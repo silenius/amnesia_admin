@@ -1,25 +1,141 @@
 <script setup>
+import { computed, ref, reactive, nextTick }  from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
 import TitleField from '@/components/TitleField.vue'
+
+const state = reactive({
+    count: 0
+});
+
+const foobar = ref('blablabla');
+
+const count = ref(1);
+
+const obj = {
+  foo: ref(1),
+  bar: ref(2)
+}
+
+function increment(event) {
+    console.log(event)
+    state.count++
+    count.value*=2
+    nextTick(() => {
+        console.log('TICK');
+    })
+}
+
+function warn(message, event) {
+  // now we have access to the native event
+  if (event) {
+    event.preventDefault()
+  }
+  alert(message)
+}
+
+function onsubmit(event) {
+    console.log('SUBMIT');
+}
+
+
+/*
+DOES NOT WORK:
+(ref() should be used)
+
+
+let n = state.count;
+n++;
+
+let { count } = state
+count++
+
+*/
+
+function pagedown() {
+    console.log('PAGE DOWN');
+}
+
+
+const author = reactive({
+  name: 'John Doe',
+  books: [
+    'Vue 2 - Advanced Guide',
+    'Vue 3 - Basic Guide',
+    'Vue 4 - The Mystery'
+  ]
+})
+
+// a computed ref
+const publishedBooksMessage = computed(() => {
+  return author.books.length > 0 ? 'Yes' : 'No'
+})
+
+
+const firstName = ref('John')
+const lastName = ref('Doe')
+
+const fullName = computed({
+  // getter
+  get() {
+    return firstName.value + ' ' + lastName.value
+  },
+  // setter
+  set(newValue) {
+    // Note: we are using destructuring assignment syntax here.
+    [firstName.value, lastName.value] = newValue.split(' ')
+  }
+})
+
+const isActive = ref(true)
+const hasError = ref(false)
+
+const error = ref(null)
+
+const classObject = computed(() => ({
+  active: isActive.value && !error.value,
+  'text-danger': error.value && error.value.type === 'fatal'
+}))
+
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    <TitleField class="rounded-full" />
+        <div @keyup.page-down="pagedown">
+            <form>
+                <input type="text" v-model="foobar" />
+                <input type="submit" />
+            </form>
+            <form @submit.prevent="onsubmit">
+                <input type="submit" />
+            </form>
+            <button @click="increment">
+                {{ state.count }}
+            </button>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+                foobar: {{ foobar }}
+
+            <button @click="(event) => warn('coucou', event)">
+                test
+            </button>
+            coucou {{ state.count }}
+            coucou {{ count }}
+            <p v-for="book in author.books">
+                {{ book }}
+            </p>
+
+            <p v-for="book in author.books">
+                {{ book }}
+            </p>
+            <div class="static" :class="{ active: isActive, 'text-danger': hasError }" ></div>
+            <div :class="classObject"></div>
+            <h1 v-show="isActive">Hello! (v-show only toggles the display CSS
+                property of the element.)</h1>
+        </div>
+
   </header>
 
-  <RouterView />
 </template>
 
 <style>
