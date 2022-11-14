@@ -1,8 +1,12 @@
 <script setup>
-import { computed, ref, reactive, nextTick }  from 'vue'
+import { 
+    onMounted, computed, ref, reactive, nextTick,
+    onUpdated, watch, watchEffect
+}  from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
 import TitleField from '@/components/TitleField.vue'
+import Julien from '@/components/Julien.vue'
 
 const state = reactive({
     count: 0
@@ -10,7 +14,9 @@ const state = reactive({
 
 const foobar = ref('blablabla');
 
-const count = ref(1);
+const count = ref(5);
+
+const lol123 = ref(null);
 
 const obj = {
   foo: ref(1),
@@ -37,6 +43,20 @@ function warn(message, event) {
 function onsubmit(event) {
     console.log('SUBMIT');
 }
+
+onMounted(() => {
+    console.log("MOUNTED");
+})
+
+onMounted(() => {
+    console.log(lol123);
+    console.log(lol123.value);
+    console.log("MOUNTED ENCORE");
+})
+
+onUpdated(() => {
+    console.log('UPDATED');
+})
 
 
 /*
@@ -65,6 +85,7 @@ const author = reactive({
     'Vue 4 - The Mystery'
   ]
 })
+
 
 // a computed ref
 const publishedBooksMessage = computed(() => {
@@ -97,15 +118,57 @@ const classObject = computed(() => ({
   'text-danger': error.value && error.value.type === 'fatal'
 }))
 
+
+// watch
+
+const question = ref('foo?')
+const answer = ref('Questions usually contain a question mark. ;-)')
+const img = ref('')
+
+// watch works directly on a ref
+const stop = watch(question, async (newQuestion, oldQuestion) => {
+  if (question.value.indexOf('?') > -1) {
+    answer.value = 'Thinking...'
+    try {
+      const res = await fetch('https://yesno.wtf/api')
+      const js = await res.json()
+      answer.value = js.answer
+      img.value = js.image
+    } catch (error) {
+      answer.value = 'Error! Could not reach the API. ' + error
+    }
+  }
+})
+
+stop()
+
+watchEffect(async () => {
+  if (question.value.indexOf('?') > -1) {
+    answer.value = 'Thinking...'
+    try {
+      const res = await fetch('https://yesno.wtf/api')
+      const js = await res.json()
+      answer.value = js.answer
+      img.value = js.image
+    } catch (error) {
+      answer.value = 'Error! Could not reach the API. ' + error
+    }
+  }
+
+})
+
 </script>
 
 <template>
   <header>
+        <input type="text" v-model="question" placeholder="lol" />
+        <p> {{ answer }}</p>
+        <img :src="img" />
 
         <div @keyup.page-down="pagedown">
             <form>
                 <input type="text" v-model="foobar" />
-                <input type="submit" />
+                <input type="submit" ref="lol123" />
             </form>
             <form @submit.prevent="onsubmit">
                 <input type="submit" />
@@ -113,6 +176,9 @@ const classObject = computed(() => ({
             <button @click="increment">
                 {{ state.count }}
             </button>
+
+            <Julien v-for="foo in [...Array(5).keys()]" 
+                :tt="foo" />
 
                 foobar: {{ foobar }}
 
