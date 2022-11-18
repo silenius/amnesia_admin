@@ -1,9 +1,16 @@
-
 <script setup>
-defineProps(['tt'])
+    const props = defineProps([
+        name: String, 
+        age: Number, 
+        fontsize: Number
+    ])
+    const events = defineEmits(['enlarge-text'])
 </script>
 
 <template>
-<h1> Hello {{ tt }} </h1>
-
+<h1 :style="{ fontSize: fontsize + 'em' }"> 
+    Hello {{ name }}, you are {{ age }} years old 
+    <button @click="$emit('enlarge-text')">enlarge</button>
+</h1>
+        <slot />
 </template>

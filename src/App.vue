@@ -157,6 +157,16 @@ watchEffect(async () => {
 
 })
 
+const people = ref([
+    {'name': 'Julien', 'age': 41, 'size': 1},
+    {'name': 'Cécile', 'age': 43, 'size': 1},
+    {'name': 'Barbara', 'age': 39, 'size': 1},
+]);
+
+function enlarge() {
+    console.log(this);
+}
+
 </script>
 
 <template>
@@ -177,8 +187,14 @@ watchEffect(async () => {
                 {{ state.count }}
             </button>
 
-            <Julien v-for="foo in [...Array(5).keys()]" 
-                :tt="foo" />
+            <Julien v-for="person in people" 
+                :key="person.name"
+                :name="person.name"
+                :age="person.age" 
+                :fontsize="person.size"
+                @enlarge-text="enlarge">
+                Cool raoul
+            </Julien>
 
                 foobar: {{ foobar }}
 
