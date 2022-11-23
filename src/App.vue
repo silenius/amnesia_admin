@@ -7,6 +7,10 @@ import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
 import TitleField from '@/components/TitleField.vue'
 import Julien from '@/components/Julien.vue'
+import ContentTitle from '@/components/content/ContentTitle.vue'
+import { lineage } from '@/services/folder'
+
+import RoleTable from '@/components/role/RoleTable.vue'
 
 const state = reactive({
     count: 0
@@ -45,6 +49,7 @@ function onsubmit(event) {
 }
 
 onMounted(() => {
+    console.log(import.meta.env.MODE);
     console.log("MOUNTED");
 })
 
@@ -151,7 +156,7 @@ watchEffect(async () => {
       answer.value = js.answer
       img.value = js.image
     } catch (error) {
-      answer.value = 'Error! Could not reach the API. ' + error
+        answer.value = 'Error! Could not reach the API. ' + error
     }
   }
 
@@ -163,19 +168,41 @@ const people = ref([
     {'name': 'Barbara', 'age': 39, 'size': 1},
 ]);
 
-function enlarge() {
-    console.log(this);
+function enlarge(n) {
+    console.log('ENLARGE ' + n);
+    console.log(contentTitle.value);
+    lineage(1806);
 }
+
+const post = {
+  id: 1,
+  title: 'My Journey with Vue'
+}
+
+const contentTitle = ref('placeholder')
+
+watch(contentTitle, (v1, v2) => {
+    console.log('contenTitle updated from ' + v1 + ' to ' + v2);
+});
 
 </script>
 
 <template>
   <header>
+        <ContentTitle v-model="contentTitle">
+            <template #before-input>
+                coucou petite perruche
+            </template>
+        </ContentTitle>
+
+
+
         <input type="text" v-model="question" placeholder="lol" />
         <p> {{ answer }}</p>
         <img :src="img" />
 
-        <div @keyup.page-down="pagedown">
+        <div @keyup.page-down="pagedown" class="bg-gradient-to-r from-red-500 to-orange-500">
+            <p> coucou </p>
             <form>
                 <input type="text" v-model="foobar" />
                 <input type="submit" ref="lol123" />
@@ -187,16 +214,18 @@ function enlarge() {
                 {{ state.count }}
             </button>
 
+
             <Julien v-for="person in people" 
                 :key="person.name"
                 :name="person.name"
                 :age="person.age" 
                 :fontsize="person.size"
+                v-bind="post"
                 @enlarge-text="enlarge">
                 Cool raoul
             </Julien>
 
-                foobar: {{ foobar }}
+            foobar: {{ foobar }}
 
             <button @click="(event) => warn('coucou', event)">
                 test
@@ -217,6 +246,7 @@ function enlarge() {
         </div>
 
   </header>
+        <RoleTable />
 
 </template>
 
