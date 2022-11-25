@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useFetch } from '@/services/fetch.js'
 
 const roles = ref([]);
-const url = 'http://10.209.1.41:10613/bbpf/roles/browse';
+const url = 'http://home.lan/bbpf/roles/browse';
 
 onMounted(() => {
     const options = {
@@ -12,9 +12,10 @@ onMounted(() => {
             accept: 'application/json'
         }
     }
-    const { data, error } = fetch(url, options)
-    data.value = JSON.parse(data.value)
-    console.log(data)
+
+    fetch(url, options).then((res) => res.json()).then((json) => {
+        roles.value = json.roles
+    })
 })
 
 </script>
@@ -32,7 +33,8 @@ onMounted(() => {
         <tbody>
             <tr v-for="role in roles" :key="role.id">
                 <td>{{ role.name }}</td>
-                <td></td>
+                <td>{{ role.description }}</td>
+                <td>Foo</td>
             </tr>
         </tbody>
 

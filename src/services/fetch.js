@@ -10,7 +10,9 @@ export function useFetch(url, options) {
 
         fetch(unref(url), options)
             .then((res) => res.json())
-            .then((json) => (data.value = json))
+            .then((json) => {
+                data.value = json
+            })
             .catch((err) => {
                 error.value = err
                 console.log('There has been a problem with a fetch operation:', error)
