@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useFetch } from '@/services/fetch.js'
 
 const roles = ref([]);
-const url = 'http://home.lan/bbpf/roles/browse';
+const url = import.meta.env.VITE_FETCH_ROLES_URL;
 
 onMounted(() => {
     const options = {
