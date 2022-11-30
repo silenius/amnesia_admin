@@ -252,7 +252,7 @@ property of the element.)</h1>
         <div class="border-2 grid-row-2">col2</div>
         <div class="border-2">col3</div>
         <div class="border-2">col4</div>
-        <div class="border-2">col5<!--<RoleTable />--></div>
+        <div class="border-2"><RoleTable /></div>
         <div class="border-2 order-first">
             coucou
             <!--

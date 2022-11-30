@@ -7,6 +7,8 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.4",
+    "@heroicons/vue": "^2.0.13",
     "@tailwindcss/language-server": "^0.0.10",
     "flowbite": "^1.5.3",
     "pinia": "^2.0.11",
