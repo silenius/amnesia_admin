@@ -18,23 +18,31 @@ onMounted(() => {
     fetch(url, options).then((res) => res.json()).then((json) => {
         roles.value = json.roles
     })
+
 })
+
+    function show_dialog(event) {
+        document.getElementById('lol').showModal();
+    }
 
 </script>
 
 <template>
-    <table class="table-auto border-spacing-0 text-xs">
+    <dialog id="edit_role">
+
+    </dialog>
+    <table class="table-auto border-spacing-4 text-xs">
         <thead>
-            <tr>
-                <th>Name</th>
+            <tr class="text-left bg-slate-100">
+                <th class="p-2">Name</th>
                 <th>Description</th>
                 <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr v-for="role in roles" :key="role.id">
-                <td>{{ role.name }}</td>
+            <tr v-for="role in roles" :key="role.id" class="odd:bg-white even:bg-slate-50">
+                <td class="p-2"><a href="#" @click="show_dialog">{{ role.name }}</a></td>
                 <td>{{ role.description }}</td>
                 <td>
 

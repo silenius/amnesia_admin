@@ -247,14 +247,9 @@ property of the element.)</h1>
 </div>
 -->
     </header>
-    <div class="grid grid-flow-row border-2 border-indigo-600 gap-4">
-        <div class="border-2">col1</div>
-        <div class="border-2 grid-row-2">col2</div>
-        <div class="border-2">col3</div>
-        <div class="border-2">col4</div>
-        <div class="border-2"><RoleTable /></div>
-        <div class="border-2 order-first">
-            coucou
+    <div class="container mx-auto">
+    <div class="grid grid-flow-row justify-items-center">
+    <div><RoleTable /></div>
             <!--
 
 
@@ -313,11 +308,8 @@ property of the element.)</h1>
     </table>
 </div>
             -->
-</div>
+        </div>
     </div>
-
-
-        
 </template>
 
 <style>
