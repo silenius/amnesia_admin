@@ -6,11 +6,11 @@ import {
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
 import TitleField from '@/components/TitleField.vue'
-import Julien from '@/components/Julien.vue'
 import ContentTitle from '@/components/content/ContentTitle.vue'
 import { lineage } from '@/services/folder'
 
 import RoleTable from '@/components/role/RoleTable.vue'
+import BreadCrumb from '@/components/BreadCrumb.vue'
 
 const state = reactive({
     count: 0
@@ -76,6 +76,12 @@ let { count } = state
 count++
 
 */
+
+const items = [
+    { name: "foo" },
+    { name: "bar" },
+    { name: "fdp" }
+]
 
 function pagedown() {
     console.log('PAGE DOWN');
@@ -248,7 +254,8 @@ property of the element.)</h1>
 -->
     </header>
     <div class="container mx-auto">
-    <div class="grid grid-flow-row justify-items-center">
+    <div class="grid gap-4">
+    <div><BreadCrumb :items="items" /></div>
     <div><RoleTable /></div>
             <!--
 

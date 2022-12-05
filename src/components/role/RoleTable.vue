@@ -6,7 +6,10 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid'
 
 const roles = ref([]);
-const url = import.meta.env.VITE_FETCH_ROLES_URL;
+const url = new URL(
+    '/roles/browse',
+    import.meta.env.BASE_URL
+);
 
 onMounted(() => {
     const options = {
@@ -22,13 +25,15 @@ onMounted(() => {
 })
 
     function show_dialog(event) {
-        document.getElementById('lol').showModal();
+        document.getElementById('edit_role').showModal();
     }
 
 </script>
 
 <template>
     <dialog id="edit_role">
+
+        Edit: <input type="text" class="text-sm">
 
     </dialog>
     <table class="table-auto border-spacing-4 text-xs">
@@ -42,7 +47,7 @@ onMounted(() => {
 
         <tbody>
             <tr v-for="role in roles" :key="role.id" class="odd:bg-white even:bg-slate-50">
-                <td class="p-2"><a href="#" @click="show_dialog">{{ role.name }}</a></td>
+                <td class="p-2" @click="show_dialog">{{ role.name }}</td>
                 <td>{{ role.description }}</td>
                 <td>
 
