@@ -6,12 +6,10 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid'
 
 const roles = ref([]);
-const url = new URL(
-    '/roles/browse',
-    import.meta.env.BASE_URL
-);
+const url = new URL( 'roles/browse', import.meta.env.VITE_BASE_BACKEND);
 
 onMounted(() => {
+    console.log(import.meta.env);
     const options = {
         headers: {
             accept: 'application/json'
