@@ -19,7 +19,6 @@ import BreadCrumb from '@/components/BreadCrumb.vue'
     <RouterView />
     <div class="container mx-auto">
     <div class="grid gap-4">
-    <div><BreadCrumb :items="items" /></div>
     <div><RoleTable /></div>
        </div>
     </div>
@@ -27,4 +26,3 @@ import BreadCrumb from '@/components/BreadCrumb.vue'
 
 <style>
 </style>
-
