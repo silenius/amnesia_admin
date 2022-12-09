@@ -1,32 +1,19 @@
-import { ref, isRef, unref, watchEffect } from 'vue'
+import { inject }  from 'vue'
+import { createFetch } from '@vueuse/core'
 
-export function useFetch(url, options) {
-    const data = ref(null)
-    const error = ref(null)
+import { backend_url } from '@/symbols.js'
 
-    function doFetch() {
-        data.value = null
-        error.value = null
+export const useBackendFetch = createFetch({
+  baseUrl: 'http://home.lan/bbpf',
+  options: {
+    async beforeFetch({ options }) {
+      options.headers.Accept = 'application/json'
 
-        fetch(unref(url), options)
-            .then((res) => res.json())
-            .then((json) => {
-                data.value = json
-            })
-            .catch((err) => {
-                error.value = err
-                console.log('There has been a problem with a fetch operation:', error)
-            })
-    }
+      return { options }
+    },
+  },
+  fetchOptions: {
+    mode: 'cors',
+  },
+})
 
-    if (isRef(url)) {
-        // setup reactive re-fetch if input URL is a ref
-        watchEffect(doFetch)
-    } else {
-        // otherwise, just fetch once
-        // and avoid the overhead of a watcher
-        doFetch()
-    }
-
-    return { data, error }
-}
