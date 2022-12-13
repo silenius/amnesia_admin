@@ -1,2 +1,2 @@
-import { useBackendFetch } from '@/services/fetch'
+import { useFetchBackend } from '@/services/fetch'
 

@@ -1,14 +1,14 @@
 <script setup>
 
 import { ref, watch, onMounted, inject } from 'vue'
-import { useBackendFetch } from '@/services/fetch.js'
+import { useFetchBackend } from '@/services/fetch.js'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid'
 
 const roles = ref([])
 
 onMounted(() => {
-    const { data, error } = useBackendFetch('roles/browse').get().json()
+    const { data, error } = useFetchBackend('roles/browse')
     
     watch(data, (x) => {
         roles.value = x.roles
