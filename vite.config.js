@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 // https://vitejs.dev/config/
 export default defineConfig({
   server : {
-        host: "home.lan",
+        host: "dev.lan",
         watch: {
             usePolling: true,
             interval: 1000,

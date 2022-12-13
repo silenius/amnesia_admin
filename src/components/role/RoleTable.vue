@@ -3,16 +3,16 @@
 import { ref, watch, onMounted, inject } from 'vue'
 import { useFetchBackend } from '@/services/fetch.js'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon } from '@heroicons/vue/20/solid'
+import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
 
 const roles = ref([])
 
 onMounted(() => {
-    const { data, error } = useFetchBackend('roles/browse')
-    
-    watch(data, (x) => {
-        roles.value = x.roles
-    })
+  const { data, error } = useFetchBackend('roles/browse')
+
+  watch(data, (x) => {
+    roles.value = x.data.roles
+  })
 })
 
 </script>
@@ -22,24 +22,28 @@ onMounted(() => {
     <thead>
       <tr class="text-left bg-slate-100">
         <th class="p-2">Name</th>
+        <th></th>
         <th>Description</th>
         <th>Actions</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr v-for="role in roles" :key="role.id" class="odd:bg-white even:bg-slate-50">
-        <td class="p-2" @click="show_dialog">{{ role.name }}</td>
-        <td>{{ role.description }}</td>
+      <tr v-for="role in roles" :key="role.id" class="odd:bg-white
+        even:bg-slate-50 text-slate-600">
+        <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
+          {{ role.name }}
+        </td>
+        <td class="p-2">
+          <LockClosedIcon v-if="role.locked" class="inline h-4 w-4 fill-red-500" />
+          <PaperAirplaneIcon v-if="role.virtual" class="inline h-4 w-4 fill-cyan-500" />
+        </td>
+        <td class="tracking-tighter">{{ role.description }}</td>
         <td>
           <div class="text-right">
             <Menu as="div" class="relative text-left">
               <div>
-                <MenuButton
-                  class="rounded inline-flex w-full justify-center
-                  hover:bg-slate-300 bg-slate-200 px-4 py-1
-                  text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-                >
+                <MenuButton class="rounded inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                   action
                 </MenuButton>
               </div>
@@ -66,7 +70,7 @@ onMounted(() => {
                     </MenuItem>
                   </div>
 
-                  <div class="px-1 py-1">
+                  <div class="px-1 py-1" v-if="!role.locked">
                     <MenuItem v-slot="{ active }">
                     <button :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                       <PencilSquareIcon class="h-4 w-4"/> Edit

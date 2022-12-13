@@ -1,7 +1,25 @@
 import { ref, isRef, unref, inject, watchEffect } from 'vue'
 import { backend_url } from '@/symbols.js'
 
-export function useFetch(url, options) {
+class Format {
+    constructor(resp, fmt) {
+        this.resp = resp
+        this.fmt = fmt
+    }
+
+    then(resolve, reject) {
+        switch(this.fmt) {
+            case 'json':
+                resolve(this.resp.json())
+                break
+            case 'text':
+                resolve(this.resp.text())
+                break
+        }
+    }
+}
+
+export function useFetch(url, options, fmt='json') {
     const data = ref(null)
     const error = ref(null)
 
@@ -11,7 +29,7 @@ export function useFetch(url, options) {
 
         try {
             const res = await fetch(unref(url), options)
-            data.value = await res.json()
+            data.value = await new Format(res, fmt)
         } catch (e) {
             error.value = e
         }
