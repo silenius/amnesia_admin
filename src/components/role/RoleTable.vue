@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, watch, onMounted, inject } from 'vue'
-import { useFetchBackend } from '@/services/fetch.js'
+import { useFetchBackend } from '@/composables/fetch.js'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
 

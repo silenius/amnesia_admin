@@ -4,8 +4,6 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-import 'flowbite'
-
 import './index.css'
 
 import { backend_url } from './symbols.js'
