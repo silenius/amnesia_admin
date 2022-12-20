@@ -1,65 +1,29 @@
 import { ref, isRef, unref, inject, watchEffect } from 'vue'
-import { backend_url } from '@/symbols.js'
 
-class Format {
-    constructor(resp, fmt) {
-        this.resp = resp
-        this.fmt = fmt
-    }
-
-    then(resolve, reject) {
-        switch(this.fmt) {
-            case 'json':
-                resolve(this.resp.json())
-                break
-            case 'text':
-                resolve(this.resp.text())
-                break
-        }
-    }
-}
-
-export function useFetch(url, options, fmt='json') {
-    const data = ref(null)
-    const error = ref(null)
-
-    async function doFetch() {
-        data.value = null
-        error.value = null
-
-        try {
-            const res = await fetch(unref(url), options)
-            data.value = await new Format(res, fmt)
-        } catch (e) {
-            error.value = e
-        }
-    }
-
-    if (isRef(url)) {
-        watchEffect(doFetch)
-    } else {
-        doFetch()
-    }
-
-    return { data, error, retry: doFetch }
-}
-
-export function useFetchBackend(url) {
+export async function useFetchBackend(url, options) {
     const headers = new Headers({
         'accept': 'application/json'
     })
 
-    const options = {
+    const opts = {
         method: 'GET',
-        headers: headers
+        headers: headers,
+        ...options
     }
 
-    if (!url.startsWith('http')) {
-        url = new URL(url, inject(backend_url))
+    url = backend_url(url)
+    
+    const res = await fetch(unref(url), opts)
+
+    if (res.ok) {
+        return res.status == 204 ? res : res.json()
     } else {
-        url = new URL(url)
+        throw new Error(`HTTP error! Status: ${res.status}`);
     }
-
-    return useFetch(url, options)
 }
 
+export function backend_url(src) {
+    const base = import.meta.env.VITE_BASE_BACKEND
+
+    return src.startsWith('http') ? new URL(src) : new URL(src, base) 
+}

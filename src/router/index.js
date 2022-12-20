@@ -8,13 +8,25 @@ const routes = [
     },
     {
         path: '/roles',
-        name: 'admin_roles',
-        component: () => import('../views/RolesView.vue')
+        name: 'roles',
+        component: () => import('../views/roles/RolesIndex.vue'),
+        children: [
+            {
+                name: 'browse_role',
+                path: '',
+                component: () => import('../views/roles/RolesBrowse.vue')
+            },
+            {
+                name: 'add_role',
+                path: 'new',
+                component: () => import('../views/roles/RoleAdd.vue')
+            }
+        ]
     },
     {
         path: '/role/:id(\\d+)',
         name: 'admin_role',
-        component: () => import('../views/RoleView.vue'),
+        component: () => import('../views/roles/RoleView.vue'),
         children: [
             {
                 path: 'members',
@@ -22,7 +34,6 @@ const routes = [
             }
 
         ]
-
     }
 ]
 const router = createRouter({
