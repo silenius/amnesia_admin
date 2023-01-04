@@ -11,10 +11,6 @@ export function useRoles() {
         roles.value = res.data.roles
     }
 
-    const getRole = async (id) => {
-        const res = await useFetchBackend(`role/${id}`)
-        role.value = res.data.role
-    }
 
     const destroyRole = async (id) => {
         const res = await useFetchBackend(`roles/${id}`, {
@@ -26,9 +22,9 @@ export function useRoles() {
 
     const createRole = async (data) => {
         const res = await useFetchBackend('roles', {
-            method: 'POST'
+            method: 'POST',
+            body: data
         })
-
     }
 
     return {
@@ -44,6 +40,11 @@ const errors = ref({})
 
 export function useRole() {
     const { isEmpty, minLength } = useValidators()
+
+    const getRole = async (id) => {
+        const res = await useFetchBackend(`role/${id}`)
+        role.value = res.data.role
+    }
 
     const validateName = (value) => {
         errors.value.name = !value ? isEmpty('name', value) : minLength('name', value, 4)

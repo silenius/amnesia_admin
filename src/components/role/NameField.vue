@@ -2,7 +2,7 @@
   <div>
     <label class="block">
       <span>Name</span>
-      <input v-model="value" class="block" type="text" placeholder="" />
+      <input v-model.trim="value" class="block" type="text" placeholder="" />
       <span class="text-red-500" v-if="errors.name">
         {{ errors.name }}</span>
     </label>
