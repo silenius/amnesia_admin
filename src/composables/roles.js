@@ -37,6 +37,7 @@ export function useRoles() {
 
 // TODO: use Pinia?
 const errors = ref({})
+const role = ref({})
 
 export function useRole() {
     const { isEmpty, minLength } = useValidators()
@@ -52,7 +53,9 @@ export function useRole() {
 
     return {
         errors,
-        validateName
+        validateName,
+        getRole,
+        role
     }
 }
 

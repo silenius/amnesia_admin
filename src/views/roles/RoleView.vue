@@ -4,5 +4,5 @@ const route = useRoute()
 </script>
 
 <template>
-  {{ route.params.id }}
+<router-view @role_id="route.params.id"></router-view>
 </template>

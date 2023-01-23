@@ -29,7 +29,10 @@ const routes = [
         component: () => import('../views/roles/RoleView.vue'),
         children: [
             {
-                path: 'members',
+                name: 'edit_role',
+                path: 'edit',
+                component: () => import('../views/roles/RoleEdit.vue'),
+                props: true
                 //component:
             }
 

@@ -1,17 +1,27 @@
 <script setup>
 
 import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
 
 import { useRoles } from '@/composables/roles.js'
 
 const { roles, getRoles, destroyRole } = useRoles()
+const router = useRouter()
 
 onMounted(getRoles)
 
 const delete_role = (id) => {
     destroyRole(id)
+}
+
+const edit_role = (id) => {
+    router.push({
+        name: 'edit_role',
+        params: { id: id }
+    })
+    
 }
 
 </script>
@@ -71,7 +81,7 @@ const delete_role = (id) => {
 
                                     <div class="px-1 py-1" v-if="!role.locked">
                                         <MenuItem v-slot="{ active }">
-                                        <button :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                                        <button @click="edit_role(role.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                                             <PencilSquareIcon class="h-4 w-4"/> Edit
                                         </button>
                                         </MenuItem>
