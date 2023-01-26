@@ -1,8 +1,21 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-const route = useRoute()
+
+import { ref, computed, onMounted } from 'vue'
+import { RouterLink, RouterView } from 'vue-router'
+import { useRole } from '@/composables/roles.js'
+
+const props = defineProps({
+    role_id: Number
+})
+
+const { getRole, role } = useRole()
+
+onMounted( () => {
+    getRole(props.role_id)
+})
+
 </script>
 
 <template>
-<router-view @role_id="route.params.id"></router-view>
+    <RouterView :role="role" />
 </template>

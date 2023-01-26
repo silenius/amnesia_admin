@@ -24,18 +24,18 @@ const routes = [
         ]
     },
     {
-        path: '/role/:id(\\d+)',
+        path: '/roles/:id(\\d+)',
         name: 'admin_role',
         component: () => import('../views/roles/RoleView.vue'),
+        props: (route) => ({ 
+            role_id: parseInt(route.params.id) 
+        }),
         children: [
             {
                 name: 'edit_role',
                 path: 'edit',
                 component: () => import('../views/roles/RoleEdit.vue'),
-                props: true
-                //component:
             }
-
         ]
     }
 ]

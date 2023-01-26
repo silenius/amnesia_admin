@@ -6,13 +6,7 @@ import RoleForm from '@/components/role/RoleForm.vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
-    role_id: Number
-})
-
-const { getRole, role } = useRole()
-
-onMounted( () => {
-    getRole(props.role_id)
+    role: Object
 })
 
 function edit_role() {
@@ -25,7 +19,5 @@ function edit_role() {
 </script>
 
 <template>
-    Edit Role page
     <RoleForm :role="role" @submit_role="edit_role" />
-
 </template>

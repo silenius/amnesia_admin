@@ -43,9 +43,21 @@ export function useRole() {
     const { isEmpty, minLength } = useValidators()
 
     const getRole = async (id) => {
-        const res = await useFetchBackend(`role/${id}`)
-        role.value = res.data.role
+        const res = await useFetchBackend(`roles/${id}`)
+        role.value = res
     }
+
+    const updateRole = async (name, description) => {
+        const data = new FormData()
+        data.append('name', name)
+        data.append('description', description)
+
+        const res = await useFetchBackend('roles/${id}', {
+            method: 'POST',
+            body: data
+          
+        })
+    })
 
     const validateName = (value) => {
         errors.value.name = !value ? isEmpty('name', value) : minLength('name', value, 4)
