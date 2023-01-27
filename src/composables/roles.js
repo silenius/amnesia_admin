@@ -56,7 +56,7 @@ export function useRole() {
         data.append('description', role.value.description)
 
         const res = await useFetchBackend(`roles/${role.value.id}`, {
-            method: 'POST',
+            method: 'PUT',
             body: data
         })
     }
