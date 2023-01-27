@@ -25,7 +25,7 @@ const routes = [
     },
     {
         path: '/roles/:id(\\d+)',
-        name: 'admin_role',
+        name: 'role',
         component: () => import('../views/roles/RoleView.vue'),
         props: (route) => ({ 
             role_id: parseInt(route.params.id) 

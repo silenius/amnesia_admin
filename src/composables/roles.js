@@ -36,6 +36,8 @@ export function useRoles() {
 }
 
 // TODO: use Pinia?
+// return .value ??
+// return readonly() ?
 const errors = ref({})
 const role = ref({})
 
@@ -47,25 +49,31 @@ export function useRole() {
         role.value = res
     }
 
-    const updateRole = async (name, description) => {
+    const updateRole = async () => {
         const data = new FormData()
-        data.append('name', name)
-        data.append('description', description)
+        console.log(role.value)
+        data.append('name', role.value.name)
+        data.append('description', role.value.description)
 
-        const res = await useFetchBackend('roles/${id}', {
+        const res = await useFetchBackend(`roles/${role.value.id}`, {
             method: 'POST',
             body: data
-          
         })
-    })
+    }
 
     const validateName = (value) => {
         errors.value.name = !value ? isEmpty('name', value) : minLength('name', value, 4)
     }
 
+    const validateDescription = (value) => {
+        return true
+    }
+
     return {
         errors,
         validateName,
+        validateDescription,
+        updateRole,
         getRole,
         role
     }

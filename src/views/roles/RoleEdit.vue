@@ -9,15 +9,18 @@ const props = defineProps({
     role: Object
 })
 
-function edit_role() {
-  const data = new FormData()
-  data.append('name', role.value.name)
-  data.append('description', role.value.description)
-  createRole(data)
+const { updateRole } = useRole()
+
+function update_role() {
+  updateRole()
 }
 
 </script>
 
 <template>
-    <RoleForm :role="role" @submit_role="edit_role" />
+    <RoleForm 
+      :role="role" 
+      :action="'Update role'"
+      @submit_role="update_role" 
+    />
 </template>

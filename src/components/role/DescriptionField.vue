@@ -2,18 +2,37 @@
   <div>
     <label class="block">
       <span>Description</span>
-      <input @input="$emit('update:modelValue', $event.target.value)" class="block" type="text" placeholder="" />
+      <input v-model.trim="value" class="block" type="text" placeholder="" />
+      <span class="text-red-500" v-if="errors.description">
+          {{ errors.description }}
+      </span>
     </label>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRole } from '@/composables/roles.js'
 
-const input = ref('');
+const props = defineProps({
+    modelValue: String
+})
 
-const validate = () => {
+const emit = defineEmits(['update:modelValue'])
 
-}
+const { errors, validateDescription } = useRole()
+
+const value = computed({
+
+    get() {
+        return props.modelValue
+    },
+
+    set(value) {
+        validateDescription(value)
+        emit('update:modelValue', value)
+    }
+
+})
 
 </script>

@@ -17,5 +17,8 @@ onMounted( () => {
 </script>
 
 <template>
+  <div>
+    ROLE {{ role_id }}
     <RouterView :role="role" />
+  </div>
 </template>

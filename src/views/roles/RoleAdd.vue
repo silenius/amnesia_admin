@@ -22,6 +22,10 @@ function add_role() {
 
 <template>
     Add Role page
-    <RoleForm :role="role" @submit_role="add_role" />
+    <RoleForm 
+      :role="role" 
+      :action="'Create role'"
+      @submit_role="add_role" 
+    />
 
 </template>
