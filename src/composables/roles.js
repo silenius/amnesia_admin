@@ -1,16 +1,28 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, watch } from 'vue';
+import { ref, readonly, watch } from 'vue';
 import { useValidators } from '@/composables/validators.js'
+
+const role_to_formdata = (role) => {
+    const data = new FormData()
+
+    data.append('name', role.value.name)
+    data.append('description', role.value.description)
+
+    return data
+}
 
 export function useRoles() {
 
     const roles = ref([])
+    const role = ref({
+        name: '',
+        description: ''
+    })
 
     const getRoles = async () => {
         const res = await useFetchBackend('roles/browse')
         roles.value = res.data.roles
     }
-
 
     const destroyRole = async (id) => {
         const res = await useFetchBackend(`roles/${id}`, {
@@ -20,7 +32,9 @@ export function useRoles() {
         getRoles()
     }
 
-    const createRole = async (data) => {
+    const createRole = async () => {
+        const data = role_to_formdata(role)
+
         const res = await useFetchBackend('roles', {
             method: 'POST',
             body: data
@@ -28,7 +42,8 @@ export function useRoles() {
     }
 
     return {
-        roles,
+        roles: readonly(roles),
+        role: readonly(role),
         getRoles,
         destroyRole,
         createRole
@@ -38,8 +53,8 @@ export function useRoles() {
 // TODO: use Pinia?
 // return .value ??
 // return readonly() ?
-const errors = ref({})
 const role = ref({})
+const errors = ref({})
 
 export function useRole() {
     const { isEmpty, minLength } = useValidators()
@@ -49,11 +64,13 @@ export function useRole() {
         role.value = res
     }
 
+    const getMembers = async () => {
+        const res = await useFetchBackend(`roles/${role.value.id}/members`)
+        role.value.members = res
+    }
+
     const updateRole = async () => {
-        const data = new FormData()
-        console.log(role.value)
-        data.append('name', role.value.name)
-        data.append('description', role.value.description)
+        const data = role_to_formdata(role)
 
         const res = await useFetchBackend(`roles/${role.value.id}`, {
             method: 'PUT',
@@ -70,12 +87,13 @@ export function useRole() {
     }
 
     return {
-        errors,
+        errors: readonly(errors),
         validateName,
         validateDescription,
         updateRole,
         getRole,
-        role
+        getMembers,
+        role: readonly(role)
     }
 }
 

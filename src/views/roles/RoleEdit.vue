@@ -11,16 +11,13 @@ const props = defineProps({
 
 const { updateRole } = useRole()
 
-function update_role() {
-  updateRole()
-}
-
 </script>
 
 <template>
+    <h1>Edit role</h1>
     <RoleForm 
       :role="role" 
       :action="'Update role'"
-      @submit_role="update_role" 
+      @submit_role="updateRole" 
     />
 </template>

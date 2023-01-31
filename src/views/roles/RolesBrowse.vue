@@ -1,4 +1,5 @@
 <script setup>
+
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import RoleTable from '@/components/role/RoleTable.vue'
 

@@ -26,7 +26,7 @@ const routes = [
     {
         path: '/roles/:id(\\d+)',
         name: 'role',
-        component: () => import('../views/roles/RoleView.vue'),
+        component: () => import('../views/roles/RoleIndex.vue'),
         props: (route) => ({ 
             role_id: parseInt(route.params.id) 
         }),
@@ -35,7 +35,13 @@ const routes = [
                 name: 'edit_role',
                 path: 'edit',
                 component: () => import('../views/roles/RoleEdit.vue'),
+            },
+            {
+                name: 'edit_members',
+                path: 'members',
+                component: () => import('../views/roles/RoleMembers.vue'),
             }
+
         ]
     }
 ]

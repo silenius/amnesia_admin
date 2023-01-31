@@ -4,28 +4,16 @@ import { ref, computed, onMounted } from 'vue'
 import RoleForm from '@/components/role/RoleForm.vue'
 import { useRoles } from '@/composables/roles.js'
 
-const { createRole } = useRoles()
-
-const role = ref({
-  name: '',
-  description: ''
-});
-
-function add_role() {
-  const data = new FormData()
-  data.append('name', role.value.name)
-  data.append('description', role.value.description)
-  createRole(data)
-}
+const { createRole, role } = useRoles()
 
 </script>
 
 <template>
-    Add Role page
+  <h1>Add role</h1>
     <RoleForm 
       :role="role" 
       :action="'Create role'"
-      @submit_role="add_role" 
+      @submit_role="createRole" 
     />
 
 </template>

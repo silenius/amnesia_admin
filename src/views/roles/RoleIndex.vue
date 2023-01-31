@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUpdated } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRole } from '@/composables/roles.js'
 
@@ -10,7 +10,12 @@ const props = defineProps({
 
 const { getRole, role } = useRole()
 
+onUpdated( () => {
+  console.log('===>>> RoleIndex updated')
+})
+
 onMounted( () => {
+    console.log('===>>> RoleIndex mounted')
     getRole(props.role_id)
 })
 
@@ -18,7 +23,7 @@ onMounted( () => {
 
 <template>
   <div>
-    ROLE {{ role_id }}
+    ROLE / {{ role.name }}
     <RouterView :role="role" />
   </div>
 </template>
