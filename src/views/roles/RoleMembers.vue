@@ -3,6 +3,7 @@
 import { ref, watch, computed, onMounted, onUpdated } from 'vue'
 import { useRole, useRoles } from '@/composables/roles.js'
 import { useAccounts } from '@/composables/accounts.js'
+import { AccountTable } from '@/components/accounts/AccountTable.vue'
 
 const props = defineProps({
     role: Object
@@ -35,8 +36,7 @@ onUpdated( () => {
     <p v-for="member in role.members">
       {{ member.login }}
     </p>
-    <p v-for="account in accounts">
-      {{ account.login }}
-      </p>
+
+    <AccountTable />
   </div>
 </template>

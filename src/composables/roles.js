@@ -1,5 +1,5 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, readonly, watch } from 'vue';
+import { ref, computed, readonly, watch } from 'vue';
 import { useValidators } from '@/composables/validators.js'
 
 const role_to_formdata = (role) => {
@@ -53,6 +53,7 @@ export function useRoles() {
 // TODO: use Pinia?
 // return .value ??
 // return readonly() ?
+
 const role = ref({})
 const errors = ref({})
 
@@ -93,7 +94,7 @@ export function useRole() {
         updateRole,
         getRole,
         getMembers,
-        role: readonly(role)
+        role: role
     }
 }
 

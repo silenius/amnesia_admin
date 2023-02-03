@@ -15,11 +15,11 @@ import { ref, computed } from 'vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
-  modelValue: String
+  name: String
 })
 
 const emit = defineEmits([
-  'update:modelValue'
+  'update:name'
 ])
 
 const { errors, validateName } = useRole()
@@ -27,12 +27,12 @@ const { errors, validateName } = useRole()
 const value = computed({
 
   get() {
-    return props.modelValue
+    return props.name
   },
 
   set(value) {
     validateName(value)
-    emit('update:modelValue', value)
+    emit('update:name', value)
   }
 
 })

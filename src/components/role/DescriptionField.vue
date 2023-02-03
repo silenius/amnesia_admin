@@ -15,22 +15,24 @@ import { ref, computed } from 'vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
-    modelValue: String
+    description: String
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits([
+    'update:description'
+])
 
 const { errors, validateDescription } = useRole()
 
 const value = computed({
 
     get() {
-        return props.modelValue
+        return props.description
     },
 
     set(value) {
         validateDescription(value)
-        emit('update:modelValue', value)
+        emit('update:description', value)
     }
 
 })
