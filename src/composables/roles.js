@@ -66,8 +66,32 @@ export function useRole() {
     }
 
     const getMembers = async () => {
-        const res = await useFetchBackend(`roles/${role.value.id}/members`)
+        const res = await useFetchBackend(`roles/${role.value.id}/members/all`)
         role.value.members = res
+    }
+
+    const addMember = async (id) => {
+        const data = new FormData()
+        data.append('account_id', id)
+        
+        const res = await useFetchBackend(
+            `roles/${role.value.id}/members`, {
+                method: 'POST',
+                body: data
+            }
+        )
+    }
+
+    const deleteMember = async (id) => {
+        const data = new FormData()
+        data.append('account_id', id)
+        
+        const res = await useFetchBackend(
+            `roles/${role.value.id}/members`, {
+                method: 'DELETE',
+                body: data
+            }
+        )
     }
 
     const updateRole = async () => {
@@ -94,6 +118,8 @@ export function useRole() {
         updateRole,
         getRole,
         getMembers,
+        addMember,
+        deleteMember,
         role: role
     }
 }
