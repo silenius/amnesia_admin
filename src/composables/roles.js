@@ -43,7 +43,7 @@ export function useRoles() {
 
     return {
         roles: readonly(roles),
-        role: readonly(role),
+        role: role,
         getRoles,
         destroyRole,
         createRole
@@ -87,7 +87,7 @@ export function useRole() {
         data.append('account_id', id)
         
         const res = await useFetchBackend(
-            `roles/${role.value.id}/members`, {
+            `roles/${role.value.id}/members/${id}`, {
                 method: 'DELETE',
                 body: data
             }
@@ -112,7 +112,7 @@ export function useRole() {
     }
 
     return {
-        errors: readonly(errors),
+        errors: errors,
         validateName,
         validateDescription,
         updateRole,
