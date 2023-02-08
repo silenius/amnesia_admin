@@ -23,6 +23,13 @@ const edit_role = (id) => {
   })
 }
 
+const edit_permissions = (id) => {
+  router.push({
+    name: 'edit_permissions',
+    params: { id: id }
+  })
+}
+
 const edit_members = (id) => {
   router.push({
     name: 'edit_members',
@@ -79,7 +86,7 @@ action
                     </button>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
-                    <button :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
+                    <button @click="edit_permissions(role.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
                       <AdjustmentsVerticalIcon class="w-4 h-4" /> Manage permissions
                     </button>
                     </MenuItem>

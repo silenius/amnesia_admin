@@ -4,6 +4,7 @@ import { ref, watch, computed, onMounted, onUpdated } from 'vue'
 import { useRole, useRoles } from '@/composables/roles.js'
 import { useAccounts } from '@/composables/accounts.js'
 import AccountTable from '@/components/account/AccountTable.vue'
+import ActionButton from '@/components/buttons/ActionButton.vue'
 
 const props = defineProps({
     role: Object
@@ -19,8 +20,6 @@ onMounted( () => {
   })
 
   getAccounts()
-
-  console.log('===>>> RoleMembers mounted')
 })
 
 const add_member = async (id) => {
@@ -33,10 +32,6 @@ const delete_member = async (id) => {
   getMembers()
 }
 
-onUpdated( () => {
-  console.log('===>>> RoleMembers updated')
-})
-
 </script>
 
 
@@ -46,16 +41,13 @@ onUpdated( () => {
 
     <AccountTable :accounts="role.members">
       <template #headers>
-        <th>Member</th>
+        <th class="text-center">Member</th>
       </template>
       <template #tds="tdsProps">
         <td v-if="tdsProps.account.member" class="p-2">
-          <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700 rounded w-full p-1
-            text-red-600" @click="delete_member(tdsProps.account.id)">remove</button>
+          <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700 rounded w-full p-1 text-red-600" @click="delete_member(tdsProps.account.id)">remove</button>
         </td>
-        <td v-else="tdsProps.account.member" class="p-2">
-          <button class="bg-green-200 hover:text-green-700 hover:bg-green-300 px-2 rounded w-full
-            p-1 text-green-600" @click="add_member(tdsProps.account.id)">add</button>
+        <td v-else="tdsProps.account.member" class="p-2"> <button class="hover:bg-green-300 bg-green-200 px-2 hover:text-green-700 rounded w-full p-1 text-green-600" @click="add_member(tdsProps.account.id)">add</button>
         </td>
       </template>
     </AccountTable>
