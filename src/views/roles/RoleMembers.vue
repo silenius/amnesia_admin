@@ -4,7 +4,6 @@ import { ref, watch, computed, onMounted, onUpdated } from 'vue'
 import { useRole, useRoles } from '@/composables/roles.js'
 import { useAccounts } from '@/composables/accounts.js'
 import AccountTable from '@/components/account/AccountTable.vue'
-import ActionButton from '@/components/buttons/ActionButton.vue'
 
 const props = defineProps({
     role: Object
@@ -19,7 +18,6 @@ onMounted( () => {
     getMembers()
   })
 
-  getAccounts()
 })
 
 const add_member = async (id) => {

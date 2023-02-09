@@ -70,6 +70,11 @@ export function useRole() {
         role.value.members = res
     }
 
+    const getPermissions = async () => {
+        const res = await useFetchBackend(`roles/${role.value.id}/global-permissions`)
+        role.value.permissions = res
+    }
+
     const addMember = async (id) => {
         const data = new FormData()
         data.append('account_id', id)
@@ -118,6 +123,7 @@ export function useRole() {
         updateRole,
         getRole,
         getMembers,
+        getPermissions,
         addMember,
         deleteMember,
         role: role
