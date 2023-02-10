@@ -75,6 +75,25 @@ export function useRole() {
         role.value.permissions = res
     }
 
+    const addGlobalACL = async (permission_id, allow) => {
+        const data = new FormData()
+        data.append('permission_id', permission_id)
+        data.append('allow', allow)
+
+        const res = await useFetchBackend(`roles/${role.value.id}/acls`, {
+            method: 'POST',
+            body: data
+
+        })
+    }
+
+    const deleteGlobalACL = async (acl_id) => {
+        const res = await useFetchBackend(`acls/${acl_id}`, {
+            method: 'DELETE'
+        })
+        
+    }
+
     const addMember = async (id) => {
         const data = new FormData()
         data.append('account_id', id)
@@ -125,6 +144,8 @@ export function useRole() {
         getMembers,
         getPermissions,
         addMember,
+        addGlobalACL,
+        deleteGlobalACL,
         deleteMember,
         role: role
     }
