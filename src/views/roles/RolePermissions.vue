@@ -2,6 +2,7 @@
 
 import { ref, watch, computed, onMounted, onUpdated } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { ViewfinderCircleIcon } from '@heroicons/vue/20/solid'
 import { useRole, useRoles } from '@/composables/roles.js'
 import { useAccounts } from '@/composables/accounts.js'
 import AccountTable from '@/components/account/AccountTable.vue'
@@ -10,7 +11,12 @@ const props = defineProps({
   role: Object
 })
 
-const { getPermissions, deleteGlobalACL, addGlobalACL } = useRole()
+const { 
+  getPermissions, 
+  deleteGlobalACL, 
+  addGlobalACL,
+  patchGlobalACL
+} = useRole()
 
 onMounted( () => {
   watch(() => props.role, (r, old_r) => {
@@ -26,17 +32,36 @@ const change_permission = async (permission, allow) => {
       allow
     )
   } else if (allow === null) {
+    // Allow is unset, delete ACL.
     await deleteGlobalACL(
       permission.acl_id
     )
   } else {
-    await updateGlobalACL(
+    // Update it's allow field
+    await patchGlobalACL(
       permission.acl_id,
-      allow
+      {'allow': allow}
     )
   }
 
   getPermissions()
+}
+
+const move = (evt) => {
+  console.log('===> MOVE')
+  console.log(evt)
+}
+
+const enter = (evt) => {
+  console.log('===> ENTER')
+}
+
+const leave = (evt) => {
+  console.log('===> LEAVE')
+}
+
+const foodrop = (evt) => {
+  console.log('===> DROP')
 }
 
 const menuColors = {
@@ -72,7 +97,12 @@ const menuColors = {
     </thead>
 
     <tbody>
-      <tr v-for="permission in role.permissions" :key="permission.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
+      <tr v-for="permission in role.permissions" :key="permission.id"
+        class="odd:bg-white even:bg-slate-50 text-slate-600" draggable="true"
+        @dragstart="move"
+        @dragleave="leave"
+        @dragenter="enter"
+        @drop="foodrop">
         <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
           {{ permission.name }}
         </td>
@@ -127,7 +157,8 @@ const menuColors = {
 </div>
         </td>
         <td>
-          {{ permission.weight }}
+           <font-awesome-icon icon="fa-solid fa-up-down-left-right"
+            class="w-full text-slate-700" />
         </td>
       </tr>
     </tbody>

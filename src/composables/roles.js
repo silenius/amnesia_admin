@@ -87,6 +87,19 @@ export function useRole() {
         })
     }
 
+    const patchGlobalACL = async (acl_id, items) => {
+        const data = new FormData()
+
+        for (const [key, value] of Object.entries(items)) {
+            data.append(key, value)
+        }
+
+        const res = await useFetchBackend(`acls/${acl_id}`, {
+            method: 'PATCH',
+            body: data
+        })
+    }
+
     const deleteGlobalACL = async (acl_id) => {
         const res = await useFetchBackend(`acls/${acl_id}`, {
             method: 'DELETE'
@@ -146,6 +159,7 @@ export function useRole() {
         addMember,
         addGlobalACL,
         deleteGlobalACL,
+        patchGlobalACL,
         deleteMember,
         role: role
     }
