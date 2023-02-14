@@ -7,6 +7,19 @@ const routes = [
         component: () => import('../views/HomeView.vue')
     },
     {
+        path: '/accounts',
+        name: 'accounts',
+        component: () => import('../views/accounts/AccountsIndex.vue'),
+        children: [
+            {
+                name: 'browse_accounts',
+                path: '',
+                component: () => import('../views/accounts/AccountsBrowse.vue')
+            },
+        ]
+    },
+
+    {
         path: '/roles',
         name: 'roles',
         component: () => import('../views/roles/RolesIndex.vue'),

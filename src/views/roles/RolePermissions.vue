@@ -70,57 +70,47 @@ const update_weight = async (acl_id, weight) => {
 }
 
 const drag = (evt) => {
-  console.debug('===> DRAG')
-  console.debug(evt)
-  evt.target.style.border='1px dotted red'
+  console.debug('===> DRAG', evt)
 }
 
 const start = (evt) => {
-  console.debug('===> START')
-  console.debug(evt)
-  evt.target.style.opacity='0.4'
-  evt.target.style.border='1px dotted black'
+  console.debug('===> START', evt)
+  evt.target.classList.add('opacity-25', 'border-indigo-500', 'border')
   evt.dataTransfer.dropEffect = "move";
   evt.dataTransfer.setData('text/plain', evt.target.getAttribute('data-acl_id'))
 }
 
 const end = (evt) => {
-  console.debug('===> END')
-  console.debug(evt)
-  evt.target.style.opacity='1'
-  evt.target.style.border='0'
+  console.debug('===> END', evt)
+  const tr = get_tr(evt.target)
+  tr.classList.remove('opacity-25', 'border-indigo-500', 'border')
 }
 
 const enter = (evt) => {
-  console.debug('===> ENTER')
-  console.debug(evt)
+  console.debug('===> ENTER', evt)
   evt.preventDefault()
-
 }
 
 const leave = (evt) => {
-  console.debug('===> LEAVE')
-  console.debug(evt)
+  console.debug('===> LEAVE', evt)
 
   const tr = get_tr(evt.target)
-  tr.style.border='0'
+  tr.classList.remove('border-lime-500', 'border')
 }
 
 const over = (evt) => {
-  console.debug('===> OVER')
-  console.debug(evt)
+  console.debug('===> OVER', evt)
   evt.preventDefault()
 
   const tr = get_tr(evt.target)
-  tr.style.border='4px dotted red'
+  tr.classList.add('border-lime-500', 'border')
 }
 
 const drop = (evt) => {
-  console.debug('===> DROP')
-  console.debug(evt)
+  console.debug('===> DROP', evt)
 
   const tr = get_tr(evt.target)
-  tr.style.border='0'
+  tr.classList.remove('border-lime-500', 'border')
 
   const acl_id = evt.dataTransfer.getData('text/plain')
   const weight = tr.getAttribute('data-weight')

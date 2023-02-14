@@ -62,6 +62,7 @@ const edit_members = (id) => {
           </div>
         </td>
         <td class="text-center">
+          <font-awesome-icon icon="fa-solid fa-badge-check" />
           <CheckIcon v-if="account.enabled" class="inline-block h-4 w-4" />
           <XMarkIcon v-if="!account.enabled" class="inline-block h-4 w-4" />
         </td>
