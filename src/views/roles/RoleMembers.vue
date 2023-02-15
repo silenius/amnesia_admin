@@ -2,7 +2,6 @@
 
 import { ref, watch, computed, onMounted, onUpdated } from 'vue'
 import { useRole, useRoles } from '@/composables/roles.js'
-import { useAccounts } from '@/composables/accounts.js'
 import AccountTable from '@/components/account/AccountTable.vue'
 
 const props = defineProps({
@@ -10,7 +9,6 @@ const props = defineProps({
 })
 
 const { getMembers, addMember, deleteMember } = useRole()
-const { getAccounts, accounts } = useAccounts()
 
 onMounted( () => {
 

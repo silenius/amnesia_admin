@@ -13,8 +13,6 @@ onMounted( () => {
   getAccounts()
 })
 
-
-
 </script>
 
 <template>

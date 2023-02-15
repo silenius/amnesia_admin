@@ -12,7 +12,6 @@ import {
     faUpDownLeftRight,
     faUserAstronaut,
     faUserGroup,
-    faBadgeCheck
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
