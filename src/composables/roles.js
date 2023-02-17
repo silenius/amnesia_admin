@@ -14,10 +14,6 @@ const role_to_formdata = (role) => {
 export function useRoles() {
 
     const roles = ref([])
-    const role = ref({
-        name: '',
-        description: ''
-    })
 
     const getRoles = async () => {
         const res = await useFetchBackend('roles/browse')
@@ -32,10 +28,10 @@ export function useRoles() {
         getRoles()
     }
 
-    const createRole = async () => {
+    const createRole = async (role) => {
         const data = role_to_formdata(role)
 
-        const res = await useFetchBackend('roles', {
+        return await useFetchBackend('roles', {
             method: 'POST',
             body: data
         })
@@ -55,7 +51,6 @@ export function useRoles() {
 // return readonly() ?
 
 const role = ref({})
-const errors = ref({})
 
 export function useRole() {
     const { isEmpty, minLength } = useValidators()
@@ -134,22 +129,21 @@ export function useRole() {
     const updateRole = async () => {
         const data = role_to_formdata(role)
 
-        const res = await useFetchBackend(`roles/${role.value.id}`, {
+        return await useFetchBackend(`roles/${role.value.id}`, {
             method: 'PUT',
             body: data
         })
     }
 
     const validateName = (value) => {
-        errors.value.name = !value ? isEmpty('name', value) : minLength('name', value, 4)
+        return !value ? isEmpty('name', value) : minLength('name', value, 4)
     }
 
     const validateDescription = (value) => {
-        return true
+        return false
     }
 
     return {
-        errors: errors,
         validateName,
         validateDescription,
         updateRole,

@@ -10,12 +10,7 @@ const props = defineProps({
 
 const { getRole, role } = useRole()
 
-onUpdated( () => {
-  console.log('===>>> RoleIndex updated')
-})
-
 onMounted( () => {
-    console.log('===>>> RoleIndex mounted')
     getRole(props.role_id)
 })
 

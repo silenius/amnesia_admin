@@ -1,10 +1,33 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, provide, computed, onMounted } from 'vue'
 
 import RoleForm from '@/components/role/RoleForm.vue'
 import { useRoles } from '@/composables/roles.js'
 
-const { createRole, role } = useRoles()
+const { createRole } = useRoles()
+
+const role = ref({
+  name: '',
+  description: ''
+})
+
+const errors = ref({})
+
+const setError = (key, value) => {
+  errors.value[key] = value
+}
+
+provide('errors', {
+  errors,
+  setError
+})
+
+
+const create = async () => {
+  const res = await createRole(role).catch(e => {
+    console.log('ERROR')
+  })
+}
 
 </script>
 
@@ -13,7 +36,7 @@ const { createRole, role } = useRoles()
     <RoleForm 
       :role="role" 
       :action="'Create role'"
-      @submit_role="createRole" 
+      @submit-role="create" 
     />
 
 </template>

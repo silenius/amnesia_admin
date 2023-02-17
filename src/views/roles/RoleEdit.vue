@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, provide, computed, onMounted } from 'vue'
 
 import RoleForm from '@/components/role/RoleForm.vue'
 import { useRole } from '@/composables/roles.js'
@@ -11,6 +11,17 @@ const props = defineProps({
 
 const { updateRole } = useRole()
 
+const errors = ref({})
+
+const setError = (key, value) => {
+  errors.value[key] = value
+}
+
+provide('errors', {
+  errors,
+  setError
+})
+
 </script>
 
 <template>
@@ -18,6 +29,6 @@ const { updateRole } = useRole()
     <RoleForm 
       :role="role" 
       :action="'Update role'"
-      @submit_role="updateRole" 
+      @submit-role="updateRole" 
     />
 </template>

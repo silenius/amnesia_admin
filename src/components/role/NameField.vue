@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
@@ -19,10 +19,12 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'update:name'
+  'update:name',
 ])
 
-const { errors, validateName } = useRole()
+const { errors, setError } = inject('errors')
+
+const { validateName } = useRole()
 
 const value = computed({
 
@@ -31,7 +33,7 @@ const value = computed({
   },
 
   set(value) {
-    validateName(value)
+    setError('name', validateName(value))
     emit('update:name', value)
   }
 
