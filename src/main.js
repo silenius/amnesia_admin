@@ -12,11 +12,17 @@ import {
     faUpDownLeftRight,
     faUserAstronaut,
     faUserGroup,
+    faCircleCheck,
+    faCircleXmark,
+    faShieldHalved
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
 library.add(faUserAstronaut)
 library.add(faUserGroup)
+library.add(faCircleCheck)
+library.add(faCircleXmark)
+library.add(faShieldHalved)
 
 const app = createApp(App)
 const pinia = createPinia()

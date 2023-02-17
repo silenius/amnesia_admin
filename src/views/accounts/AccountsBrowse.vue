@@ -16,5 +16,5 @@ onMounted( () => {
 </script>
 
 <template>
-    <AccountTable :accounts="accounts"/>
+    <AccountTable :accounts="accounts" :actions="true"/>
 </template>

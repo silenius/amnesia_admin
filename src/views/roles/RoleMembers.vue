@@ -35,7 +35,7 @@ const delete_member = async (id) => {
   <div>
     / Members
 
-    <AccountTable :accounts="role.members">
+    <AccountTable :accounts="role.members" :enabled="false">
       <template #headers>
         <th class="text-center">Member</th>
       </template>

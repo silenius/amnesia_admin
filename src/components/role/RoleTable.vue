@@ -108,13 +108,8 @@ const edit_members = (id) => {
 </transition>
                         </Menu>
                     </div>
-
-
                 </td>
-
             </tr>
         </tbody>
-
     </table>
-
-    </template>
+</template>
