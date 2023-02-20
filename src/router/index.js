@@ -6,6 +6,21 @@ const routes = [
         name: 'home',
         component: () => import('../views/HomeView.vue')
     },
+
+    {
+        path: '/contents',
+        name: 'contents',
+        component: () => import('../views/contents/ContentsIndex.vue'),
+        children: [
+            {
+                name: 'browse-content',
+                path: '',
+                component: () => import('../views/contents/ContentsBrowse.vue')
+            },
+        ]
+    },
+
+
     {
         path: '/accounts',
         name: 'accounts',
