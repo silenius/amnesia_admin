@@ -8,13 +8,16 @@ const routes = [
     },
 
     {
-        path: '/contents',
+        path: '/:id(\\d+)',
         name: 'contents',
         component: () => import('../views/contents/ContentsIndex.vue'),
+        props: (route) => ({ 
+            content_id: parseInt(route.params.id) 
+        }),
         children: [
             {
                 name: 'browse-content',
-                path: '',
+                path: 'browse',
                 component: () => import('../views/contents/ContentsBrowse.vue')
             },
         ]

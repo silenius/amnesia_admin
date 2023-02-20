@@ -1,23 +1,21 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 
-const { browse } = useFolder()
-
-const contents = ref([])
-
+const { getFolder, browse, folder } = useFolder()
 
 onMounted( async () => {
-  contents.value = await browse()
+  await browse()
 })
+
 
 
 </script>
 
 <template>
 
-  <FolderBrowser :contents="contents" />
+  <FolderBrowser :contents="folder.contents" />
 
 </template>

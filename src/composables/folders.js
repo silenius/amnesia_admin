@@ -1,15 +1,25 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, computed, readonly, watch } from 'vue';
-import { useValidators } from '@/composables/validators.js'
+import { ref, readonly } from 'vue';
+
+const folder = ref({})
 
 export function useFolder() {
 
+    const getFolder = async (id) => {
+        const res = await useFetchBackend(`folder/${id}`)
+        folder.value = res
+
+    }
+
     const browse = async () => {
-        return await useFetchBackend('1/browse')
+        const res = await useFetchBackend(`folder/${folder.id}/browse`)
+        folder.value.contents = res
 
     }
 
     return {
+        folder: readonly(folder),
+        getFolder,
         browse
     }
 

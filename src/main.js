@@ -15,7 +15,9 @@ import {
     faCircleCheck,
     faCircleXmark,
     faShieldHalved,
-    faFolderTree
+    faFolderTree,
+    faFolder,
+    faFileLines
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
@@ -25,6 +27,8 @@ library.add(faCircleCheck)
 library.add(faCircleXmark)
 library.add(faShieldHalved)
 library.add(faFolderTree)
+library.add(faFolder)
+library.add(faFileLines)
 
 const app = createApp(App)
 const pinia = createPinia()
