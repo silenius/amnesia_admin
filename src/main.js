@@ -17,7 +17,8 @@ import {
     faShieldHalved,
     faFolderTree,
     faFolder,
-    faFileLines
+    faFileLines,
+    faArrowUpFromBracket
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
@@ -29,6 +30,7 @@ library.add(faShieldHalved)
 library.add(faFolderTree)
 library.add(faFolder)
 library.add(faFileLines)
+library.add(faArrowUpFromBracket)
 
 const app = createApp(App)
 const pinia = createPinia()

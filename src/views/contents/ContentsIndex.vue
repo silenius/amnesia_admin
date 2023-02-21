@@ -1,23 +1,28 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { watch, onMounted, onUpdated } from 'vue'
+import { RouterView } from 'vue-router'
+import { useFolder } from '@/composables/folders.js'
 
 const props = defineProps({
     content_id: Number
 })
 
-const { getRole, role } = useRole()
+const { getFolder, folder } = useFolder()
 
-onMounted( () => {
-    getRole(props.role_id)
+onMounted(async () => {
+    await getFolder(props.content_id)
 })
 
+watch(() => props.content_id, async () => {
+    await getFolder(props.content_id)
+})
 
 </script>
 
 <template>
     <div>
         <h1>CONTENTS</h1>
-        <RouterView />
+        <RouterView :content="folder" />
     </div>
 
 </template>

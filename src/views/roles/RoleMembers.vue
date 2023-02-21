@@ -10,13 +10,11 @@ const props = defineProps({
 
 const { getMembers, addMember, deleteMember } = useRole()
 
-onMounted( () => {
 
-  watch(() => props.role, (r, old_r) => {
-    getMembers()
-  })
-
+watch(() => props.role, async () => {
+  await getMembers()
 })
+
 
 const add_member = async (id) => {
   await addMember(id)

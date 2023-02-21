@@ -6,15 +6,14 @@ const folder = ref({})
 export function useFolder() {
 
     const getFolder = async (id) => {
-        const res = await useFetchBackend(`folder/${id}`)
+        const res = await useFetchBackend(`${id}`)
         folder.value = res
 
     }
 
     const browse = async () => {
-        const res = await useFetchBackend(`folder/${folder.id}/browse`)
+        const res = await useFetchBackend(`${folder.value.id}/browse`)
         folder.value.contents = res
-
     }
 
     return {

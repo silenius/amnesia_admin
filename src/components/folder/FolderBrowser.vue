@@ -10,13 +10,14 @@ import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import Avatar from "vue-boring-avatars";
 
 defineProps({
-  contents: Array
+  contents: Array,
+  folder: Object
 })
 
 </script>
 
 <template>
-    <table class="table-auto border-spacing-4 text-xs">
+    <table class="border-collapse table-fixed text-xs">
         <thead>
             <tr class="text-left bg-slate-100">
                 <th class="p-2">Title</th>
@@ -28,23 +29,29 @@ defineProps({
         </thead>
 
         <tbody>
+            <tr v-if="folder.container_id" class="text-slate-600">  
+              <td colspan="5">
+                <button @click="$emit('browse', folder.container_id)">
+                <font-awesome-icon class="h-4 w-4 align-middle" icon="fa-solid
+              fa-arrow-up-from-bracket p-4" /> back to {{ folder.title }}</button>
+              </td>
+            </tr>
             <tr v-for="content in contents" :key="content.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
-                <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
+                <td class="tracking-wide whitespace-nowrap">
                     <button @click="$emit('browse', content.id)" v-if="content.type.name=='folder'">{{ content.title }}</button>
                     <template v-if="content.type.name!='folder'">{{ content.title }}</template>
                 </td>
                 <td>
                     <font-awesome-icon class="h-4 w-4" :icon="['fa-solid', content.type.icons['fa']]" />
                 </td>
-                <td class="text-center">
+                <td>
                      {{ content.description }}
                 </td>
-                <td class="p-2 tracking-wide whitespace-nowrap">
+                <td class="tracking-wide whitespace-nowrap">
                     <div class="grid grid-flow-col w-fit gap-2">
-                        <Avatar :size="32" :name="content.owner.full_name" variant="bauhaus" />
+                        <Avatar :size="16" :name="content.owner.full_name" variant="bauhaus" />
                         <span class="flex flex-col">
                             {{ content.owner.full_name }}
-                            <small>{{ content.owner.email }}</small>
                         </span>
                     </div>
                 </td>
