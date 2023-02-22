@@ -1,26 +1,36 @@
 <script setup>
-import { ref, onUpdated, onMounted, watch } from 'vue'
+
+import { useAttrs, watch } from 'vue'
 import { useFolder } from '@/composables/folders.js'
-import { RouterView, useRouter } from 'vue-router'
+import { useContent } from '@/composables/contents.js'
+import { useRouter } from 'vue-router'
 
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
+
 const props = defineProps({
     content: Object
 })
 
 const router = useRouter()
 
-const { browse, getFolder, folder } = useFolder()
+const { browse, contents } = useFolder()
+
+const { destroyContent } = useContent()
 
 const doBrowse = async (id) => await router.push({
-  name: 'browse-content', params: {
-    id: id
-  }
+  name: 'browse-content', params: { id: id }
 })
 
 watch(() => props.content, async () => {
   await browse()
 })
+
+const deleteContent = async (id) => {
+    await destroyContent(id)
+    await browse()
+}
+
+
 
 </script>
 
@@ -28,7 +38,9 @@ watch(() => props.content, async () => {
 
   <FolderBrowser
     @browse="doBrowse"
-    :folder="folder"
-    :contents="folder.contents" />
+    @delete-content="deleteContent"
+    :folder="content"
+    :contents="contents" 
+/>
 
 </template>

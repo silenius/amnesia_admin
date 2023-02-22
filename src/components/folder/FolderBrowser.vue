@@ -1,11 +1,6 @@
 <script setup>
 
-import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-
-import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 import Avatar from "vue-boring-avatars";
 
@@ -17,37 +12,35 @@ defineProps({
 </script>
 
 <template>
-    <table class="border-collapse table-fixed text-xs">
+    <table class="border-collapse table-fixed">
         <thead>
-            <tr class="text-left bg-slate-100">
+            <tr class="text-left">
                 <th class="p-2">Title</th>
-                <th></th>
-                <th>Description</th>
-                <th>Owner</th>
-                <th>Actions</th>
+                <th class="p-2">Description</th>
+                <th class="p-2">Owner</th>
+                <th class="p-2">Actions</th>
             </tr>
         </thead>
 
         <tbody>
             <tr v-if="folder.container_id" class="text-slate-600">  
-              <td colspan="5">
+              <td colspan="5" class="p-2">
                 <button @click="$emit('browse', folder.container_id)">
                 <font-awesome-icon class="h-4 w-4 align-middle" icon="fa-solid
               fa-arrow-up-from-bracket p-4" /> back to {{ folder.title }}</button>
               </td>
             </tr>
             <tr v-for="content in contents" :key="content.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
-                <td class="tracking-wide whitespace-nowrap">
+                <td class="whitespace-nowrap p-2">
+                    <font-awesome-icon class="h-4 w-4 mr-2" :icon="['fa-solid',
+                        content.type.icons['fa']]" />
                     <button @click="$emit('browse', content.id)" v-if="content.type.name=='folder'">{{ content.title }}</button>
                     <template v-if="content.type.name!='folder'">{{ content.title }}</template>
                 </td>
-                <td>
-                    <font-awesome-icon class="h-4 w-4" :icon="['fa-solid', content.type.icons['fa']]" />
-                </td>
-                <td>
+                <td class="p-2">
                      {{ content.description }}
                 </td>
-                <td class="tracking-wide whitespace-nowrap">
+                <td class="p-2 whitespace-nowrap">
                     <div class="grid grid-flow-col w-fit gap-2">
                         <Avatar :size="16" :name="content.owner.full_name" variant="bauhaus" />
                         <span class="flex flex-col">
@@ -55,7 +48,7 @@ defineProps({
                         </span>
                     </div>
                 </td>
-                <td>
+                <td class="p-2">
                     <div class="text-right">
                         <Menu as="div" class="relative text-left">
                             <div>
@@ -76,12 +69,12 @@ defineProps({
                                     <div>
                                         <MenuItem v-slot="{ active }">
                                         <button @click="$emit('edit-content', content.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                                            <PencilSquareIcon class="h-4 w-4"/> Edit
+                                            <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-pen-to-square" /> Edit
                                         </button>
                                         </MenuItem>
                                         <MenuItem v-slot="{ active }">
                                         <button @click="$emit('delete-content', content.id)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                                            <TrashIcon class="h-4 w-4" /> Delete
+                                            <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-trash-can" /> Delete
                                         </button>
                                         </MenuItem>
                                     </div>

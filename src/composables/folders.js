@@ -1,24 +1,22 @@
 import { useFetchBackend } from '@/composables/fetch.js'
 import { ref, readonly } from 'vue';
 
-const folder = ref({})
+import { useContent } from '@/composables/contents.js'
+
+const { content: folder } = useContent()
 
 export function useFolder() {
 
-    const getFolder = async (id) => {
-        const res = await useFetchBackend(`${id}`)
-        folder.value = res
-
-    }
+    const contents = ref([])
 
     const browse = async () => {
         const res = await useFetchBackend(`${folder.value.id}/browse`)
-        folder.value.contents = res
+        contents.value = res
     }
 
     return {
         folder: readonly(folder),
-        getFolder,
+        contents: readonly(contents),
         browse
     }
 

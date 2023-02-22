@@ -21,7 +21,7 @@ export function useRoles() {
     }
 
     const destroyRole = async (id) => {
-        const res = await useFetchBackend(`roles/${id}`, {
+        await useFetchBackend(`roles/${id}`, {
             method: 'DELETE'
         })
 

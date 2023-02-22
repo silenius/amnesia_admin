@@ -1,20 +1,16 @@
 <script setup>
-import { watch, onMounted, onUpdated } from 'vue'
+import { watchEffect } from 'vue'
 import { RouterView } from 'vue-router'
-import { useFolder } from '@/composables/folders.js'
+import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({
     content_id: Number
 })
 
-const { getFolder, folder } = useFolder()
+const { getContent, content, destroyContent } = useContent()
 
-onMounted(async () => {
-    await getFolder(props.content_id)
-})
-
-watch(() => props.content_id, async () => {
-    await getFolder(props.content_id)
+watchEffect(async () => {
+    await getContent(props.content_id)
 })
 
 </script>
@@ -22,7 +18,9 @@ watch(() => props.content_id, async () => {
 <template>
     <div>
         <h1>CONTENTS</h1>
-        <RouterView :content="folder" />
+        <RouterView 
+            :content="content" 
+        />
     </div>
 
 </template>
