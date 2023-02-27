@@ -1,10 +1,10 @@
 <script setup>
 import { inject } from 'vue'
-import NameField from '@/components/role/NameField.vue'
-import DescriptionField from '@/components/role/DescriptionField.vue'
+import ContentTitle from '@/components/content/ContentTitle.vue'
+import ContentDescription from '@/components/content/ContentDescription.vue'
 
 const props = defineProps({
-  role: {
+  folder: {
     type: Object,
     required: true
   },
@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'submit-role'
+  'submit-folder'
 ])
 
 const errors = inject('errors')
@@ -23,9 +23,9 @@ const errors = inject('errors')
 </script>
 
 <template>
-  <form @submit.prevent="$emit('submit-role')">
-    <NameField v-model:name="role.name" />
-    <DescriptionField v-model:description="role.description" />
+  <form @submit.prevent="$emit('submit-folder')">
+    <ContentTitle v-model:title="folder.title" />
+    <ContentDescription v-model:description="folder.description" />
     <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>

@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, inject, computed } from 'vue'
+import { inject, computed } from 'vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({

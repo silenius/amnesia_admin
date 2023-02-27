@@ -1,9 +1,12 @@
 import { useFetchBackend } from '@/composables/fetch.js'
 import { ref, readonly } from 'vue';
+import { useValidators } from '@/composables/validators.js'
 
 const content = ref({})
 
 export function useContent() {
+
+    const { isEmpty, minLength } = useValidators()
 
     const getContent = async (id) => {
         const res = await useFetchBackend(`${id}`)
@@ -16,10 +19,20 @@ export function useContent() {
         })
     }
 
+    const validateTitle = (value) => {
+        return !value ? isEmpty('title', value) : minLength('title', value, 4)
+    }
+
+    const validateDescription = (value) => {
+        return false
+    }
+
     return {
-        content: readonly(content),
+        content: content,
         getContent,
         destroyContent,
+        validateTitle,
+        validateDescription
     }
 
 }

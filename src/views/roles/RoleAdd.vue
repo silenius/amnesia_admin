@@ -24,7 +24,7 @@ provide('errors', {
 
 
 const create = async () => {
-  const res = await createRole(role).catch(e => {
+  await createRole(role).catch(e => {
     console.log('ERROR')
   })
 }

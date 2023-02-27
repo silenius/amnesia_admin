@@ -18,7 +18,7 @@
 <template>
 
   <div :class="sectionClass">
-    <button @click="this.$router.push('contents')" :class="buttonClass">
+    <button @click="this.$router.push({name: 'browse-content', params: {id: 1}})" :class="buttonClass">
        <font-awesome-icon :class="faClass" icon="fa-solid fa-folder-tree" />
       <div>Content</div>
     </button>

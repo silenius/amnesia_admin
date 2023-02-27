@@ -19,6 +19,7 @@ watchEffect(async () => {
     <div>
         <h1>CONTENTS</h1>
         <RouterView 
+            v-if="content.id" 
             :content="content" 
         />
     </div>

@@ -20,6 +20,12 @@ const routes = [
                 path: 'browse',
                 component: () => import('../views/contents/ContentsBrowse.vue')
             },
+            {
+                name: 'edit-content',
+                path: 'edit',
+                component: () => import('../views/contents/ContentEdit.vue'),
+            },
+
         ]
     },
 
