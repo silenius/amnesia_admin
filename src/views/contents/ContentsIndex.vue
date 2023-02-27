@@ -7,7 +7,7 @@ const props = defineProps({
     content_id: Number
 })
 
-const { getContent, content, destroyContent } = useContent()
+const { getContent, content } = useContent()
 
 watchEffect(async () => {
     await getContent(props.content_id)
@@ -22,5 +22,4 @@ watchEffect(async () => {
             :content="content" 
         />
     </div>
-
 </template>

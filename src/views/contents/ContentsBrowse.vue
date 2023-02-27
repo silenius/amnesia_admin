@@ -1,6 +1,6 @@
 <script setup>
 
-import { useAttrs, watch } from 'vue'
+import { watch } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import { useRouter } from 'vue-router'
@@ -30,8 +30,6 @@ const deleteContent = async (id) => {
     await browse()
 }
 
-
-
 </script>
 
 <template>
@@ -41,6 +39,6 @@ const deleteContent = async (id) => {
     @delete-content="deleteContent"
     :folder="content"
     :contents="contents" 
-/>
+  />
 
 </template>

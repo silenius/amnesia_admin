@@ -10,6 +10,7 @@ export function useFolder() {
     const contents = ref([])
 
     const browse = async () => {
+    console.log(folder.value.id)
         const res = await useFetchBackend(`${folder.value.id}/browse`)
         contents.value = res
     }
