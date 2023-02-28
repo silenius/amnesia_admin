@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 
 const props = defineProps({
-    content: Object
+  content: Object
 })
 
 const router = useRouter()
@@ -18,16 +18,23 @@ const { browse, contents } = useFolder()
 const { destroyContent } = useContent()
 
 const doBrowse = async (id) => await router.push({
-  name: 'browse-content', params: { id: id }
+  name: 'browse-content', 
+  params: { id: id }
 })
+
+const doEdit = async (id) => await router.push({
+  name: 'edit-content', 
+  params: { id: id }
+})
+
 
 watch(() => props.content, async () => {
   await browse()
 })
 
 const deleteContent = async (id) => {
-    await destroyContent(id)
-    await browse()
+  await destroyContent(id)
+  await browse()
 }
 
 </script>
@@ -37,8 +44,9 @@ const deleteContent = async (id) => {
   <FolderBrowser
     @browse="doBrowse"
     @delete-content="deleteContent"
+    @edit-content="doEdit"
     :folder="content"
     :contents="contents" 
   />
 
-</template>
+  </template>

@@ -27,6 +27,9 @@ provide('errors', {
 
 <template>
     <h1>Edit content</h1>
-    <component :is="mapping[content.type.name]" :content="content" v-if="content" />
+    <component 
+      :is="mapping[content.type.name]" 
+      :content="content"
+    />
 
 </template>

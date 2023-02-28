@@ -20,7 +20,13 @@ import {
     faFileLines,
     faArrowUpFromBracket,
     faTrashCan,
-    faPenToSquare
+    faPenToSquare,
+    faCalendar,
+    faFile,
+    faAtom,
+    faMicrophoneLines,
+    faFileImage,
+    faFilePdf,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
@@ -35,6 +41,13 @@ library.add(faFileLines)
 library.add(faArrowUpFromBracket)
 library.add(faTrashCan)
 library.add(faPenToSquare)
+library.add(faCalendar)
+library.add(faFile)
+library.add(faAtom)
+library.add(faMicrophoneLines)
+library.add(faFileImage)
+library.add(faFilePdf)
+
 
 const app = createApp(App)
 const pinia = createPinia()
