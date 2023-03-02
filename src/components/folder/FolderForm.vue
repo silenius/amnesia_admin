@@ -9,6 +9,7 @@ import ContentIndexed from '@/components/content/fields/ContentIndexed.vue'
 import FolderExcludeNav from '@/components/folder/fields/FolderExcludeNav.vue'
 import ContentPublishingDate from '@/components/content/fields/ContentPublishingDate.vue'
 import ContentExpirationDate from '@/components/content/fields/ContentExpirationDate.vue'
+import FolderDefaultPage from '@/components/folder/fields/FolderDefaultPage.vue'
 
 const props = defineProps({
   folder: {
@@ -53,6 +54,7 @@ const errors = inject('errors')
           <ContentExpirationDate v-model:expiration="folder.expiration" />
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
           <ContentIndexed v-model:is_fts="folder.is_fts" />
+          <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
         </TabPanel>
 
         <!-- SECURITY -->

@@ -1,24 +1,37 @@
 <template>
   <div>
     <label class="block">
-      <input type="checkbox" v-model="enabled" />
       <span>Expiration date</span>
-      <input v-model="value" v-if="enabled" type="datetime-local" />
+
+      <flat-pickr
+        v-model="value"
+        :config="config"
+        placeholder="Select date"
+        name="expiration"/>
+
+      <button @click.prevent title="Clear" data-clear>
+        <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-trash-can" />
+      </button>
+
       <span class="text-red-500" v-if="errors.expiration">
         {{ errors.expiration }}
       </span>
     </label>
   </div>
-</template>
+  </template>
 
 <script setup>
-import { inject, watch, computed, ref } from 'vue'
+import { inject, computed, ref } from 'vue'
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
+
+const config = ref({
+  wrap: true
+})
 
 const props = defineProps({
   expiration: String
 })
-
-const enabled = ref(false)
 
 const emit = defineEmits([
   'update:expiration',

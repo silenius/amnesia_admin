@@ -1,9 +1,9 @@
 <script setup>
 
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
-import { useRouter } from 'vue-router'
 
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 
@@ -13,9 +13,11 @@ const props = defineProps({
 
 const router = useRouter()
 
-const { browse, contents } = useFolder()
+const { browse } = useFolder()
 
 const { destroyContent } = useContent()
+
+const contents = ref([])
 
 const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
@@ -29,12 +31,12 @@ const doEdit = async (id) => await router.push({
 
 
 watch(() => props.content, async () => {
-  await browse()
+  contents.value = await browse()
 })
 
 const deleteContent = async (id) => {
   await destroyContent(id)
-  await browse()
+  contents.value = await browse()
 }
 
 </script>
