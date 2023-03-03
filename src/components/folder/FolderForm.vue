@@ -1,5 +1,5 @@
 <script setup>
-import { inject, watch } from 'vue'
+import { onMounted, inject, watch } from 'vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -10,6 +10,8 @@ import FolderExcludeNav from '@/components/folder/fields/FolderExcludeNav.vue'
 import ContentPublishingDate from '@/components/content/fields/ContentPublishingDate.vue'
 import ContentExpirationDate from '@/components/content/fields/ContentExpirationDate.vue'
 import FolderDefaultPage from '@/components/folder/fields/FolderDefaultPage.vue'
+import FolderPolymorphicLoading from '@/components/folder/fields/FolderPolymorphicLoading.vue'
+import ContentTypes from '@/components/content/fields/ContentTypes.vue'
 
 const props = defineProps({
   folder: {
@@ -55,6 +57,11 @@ const errors = inject('errors')
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
           <ContentIndexed v-model:is_fts="folder.is_fts" />
           <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
+          <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
+          <ContentTypes 
+            v-model:polymorphic_children="folder.polymorphic_children" 
+            :polymorphic_loading="folder.polymorphic_loading"
+          />
         </TabPanel>
 
         <!-- SECURITY -->
