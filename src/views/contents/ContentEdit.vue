@@ -31,5 +31,4 @@ provide('errors', {
       :is="mapping[content.type.name]" 
       :content="content"
     />
-
 </template>

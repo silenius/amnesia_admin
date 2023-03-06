@@ -1,11 +1,8 @@
 <script setup>
 
-import { ref, watch, computed, onMounted, onUpdated } from 'vue'
+import { watch, onMounted } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { ViewfinderCircleIcon } from '@heroicons/vue/20/solid'
-import { useRole, useRoles } from '@/composables/roles.js'
-import { useAccounts } from '@/composables/accounts.js'
-import AccountTable from '@/components/account/AccountTable.vue'
+import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
   role: Object

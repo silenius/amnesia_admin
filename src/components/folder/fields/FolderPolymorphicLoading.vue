@@ -2,10 +2,10 @@
   <div>
     <label class="block">
       <input type="checkbox" v-model="value"/>
-      <span>Select a default page</span>
+      <span>Polymorphic loading</span>
     </label>
   </div>
-  </template>
+</template>
 
 <script setup>
 import { computed } from 'vue'
@@ -29,6 +29,4 @@ const value = computed({
   }
 
 })
-
-
 </script>

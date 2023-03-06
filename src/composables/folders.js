@@ -1,5 +1,4 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, readonly } from 'vue';
 
 import { useContent } from '@/composables/contents.js'
 
@@ -15,7 +14,8 @@ const folder_to_formdata = (folder) => {
       'is_fts',
       'effective',
       'expiration',
-      'index_content_id'
+      'index_content_id',
+      'polymorphic_loading',
     ]
 
     for (let key of fields) {
@@ -24,6 +24,13 @@ const folder_to_formdata = (folder) => {
       } else {
         data.append(key, folder.value[key])
       }
+    }
+    
+    if (folder.value.polymorphic_loading 
+        && folder.value.polymorphic_children) {
+        folder.value.polymorphic_children.map(
+            (c) => data.append('polymorphic_children_ids', c.id)
+        )
     }
 
     return data
