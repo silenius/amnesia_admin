@@ -56,8 +56,16 @@ const getIndexCandidates = async () => {
   })
 }
 
-const getOrders = async (id=null, opts = []) => {
-  const options = new URLSearchParams(opts)
+const getOrders = async (id=null, opts = {}) => {
+  const options = new URLSearchParams()
+  
+  if (opts.pl) {
+    options.append('pl', opts.pl)
+  }
+
+  if (opts.pc) {
+    opts.pc.forEach(i => options.append('pc', i))
+  }
   
   let url=''
 

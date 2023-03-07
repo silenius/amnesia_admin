@@ -8,14 +8,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="order in orders.orders">
+      <tr v-for="order in orders.orders" :key="order.key">
         <td>
-          {{ order }}
-          <input type="checkbox" /> {{ order.checked }}
+          <input type="checkbox" v-model="order.checked" />
           {{ order.doc }} ({{ order.cls }} {{ order.prop }})
         </td>
-        <td>{{ order.direction }}</td>
-        <td>{{ order.nulls }}</td>
+        <td>
+          <select v-model="order.direction">
+            <option value="asc">asc</option>
+            <option value="desc">desc</option>
+          </select>
+        </td>
+        <td>
+          <select v-model="order.nulls">
+            <option value="first">first</option>
+            <option value="last">last</option>
+          </select>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -24,7 +33,7 @@
 
 <script setup>
 
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 
 const { getOrders, folder } = useFolder()
@@ -32,18 +41,52 @@ const { getOrders, folder } = useFolder()
 const props = defineProps({
   polymorphic_children: {
     type: Array
+  },
+  polymorphic_loading : {
+    type: Boolean
   }
+})
+
+const emit = defineEmits([
+  'update:default_order'
+])
+
+const selected = computed(() => {
+  return orders.value.orders.filter(
+    item => item.checked
+  )
 })
 
 const orders = ref([])
 
-watch(() => props.polymorphic_children, async (v) => {
+watch(() => orders, () => {
+  emit('update:default_order', selected.value)
+}, { deep: true })
+
+watch(() => props.polymorphic_children, async () => {
   orders.value = await getOrders(folder.value.id, {
-    pl: true
+    pl: true,
+    pc: props.polymorphic_children.map(x => x.id)
   })
 
-  console.log(orders)
-})
+  if (folder.value.default_order) {
+    folder.value.default_order.forEach((i, idx) => {
+      for (const [idx2, o] of orders.value.orders.entries()) {
+        if (i.key === o.key) {
+          o.nulls = i.nulls
+          o.direction = i.direction
+          o.checked = true
 
+          orders.value.orders.splice(
+            idx, 0, orders.value.orders.splice(idx2, 1)[0]
+          )
+
+          break;
+        }
+      }
+      
+    })
+  }
+}, { immediate: true })
 
 </script>
