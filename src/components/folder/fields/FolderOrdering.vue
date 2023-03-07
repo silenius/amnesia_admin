@@ -8,12 +8,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="order in orders">
+      <tr v-for="order in orders.orders">
         <td>
-          <input type="checkbox" />
-          {{ order.doc }}
+          {{ order }}
+          <input type="checkbox" /> {{ order.checked }}
+          {{ order.doc }} ({{ order.cls }} {{ order.prop }})
         </td>
-
+        <td>{{ order.direction }}</td>
+        <td>{{ order.nulls }}</td>
       </tr>
     </tbody>
   </table>
@@ -22,6 +24,26 @@
 
 <script setup>
 
+import { ref, watch } from 'vue'
+import { useFolder } from '@/composables/folders.js'
+
+const { getOrders, folder } = useFolder()
+
+const props = defineProps({
+  polymorphic_children: {
+    type: Array
+  }
+})
+
+const orders = ref([])
+
+watch(() => props.polymorphic_children, async (v) => {
+  orders.value = await getOrders(folder.value.id, {
+    pl: true
+  })
+
+  console.log(orders)
+})
 
 
 </script>

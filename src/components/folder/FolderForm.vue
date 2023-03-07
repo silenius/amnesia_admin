@@ -11,6 +11,7 @@ import ContentPublishingDate from '@/components/content/fields/ContentPublishing
 import ContentExpirationDate from '@/components/content/fields/ContentExpirationDate.vue'
 import FolderDefaultPage from '@/components/folder/fields/FolderDefaultPage.vue'
 import FolderPolymorphicLoading from '@/components/folder/fields/FolderPolymorphicLoading.vue'
+import FolderOrdering from '@/components/folder/fields/FolderOrdering.vue'
 import ContentTypes from '@/components/content/fields/ContentTypes.vue'
 
 const props = defineProps({
@@ -61,6 +62,11 @@ const errors = inject('errors')
           <ContentTypes 
             v-model:polymorphic_children="folder.polymorphic_children" 
             :polymorphic_loading="folder.polymorphic_loading"
+          />
+
+          <FolderOrdering 
+            v-model:default_order="folder.default_order"
+            :polymorphic_children="folder.polymorphic_children" 
           />
         </TabPanel>
 

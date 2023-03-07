@@ -36,35 +36,48 @@ const folder_to_formdata = (folder) => {
     return data
 }
 
+const browse = async (opts = []) => {
+    const options = new URLSearchParams(opts)
+    return await useFetchBackend(`${folder.value.id}/browse?${options}`)
+}
+
+const updateFolder = async() => {
+    const data = folder_to_formdata(folder)
+
+    return await useFetchBackend(`${folder.value.id}`, {
+        method: 'PUT',
+        body: data
+    })
+}
+
+const getIndexCandidates = async () => {
+  return await browse({
+    filter_types: 'document'
+  })
+}
+
+const getOrders = async (id=null, opts = []) => {
+  const options = new URLSearchParams(opts)
+  
+  let url=''
+
+  if (id) {
+    url=id
+  } else {
+    url='folder'
+  }
+
+
+  return await useFetchBackend(`${url}/polymorphic_orders?${options}`)
+}
 
 
 export function useFolder() {
-
-    const browse = async (opts = []) => {
-        const options = new URLSearchParams(opts)
-        return await useFetchBackend(`${folder.value.id}/browse?${options}`)
-    }
-
-    const updateFolder = async() => {
-        const data = folder_to_formdata(folder)
-
-        return await useFetchBackend(`${folder.value.id}`, {
-            method: 'PUT',
-            body: data
-        })
-    }
-
-    const getIndexCandidates = async () => {
-      return await browse({
-        filter_types: 'document'
-      })
-    }
-
-    return {
-        folder: folder,
-        updateFolder,
-        getIndexCandidates,
-        browse
-    }
-
+  return {
+      folder: folder,
+      updateFolder,
+      getIndexCandidates,
+      browse,
+      getOrders
+  }
 }
