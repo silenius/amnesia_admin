@@ -28,9 +28,13 @@ const folder_to_formdata = (folder) => {
     
     if (folder.value.polymorphic_loading 
         && folder.value.polymorphic_children) {
-        folder.value.polymorphic_children.map(
-            (c) => data.append('polymorphic_children_ids', c.id)
+        folder.value.polymorphic_children.forEach(
+            c => data.append('polymorphic_children_ids', c.id)
         )
+    }
+
+    if (folder.value.default_order) {
+      data.append('default_order', JSON.stringify(folder.value.default_order))
     }
 
     return data
@@ -59,9 +63,7 @@ const getIndexCandidates = async () => {
 const getOrders = async (id=null, opts = {}) => {
   const options = new URLSearchParams()
   
-  if (opts.pl) {
-    options.append('pl', opts.pl)
-  }
+  options.append('pl', opts.pl)
 
   if (opts.pc) {
     opts.pc.forEach(i => options.append('pc', i))

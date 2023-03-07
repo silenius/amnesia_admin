@@ -67,6 +67,7 @@ const errors = inject('errors')
           <FolderOrdering 
             v-model:default_order="folder.default_order"
             :polymorphic_children="folder.polymorphic_children" 
+            :polymorphic_loading="folder.polymorphic_loading"
           />
         </TabPanel>
 
