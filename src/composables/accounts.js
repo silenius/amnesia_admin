@@ -12,7 +12,7 @@ export function useAccounts() {
     }
 
     const destroyAccount = async(account_id) => {
-        const res = await useFetchBackend(`auth/${account_id}`, {
+        await useFetchBackend(`auth/${account_id}`, {
             method: 'DELETE'
         })
 
@@ -27,7 +27,7 @@ export function useAccounts() {
             data.append(key, value)
         }
 
-        const res = await useFetchBackend(`auth/${account_id}`, {
+        await useFetchBackend(`auth/${account_id}`, {
             method: 'PATCH',
             body: data
         })

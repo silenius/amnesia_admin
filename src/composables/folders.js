@@ -37,6 +37,11 @@ const folder_to_formdata = (folder) => {
       data.append('default_order', JSON.stringify(folder.value.default_order))
     }
 
+    if (folder.value.acls) {
+      data.append('acls', JSON.stringify(folder.value.acls))
+    }
+
+
     return data
 }
 

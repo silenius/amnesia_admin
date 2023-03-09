@@ -13,6 +13,7 @@ import FolderDefaultPage from '@/components/folder/fields/FolderDefaultPage.vue'
 import FolderPolymorphicLoading from '@/components/folder/fields/FolderPolymorphicLoading.vue'
 import FolderOrdering from '@/components/folder/fields/FolderOrdering.vue'
 import ContentTypes from '@/components/content/fields/ContentTypes.vue'
+import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
 
 const props = defineProps({
   folder: {
@@ -75,8 +76,8 @@ const errors = inject('errors')
 
 
         <TabPanel>
-
           SECURITY
+          <ContentSecurity v-model:acls="folder.acls" />
 
         </TabPanel>
 
