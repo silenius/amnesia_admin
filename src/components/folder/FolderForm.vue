@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, inject, watch } from 'vue'
+import { onMounted, provide, inject, watch } from 'vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -31,6 +31,8 @@ const emit = defineEmits([
 ])
 
 const errors = inject('errors')
+
+provide('content', props.folder)
 
 </script>
 

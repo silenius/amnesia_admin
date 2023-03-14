@@ -47,20 +47,20 @@ const folder_to_formdata = (folder) => {
 
 const browse = async (opts = []) => {
     const options = new URLSearchParams(opts)
-    return await useFetchBackend(`${folder.value.id}/browse?${options}`)
+    return useFetchBackend(`${folder.value.id}/browse?${options}`)
 }
 
 const updateFolder = async() => {
     const data = folder_to_formdata(folder)
 
-    return await useFetchBackend(`${folder.value.id}`, {
+    return useFetchBackend(`${folder.value.id}`, {
         method: 'PUT',
         body: data
     })
 }
 
 const getIndexCandidates = async () => {
-  return await browse({
+  return browse({
     filter_types: 'document'
   })
 }
@@ -82,8 +82,7 @@ const getOrders = async (id=null, opts = {}) => {
     url='folder'
   }
 
-
-  return await useFetchBackend(`${url}/polymorphic_orders?${options}`)
+  return useFetchBackend(`${url}/polymorphic_orders?${options}`)
 }
 
 
