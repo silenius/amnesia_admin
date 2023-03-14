@@ -11,7 +11,7 @@
 
     <tbody>
       <tr 
-        v-for="acl in values"
+        v-for="(acl, idx) in values"
         class="odd:bg-white even:bg-slate-50 text-slate-600"
       >
         <td class="px-1 py-1">
@@ -32,7 +32,8 @@
         </td>
         <td>
           <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700
-            rounded w-full p-1 text-red-600" @click.prevent="delete_acl(acl)">remove</button>
+            rounded w-full p-1 text-red-600"
+            @click.prevent="delete_acl(acl, idx)">remove</button>
         </td>
       </tr>
       </tbody>
@@ -40,7 +41,6 @@
       <tr>
         <td>
           <select v-model="selectedAllow">
-            <option>choose</option>
             <option value="yes">allow</option>
             <option value="no">deny</option>
           </select>
@@ -57,7 +57,8 @@
           </select>
         </td>
         <td>
-          <button @click.prevent="add">add</button>
+          <button @click.prevent="add" class="hover:bg-blue-300 bg-blue-200
+            px-2 hover:text-blue-700 rounded w-full p-1 text-blue-600">add</button>
         </td>
       </tr>
     </tfoot>
@@ -92,18 +93,29 @@ const selectedPermission = ref()
 const selectedRole = ref()
 
 const add = async () => {
-  try {
-    await addContentACL(selectedAllow.value, selectedRole.value.id, selectedPermission.value.id)
-    getContentACL()
-  }
-  finally {
-    selectedAllow.value=''
-    selectedPermission.value=''
-    selectedRole.value=''
+  if (!content.id) {
+    values.value.unshift({
+      allow: selectedAllow.value,
+      role: selectedRole.value,
+      permission: selectedPermission.value
+    })
+  } else {
+    try {
+      await addContentACL(
+        selectedAllow.value,
+        selectedRole.value.id, 
+        selectedPermission.value.id
+      )
+      getContentACL()
+    } finally {
+      selectedAllow.value=''
+      selectedPermission.value=''
+      selectedRole.value=''
+    }
   }
 }
 
-watch( () => content.acls, async () => {
+watch(() => content.acls, async () => {
   values.value = content.acls
 })
 
@@ -115,9 +127,13 @@ onMounted(() => {
   getRoles()
 })
 
-const delete_acl = async (acl) => {
-  await deleteContentACL(acl.id)
-  getContentACL()
+const delete_acl = async (acl, idx) => {
+  if (content.id) {
+    await deleteContentACL(acl.id)
+    getContentACL()
+  } else {
+    values.value.splice(idx, 1)
+  }
 }
 
 const menuColors = {

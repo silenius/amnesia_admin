@@ -52,10 +52,12 @@ const { getOrders, folder } = useFolder()
 
 const props = defineProps({
   polymorphic_children: {
-    type: Array
+    type: Array,
+    default: []
   },
   polymorphic_loading : {
-    type: Boolean
+    type: Boolean,
+    default: false
   }
 })
 

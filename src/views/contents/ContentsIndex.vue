@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect } from 'vue'
+import { watchEffect, onMounted, onUpdated } from 'vue'
 import { RouterView } from 'vue-router'
 import { useContent } from '@/composables/contents.js'
 
@@ -13,13 +13,17 @@ watchEffect(async () => {
   await getContent(props.content_id)
 })
 
+onMounted(() => console.log('MOUNTED: ContentIndex'))
+onUpdated(() => console.log('UPDATED: ContentIndex'))
+
+
 </script>
 
 <template>
   <div>
     <h1>CONTENTS</h1>
     <RouterView 
-      :content="content" 
+      :content="content" v-if="content.id"
     />
   </div>
   </template>

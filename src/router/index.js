@@ -25,6 +25,14 @@ const routes = [
                 path: 'edit',
                 component: () => import('../views/contents/ContentEdit.vue'),
             },
+            {
+                name: 'add-content',
+                path: 'add',
+                component: () => import('../views/contents/ContentAdd.vue'),
+                props: (route) => ({
+                    type: route.query.type
+                })
+            },
 
         ]
     },
