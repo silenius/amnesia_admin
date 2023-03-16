@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, onUpdated, provide } from 'vue'
+import { provide, ref } from 'vue'
 
 import FolderAdd from '@/views/folders/FolderAdd.vue'
 
@@ -24,9 +24,6 @@ provide('errors', {
   setError
 })
 
-onMounted(() => console.log('MOUNTED: ContentAdd', props.content.type.name,
-  props.type))
-onUpdated(() => console.log('UPDATED: ContentAdd'))
 </script>
 
 <template>

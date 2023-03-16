@@ -1,10 +1,9 @@
+import { unref } from 'vue'
 import { useFetchBackend } from '@/composables/fetch.js'
 
-import { useContent } from '@/composables/contents.js'
+const folder_to_formdata = (folder_data) => {
 
-const { content: folder } = useContent()
-
-const folder_to_formdata = (folder) => {
+    const folder = unref(folder_data)
     const data = new FormData()
 
     const fields = [
@@ -19,41 +18,49 @@ const folder_to_formdata = (folder) => {
     ]
 
     for (let key of fields) {
-      if (folder.value[key] === null) {
+      if ((folder[key] === null) || (folder[key] === undefined)) {
         data.append(key, '')
       } else {
-        data.append(key, folder.value[key])
+        data.append(key, folder[key])
       }
     }
     
-    if (folder.value.polymorphic_loading 
-        && folder.value.polymorphic_children) {
-        folder.value.polymorphic_children.forEach(
+    if (folder.polymorphic_loading 
+        && folder.polymorphic_children) {
+        folder.polymorphic_children.forEach(
             c => data.append('polymorphic_children_ids', c.id)
         )
     }
 
-    if (folder.value.default_order) {
-      data.append('default_order', JSON.stringify(folder.value.default_order))
+    if (folder.default_order) {
+      data.append('default_order', JSON.stringify(folder.default_order))
     }
 
-    if (folder.value.acls) {
-      data.append('acls', JSON.stringify(folder.value.acls))
+    if (folder.acls) {
+      data.append('acls', JSON.stringify(folder.acls))
     }
-
 
     return data
 }
 
-const browse = async (opts = []) => {
+const browse = async (id, opts = []) => {
     const options = new URLSearchParams(opts)
-    return useFetchBackend(`${folder.value.id}/browse?${options}`)
+    return useFetchBackend(`${id}/browse?${options}`)
 }
 
-const updateFolder = async() => {
+const createFolder = async(container, folder) => {
     const data = folder_to_formdata(folder)
 
-    return useFetchBackend(`${folder.value.id}`, {
+    return useFetchBackend(`${container.id}/@@add_folder`, {
+        method: 'POST',
+        body: data
+    })
+}
+
+const updateFolder = async(folder) => {
+    const data = folder_to_formdata(folder)
+
+    return useFetchBackend(`${folder.id}`, {
         method: 'PUT',
         body: data
     })
@@ -65,7 +72,7 @@ const getIndexCandidates = async () => {
   })
 }
 
-const getOrders = async (id=null, opts = {}) => {
+const getOrders = async (opts = {}) => {
   const options = new URLSearchParams()
   
   options.append('pl', opts.pl)
@@ -74,22 +81,14 @@ const getOrders = async (id=null, opts = {}) => {
     opts.pc.forEach(i => options.append('pc', i))
   }
   
-  let url=''
-
-  if (id) {
-    url=id
-  } else {
-    url='folder'
-  }
-
-  return useFetchBackend(`${url}/polymorphic_orders?${options}`)
+  return useFetchBackend(`folder/polymorphic_orders?${options}`)
 }
 
 
 export function useFolder() {
   return {
-      folder: folder,
       updateFolder,
+      createFolder,
       getIndexCandidates,
       browse,
       getOrders

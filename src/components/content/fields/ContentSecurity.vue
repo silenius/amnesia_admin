@@ -25,7 +25,7 @@
           </span>
         </td>
         <td>
-          {{ acl.role.name }} ({{ acl.weight }})
+          {{ acl.role.name }}
         </td>
         <td>
           {{ acl.permission.description }}
@@ -67,7 +67,7 @@
 
 
 <script setup>
-import { inject, ref, onMounted, watch } from 'vue'
+import { inject, unref, computed, ref, onMounted, watch } from 'vue'
 import { useContent } from '@/composables/contents.js'
 import { usePermissions } from '@/composables/permissions.js'
 import { useRoles } from '@/composables/roles.js'
@@ -82,7 +82,7 @@ const emit = defineEmits([
 
 const values = ref([])
 
-const content = inject('content')
+const content = unref(inject('editable'))
 
 const { getPermissions, permissions } = usePermissions()
 const { getRoles, roles } = useRoles()
@@ -93,27 +93,32 @@ const selectedPermission = ref()
 const selectedRole = ref()
 
 const add = async () => {
-  if (!content.id) {
-    values.value.unshift({
-      allow: selectedAllow.value,
-      role: selectedRole.value,
-      permission: selectedPermission.value
-    })
-  } else {
-    try {
-      await addContentACL(
-        selectedAllow.value,
-        selectedRole.value.id, 
-        selectedPermission.value.id
-      )
-      getContentACL()
-    } finally {
+  try {
+    if (!content.id) {
+      values.value.unshift({
+        allow: selectedAllow.value === 'yes' ? true : false,
+        role: selectedRole.value,
+        permission: selectedPermission.value
+      })
+    } else {
+        await addContentACL(
+          content.id,
+          selectedAllow.value,
+          selectedRole.value.id, 
+          selectedPermission.value.id
+        )
+        values.value = await getContentACL(content.id)
+    }
+  } finally {
       selectedAllow.value=''
       selectedPermission.value=''
       selectedRole.value=''
     }
-  }
 }
+
+watch(values, () => {
+  emit('update:acls', values.value)
+}, { deep: true })
 
 watch(() => content.acls, async () => {
   values.value = content.acls
@@ -130,7 +135,7 @@ onMounted(() => {
 const delete_acl = async (acl, idx) => {
   if (content.id) {
     await deleteContentACL(acl.id)
-    getContentACL()
+    values.value = await getContentACL(content.id)
   } else {
     values.value.splice(idx, 1)
   }

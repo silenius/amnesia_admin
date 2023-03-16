@@ -24,8 +24,14 @@ import {
 import { useContentTypes } from '@/composables/content_types.js'
 
 const props = defineProps({
-  polymorphic_children: Array,
-  polymorphic_loading: Boolean
+  polymorphic_children: {
+    type: Array,
+    default: []
+  },
+  polymorphic_loading: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const emit = defineEmits([

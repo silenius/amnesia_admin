@@ -30,7 +30,7 @@ const routes = [
                 path: 'add',
                 component: () => import('../views/contents/ContentAdd.vue'),
                 props: (route) => ({
-                    type: route.query.type
+                    type: route.query.type,
                 })
             },
 
@@ -99,6 +99,11 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,
     sensitive: true
+})
+
+router.afterEach((to, from) => {
+    console.log(to)
+    console.log(from)
 })
 
 export default router

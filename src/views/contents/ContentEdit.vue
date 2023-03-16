@@ -15,7 +15,7 @@ const setError = (key, value) => {
 }
 
 const mapping = {
-    'folder': FolderEdit
+  'folder': FolderEdit
 }
 
 provide('errors', {
@@ -27,6 +27,7 @@ provide('errors', {
 
 <template>
     <h1>Edit content</h1>
+    <span class="text-green-600">{{ content.title }}</span>
     <component 
       :is="mapping[content.type.name]" 
       :content="content"

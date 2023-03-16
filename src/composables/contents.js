@@ -1,29 +1,24 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, readonly } from 'vue';
 import { useValidators } from '@/composables/validators.js'
-
-const content = ref({})
 
 const { isEmpty, minLength } = useValidators()
 
 const getContent = async (id) => {
-    const res = await useFetchBackend(`${id}`)
-    content.value = res
+    return useFetchBackend(`${id}`)
 }
 
-const getContentACL = async () => {
-    const res = await useFetchBackend(`${content.value.id}/acl`)
-    content.value.acls = res
+const getContentACL = async (id) => {
+    return useFetchBackend(`${id}/acl`)
 }
 
-const addContentACL = async (allow, role_id, permission_id) => {
+const addContentACL = async (content_id, allow, role_id, permission_id) => {
     const data = new FormData()
 
     data.append('allow', allow)
     data.append('role_id', role_id)
     data.append('permission_id', permission_id)
 
-    await useFetchBackend(`${content.value.id}/acl`, {
+    await useFetchBackend(`${content_id}/acl`, {
         method: 'POST',
         body: data
     })
@@ -52,7 +47,6 @@ const validateDescription = (value) => {
 
 export function useContent() {
     return {
-        content: content,
         getContent,
         getContentACL,
         addContentACL,

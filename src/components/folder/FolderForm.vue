@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, provide, inject, watch } from 'vue'
+import { onMounted, onUpdated, computed, provide, inject, watch } from 'vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -32,11 +32,13 @@ const emit = defineEmits([
 
 const errors = inject('errors')
 
-provide('content', props.folder)
+// note provide result is _not_ reactive by default
+provide('editable', computed(() => props.folder))
 
 </script>
 
 <template>
+  <span class="text-slate-600">{{ folder.title }}</span>
   <form @submit.prevent="$emit('submit-folder')">
     <TabGroup>
       <TabList>

@@ -1,29 +1,21 @@
 <script setup>
 
-import { ref, provide, computed, onMounted } from 'vue'
+import { ref } from 'vue'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
+import { useFolder } from '@/composables/folders.js'
 
 const props = defineProps({
     container: Object
 })
 
-const errors = ref({})
-
-const setError = (key, value) => {
-  errors.value[key] = value
-}
+const { createFolder } = useFolder()
 
 const folder = ref({})
 
-const createFolder = () => {
-  console.log('CREATE')
+const create = async () => {
+  await createFolder(props.container, folder)
 }
-
-provide('errors', {
-  errors,
-  setError
-})
 
 </script>
 
@@ -31,7 +23,8 @@ provide('errors', {
     <h1>Add folder</h1>
     <FolderForm 
       :folder="folder" 
+      :container="container"
       :action="'Add folder'"
-      @submit-folder="createFolder" 
+      @submit-folder="create" 
     />
 </template>

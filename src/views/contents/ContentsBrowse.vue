@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, onUpdated, watch } from 'vue'
+import { ref, onMounted, onUpdated, watchEffect } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useFolder } from '@/composables/folders.js'
@@ -27,27 +27,25 @@ const doBrowse = async (id) => await router.push({
   params: { id: id }
 })
 
-const doEdit = async (id) => await router.push({
-  name: 'edit-content', 
-  params: { id: id }
-})
+const doEdit = async (id) => { 
+  await router.push({
+    name: 'edit-content', 
+    params: { id: id }
+  })
+}
 
-watch(() => props.content, async () => {
-  contents.value = await browse()
+watchEffect(async () => {
+  contents.value = await browse(props.content.id)
 })
-
-onUpdated(() => console.log('UPDATED: ContentBrowse'))
 
 onMounted(async () => {
-  console.log('MOUNTED: ContentBrowse', props.content.id)
   const res = await getContentTypes()
   types.value = res
-  contents.value = await browse()
 })
 
 const deleteContent = async (id) => {
   await destroyContent(id)
-  contents.value = await browse()
+  contents.value = await browse(props.content.id)
 }
 
 </script>
