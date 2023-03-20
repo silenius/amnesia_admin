@@ -12,7 +12,18 @@
     <tbody>
       <tr 
         v-for="(acl, idx) in values"
-        class="odd:bg-white even:bg-slate-50 text-slate-600"
+        class="cursor-move odd:bg-white even:bg-slate-50 text-slate-600"
+        draggable="true"
+        :data-acl_id="acl.id"
+        :data-weight="acl.weight"
+        :data-idx="idx"
+        @drag="drag"
+        @dragstart="start"
+        @dragend="end"
+        @dragleave="leave"
+        @dragenter="enter"
+        @dragover="over"
+        @drop="drop"
       >
         <td class="px-1 py-1">
           <span class="rounded inline-flex w-full justify-center
@@ -86,7 +97,7 @@ const content = unref(inject('editable'))
 
 const { getPermissions, permissions } = usePermissions()
 const { getRoles, roles } = useRoles()
-const { addContentACL, deleteContentACL, getContentACL } = useContent()
+const { addContentACL, deleteContentACL, patchContentACL, getContentACL } = useContent()
 
 const selectedAllow = ref()
 const selectedPermission = ref()
@@ -151,6 +162,21 @@ const delete_acl = async (acl, idx) => {
   }
 }
 
+const update_weight = async (data, weight) => {
+  if (content.id) {
+    console.info(`===> Update ACL ${data.acl_id} weight to ${weight}`)
+    await patchContentACL(
+      data.acl_id,
+      {'weight': weight}
+    )
+    values.value = await getContentACL(content.id)
+  } else {
+    console.info(`===> Update ACL at idx ${data.idx} weight to idx ${weight}`)
+    const acl = values.value.splice(data.idx, 1)
+    values.value.splice(weight, 0, acl[0])
+  }
+}
+
 const menuColors = {
   true: [
     'bg-green-200',
@@ -161,5 +187,79 @@ const menuColors = {
     'text-red-700'
   ],
 }
+
+const get_tr = (node) => {
+  let target = node
+
+  if (target.nodeType != Node.ELEMENT_NODE) {
+    target = target.parentNode
+  }
+
+  return target.closest('tr')
+}
+
+const drag = (evt) => {
+  console.debug('===> DRAG', evt)
+}
+
+const start = (evt) => {
+  console.debug('===> START', evt)
+  evt.target.classList.add('opacity-25', 'border-indigo-500', 'border')
+  evt.dataTransfer.dropEffect = "move";
+  evt.dataTransfer.setData(
+    'text/plain', 
+    JSON.stringify({
+      acl_id: evt.target.getAttribute('data-acl_id'),
+      weight: evt.target.getAttribute('data-weight'),
+      idx: evt.target.getAttribute('data-idx'),
+
+    })
+  )
+}
+
+const end = (evt) => {
+  console.debug('===> END', evt)
+  const tr = get_tr(evt.target)
+  tr.classList.remove('opacity-25', 'border-indigo-500', 'border')
+}
+
+const enter = (evt) => {
+  console.debug('===> ENTER', evt)
+  evt.preventDefault()
+}
+
+const leave = (evt) => {
+  console.debug('===> LEAVE', evt)
+
+  const tr = get_tr(evt.target)
+  tr.classList.remove('border-lime-500', 'border')
+}
+
+const over = (evt) => {
+  console.debug('===> OVER', evt)
+  evt.preventDefault()
+
+  const tr = get_tr(evt.target)
+  tr.classList.add('border-lime-500', 'border')
+}
+
+const drop = (evt) => {
+  console.debug('===> DROP', evt)
+
+  const data = JSON.parse(evt.dataTransfer.getData('text/plain'))
+
+  const tr = get_tr(evt.target)
+  let weight = tr.getAttribute('data-weight')
+  tr.classList.remove('border-lime-500', 'border')
+
+  if (weight === null) {
+    weight = tr.getAttribute('data-idx')
+  }
+
+  update_weight(data, weight)
+
+  evt.preventDefault()
+}
+
 
 </script>

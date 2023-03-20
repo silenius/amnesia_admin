@@ -12,9 +12,7 @@ const content = ref({})
 const { getContent } = useContent()
 
 watchEffect(async () => {
-  console.debug('===>>> Fetch content_id ', props.content_id) 
-  const res = await getContent(props.content_id)
-  content.value = res
+  content.value = await getContent(props.content_id)
 })
 
 </script>

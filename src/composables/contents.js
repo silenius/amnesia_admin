@@ -24,6 +24,19 @@ const addContentACL = async (content_id, allow, role_id, permission_id) => {
     })
 }
 
+const patchContentACL = async (acl_id, items) => {
+    const data = new FormData()
+
+    for (const [key, value] of Object.entries(items)) {
+        data.append(key, value)
+    }
+
+    await useFetchBackend(`acls/${acl_id}`, {
+        method: 'PATCH',
+        body: data
+    })
+}
+
 const deleteContentACL = async (acl_id) => {
     await useFetchBackend(`acls/${acl_id}`, {
         method: 'DELETE'
@@ -51,6 +64,7 @@ export function useContent() {
         getContentACL,
         addContentACL,
         deleteContentACL,
+        patchContentACL,
         destroyContent,
         validateTitle,
         validateDescription
