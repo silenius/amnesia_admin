@@ -66,8 +66,8 @@ const updateFolder = async(folder) => {
     })
 }
 
-const getIndexCandidates = async () => {
-  return browse({
+const getIndexCandidates = async (id) => {
+  return browse(id, {
     filter_types: 'document'
   })
 }

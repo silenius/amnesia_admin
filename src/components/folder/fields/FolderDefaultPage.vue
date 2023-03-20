@@ -13,7 +13,7 @@
   </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect } from 'vue'
+import { ref, unref, inject, computed, onMounted, watchEffect } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 
 const props = defineProps({
@@ -25,6 +25,8 @@ const emit = defineEmits([
 ])
 
 const { getIndexCandidates } = useFolder()
+
+const folder = unref(inject('editable'))
 
 const active = ref(false)
 const pages = ref([])
@@ -50,7 +52,7 @@ onMounted( () => {
     if (!active.value) {
       value.value = null
     } else {
-      pages.value = await getIndexCandidates()
+      pages.value = await getIndexCandidates(folder.id)
     }
 
   })

@@ -117,16 +117,26 @@ const add = async () => {
 }
 
 watch(values, () => {
-  emit('update:acls', values.value)
+  if (content.id) {
+    emit(
+      'update:acls', values.value
+    )
+  } else {
+    emit(
+      'update:acls', values.value.map(x => {
+        return {
+          allow: x.allow,
+          role_id: x.role.id,
+          permission_id: x.permission.id
+        }
+      })
+    )
+  }
 }, { deep: true })
 
-watch(() => content.acls, async () => {
-  values.value = content.acls
-})
-
-onMounted(() => {
+onMounted( async () => {
   if (content.id) {
-    values.value = content.acls
+    values.value = await getContentACL(content.id)  
   }
   getPermissions()
   getRoles()

@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
 import { useFolder } from '@/composables/folders.js'
@@ -11,11 +11,23 @@ const props = defineProps({
 
 const { createFolder } = useFolder()
 
-const folder = ref({})
+const folder = ref({
+  is_fts: true,
+  polymorphic_loading: false,
+  exclude_nav: false
+})
+
+const { errors, setError } = inject('errors')
 
 const create = async () => {
-  await createFolder(props.container, folder)
+  try {
+    await createFolder(props.container, folder)
+  } catch (e) {
+    // TODO
+    console.log(e)
+  }
 }
+
 
 </script>
 

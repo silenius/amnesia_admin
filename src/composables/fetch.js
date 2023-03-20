@@ -1,4 +1,12 @@
-import { ref, isRef, unref, inject, watchEffect } from 'vue'
+import { unref, } from 'vue'
+
+class HTTPError extends Error {
+    constructor(message, response) {
+        super(message)
+        this.name = 'HTTPError'
+        this.response = response
+    }
+}
 
 export async function useFetchBackend(url, options) {
     const headers = new Headers({
@@ -18,7 +26,7 @@ export async function useFetchBackend(url, options) {
     if (res.ok) {
         return res.status == 204 ? res : await res.json()
     } else {
-        throw new Error(`HTTP error! Status: ${res.status}`);
+        throw new HTTPError(`HTTP error! Status: ${res.status}`, res);
     }
 }
 
