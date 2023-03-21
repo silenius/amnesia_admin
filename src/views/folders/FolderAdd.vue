@@ -1,6 +1,7 @@
 <script setup>
 
 import { ref, inject } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
 import { useFolder } from '@/composables/folders.js'
@@ -8,6 +9,8 @@ import { useFolder } from '@/composables/folders.js'
 const props = defineProps({
     container: Object
 })
+
+const router = useRouter()
 
 const { createFolder } = useFolder()
 
@@ -21,7 +24,8 @@ const { errors, setError } = inject('errors')
 
 const create = async () => {
   try {
-    await createFolder(props.container, folder)
+    const { data } = await createFolder(props.container, folder)
+    router.push({name: 'contents', params: {id: data.id}})
   } catch (e) {
     // TODO
     console.log(e)

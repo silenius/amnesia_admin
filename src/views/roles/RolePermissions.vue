@@ -1,12 +1,14 @@
 <script setup>
 
-import { watch, onMounted } from 'vue'
+import { watch, onMounted, ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
   role: Object
 })
+
+const permissions = ref([])
 
 const { 
   getPermissions, 
@@ -17,9 +19,14 @@ const {
 
 onMounted( () => {
   watch(() => props.role, (r, old_r) => {
-    getPermissions()
+    refresh()
   })
 })
+
+const refresh = async() => {
+  const { data } = await getPermissions(props.role.id)
+  permissions.value = data
+}
 
 const get_tr = (node) => {
   let target = node
@@ -36,6 +43,7 @@ const change_permission = async (permission, allow) => {
     console.info(`===> Add new GlobalACL: ${permission.name} / ${allow}`)
     // Add a new ACL
     await addGlobalACL(
+      props.role.id,
       permission.id,
       allow
     )
@@ -54,7 +62,7 @@ const change_permission = async (permission, allow) => {
     )
   }
 
-  getPermissions()
+  refresh()
 }
 
 const update_weight = async (acl_id, weight) => {
@@ -63,7 +71,7 @@ const update_weight = async (acl_id, weight) => {
     acl_id,
     {'weight': weight}
   )
-  getPermissions()
+  refresh()
 }
 
 const drag = (evt) => {
@@ -155,7 +163,7 @@ const menuColors = {
     </thead>
 
     <tbody>
-      <tr v-for="permission in role.permissions" 
+      <tr v-for="permission in permissions" 
         :key="permission.id"
         :class="{ 'cursor-move': permission.allow !== null }"
         :data-weight="permission.weight"

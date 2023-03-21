@@ -12,7 +12,8 @@ const content = ref({})
 const { getContent } = useContent()
 
 watchEffect(async () => {
-  content.value = await getContent(props.content_id)
+  const { data } = await getContent(props.content_id)
+  content.value = data
 })
 
 </script>

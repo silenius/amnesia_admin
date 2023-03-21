@@ -5,8 +5,8 @@ import { ref } from 'vue'
 const permissions = ref([])
 
 const getPermissions = async () => {
-    const res = await useFetchBackend('permissions')
-    permissions.value = res
+    const { data } = await useFetchBackend('permissions')
+    permissions.value = data
 }
 
 export function usePermissions() {

@@ -35,17 +35,19 @@ const doEdit = async (id) => {
 }
 
 watchEffect(async () => {
-  contents.value = await browse(props.content.id)
+  const { data } = await browse(props.content.id)
+  contents.value = data
 })
 
 onMounted(async () => {
-  const res = await getContentTypes()
-  types.value = res
+  const { data } = await getContentTypes()
+  types.value = data
 })
 
 const deleteContent = async (id) => {
   await destroyContent(id)
-  contents.value = await browse(props.content.id)
+  const { data } = await browse(props.content.id)
+  contents.value = data
 }
 
 </script>

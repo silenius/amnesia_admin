@@ -24,7 +24,10 @@ export async function useFetchBackend(url, options) {
     const res = await fetch(unref(url), opts)
 
     if (res.ok) {
-        return res.status == 204 ? res : await res.json()
+        return {
+            headers: res.headers,
+            data: res.status == 204 ? null : await res.json(),
+        }
     } else {
         throw new HTTPError(`HTTP error! Status: ${res.status}`, res);
     }

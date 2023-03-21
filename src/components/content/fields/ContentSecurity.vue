@@ -84,14 +84,15 @@ import { usePermissions } from '@/composables/permissions.js'
 import { useRoles } from '@/composables/roles.js'
 
 const props = defineProps({
-  acls: Object
+  acls: Array,
+  cached_acls: Array
 })
 
 const emit = defineEmits([
   'update:acls'
 ])
 
-const values = ref([])
+let values = props.cached_acls
 
 const content = unref(inject('editable'))
 
@@ -103,10 +104,15 @@ const selectedAllow = ref()
 const selectedPermission = ref()
 const selectedRole = ref()
 
+const refresh = async () => {
+  const { data } = await getContentACL(content.id)  
+  values = data
+}
+
 const add = async () => {
   try {
     if (!content.id) {
-      values.value.unshift({
+      values.unshift({
         allow: selectedAllow.value === 'yes' ? true : false,
         role: selectedRole.value,
         permission: selectedPermission.value
@@ -118,7 +124,7 @@ const add = async () => {
           selectedRole.value.id, 
           selectedPermission.value.id
         )
-        values.value = await getContentACL(content.id)
+        refresh()
     }
   } finally {
       selectedAllow.value=''
@@ -130,11 +136,11 @@ const add = async () => {
 watch(values, () => {
   if (content.id) {
     emit(
-      'update:acls', values.value
+      'update:acls', values
     )
   } else {
     emit(
-      'update:acls', values.value.map(x => {
+      'update:acls', values.map(x => {
         return {
           allow: x.allow,
           role_id: x.role.id,
@@ -147,7 +153,7 @@ watch(values, () => {
 
 onMounted( async () => {
   if (content.id) {
-    values.value = await getContentACL(content.id)  
+    refresh()
   }
   getPermissions()
   getRoles()
@@ -156,9 +162,9 @@ onMounted( async () => {
 const delete_acl = async (acl, idx) => {
   if (content.id) {
     await deleteContentACL(acl.id)
-    values.value = await getContentACL(content.id)
+    refresh()
   } else {
-    values.value.splice(idx, 1)
+    values.splice(idx, 1)
   }
 }
 
@@ -169,11 +175,11 @@ const update_weight = async (data, weight) => {
       data.acl_id,
       {'weight': weight}
     )
-    values.value = await getContentACL(content.id)
+    refresh()
   } else {
     console.info(`===> Update ACL at idx ${data.idx} weight to idx ${weight}`)
-    const acl = values.value.splice(data.idx, 1)
-    values.value.splice(weight, 0, acl[0])
+    const acl = values.splice(data.idx, 1)
+    values.splice(weight, 0, acl[0])
   }
 }
 
@@ -211,8 +217,7 @@ const start = (evt) => {
     JSON.stringify({
       acl_id: evt.target.getAttribute('data-acl_id'),
       weight: evt.target.getAttribute('data-weight'),
-      idx: evt.target.getAttribute('data-idx'),
-
+      idx: evt.target.getAttribute('data-idx')
     })
   )
 }
@@ -249,12 +254,9 @@ const drop = (evt) => {
   const data = JSON.parse(evt.dataTransfer.getData('text/plain'))
 
   const tr = get_tr(evt.target)
-  let weight = tr.getAttribute('data-weight')
   tr.classList.remove('border-lime-500', 'border')
 
-  if (weight === null) {
-    weight = tr.getAttribute('data-idx')
-  }
+  const weight = content.id ? tr.getAttribute('data-weight') : tr.getAttribute('data-idx')
 
   update_weight(data, weight)
 

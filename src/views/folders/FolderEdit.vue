@@ -1,4 +1,5 @@
 <script setup>
+import { useRouter } from 'vue-router'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
 import { useFolder } from '@/composables/folders.js'
@@ -7,9 +8,14 @@ const props = defineProps({
   content: Object
 })
 
+const router = useRouter()
+
 const { updateFolder } = useFolder()
 
-const update = async () => await updateFolder(props.content)
+const update = async () => {
+  await updateFolder(props.content)
+  router.push({name: 'contents', params: {id: props.content.id}})
+}
 
 </script>
 
