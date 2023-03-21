@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, inject } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
 import { useFolder } from '@/composables/folders.js'
