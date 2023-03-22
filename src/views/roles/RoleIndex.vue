@@ -1,17 +1,20 @@
 <script setup>
 
-import { ref, computed, onMounted, onUpdated } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { RouterView } from 'vue-router'
 import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
     role_id: Number
 })
 
-const { getRole, role } = useRole()
+const role = ref({})
 
-onMounted( () => {
-    getRole(props.role_id)
+const { getRole } = useRole()
+
+onMounted( async () => {
+  const { data } = await getRole(props.role_id)
+  role.value = data
 })
 
 </script>
@@ -19,6 +22,8 @@ onMounted( () => {
 <template>
   <div>
     ROLE / {{ role.name }}
-    <RouterView :role="role" />
+    <RouterView 
+      :role="role"
+      v-if="role" />
   </div>
 </template>

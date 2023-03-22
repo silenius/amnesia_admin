@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUpdated, computed, provide, inject, watch } from 'vue'
+import { ref, computed, provide, inject, watch } from 'vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
@@ -34,6 +34,7 @@ const emit = defineEmits([
 ])
 
 const errors = inject('errors')
+const cached_acls = ref([])
 
 // note provide result is _not_ reactive by default
 provide('editable', computed(() => props.folder))
@@ -84,7 +85,10 @@ provide('editable', computed(() => props.folder))
 
         <TabPanel>
           SECURITY
-          <ContentSecurity v-model:acls="folder.acls" />
+          <ContentSecurity 
+            v-model:acls="folder.acls"
+            :cached_acls="cached_acls" 
+          />
 
         </TabPanel>
 

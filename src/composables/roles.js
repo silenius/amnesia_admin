@@ -16,8 +16,8 @@ export function useRoles() {
     const roles = ref([])
 
     const getRoles = async () => {
-        const res = await useFetchBackend('roles/browse')
-        roles.value = res.data.roles
+        const { data } = await useFetchBackend('roles/browse')
+        roles.value = data.data.roles
     }
 
     const destroyRole = async (id) => {
@@ -39,7 +39,6 @@ export function useRoles() {
 
     return {
         roles: readonly(roles),
-        role: role,
         getRoles,
         destroyRole,
         createRole
@@ -50,35 +49,29 @@ export function useRoles() {
 // return .value ??
 // return readonly() ?
 
-const role = ref({})
-
 export function useRole() {
     const { isEmpty, minLength } = useValidators()
 
     const getRole = async (id) => {
-        const res = await useFetchBackend(`roles/${id}`)
-        role.value = res
+        return useFetchBackend(`roles/${id}`)
     }
 
-    const getMembers = async () => {
-        const res = await useFetchBackend(`roles/${role.value.id}/members/all`)
-        role.value.members = res
+    const getMembers = async (id) => {
+        return useFetchBackend(`roles/${id}/members/all`)
     }
 
-    const getPermissions = async () => {
-        const res = await useFetchBackend(`roles/${role.value.id}/global-permissions`)
-        role.value.permissions = res
+    const getPermissions = async (id) => {
+        return useFetchBackend(`roles/${id}/global-permissions`)
     }
 
-    const addGlobalACL = async (permission_id, allow) => {
+    const addGlobalACL = async (id, permission_id, allow) => {
         const data = new FormData()
         data.append('permission_id', permission_id)
         data.append('allow', allow)
 
-        const res = await useFetchBackend(`roles/${role.value.id}/acls`, {
+        return useFetchBackend(`roles/${id}/acls`, {
             method: 'POST',
             body: data
-
         })
     }
 
@@ -89,14 +82,14 @@ export function useRole() {
             data.append(key, value)
         }
 
-        const res = await useFetchBackend(`acls/${acl_id}`, {
+        return await useFetchBackend(`acls/${acl_id}`, {
             method: 'PATCH',
             body: data
         })
     }
 
     const deleteGlobalACL = async (acl_id) => {
-        const res = await useFetchBackend(`acls/${acl_id}`, {
+        return useFetchBackend(`acls/${acl_id}`, {
             method: 'DELETE'
         })
         
@@ -126,10 +119,10 @@ export function useRole() {
         )
     }
 
-    const updateRole = async () => {
+    const updateRole = async (id) => {
         const data = role_to_formdata(role)
 
-        return await useFetchBackend(`roles/${role.value.id}`, {
+        return await useFetchBackend(`roles/${id}`, {
             method: 'PUT',
             body: data
         })
@@ -155,7 +148,6 @@ export function useRole() {
         deleteGlobalACL,
         patchGlobalACL,
         deleteMember,
-        role: role
     }
 }
 

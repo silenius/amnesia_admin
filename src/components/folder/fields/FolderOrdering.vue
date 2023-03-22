@@ -45,7 +45,7 @@
 
 <script setup>
 
-import { ref, unref, watch, inject, onUpdated, computed } from 'vue'
+import { ref, unref, watch, inject, computed } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 
 const folder = unref(inject('editable'))
@@ -90,10 +90,11 @@ watch(() => orders, () => {
 watch(
   [() => props.polymorphic_children, () => props.polymorphic_loading], 
   async () => {
-    orders.value = await getOrders({
+    const { data } = await getOrders({
       pl: props.polymorphic_loading,
       pc: props.polymorphic_children.map(x => x.id)
     })
+    orders.value = data
 
     if (folder.default_order) {
       folder.default_order.forEach((i, idx) => {
