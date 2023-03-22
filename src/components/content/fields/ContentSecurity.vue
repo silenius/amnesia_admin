@@ -74,6 +74,50 @@
       </tr>
     </tfoot>
   </table>
+
+  PARENT ACLS:
+
+  <table class="table-auto border-spacing-4 text-xs">
+    <thead>
+      <tr class="text-left bg-slate-100">
+        <th>Type</th>
+        <th class="p-2"></th>
+        <th>Role</th>
+        <th>Permission</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr 
+        v-for="acl in recursive_acls"
+        class="odd:bg-white even:bg-slate-50 text-slate-600"
+      >
+        <td>
+          {{ acl.resource.name }}
+          <span v-if="acl.content">
+            {{ acl.content.title }}
+          </span>
+        </td>
+        <td class="px-1 py-1">
+          <span class="rounded inline-flex w-full justify-center
+            px-4 py-1 text-xs font-medium focus:outline-none
+            focus-visible:ring-2 focus-visible:ring-white
+            focus-visible:ring-opacity-75"
+            :class="menuColors[acl.allow]">
+            <span v-if="acl.allow === true"> Allow </span>
+            <span v-if="acl.allow === false"> Deny </span>
+          </span>
+        </td>
+        <td>
+          {{ acl.role.name }}
+        </td>
+        <td>
+          {{ acl.permission.description }}
+        </td>
+      </tr>
+      </tbody>
+  </table>
+
 </template>
 
 
@@ -92,12 +136,19 @@ const emit = defineEmits([
 ])
 
 const values = ref([])
+const recursive_acls = ref([])
 
 const content = unref(inject('editable'))
 
 const { getPermissions, permissions } = usePermissions()
 const { getRoles, roles } = useRoles()
-const { addContentACL, deleteContentACL, patchContentACL, getContentACL } = useContent()
+const { 
+  addContentACL, 
+  deleteContentACL, 
+  patchContentACL, 
+  getContentACL,
+  getContentParentACLS
+} = useContent()
 
 const selectedAllow = ref()
 const selectedPermission = ref()
@@ -118,7 +169,8 @@ const add = async () => {
           selectedRole.value.id, 
           selectedPermission.value.id
         )
-        values.value = await getContentACL(content.id)
+        const { data } = await getContentACL(content.id)
+        values.value = data
     }
   } finally {
       selectedAllow.value=''
@@ -149,6 +201,7 @@ onMounted( async () => {
   if (content.id) {
     values.value = await getContentACL(content.id)  
   }
+  recursive_acls.value = await getContentParentACLS(content.container_id)
   getPermissions()
   getRoles()
 })
@@ -156,7 +209,8 @@ onMounted( async () => {
 const delete_acl = async (acl, idx) => {
   if (content.id) {
     await deleteContentACL(acl.id)
-    values.value = await getContentACL(content.id)
+    const { data } = await getContentACL(content.id)
+    values.value = data
   } else {
     values.value.splice(idx, 1)
   }
@@ -169,7 +223,8 @@ const update_weight = async (data, weight) => {
       data.acl_id,
       {'weight': weight}
     )
-    values.value = await getContentACL(content.id)
+    const { data } = await getContentACL(content.id)
+    values.value = data
   } else {
     console.info(`===> Update ACL at idx ${data.idx} weight to idx ${weight}`)
     const acl = values.value.splice(data.idx, 1)

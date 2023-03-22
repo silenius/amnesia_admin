@@ -11,6 +11,10 @@ const getContentACL = async (id) => {
     return useFetchBackend(`${id}/acl`)
 }
 
+const getContentParentACLS = async(id) => {
+    return useFetchBackend(`${id}/acls`)
+}
+
 const addContentACL = async (content_id, allow, role_id, permission_id) => {
     const data = new FormData()
 
@@ -62,6 +66,7 @@ export function useContent() {
     return {
         getContent,
         getContentACL,
+        getContentParentACLS,
         addContentACL,
         deleteContentACL,
         patchContentACL,
