@@ -34,7 +34,6 @@ const emit = defineEmits([
 ])
 
 const errors = inject('errors')
-const cached_acls = ref([])
 
 // note provide result is _not_ reactive by default
 provide('editable', computed(() => props.folder))
@@ -87,7 +86,6 @@ provide('editable', computed(() => props.folder))
           SECURITY
           <ContentSecurity 
             v-model:acls="folder.acls"
-            :cached_acls="cached_acls" 
           />
 
         </TabPanel>

@@ -27,7 +27,7 @@ defineProps({
         <td colspan="5" class="p-2">
           <button @click="$emit('browse', folder.container_id)">
             <font-awesome-icon class="h-4 w-4 align-middle" icon="fa-solid
-              fa-arrow-up-from-bracket p-4" /> back to {{ folder.title }}</button>
+              fa-arrow-up-from-bracket p-4" /> back to {{ folder.parent.title }}</button>
         </td>
       </tr>
       <tr v-for="content in contents" :key="content.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
@@ -88,5 +88,3 @@ defineProps({
     </tbody>
   </table>
   </template>
-
-

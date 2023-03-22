@@ -128,8 +128,10 @@ import { usePermissions } from '@/composables/permissions.js'
 import { useRoles } from '@/composables/roles.js'
 
 const props = defineProps({
-  acls: Array,
-  cached_acls: Array
+  acls:  {
+    type: Array,
+    default: []
+  }
 })
 
 const emit = defineEmits([
@@ -137,7 +139,7 @@ const emit = defineEmits([
 ])
 
 const recursive_acls = ref([])
-let values = props.cached_acls
+const values = ref([...props.acls])
 
 const content = unref(inject('editable'))
 
@@ -157,13 +159,13 @@ const selectedRole = ref()
 
 const refresh = async () => {
   const { data } = await getContentACL(content.id)  
-  values = data
+  values.value = data
 }
 
 const add = async () => {
   try {
     if (!content.id) {
-      values.unshift({
+      values.value.unshift({
         allow: selectedAllow.value === 'yes' ? true : false,
         role: selectedRole.value,
         permission: selectedPermission.value
@@ -184,29 +186,14 @@ const add = async () => {
     }
 }
 
-watch(values, () => {
-  if (content.id) {
-    emit(
-      'update:acls', values
-    )
-  } else {
-    emit(
-      'update:acls', values.map(x => {
-        return {
-          allow: x.allow,
-          role_id: x.role.id,
-          permission_id: x.permission.id
-        }
-      })
-    )
-  }
-}, { deep: true })
+watch(values, () => emit('update:acls', values), { deep: true })
 
 onMounted( async () => {
   if (content.id) {
     refresh()
   }
-  recursive_acls.value = await getContentParentACLS(content.container_id)
+  const { data } = await getContentParentACLS(content.container_id)
+  recursive_acls.value = data
   getPermissions()
   getRoles()
 })
@@ -216,7 +203,7 @@ const delete_acl = async (acl, idx) => {
     await deleteContentACL(acl.id)
     refresh()
   } else {
-    values.splice(idx, 1)
+    values.value.splice(idx, 1)
   }
 }
 
@@ -230,8 +217,8 @@ const update_weight = async (data, weight) => {
     refresh()
   } else {
     console.info(`===> Update ACL at idx ${data.idx} weight to idx ${weight}`)
-    const acl = values.splice(data.idx, 1)
-    values.splice(weight, 0, acl[0])
+    const acl = values.value.splice(data.idx, 1)
+    values.value.splice(weight, 0, acl[0])
   }
 }
 

@@ -37,7 +37,13 @@ const folder_to_formdata = (folder_data) => {
     }
 
     if (folder.acls) {
-      data.append('acls', JSON.stringify(folder.acls))
+      data.append('acls', JSON.stringify(folder.acls.map(x => {
+        return {
+          allow: x.allow,
+          role_id: x.role.id,
+          permission_id: x.permission.id
+        }
+      })))
     }
 
     return data
