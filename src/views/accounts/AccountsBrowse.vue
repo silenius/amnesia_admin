@@ -1,20 +1,41 @@
 <script setup>
 
-import { ref, watch, onMounted } from 'vue'
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import AccountTable from '@/components/account/AccountTable.vue'
 import { useAccounts } from '@/composables/accounts.js'
 
-const router = useRouter()
 
-const { getAccounts, accounts } = useAccounts()
+const accounts = ref([])
 
-onMounted( () => {
-  getAccounts()
+const { destroyAccount, patchAccount, getAccounts } = useAccounts()
+
+onMounted( async () => {
+  await loadAccounts()
 })
+
+const loadAccounts = async () => {
+  const { data } = await getAccounts()
+  accounts.value = data.data.accounts
+}
+
+const toggleEnabled = async (account) => {
+  await patchAccount(account.id, {
+    enabled: !account.enabled
+  })
+}
+
+const destroy = async (account) => {
+  await destroyAccount(account.id)
+}
 
 </script>
 
 <template>
-    <AccountTable :accounts="accounts" :actions="true" />
+  <AccountTable 
+    v-if="accounts"
+    :accounts="accounts" 
+    :actions="true" 
+    @delete-account="destroy"
+    @toggle-enabled="toggleEnabled" 
+  />
 </template>

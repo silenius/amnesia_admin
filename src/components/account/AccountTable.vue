@@ -1,14 +1,10 @@
 <script setup>
 
-import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 import Avatar from "vue-boring-avatars";
 
-import { useAccounts } from '@/composables/accounts.js'
 
 const props = defineProps({
     accounts: {
@@ -88,7 +84,7 @@ const emit = defineEmits([
                                         </button>
                                         </MenuItem>
                                         <MenuItem v-slot="{ active }">
-                                        <button @click="$emit('delete-account', account.id)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                                        <button @click="$emit('delete-account', account)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                                             <TrashIcon class="h-4 w-4" /> Delete
                                         </button>
                                         </MenuItem>

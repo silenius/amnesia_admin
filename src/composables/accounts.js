@@ -1,23 +1,15 @@
 import { useFetchBackend } from '@/composables/fetch.js'
-import { ref, watch, readonly } from 'vue';
-import { useValidators } from '@/composables/validators.js'
-
-const accounts = ref([])
 
 export function useAccounts() {
 
     const getAccounts = async () => {
-        const res = await useFetchBackend('auth/browse')
-        accounts.value = res.data.accounts
+        return useFetchBackend('auth/browse')
     }
 
     const destroyAccount = async(account_id) => {
-        await useFetchBackend(`auth/${account_id}`, {
+        return useFetchBackend(`auth/${account_id}`, {
             method: 'DELETE'
         })
-
-        getAccounts()
-
     }
 
     const patchAccount = async (account_id, items) => {
@@ -27,16 +19,13 @@ export function useAccounts() {
             data.append(key, value)
         }
 
-        await useFetchBackend(`auth/${account_id}`, {
+        return useFetchBackend(`auth/${account_id}`, {
             method: 'PATCH',
             body: data
         })
-        
-        getAccounts()
     }
 
     return {
-        accounts: readonly(accounts),
         getAccounts,
         patchAccount,
         destroyAccount
