@@ -18,7 +18,9 @@ const folder = ref({
   is_fts: true,
   polymorphic_loading: false,
   exclude_nav: false,
-  container_id: props.container.id
+  container_id: props.container.id,
+  default_limit: 50,
+  breadcrumb: true
 })
 
 const { errors, setError } = inject('errors')

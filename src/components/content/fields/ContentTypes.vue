@@ -43,7 +43,8 @@ const { getContentTypes } = useContentTypes()
 const types = ref([])
 
 onMounted( async () => {
-  types.value = await getContentTypes()
+  const { data } = await getContentTypes()
+  types.value = data
 })
 
 watch(() => props.polymorphic_loading, (v) => {

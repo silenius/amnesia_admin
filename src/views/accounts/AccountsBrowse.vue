@@ -22,6 +22,7 @@ const toggleEnabled = async (account) => {
   await patchAccount(account.id, {
     enabled: !account.enabled
   })
+  loadAccounts()
 }
 
 const destroy = async (account) => {

@@ -10,20 +10,25 @@ const props = defineProps({
 
 const { getMembers, addMember, deleteMember } = useRole()
 
+const members = ref([])
 
 watch(() => props.role, async () => {
-  await getMembers()
+  const { data } = await getMembers(props.role.id)
+  members.value = data
 })
 
 
 const add_member = async (id) => {
-  await addMember(id)
-  getMembers()
+  await addMember(props.role.id, id)
+  const { data } = await getMembers(props.role.id)
+  members.value = data
+
 }
 
 const delete_member = async (id) => {
-  await deleteMember(id)
-  getMembers()
+  await deleteMember(props.role.id, id)
+  const { data } = await getMembers(props.role.id)
+  members.value = data
 }
 
 </script>
@@ -33,7 +38,7 @@ const delete_member = async (id) => {
   <div>
     / Members
 
-    <AccountTable :accounts="role.members" :enabled="false">
+    <AccountTable :accounts="members" :enabled="false">
       <template #headers>
         <th class="text-center">Member</th>
       </template>

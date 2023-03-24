@@ -15,6 +15,8 @@ const folder_to_formdata = (folder_data) => {
       'expiration',
       'index_content_id',
       'polymorphic_loading',
+      'default_limit',
+      'breadcrumb'
     ]
 
     for (let key of fields) {

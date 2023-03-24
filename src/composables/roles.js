@@ -95,24 +95,24 @@ export function useRole() {
         
     }
 
-    const addMember = async (id) => {
+    const addMember = async (role_id, account_id) => {
         const data = new FormData()
-        data.append('account_id', id)
+        data.append('account_id', account_id)
         
-        const res = await useFetchBackend(
-            `roles/${role.value.id}/members`, {
+        return useFetchBackend(
+            `roles/${role_id}/members`, {
                 method: 'POST',
                 body: data
             }
         )
     }
 
-    const deleteMember = async (id) => {
+    const deleteMember = async (role_id, account_id) => {
         const data = new FormData()
-        data.append('account_id', id)
+        data.append('account_id', account_id)
         
-        const res = await useFetchBackend(
-            `roles/${role.value.id}/members/${id}`, {
+        return useFetchBackend(
+            `roles/${role_id}/members/${account_id}`, {
                 method: 'DELETE',
                 body: data
             }

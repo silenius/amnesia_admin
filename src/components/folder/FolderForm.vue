@@ -12,8 +12,11 @@ import ContentExpirationDate from '@/components/content/fields/ContentExpiration
 import FolderDefaultPage from '@/components/folder/fields/FolderDefaultPage.vue'
 import FolderPolymorphicLoading from '@/components/folder/fields/FolderPolymorphicLoading.vue'
 import FolderOrdering from '@/components/folder/fields/FolderOrdering.vue'
+import FolderDefaultLimit from '@/components/folder/fields/FolderDefaultLimit.vue'
 import ContentTypes from '@/components/content/fields/ContentTypes.vue'
 import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
+import ContentBreadcrumb from '@/components/content/fields/ContentBreadcrumb.vue'
+import ContentBannerImage from '@/components/content/fields/ContentBannerImage.vue'
 
 const props = defineProps({
   folder: {
@@ -64,7 +67,10 @@ provide('editable', computed(() => props.folder))
           <ContentPublishingDate v-model:effective="folder.effective" />
           <ContentExpirationDate v-model:expiration="folder.expiration" />
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
+          <ContentBreadcrumb v-model:breadcrumb="folder.breadcrumb" />
           <ContentIndexed v-model:is_fts="folder.is_fts" />
+          <ContentBannerImage v-model:banner_image="folder.banner_image" />
+          <FolderDefaultLimit v-model:default_limit="folder.default_limit" />
           <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
           <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
           <ContentTypes 
@@ -77,6 +83,7 @@ provide('editable', computed(() => props.folder))
             :polymorphic_children="folder.polymorphic_children" 
             :polymorphic_loading="folder.polymorphic_loading"
           />
+
         </TabPanel>
 
         <!-- SECURITY -->
