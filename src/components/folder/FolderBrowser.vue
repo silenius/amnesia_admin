@@ -5,20 +5,44 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Avatar from "vue-boring-avatars";
 
 defineProps({
-  contents: Array,
-  folder: Object
+  contents: {
+    type: Array,
+    default: []
+  },
+  folder: {
+    type: Object
+  },
+  view: {
+    type: String,
+    default: 'tabular'
+  },
+  actions: {
+    type: Array,
+    default: [{
+      label: 'Edit',
+      event: 'edit-content',
+      icon: 'fa-solid fa-pen-to-square',
+      class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900'
+    }, {
+      label: 'Delete',
+      event: 'delete-content',
+      icon: 'fa-solid fa-trash-can',
+      class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700'
+    }]
+  }
 })
 
 </script>
 
 <template>
-  <table class="border-collapse table-fixed">
+  <table class="border-collapse table-fixed" v-if="view == 'tabular'">
     <thead>
       <tr class="text-left">
         <th class="p-2">Title</th>
         <th class="p-2">Description</th>
         <th class="p-2">Owner</th>
-        <th class="p-2">Actions</th>
+        <th class="p-2" v-if="actions">Actions</th>
+        <slot name="th" />
       </tr>
     </thead>
 
@@ -49,7 +73,7 @@ defineProps({
             </span>
           </div>
         </td>
-        <td class="p-2">
+        <td class="p-2" v-if="actions">
           <div class="text-right">
             <Menu as="div" class="relative text-left">
               <div>
@@ -68,14 +92,9 @@ defineProps({
               >
                 <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div>
-                    <MenuItem v-slot="{ active }">
-                    <button @click="$emit('edit-content', content.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                      <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-pen-to-square" /> Edit
-                    </button>
-                    </MenuItem>
-                    <MenuItem v-slot="{ active }">
-                    <button @click="$emit('delete-content', content.id)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                      <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-trash-can" /> Delete
+                    <MenuItem v-for="action in actions" v-slot="{ active }">
+                    <button @click="$emit(action.event, content.id)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
+                      <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
                     </button>
                     </MenuItem>
                   </div>
@@ -84,7 +103,24 @@ defineProps({
             </Menu>
           </div>
         </td>
+        <slot name="td" :content="content" :emit="$emit" />
       </tr>
     </tbody>
   </table>
+  <div v-if="view == 'gallery'" class="flex flex-row flex-wrap gap-8">
+    <div v-if="folder.container_id" class="text-slate-600">  
+        <button @click="$emit('browse', folder.container_id)">
+          <font-awesome-icon class="h-16 w-16 align-middle" icon="fa-solid fa-arrow-up-from-bracket p-4" /> back to {{ folder.parent.title }}</button>
+    </div>
+
+    <div v-for="content in contents" class="flex flex-col">
+      <font-awesome-icon class="h-16 w-16 mr-2 align-middle" :icon="['fa-solid', content.type.icons['fa']]" />
+      <button @click="$emit('browse', content.id)"
+        v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
+      <template v-if="content.type.name!='folder'">{{ content.title }}</template>
+
+
+    </div>
+
+  </div>
   </template>

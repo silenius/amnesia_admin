@@ -48,10 +48,14 @@ const folder_to_formdata = (folder_data) => {
       })))
     }
 
+    if (folder.banner_image) {
+        data.append('banner_image', folder.banner_image.id)
+    }
+
     return data
 }
 
-const browse = async (id, opts = []) => {
+const browse = async (id, opts = {}) => {
     const options = new URLSearchParams(opts)
     return useFetchBackend(`${id}/browse?${options}`)
 }
