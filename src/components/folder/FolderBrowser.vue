@@ -24,11 +24,11 @@ defineProps({
       icon: 'fa-solid fa-pen-to-square',
       class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900'
     }, {
-      label: 'Delete',
-      event: 'delete-content',
-      icon: 'fa-solid fa-trash-can',
-      class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700'
-    }]
+        label: 'Delete',
+        event: 'delete-content',
+        icon: 'fa-solid fa-trash-can',
+        class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700'
+      }]
   }
 })
 
@@ -107,20 +107,30 @@ defineProps({
       </tr>
     </tbody>
   </table>
-  <div v-if="view == 'gallery'" class="flex flex-row flex-wrap gap-8">
-    <div v-if="folder.container_id" class="text-slate-600">  
-        <button @click="$emit('browse', folder.container_id)">
-          <font-awesome-icon class="h-16 w-16 align-middle" icon="fa-solid fa-arrow-up-from-bracket p-4" /> back to {{ folder.parent.title }}</button>
-    </div>
+  <div v-if="view == 'gallery'" class="w-fit">
 
-    <div v-for="content in contents" class="flex flex-col">
-      <font-awesome-icon class="h-16 w-16 mr-2 align-middle" :icon="['fa-solid', content.type.icons['fa']]" />
-      <button @click="$emit('browse', content.id)"
-        v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
-      <template v-if="content.type.name!='folder'">{{ content.title }}</template>
+    <ul class="flex flex-row gap-8">
+      <li v-if="folder.container_id">  
+        <button class="flex items-center flex-col" @click="$emit('browse', folder.container_id)">
+          <font-awesome-icon class="h-16 w-16 block" icon="fa-solid fa-arrow-up-from-bracket" />
+          back to {{ folder.parent.title }}
+        </button>
+      </li>
 
+      <li v-for="content in contents" class="flex items-center flex-col basis-32">
+        <template v-if="content.type.name != 'folder'">
+          <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+          {{ content.title }}
+        </template>
+        <button 
+          v-if="content.type.name=='folder'" 
+          @click="$emit('browse', content.id)">
+          <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+          {{ content.title }}
+        </button>
+      </li>
 
-    </div>
+    </ul>
 
   </div>
-  </template>
+</template>
