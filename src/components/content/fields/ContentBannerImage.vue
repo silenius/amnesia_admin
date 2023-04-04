@@ -54,13 +54,16 @@
                       :actions="null"
                       :view="'gallery'"
                       v-if="folder && contents">
-                      <template #th>
+                      <template #tabular-th>
                         <th class="p-2"></th>
                       </template>
-                      <template #td="{ content, emit }">
+                      <template #tabular-td="{ content, emit }">
                         <td class="p-2">
                           <button v-if="content.type.name == 'file'" @click="emit('select-banner', content)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">Select</button>
                         </td>
+                      </template>
+                      <template #gallery-not_folder="{ content, emit }">
+                        <button @click="emit('select-banner', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
                       </template>
                     </FolderBrowser>
                   </p>
@@ -105,7 +108,11 @@ const emits = defineEmits([
 const { browse } = useFolder()
 const { getContent } = useContent()
 
-const doSelectBanner = (content) => emits('update:banner_image', content) 
+const doBrowse = id => folder_id.value = id
+const doSelectBanner = (content) => {
+  emits('update:banner_image', content) 
+  isOpen.value = false
+}
 
 const isOpen = ref(false)
 const folder_id = ref(1)
@@ -114,17 +121,18 @@ const contents = ref([])
 
 watchEffect( async () => {
   const { data: folder_data } = await getContent(folder_id.value)
-  const { data: contents_data } = await browse(folder_data.id, [
-    ['filter_types', 'folder'],
-    ['filter_types', 'file'], 
-    ['filter_mime', 'image/*']
-  ]
+  const { data: contents_data } = await browse(
+    folder_data.id, 
+    [
+      ['filter_types', 'folder'],
+      ['filter_types', 'file'], 
+      ['filter_mime', 'image/*']
+    ]
   )
   folder.value = folder_data
   contents.value = contents_data
 })
 
-const doBrowse = id => folder_id.value = id
 const closeModal = () => isOpen.value = false
 const openModal = () => {
   folder_id.value = 1

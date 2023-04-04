@@ -18,18 +18,18 @@
 <template>
 
   <div :class="sectionClass">
-    <button @click="this.$router.push({name: 'browse-content', params: {id: 1}})" :class="buttonClass">
+    <button @click="$router.push({name: 'browse-content', params: {id: 1}})" :class="buttonClass">
        <font-awesome-icon :class="faClass" icon="fa-solid fa-folder-tree" />
       <div>Content</div>
     </button>
   </div>
 
   <div :class="sectionClass">
-    <button @click="this.$router.push('accounts')" :class="buttonClass">
+    <button @click="$router.push('accounts')" :class="buttonClass">
        <font-awesome-icon :class="faClass" icon="fa-solid fa-user-astronaut" />
       <div>Accounts</div>
     </button>
-    <button @click="this.$router.push('roles')" :class="buttonClass">
+    <button @click="$router.push('roles')" :class="buttonClass">
       <font-awesome-icon :class="faClass" icon="fa-solid fa-user-group" />
       <div>Roles</div>
     </button>

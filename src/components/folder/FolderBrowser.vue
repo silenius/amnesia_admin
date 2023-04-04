@@ -1,10 +1,12 @@
 <script setup>
 
+import { ref } from 'vue'
+
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
 import Avatar from "vue-boring-avatars";
 
-defineProps({
+const props = defineProps({
   contents: {
     type: Array,
     default: []
@@ -32,9 +34,13 @@ defineProps({
   }
 })
 
+const view = ref(props.view)
+
 </script>
 
 <template>
+  <select v-model="view"><option value="tabular">tabular</option><option
+    value="gallery">gallery</option></select>
   <table class="border-collapse table-fixed" v-if="view == 'tabular'">
     <thead>
       <tr class="text-left">
@@ -42,7 +48,7 @@ defineProps({
         <th class="p-2">Description</th>
         <th class="p-2">Owner</th>
         <th class="p-2" v-if="actions">Actions</th>
-        <slot name="th" />
+        <slot name="tabular-th" />
       </tr>
     </thead>
 
@@ -103,31 +109,34 @@ defineProps({
             </Menu>
           </div>
         </td>
-        <slot name="td" :content="content" :emit="$emit" />
+        <slot name="tabular-td" :content="content" :emit="$emit" />
       </tr>
     </tbody>
   </table>
   <div v-if="view == 'gallery'" class="w-fit">
 
-    <ul class="flex flex-row gap-8">
-      <li v-if="folder.container_id">  
+    <ul class="flex flex-wrap text-slate-600 flex-row justify-start gap-8">
+      <li class="flex flex-col items-center h-32 w-32" v-if="folder.container_id">  
         <button class="flex items-center flex-col" @click="$emit('browse', folder.container_id)">
           <font-awesome-icon class="h-16 w-16 block" icon="fa-solid fa-arrow-up-from-bracket" />
           back to {{ folder.parent.title }}
         </button>
       </li>
 
-      <li v-for="content in contents" class="flex items-center flex-col basis-32">
+      <li v-for="content in contents" class="flex flex-col h-32 w-32 overflow-scroll">
         <template v-if="content.type.name != 'folder'">
-          <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
-          {{ content.title }}
+          <div class="flex flex-col items-center">
+            <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+            <slot name="gallery-not_folder" :content="content" :emit="$emit"/>
+            <span class="text-center text-xs">{{ content.title }}</span>
+          </div>
         </template>
-        <button 
-          v-if="content.type.name=='folder'" 
-          @click="$emit('browse', content.id)">
-          <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
-          {{ content.title }}
-        </button>
+        <template v-if="content.type.name == 'folder'">
+          <button @click="$emit('browse', content.id)" class="flex flex-col items-center">
+            <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+            <span class="text-center">{{ content.title }}</span>
+          </button>
+        </template>
       </li>
 
     </ul>

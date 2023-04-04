@@ -9,4 +9,9 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms')
   ],
+  safelist: [
+    {
+      pattern: /(h|w)-\d+/
+    }
+  ]
 }

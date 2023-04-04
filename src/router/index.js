@@ -101,9 +101,4 @@ const router = createRouter({
     sensitive: true
 })
 
-router.afterEach((to, from) => {
-    console.log(to)
-    console.log(from)
-})
-
 export default router
