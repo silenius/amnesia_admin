@@ -34,6 +34,9 @@ const props = defineProps({
   }
 })
 
+const base = import.meta.env.VITE_BASE_BACKEND
+const image_url = (id) => new URL(`${id}/download`, base)
+
 const view = ref(props.view)
 
 </script>
@@ -126,7 +129,9 @@ const view = ref(props.view)
       <li v-for="content in contents" class="flex flex-col h-32 w-32 overflow-scroll">
         <template v-if="content.type.name != 'folder'">
           <div class="flex flex-col items-center">
-            <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+            <img :src="image_url(content.id)" v-if="content.type.name == 'file' &&
+              content.mime.major.name == 'image'" />
+            <font-awesome-icon v-else class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
             <slot name="gallery-not_folder" :content="content" :emit="$emit"/>
             <span class="text-center text-xs">{{ content.title }}</span>
           </div>
