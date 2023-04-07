@@ -3,6 +3,7 @@
 import { provide, ref } from 'vue'
 
 import FolderAdd from '@/views/folders/FolderAdd.vue'
+import DocumentAdd from '@/views/documents/DocumentAdd.vue'
 
 const props = defineProps({
   content: Object,
@@ -16,7 +17,8 @@ const setError = (key, value) => {
 }
 
 const mapping = {
-    folder: FolderAdd
+    folder: FolderAdd,
+    document: DocumentAdd
 }
 
 provide('errors', {
@@ -29,7 +31,7 @@ provide('errors', {
 <template>
     <h1>Add content</h1>
     <component 
-      :is="mapping.folder" 
+      :is="mapping[props.type]" 
       :container="content"
     />
 
