@@ -3,8 +3,8 @@
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
-import DocumentForm from '@/components/document/DocumentForm.vue'
-import { useDocument } from '@/composables/documents.js'
+import FileForm from '@/components/file/FileForm.vue'
+import { useFile } from '@/composables/files.js'
 
 const props = defineProps({
     container: Object
@@ -12,9 +12,9 @@ const props = defineProps({
 
 const router = useRouter()
 
-const { createDocument } = useDocument()
+const { createFile } = useFile()
 
-const doc = ref({
+const file = ref({
   is_fts: true,
   exclude_nav: false,
   container_id: props.container.id,
@@ -25,7 +25,7 @@ const { errors, setError } = inject('errors')
 
 const create = async () => {
   try {
-    const { data } = await createDocument(props.container, doc)
+    const { data } = await createFile(props.container, file)
     router.push({name: 'contents', params: {id: data.id}})
   } catch (e) {
     // TODO
@@ -37,11 +37,11 @@ const create = async () => {
 </script>
 
 <template>
-    <h1>Add document</h1>
-    <DocumentForm 
-      :doc="doc" 
+    <h1>Add file</h1>
+    <FileForm 
+      :file="file" 
       :container="container"
-      :action="'Add document'"
-      @submit-document="create" 
+      :action="'Add file'"
+      @submit-file="create" 
     />
 </template>

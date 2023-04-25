@@ -3,6 +3,7 @@
 import { ref, provide } from 'vue'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
+import DocumentEdit from '@/views/documents/DocumentEdit.vue'
 
 const props = defineProps({
     content: Object
@@ -15,7 +16,8 @@ const setError = (key, value) => {
 }
 
 const mapping = {
-  'folder': FolderEdit
+  'folder': FolderEdit,
+  'document': DocumentEdit
 }
 
 provide('errors', {

@@ -11,7 +11,6 @@ import ContentExpirationDate from '@/components/content/fields/ContentExpiration
 import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
 import ContentBreadcrumb from '@/components/content/fields/ContentBreadcrumb.vue'
 import ContentBannerImage from '@/components/content/fields/ContentBannerImage.vue'
-import DocumentBody from '@/components/document/fields/DocumentBody.vue'
 
 const props = defineProps({
   doc: {
@@ -28,7 +27,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'submit-document'
+  'submit-file'
 ])
 
 const errors = inject('errors')
@@ -40,7 +39,7 @@ provide('editable', computed(() => props.doc))
 
 <template>
   <span class="text-slate-600">{{ doc.title }}</span>
-  <form @submit.prevent="$emit('submit-document')">
+  <form @submit.prevent="$emit('submit-file')">
     <TabGroup>
       <TabList>
         <Tab>Default</Tab>
@@ -54,7 +53,6 @@ provide('editable', computed(() => props.doc))
         <TabPanel>
           <ContentTitle v-model:title="doc.title" />
           <ContentDescription v-model:description="doc.description" />
-          <DocumentBody v-model:body="doc.body" />
         </TabPanel>
 
         <!-- SETTINGS -->

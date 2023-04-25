@@ -21,7 +21,6 @@ const update = async () => {
 
 <template>
     <h1>Edit folder</h1>
-    <span class="text-blue-600">{{ content.title }}</span>
     <FolderForm 
       :folder="content" 
       :action="'Update folder'"
