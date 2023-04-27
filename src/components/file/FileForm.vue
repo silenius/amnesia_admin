@@ -11,9 +11,10 @@ import ContentExpirationDate from '@/components/content/fields/ContentExpiration
 import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
 import ContentBreadcrumb from '@/components/content/fields/ContentBreadcrumb.vue'
 import ContentBannerImage from '@/components/content/fields/ContentBannerImage.vue'
+import FileData from '@/components/file/fields/FileData.vue'
 
 const props = defineProps({
-  doc: {
+  file: {
     type: Object,
     required: true
   },
@@ -33,12 +34,12 @@ const emit = defineEmits([
 const errors = inject('errors')
 
 // note provide result is _not_ reactive by default
-provide('editable', computed(() => props.doc))
+provide('editable', computed(() => props.file))
 
 </script>
 
 <template>
-  <span class="text-slate-600">{{ doc.title }}</span>
+  <span class="text-slate-600">{{ file.title }}</span>
   <form @submit.prevent="$emit('submit-file')">
     <TabGroup>
       <TabList>
@@ -51,18 +52,19 @@ provide('editable', computed(() => props.doc))
         <!-- DEFAULT -->
 
         <TabPanel>
-          <ContentTitle v-model:title="doc.title" />
-          <ContentDescription v-model:description="doc.description" />
+          <ContentTitle v-model:title="file.title" />
+          <ContentDescription v-model:description="file.description" />
+          <FileData v-model:content="file.content" />
         </TabPanel>
 
         <!-- SETTINGS -->
 
         <TabPanel>
-          <ContentPublishingDate v-model:effective="doc.effective" />
-          <ContentExpirationDate v-model:expiration="doc.expiration" />
-          <ContentBreadcrumb v-model:breadcrumb="doc.breadcrumb" />
-          <ContentIndexed v-model:is_fts="doc.is_fts" />
-          <ContentBannerImage v-model:banner_image="doc.banner_image" />
+          <ContentPublishingDate v-model:effective="file.effective" />
+          <ContentExpirationDate v-model:expiration="file.expiration" />
+          <ContentBreadcrumb v-model:breadcrumb="file.breadcrumb" />
+          <ContentIndexed v-model:is_fts="file.is_fts" />
+          <ContentBannerImage v-model:banner_image="file.banner_image" />
         </TabPanel>
 
         <!-- SECURITY -->
@@ -71,7 +73,7 @@ provide('editable', computed(() => props.doc))
         <TabPanel>
           SECURITY
           <ContentSecurity 
-            v-model:acls="doc.acls"
+            v-model:acls="file.acls"
           />
 
         </TabPanel>

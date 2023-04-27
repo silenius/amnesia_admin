@@ -4,9 +4,10 @@ import { ref, provide } from 'vue'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
 import DocumentEdit from '@/views/documents/DocumentEdit.vue'
+import FileEdit from '@/views/files/FileEdit.vue'
 
 const props = defineProps({
-    content: Object
+  content: Object
 })
 
 const errors = ref({})
@@ -16,8 +17,9 @@ const setError = (key, value) => {
 }
 
 const mapping = {
-  'folder': FolderEdit,
-  'document': DocumentEdit
+  folder: FolderEdit,
+  document: DocumentEdit,
+  file: FileEdit
 }
 
 provide('errors', {
@@ -28,10 +30,10 @@ provide('errors', {
 </script>
 
 <template>
-    <h1>Edit content</h1>
-    <span class="text-green-600">{{ content.title }}</span>
-    <component 
-      :is="mapping[content.type.name]" 
-      :content="content"
-    />
+  <h1>Edit content</h1>
+  <span class="text-green-600">{{ content.title }}</span>
+  <component 
+    :is="mapping[content.type.name]" 
+    :content="content"
+  />
 </template>
