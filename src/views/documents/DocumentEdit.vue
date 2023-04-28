@@ -1,6 +1,5 @@
 <script setup>
 
-import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 import DocumentForm from '@/components/document/DocumentForm.vue'
