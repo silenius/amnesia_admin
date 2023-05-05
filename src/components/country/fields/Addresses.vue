@@ -10,7 +10,7 @@
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             @change="query = $event.target.value"
           />
-					<button @click.prevent="reset" class="bg-red-400 text-white p-2 hover:bg-red-600 rounded">Reset</button>
+          <button @click.prevent="reset" class="bg-red-400 text-white p-2 hover:bg-red-600 rounded">Reset</button>
         </div>
         <TransitionRoot
           leave="transition ease-in duration-100"
@@ -80,14 +80,14 @@ const props = defineProps({
     type: String,
     default: ''
   },
-	address_latitude: {
-		type: Number,
-		default: null
-	},
-	address_longitude: {
-		type: Number,
-		default: null
-	},
+  address_latitude: {
+    type: Number,
+    default: null
+  },
+  address_longitude: {
+    type: Number,
+    default: null
+  },
   country: {
     type: Object,
     default: {}
@@ -110,15 +110,15 @@ const selected = computed({
   },
 
   set(value) {
-		if (value) {
-    	emit('update:address', value.display_name)
-    	emit('update:address_latitude', parseFloat(value.lat))
-    	emit('update:address_longitude', parseFloat(value.lon))
-		} else {
-    	emit('update:address', null)
-    	emit('update:address_latitude', null)
-    	emit('update:address_longitude', null)
-		}
+    if (value) {
+      emit('update:address', value.display_name)
+      emit('update:address_latitude', parseFloat(value.lat))
+      emit('update:address_longitude', parseFloat(value.lon))
+    } else {
+      emit('update:address', null)
+      emit('update:address_latitude', null)
+      emit('update:address_longitude', null)
+    }
   }
 
 })
@@ -126,12 +126,12 @@ const selected = computed({
 const reset = () => selected.value = null;
 
 const search = async () => {
-	if (query.value !== '') {
-		const data = await geocodeQuery(query.value, props.country.iso)
-		addresses_matches.value = data
-	} else {
-		addresses_matches.value = []
-	}
+  if (query.value !== '') {
+    const data = await geocodeQuery(query.value, props.country.iso)
+    addresses_matches.value = data
+  } else {
+    addresses_matches.value = []
+  }
 }
 
 watch(() => props.country, () => reset())
