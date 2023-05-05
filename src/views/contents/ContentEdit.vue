@@ -5,6 +5,7 @@ import { ref, provide } from 'vue'
 import FolderEdit from '@/views/folders/FolderEdit.vue'
 import DocumentEdit from '@/views/documents/DocumentEdit.vue'
 import FileEdit from '@/views/files/FileEdit.vue'
+import EventEdit from '@/views/events/EventEdit.vue'
 
 const props = defineProps({
   content: Object
@@ -19,7 +20,8 @@ const setError = (key, value) => {
 const mapping = {
   folder: FolderEdit,
   document: DocumentEdit,
-  file: FileEdit
+  file: FileEdit,
+  event: EventEdit
 }
 
 provide('errors', {

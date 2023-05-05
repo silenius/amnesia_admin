@@ -27,6 +27,7 @@ import {
     faMicrophoneLines,
     faFileImage,
     faFilePdf,
+    faCaretDown
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUpDownLeftRight)
@@ -47,6 +48,7 @@ library.add(faAtom)
 library.add(faMicrophoneLines)
 library.add(faFileImage)
 library.add(faFilePdf)
+library.add(faCaretDown)
 
 
 const app = createApp(App)

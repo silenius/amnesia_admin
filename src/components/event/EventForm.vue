@@ -1,7 +1,9 @@
 <script setup>
-import { ref, computed, provide, inject, watch } from 'vue'
+import { ref, computed, provide, inject, onMounted, watch } from 'vue'
 
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+
+import { useCountry } from '@/composables/country.js'
 
 import ContentTitle from '@/components/content/fields/ContentTitle.vue'
 import ContentDescription from '@/components/content/fields/ContentDescription.vue'
@@ -14,6 +16,9 @@ import ContentBannerImage from '@/components/content/fields/ContentBannerImage.v
 import EventBody from '@/components/event/fields/EventBody.vue'
 import EventStart from '@/components/event/fields/EventStart.vue'
 import EventEnds from '@/components/event/fields/EventEnds.vue'
+import Countries from '@/components/country/fields/Countries.vue'
+import Addresses from '@/components/country/fields/Addresses.vue'
+import EventMap from '@/components/event/fields/EventMap.vue'
 
 const props = defineProps({
   event: {
@@ -38,6 +43,14 @@ const errors = inject('errors')
 // note provide result is _not_ reactive by default
 provide('editable', computed(() => props.event))
 
+const countries = ref([])
+const { getCountries } = useCountry()
+
+onMounted( async () => {
+  const { data } = await getCountries()
+  countries.value = data
+})
+
 </script>
 
 <template>
@@ -59,6 +72,15 @@ provide('editable', computed(() => props.event))
           <EventStart v-model:starts="event.starts" />
           <EventEnds v-model:ends="event.ends" />
           <EventBody v-model:body="event.body" />
+          <Countries class="z-10" :countries="countries" v-model:country="event.country" />
+          <Addresses 
+            class="z-10"
+						:country="event.country" v-model:address="event.address" 
+						v-model:address_longitude="event.address_longitude"
+						v-model:address_latitude="event.address_latitude"
+					/>
+          <EventMap :lat="event.address_latitude"
+                    :lon="event.address_longitude" />
         </TabPanel>
 
         <!-- SETTINGS -->

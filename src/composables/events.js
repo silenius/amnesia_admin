@@ -16,7 +16,10 @@ const event_to_formdata = (event_data) => {
         'breadcrumb',
         'body',
         'starts',
-        'ends'
+        'ends',
+		'address',
+		'address_latitude',
+		'address_longitude'
     ]
 
     for (let key of fields) {
@@ -40,6 +43,8 @@ const event_to_formdata = (event_data) => {
     if (event.banner_image) {
         data.append('banner_image', event.banner_image.id)
     }
+
+    data.append('country_iso', event.country.iso)
 
     return data
 }
