@@ -1,5 +1,5 @@
 <template>
-  <div id="map" class="h-64 w-full"></div>
+  <div id="map"></div>
 </template>
 
 
@@ -10,16 +10,9 @@ import { ref, onMounted, watch } from 'vue'
 import 'ol/ol.css'
 import Map from 'ol/Map'
 import View from 'ol/View'
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
-import Vector from 'ol/source/Vector.js';
+import {Tile as TileLayer} from 'ol/layer.js'
 import OSM from 'ol/source/OSM'
-import * as proj from 'ol/proj'
-import * as ctrl from 'ol/control'
-import Feature from 'ol/Feature.js'
-import Overlay from 'ol/Overlay.js'
 import Point from 'ol/geom/Point.js'
-import VectorSource from 'ol/source/Vector.js'
-import {Icon, Style} from 'ol/style.js'
 
 const props = defineProps({
   lat: {
@@ -43,11 +36,16 @@ onMounted( () => {
       })
     ],
     view: new View({
-      center: [props.lat, props.lon],
+      center: [0, 0],
       zoom: 2,
       minZoom: 2
     })
   })
+
+  if (props.lat && props.lon) {
+    center(props.lat, props.lon)
+  }
+
 })
 
 const center = (lat, lon, zoom=15) => {

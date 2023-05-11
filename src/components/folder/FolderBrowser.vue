@@ -1,9 +1,7 @@
 <script setup>
 
 import { ref } from 'vue'
-
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-
 import Avatar from "vue-boring-avatars";
 
 const props = defineProps({
@@ -193,16 +191,8 @@ const view = ref(props.view)
               </Menu>
             </div>
           </template>
-
-
         </li>
-
       </template>
-
-
-
-
     </ul>
-
   </div>
 </template>

@@ -72,15 +72,17 @@ onMounted( async () => {
           <EventStart v-model:starts="event.starts" />
           <EventEnds v-model:ends="event.ends" />
           <EventBody v-model:body="event.body" />
-          <Countries class="z-10" :countries="countries" v-model:country="event.country" />
+          <Countries class="z-20" :countries="countries" v-model:country="event.country" />
           <Addresses 
             class="z-10"
 						:country="event.country" v-model:address="event.address" 
 						v-model:address_longitude="event.address_longitude"
 						v-model:address_latitude="event.address_latitude"
 					/>
-          <EventMap :lat="event.address_latitude"
-                    :lon="event.address_longitude" />
+          <EventMap
+            class="h-64 w-full"
+            :lat="event.address_latitude"
+            :lon="event.address_longitude" />
         </TabPanel>
 
         <!-- SETTINGS -->
