@@ -148,13 +148,14 @@ const view = ref(props.view)
                 <slot name="gallery-not_folder" :content="content" :emit="$emit"/>
                 <span class="text-center m-5 mt-1 leading-5">{{ content.title }}</span>
               </div>
-  </template>
+            </template>
 
             <!-- FOLDER -->
 
             <template v-if="content.type.name == 'folder'">
               <button @click="$emit('browse', content.id)" class="flex flex-col items-center">
                 <font-awesome-icon class="h-16 w-16 block" :icon="['fa-solid', content.type.icons['fa']]" />
+                <slot name="gallery-folder" :content="content" :emit="$emit"/>
                 <span class="text-center">{{ content.title }}</span>
               </button>
             </template>
@@ -164,7 +165,7 @@ const view = ref(props.view)
           <template v-if="actions">
             <div class="text-right">
               <Menu as="div" class="relative text-left">
-      <div>
+                <div>
                   <MenuButton class="inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                     action
                   </MenuButton>
@@ -179,7 +180,7 @@ const view = ref(props.view)
                   leave-to-class="transform scale-95 opacity-0"
                 >
                   <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-<div>
+                    <div>
                       <MenuItem v-for="action in actions" v-slot="{ active }">
                       <button @click="$emit(action.event, content.id)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
                         <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}

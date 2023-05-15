@@ -38,22 +38,41 @@
                 <p class="text-sm text-gray-500">
                   <FolderBrowser
                     @browse="doBrowse"
-                    @select-image="doSelectImage"
+                    @select="doSelect"
                     :contents="contents"
                     :folder="folder"
                     :actions="null"
                     :view="'gallery'"
                     v-if="folder && contents">
+
+                    <!-- TABULAR -->
+                    
                     <template #tabular-th>
                       <th class="p-2"></th>
                     </template>
                     <template #tabular-td="{ content, emit }">
                       <td class="p-2">
-                        <button v-if="content.type.name == 'file'" @click="emit('select-image', content)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">Select</button>
+                        <button v-if="content.type.name == 'file'" @click="emit('select', content)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">Select</button>
                       </td>
                     </template>
+                    
+                    <!-- GALLERY -->
+                    <template #gallery-folder="{ content, emit }">
+                      <button v-if="_meta.filetype == 'file'" 
+                        @click="emit('select', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
+                    </template>
+
                     <template #gallery-not_folder="{ content, emit }">
-                      <button @click="emit('select-image', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
+
+                      <button 
+                        v-if="(_meta.filetype == 'image' &&
+                        content.type.name == 'file' &&
+                        content.mime.major.name == 'image') ||
+                        (_meta.filetype == 'media' &&
+                        content.type.name == 'file' &&
+                        content.mime.major.name == 'video') ||
+                        _meta.filetype == 'file'" 
+                        @click="emit('select', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
                     </template>
                   </FolderBrowser>
                 </p>
@@ -100,9 +119,9 @@ const { browse } = useFolder()
 const { getContent } = useContent()
 
 let _cb = undefined;
-let _meta = undefined
+let _meta = ref();
 
-const doSelectImage = (content) => {
+const doSelect = (content) => {
   let cb_value = content.id;
   let cb_meta = {};
 
@@ -130,15 +149,29 @@ const doSelectImage = (content) => {
 }
 
 watchEffect( async () => {
+  let opts = [];
+
+  if (_meta.value) {
+    switch (_meta.value.filetype) {
+      case 'image':
+        opts = [
+          ['filter_types', 'folder'],
+          ['filter_types', 'file'], 
+          ['filter_mimes', 'image/*']
+        ]
+        break;
+      case 'media':
+        opts = [
+          ['filter_types', 'folder'],
+          ['filter_types', 'file'],
+          ['filter_mimes', 'video/*']
+        ]
+        break;
+    }
+  }
+
   const { data: folder_data } = await getContent(folder_id.value)
-  const { data: contents_data } = await browse(
-    folder_data.id, 
-    [
-      ['filter_types', 'folder'],
-      ['filter_types', 'file'], 
-      ['filter_mime', 'image/*']
-    ]
-  )
+  const { data: contents_data } = await browse(folder_data.id, opts)
   folder.value = folder_data
   contents.value = contents_data
 })
@@ -153,7 +186,7 @@ const doBrowse = id => folder_id.value = id
 const file_picker_cb = (callback, value, meta) => {
   console.log(callback, value, meta)
   _cb = callback
-  _meta = meta
+  _meta.value = meta
   openModal()
 }
 
@@ -167,7 +200,7 @@ export default {
   ],
   setup(props) {
     const conf = props.conf
-    return { doBrowse, doSelectImage, conf, isOpen, closeModal, folder, contents }
+    return { doBrowse, _meta, doSelect, conf, isOpen, closeModal, folder, contents }
 
   },
   props: {
