@@ -1,9 +1,5 @@
 <script setup>
-import { 
-  onMounted, computed, ref, reactive, nextTick,
-  onUpdated, watch, watchEffect
-}  from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>

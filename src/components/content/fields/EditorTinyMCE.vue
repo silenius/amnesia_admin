@@ -91,7 +91,7 @@ const actions = ref([
   {
     label: 'Select',
     event: 'select',
-    icon: 'fa-solid fa-pen-to-square',
+    icon: 'fa-solid fa-hand-point-right',
     class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
     enabled: (...args) => {
       const content = args[0];

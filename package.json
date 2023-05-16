@@ -16,6 +16,7 @@
     "@heroicons/vue": "^2.0.13",
     "@tailwindcss/language-server": "^0.0.10",
     "@tinymce/tinymce-vue": "^5.0.1",
+    "@unhead/vue": "^1.1.26",
     "@volar/vue-language-server": "^1.1.4",
     "@vueuse/core": "^9.6.0",
     "ol": "^7.3.0",

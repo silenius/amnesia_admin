@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, readonly } from 'vue'
+import { ref, computed } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Avatar from "vue-boring-avatars";
 import { actions as default_actions } from '@/components/folder/FolderBrowserActions.js'
@@ -27,13 +27,18 @@ const base = import.meta.env.VITE_BASE_BACKEND
 const image_url = (id) => new URL(`${id}/download`, base)
 
 const view = ref(props.view)
+const view_icon = computed(
+  () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
+)
 
 </script>
 
 <template>
-  <select v-model="view"><option value="tabular">tabular</option><option
-    value="gallery">gallery</option></select>
 
+  <button @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
+    <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" :icon="view_icon" />
+  </button>
+  
   <!-- TABULAR VIEW -->
 
   <table class="border-collapse table-fixed" v-if="view == 'tabular'">
