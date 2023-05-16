@@ -1,8 +1,9 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Avatar from "vue-boring-avatars";
+import { actions as default_actions } from '@/components/folder/FolderBrowserActions.js'
 
 const props = defineProps({
   contents: {
@@ -18,19 +19,7 @@ const props = defineProps({
   },
   actions: {
     type: Array,
-    default: [
-      {
-        label: 'Edit',
-        event: 'edit-content',
-        icon: 'fa-solid fa-pen-to-square',
-        class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900'
-      }, {
-        label: 'Delete',
-        event: 'delete-content',
-        icon: 'fa-solid fa-trash-can',
-        class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700'
-      }
-    ]
+    default: default_actions.slice()
   }
 })
 
@@ -90,7 +79,7 @@ const view = ref(props.view)
             <Menu as="div" class="relative text-left">
               <div>
                 <MenuButton class="rounded inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                  action
+                  actions
                 </MenuButton>
               </div>
 
@@ -104,11 +93,13 @@ const view = ref(props.view)
               >
                 <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div>
-                    <MenuItem v-for="action in actions" v-slot="{ active }">
-                    <button @click="$emit(action.event, content.id)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
-                      <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
-                    </button>
-                    </MenuItem>
+                    <template v-for="action in actions">
+                      <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
+                      <button @click="$emit(action.event, content)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
+                        <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
+                      </button>
+                      </MenuItem>
+                    </template>
                   </div>
                 </MenuItems>
               </transition>
@@ -167,7 +158,7 @@ const view = ref(props.view)
               <Menu as="div" class="relative text-left">
                 <div>
                   <MenuButton class="inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                    action
+                    actions
                   </MenuButton>
                 </div>
 
@@ -181,11 +172,13 @@ const view = ref(props.view)
                 >
                   <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div>
-                      <MenuItem v-for="action in actions" v-slot="{ active }">
-                      <button @click="$emit(action.event, content.id)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
-                        <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
-                      </button>
-                      </MenuItem>
+                      <template v-for="action in actions">
+                        <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
+                        <button @click="$emit(action.event, content)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
+                          <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
+                        </button>
+                        </MenuItem>
+                      </template>
                     </div>
                   </MenuItems>
                 </transition>

@@ -41,39 +41,9 @@
                     @select="doSelect"
                     :contents="contents"
                     :folder="folder"
-                    :actions="null"
+                    :actions="actions"
                     :view="'gallery'"
                     v-if="folder && contents">
-
-                    <!-- TABULAR -->
-                    
-                    <template #tabular-th>
-                      <th class="p-2"></th>
-                    </template>
-                    <template #tabular-td="{ content, emit }">
-                      <td class="p-2">
-                        <button v-if="content.type.name == 'file'" @click="emit('select', content)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">Select</button>
-                      </td>
-                    </template>
-                    
-                    <!-- GALLERY -->
-                    <template #gallery-folder="{ content, emit }">
-                      <button v-if="_meta.filetype == 'file'" 
-                        @click="emit('select', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
-                    </template>
-
-                    <template #gallery-not_folder="{ content, emit }">
-
-                      <button 
-                        v-if="(_meta.filetype == 'image' &&
-                        content.type.name == 'file' &&
-                        content.mime.major.name == 'image') ||
-                        (_meta.filetype == 'media' &&
-                        content.type.name == 'file' &&
-                        content.mime.major.name == 'video') ||
-                        _meta.filetype == 'file'" 
-                        @click="emit('select', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
-                    </template>
                   </FolderBrowser>
                 </p>
               </div>
@@ -117,15 +87,31 @@ const folder = ref({})
 const contents = ref([])
 const { browse } = useFolder()
 const { getContent } = useContent()
+const actions = ref([
+  {
+    label: 'Select',
+    event: 'select',
+    icon: 'fa-solid fa-pen-to-square',
+    class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+    enabled: (...args) => {
+      const content = args[0];
+      const ask_image_is_image = (_meta.value.filetype == 'image' && content.type.name == 'file' && content.mime.major.name == 'image')
+      const ask_media_is_media = (_meta.value.filetype == 'media' && content.type.name == 'file' && content.mime.major.name == 'video')
+      const ask_link = _meta.value.filetype == 'file'
+
+      return ask_image_is_image || ask_media_is_media || ask_link
+    }
+  }
+])
 
 let _cb = undefined;
 let _meta = ref();
 
 const doSelect = (content) => {
-  let cb_value = content.id;
+  let cb_value = content.id.toString();
   let cb_meta = {};
 
-  switch(_meta.filetype) {
+  switch(_meta.value.filetype) {
     case 'image':
     case 'media':
       cb_value += '/download';
@@ -184,7 +170,6 @@ const openModal = () => {
 const doBrowse = id => folder_id.value = id
 
 const file_picker_cb = (callback, value, meta) => {
-  console.log(callback, value, meta)
   _cb = callback
   _meta.value = meta
   openModal()
@@ -200,7 +185,7 @@ export default {
   ],
   setup(props) {
     const conf = props.conf
-    return { doBrowse, _meta, doSelect, conf, isOpen, closeModal, folder, contents }
+    return { actions, doBrowse, _meta, doSelect, conf, isOpen, closeModal, folder, contents }
 
   },
   props: {
@@ -324,7 +309,7 @@ export default {
         fontsize_formats: '8px 9px 10px 11px 12px 14px 16px 18px 24px 36px 48px',
         fix_list_elements : true,
         force_hex_style_colors : true,
-        //      document_base_url : document_base_url,
+        document_base_url : import.meta.env.VITE_TINYMCE_BASE_URL,
         relative_urls : true,
         remove_script_host : true,
         entity_encoding : 'numeric'

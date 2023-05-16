@@ -27,11 +27,17 @@ const doBrowse = async (id) => await router.push({
   params: { id: id }
 })
 
-const doEdit = async (id) => { 
+const doEdit = async (content) => { 
   await router.push({
     name: 'edit-content', 
-    params: { id: id }
+    params: { id: content.id }
   })
+}
+
+const deleteContent = async (content) => {
+  await destroyContent(content.id)
+  const { data } = await browse(props.content.id)
+  contents.value = data
 }
 
 watchEffect(async () => {
@@ -43,12 +49,6 @@ onMounted(async () => {
   const { data } = await getContentTypes()
   types.value = data
 })
-
-const deleteContent = async (id) => {
-  await destroyContent(id)
-  const { data } = await browse(props.content.id)
-  contents.value = data
-}
 
 </script>
 
