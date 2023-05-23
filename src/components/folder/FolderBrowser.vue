@@ -57,7 +57,7 @@ const view_icon = computed(
 
   <!-- TABULAR VIEW -->
 
-  <div v-if="selected.size > 0">
+  <div v-if="selectActions && selected.size > 0">
 
     <Menu as="div" class="relative inline-block text-left">
       <div>
@@ -98,7 +98,7 @@ const view_icon = computed(
   <table class="border-collapse table-fixed" v-if="view == 'tabular'">
     <thead>
       <tr class="text-left">
-        <th class="p-2"><input type="checkbox" /></th>
+        <th class="p-2" v-if="selectActions"><input type="checkbox" /></th>
         <th class="p-2">Title</th>
         <th class="p-2">Description</th>
         <th class="p-2">Owner</th>
@@ -116,7 +116,7 @@ const view_icon = computed(
         </td>
       </tr>
       <tr v-for="content in contents" :key="content.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
-        <td class="pr-6 pl-2"><input :checked="selected.has(content)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
+        <td class="pr-6 pl-2" v-if="selectActions"><input :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
         <td class="whitespace-nowrap p-2">
           <font-awesome-icon class="h-8 w-8 mr-2 align-middle" :icon="['fa-solid', content.type.icons['fa']]" />
           <button @click="$emit('browse', content.id)"
@@ -188,7 +188,7 @@ const view_icon = computed(
 
         <li>
 
-          <input :checked="selected.has(content)" @click="select(content, $event)" type="checkbox" class="relative border-slate-300 top-6 left-1" />
+          <input v-if="selectActions" :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" class="relative border-slate-300 top-6 left-1" />
 
           <div class="flex flex-col h-32 w-32 overflow-scroll mb-1 border">
 

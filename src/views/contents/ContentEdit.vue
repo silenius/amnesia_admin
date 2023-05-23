@@ -32,8 +32,6 @@ provide('errors', {
 </script>
 
 <template>
-  <h1>Edit content</h1>
-  <span class="text-green-600">{{ content.title }}</span>
   <component 
     :is="mapping[content.type.name]" 
     :content="content"

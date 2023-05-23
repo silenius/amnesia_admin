@@ -12,6 +12,7 @@ import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
 import ContentBreadcrumb from '@/components/content/fields/ContentBreadcrumb.vue'
 import ContentBannerImage from '@/components/content/fields/ContentBannerImage.vue'
 import DocumentBody from '@/components/document/fields/DocumentBody.vue'
+import FormTabGroup from '@/components/form/FormTabGroup.vue'
 
 const props = defineProps({
   doc: {
@@ -41,48 +42,25 @@ provide('editable', computed(() => props.doc))
 <template>
   <span class="text-slate-600">{{ doc.title }}</span>
   <form @submit.prevent="$emit('submit-document')">
-    <TabGroup>
-      <TabList>
-        <Tab>Default</Tab>
-        <Tab>Settings</Tab>
-        <Tab>Security</Tab>
-      </TabList>
-      <TabPanels>
-
-        <!-- DEFAULT -->
-
-        <TabPanel>
-          <ContentTitle v-model:title="doc.title" />
-          <ContentDescription v-model:description="doc.description" />
-          <DocumentBody v-model:body="doc.body" />
-        </TabPanel>
-
-        <!-- SETTINGS -->
-
-        <TabPanel>
-          <ContentPublishingDate v-model:effective="doc.effective" />
-          <ContentExpirationDate v-model:expiration="doc.expiration" />
-          <ContentBreadcrumb v-model:breadcrumb="doc.breadcrumb" />
-          <ContentIndexed v-model:is_fts="doc.is_fts" />
-          <ContentBannerImage v-model:banner_image="doc.banner_image" />
-        </TabPanel>
-
-        <!-- SECURITY -->
-
-
-        <TabPanel>
-          SECURITY
-          <ContentSecurity 
-            v-model:acls="doc.acls"
-          />
-
-        </TabPanel>
-
-
-      </TabPanels>
-    </TabGroup>
+    <FormTabGroup>
+      <template #default>
+        <ContentTitle v-model:title="doc.title" />
+        <ContentDescription v-model:description="doc.description" />
+        <DocumentBody v-model:body="doc.body" />
+      </template>
+      <template #settings>
+        <ContentPublishingDate v-model:effective="doc.effective" />
+        <ContentExpirationDate v-model:expiration="doc.expiration" />
+        <ContentBreadcrumb v-model:breadcrumb="doc.breadcrumb" />
+        <ContentIndexed v-model:is_fts="doc.is_fts" />
+        <ContentBannerImage v-model:banner_image="doc.banner_image" />
+      </template>
+      <template #security>
+        <ContentSecurity v-model:acls="doc.acls" />
+      </template>
+    </FormTabGroup>
     <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>
-  </template>
+</template>

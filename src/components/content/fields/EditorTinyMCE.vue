@@ -42,6 +42,7 @@
                     :contents="contents"
                     :folder="folder"
                     :actions="actions"
+                    :selectActions=null
                     :view="'gallery'"
                     v-if="folder && contents">
                   </FolderBrowser>

@@ -51,20 +51,10 @@
                       @select-banner="doSelectBanner"
                       :contents="contents"
                       :folder="folder"
-                      :actions="null"
+                      :actions="actions"
+                      :selectActions="null"
                       :view="'gallery'"
                       v-if="folder && contents">
-                      <template #tabular-th>
-                        <th class="p-2"></th>
-                      </template>
-                      <template #tabular-td="{ content, emit }">
-                        <td class="p-2">
-                          <button v-if="content.type.name == 'file'" @click="emit('select-banner', content)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">Select</button>
-                        </td>
-                      </template>
-                      <template #gallery-not_folder="{ content, emit }">
-                        <button @click="emit('select-banner', content)" class="border p-1 mt-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white">Select</button>
-                      </template>
                     </FolderBrowser>
                   </p>
                 </div>
@@ -105,13 +95,28 @@ const emits = defineEmits([
   'update:banner_image'
 ])
 
+const actions = ref([
+  {
+    label: 'Select',
+    event: 'select-banner',
+    icon: 'fa-solid fa-hand-point-right',
+    class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+    enabled: (...args) => {
+      const content = args[0];
+      const is_image = (content.type.name == 'file' && content.mime.major.name == 'image')
+
+      return is_image
+    }
+  }
+])
+
 const { browse } = useFolder()
 const { getContent } = useContent()
 
 const doBrowse = id => folder_id.value = id
 const doSelectBanner = (content) => {
   emits('update:banner_image', content) 
-  isOpen.value = false
+  closeModal()
 }
 
 const isOpen = ref(false)

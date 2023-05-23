@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, onUpdated, watchEffect } from 'vue'
+import { ref, computed, onMounted, onUpdated, watch } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useFolder } from '@/composables/folders.js'
@@ -15,13 +15,19 @@ const props = defineProps({
 
 const router = useRouter()
 
-const { browse } = useFolder()
+const { browse, destroyManyContent } = useFolder()
 const { destroyContent } = useContent()
 const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
 const selected = ref(new Map())
+
 const types = ref([])
+
+const reload = async () => {
+  const { data } = await browse(props.content.id)
+  contents.value = data
+}
 
 const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
@@ -37,32 +43,26 @@ const doEdit = async (content) => {
 
 const doDelete = async (content) => {
   await destroyContent(content.id)
-
-  if (selected.value.has(content.id)) {
-    selected.value.delete(content.id)
-  }
-
-  const { data } = await browse(props.content.id)
-  contents.value = data
+  selected.value.delete(content.id)
+  reload()
 }
 
 const doDeleteSelection = async () => {
-
+  const ids = Array.from(selected.value.keys())
+  await destroyManyContent(props.content, ids)
+  reload()
 }
 
 const doSelect = (content, evt) => {
-  if (evt.target.checked) {
-    selected.value.set(content.id, content)
-  } else {
-    selected.value.delete(content.id)
-  }
+  evt.target.checked 
+    ? selected.value.set(content.id, content)
+    : selected.value.delete(content.id)                  
 }
 
-watchEffect(async () => {
-  const { data } = await browse(props.content.id)
-  contents.value = data
+watch(() => props.content.id, async () => {
+  reload()
   selected.value.clear()
-})
+}, { immediate: true })
 
 onMounted(async () => {
   const { data } = await getContentTypes()

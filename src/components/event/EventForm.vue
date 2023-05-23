@@ -1,10 +1,6 @@
 <script setup>
 import { ref, computed, provide, inject, onMounted, watch } from 'vue'
-
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-
 import { useCountry } from '@/composables/country.js'
-
 import ContentTitle from '@/components/content/fields/ContentTitle.vue'
 import ContentDescription from '@/components/content/fields/ContentDescription.vue'
 import ContentIndexed from '@/components/content/fields/ContentIndexed.vue'
@@ -19,6 +15,7 @@ import EventEnds from '@/components/event/fields/EventEnds.vue'
 import Countries from '@/components/country/fields/Countries.vue'
 import Addresses from '@/components/country/fields/Addresses.vue'
 import EventMap from '@/components/event/fields/EventMap.vue'
+import FormTabGroup from '@/components/form/FormTabGroup.vue'
 
 const props = defineProps({
   event: {
@@ -56,61 +53,38 @@ onMounted( async () => {
 <template>
   <span class="text-slate-600">{{ event.title }}</span>
   <form @submit.prevent="$emit('submit-event')">
-    <TabGroup>
-      <TabList>
-        <Tab>Default</Tab>
-        <Tab>Settings</Tab>
-        <Tab>Security</Tab>
-      </TabList>
-      <TabPanels>
-
-        <!-- DEFAULT -->
-
-        <TabPanel>
-          <ContentTitle v-model:title="event.title" />
-          <ContentDescription v-model:description="event.description" />
-          <EventStart v-model:starts="event.starts" />
-          <EventEnds v-model:ends="event.ends" />
-          <EventBody v-model:body="event.body" />
-          <Countries class="z-20" :countries="countries" v-model:country="event.country" />
-          <Addresses 
-            class="z-10"
-						:country="event.country" v-model:address="event.address" 
-						v-model:address_longitude="event.address_longitude"
-						v-model:address_latitude="event.address_latitude"
-					/>
-          <EventMap
-            class="h-64 w-full"
-            :lat="event.address_latitude"
-            :lon="event.address_longitude" />
-        </TabPanel>
-
-        <!-- SETTINGS -->
-
-        <TabPanel>
-          <ContentPublishingDate v-model:effective="event.effective" />
-          <ContentExpirationDate v-model:expiration="event.expiration" />
-          <ContentBreadcrumb v-model:breadcrumb="event.breadcrumb" />
-          <ContentIndexed v-model:is_fts="event.is_fts" />
-          <ContentBannerImage v-model:banner_image="event.banner_image" />
-        </TabPanel>
-
-        <!-- SECURITY -->
-
-
-        <TabPanel>
-          SECURITY
-          <ContentSecurity 
-            v-model:acls="event.acls"
-          />
-
-        </TabPanel>
-
-
-      </TabPanels>
-    </TabGroup>
+    <FormTabGroup>
+      <template #default>
+        <ContentTitle v-model:title="event.title" />
+        <ContentDescription v-model:description="event.description" />
+        <EventStart v-model:starts="event.starts" />
+        <EventEnds v-model:ends="event.ends" />
+        <EventBody v-model:body="event.body" />
+        <Countries class="z-20" :countries="countries" v-model:country="event.country" />
+        <Addresses 
+          class="z-10"
+          :country="event.country" v-model:address="event.address" 
+          v-model:address_longitude="event.address_longitude"
+          v-model:address_latitude="event.address_latitude"
+        />
+        <EventMap
+          class="h-64 w-full"
+          :lat="event.address_latitude"
+          :lon="event.address_longitude" />
+      </template>
+      <template #settings>
+        <ContentPublishingDate v-model:effective="event.effective" />
+        <ContentExpirationDate v-model:expiration="event.expiration" />
+        <ContentBreadcrumb v-model:breadcrumb="event.breadcrumb" />
+        <ContentIndexed v-model:is_fts="event.is_fts" />
+        <ContentBannerImage v-model:banner_image="event.banner_image" />
+      </template>
+      <template #security>
+        <ContentSecurity v-model:acls="event.acls" />
+      </template>
+    </FormTabGroup>
     <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>
-  </template>
+</template>

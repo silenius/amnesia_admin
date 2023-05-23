@@ -7,26 +7,26 @@ const folder_to_formdata = (folder_data) => {
     const data = new FormData()
 
     const fields = [
-      'title',
-      'description',
-      'exclude_nav',
-      'is_fts',
-      'effective',
-      'expiration',
-      'index_content_id',
-      'polymorphic_loading',
-      'default_limit',
-      'breadcrumb'
+        'title',
+        'description',
+        'exclude_nav',
+        'is_fts',
+        'effective',
+        'expiration',
+        'index_content_id',
+        'polymorphic_loading',
+        'default_limit',
+        'breadcrumb'
     ]
 
     for (let key of fields) {
-      if ((folder[key] === null) || (folder[key] === undefined)) {
-        data.append(key, '')
-      } else {
-        data.append(key, folder[key])
-      }
+        if ((folder[key] === null) || (folder[key] === undefined)) {
+            data.append(key, '')
+        } else {
+            data.append(key, folder[key])
+        }
     }
-    
+
     if (folder.polymorphic_loading 
         && folder.polymorphic_children) {
         folder.polymorphic_children.forEach(
@@ -35,17 +35,17 @@ const folder_to_formdata = (folder_data) => {
     }
 
     if (folder.default_order) {
-      data.append('default_order', JSON.stringify(folder.default_order))
+        data.append('default_order', JSON.stringify(folder.default_order))
     }
 
     if (folder.acls) {
-      data.append('acls', JSON.stringify(folder.acls.map(x => {
-        return {
-          allow: x.allow,
-          role_id: x.role.id,
-          permission_id: x.permission.id
-        }
-      })))
+        data.append('acls', JSON.stringify(folder.acls.map(x => {
+            return {
+                allow: x.allow,
+                role_id: x.role.id,
+                permission_id: x.permission.id
+            }
+        })))
     }
 
     if (folder.banner_image) {
@@ -79,30 +79,39 @@ const updateFolder = async(folder) => {
 }
 
 const getIndexCandidates = async (id) => {
-  return browse(id, {
-    filter_types: 'document'
-  })
+    return browse(id, {
+        filter_types: 'document'
+    })
 }
 
 const getOrders = async (opts = {}) => {
-  const options = new URLSearchParams()
-  
-  options.append('pl', opts.pl)
+    const options = new URLSearchParams()
 
-  if (opts.pc) {
-    opts.pc.forEach(i => options.append('pc', i))
-  }
-  
-  return useFetchBackend(`folder/polymorphic_orders?${options}`)
+    options.append('pl', opts.pl)
+
+    if (opts.pc) {
+        opts.pc.forEach(i => options.append('pc', i))
+    }
+
+    return useFetchBackend(`folder/polymorphic_orders?${options}`)
 }
 
+const destroyManyContent = async(folder, ids) => {
+    const data = new FormData()
+    ids.forEach((x) => data.append('ids', x))
+    return useFetchBackend(`${folder.id}/bulk_delete`, {
+        method: 'POST',
+        body: data
+    })
+}
 
 export function useFolder() {
-  return {
-      updateFolder,
-      createFolder,
-      getIndexCandidates,
-      browse,
-      getOrders
-  }
+    return {
+        updateFolder,
+        createFolder,
+        getIndexCandidates,
+        browse,
+        getOrders,
+        destroyManyContent
+    }
 }

@@ -20,8 +20,6 @@ watchEffect(async () => {
 
 <template>
   <div>
-    <h1>CONTENTS</h1>
-    <span class="text-red-600">{{ content.title }}</span>
     <RouterView 
       :content="content"
       v-if="content.id"
