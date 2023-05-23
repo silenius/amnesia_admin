@@ -20,6 +20,7 @@ const { destroyContent } = useContent()
 const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
+const selected = ref(new Map())
 const types = ref([])
 
 const doBrowse = async (id) => await router.push({
@@ -34,15 +35,33 @@ const doEdit = async (content) => {
   })
 }
 
-const deleteContent = async (content) => {
+const doDelete = async (content) => {
   await destroyContent(content.id)
+
+  if (selected.value.has(content.id)) {
+    selected.value.delete(content.id)
+  }
+
   const { data } = await browse(props.content.id)
   contents.value = data
+}
+
+const doDeleteSelection = async () => {
+
+}
+
+const doSelect = (content, evt) => {
+  if (evt.target.checked) {
+    selected.value.set(content.id, content)
+  } else {
+    selected.value.delete(content.id)
+  }
 }
 
 watchEffect(async () => {
   const { data } = await browse(props.content.id)
   contents.value = data
+  selected.value.clear()
 })
 
 onMounted(async () => {
@@ -65,10 +84,13 @@ onMounted(async () => {
 
   <FolderBrowser
     @browse="doBrowse"
-    @delete-content="deleteContent"
+    @delete-content="doDelete"
+    @select-content="doSelect"
     @edit-content="doEdit"
+    @delete-selection="doDeleteSelection"
     :folder="content"
     :contents="contents" 
+    :selected="selected"
   />
 
   </template>

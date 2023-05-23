@@ -1,6 +1,6 @@
 import { createApp, readonly, ref } from 'vue'
 import { createPinia } from 'pinia'
-import { createHead } from "@unhead/vue"
+//import { createHead } from "@unhead/vue"
 
 import App from './App.vue'
 import router from './router'
@@ -29,6 +29,7 @@ import {
     faFileImage,
     faFilePdf,
     faCaretDown,
+    faCaretRight,
     faHandPointRight,
     faList
 } from '@fortawesome/free-solid-svg-icons'
@@ -57,15 +58,16 @@ library.add(faFileImage)
 library.add(faImage)
 library.add(faFilePdf)
 library.add(faCaretDown)
+library.add(faCaretRight)
 library.add(faHandPointRight)
 library.add(faList)
 
 const app = createApp(App)
 const pinia = createPinia()
-const head = createHead()
+//const head = createHead()
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(pinia)
 app.use(router)
-app.use(head)
+//app.use(head)
 
 app.mount('#app')

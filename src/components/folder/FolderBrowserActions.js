@@ -15,3 +15,13 @@ export const actions = readonly([
     enabled: (...args) => true
   }
 ])
+
+export const selectActions = readonly([
+  {
+    label: 'Delete',
+    event: 'delete-selection',
+    icon: 'fa-solid fa-trash-can',
+    class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700',
+    enabled: (...args) => true
+  }, 
+])
