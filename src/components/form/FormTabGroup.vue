@@ -1,8 +1,8 @@
 <template>
   <TabGroup>
-    <TabList class="flex rounded-xl">
-      <Tab v-for="tab in tabs" :key="tab.key" v-slot="{ selected }">
-        {{ tab.title }}
+    <TabList class="border-b flex mb-8 flex-col sm:flex-row">
+      <Tab class="pb-4" v-for="tab in tabs" :key="tab.key" v-slot="{ selected }">
+        <span :class="[ 'pb-4 px-12', selected ? 'border-b-2 border-indigo-500 text-indigo-500 font-bold' : 'font-thin' ]">{{ tab.title }}</span>
       </Tab>
     </TabList>
     <TabPanels>
@@ -15,6 +15,7 @@
 
 <script setup>
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+
 const props = defineProps({
   tabs: {
     type: Array,
@@ -30,7 +31,7 @@ const props = defineProps({
       {
         title: 'Security',
         key: 'security'
-      }
+      },
     ]
   }
 })

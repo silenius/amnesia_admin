@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed, provide, inject, watch } from 'vue'
 
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-
 import ContentTitle from '@/components/content/fields/ContentTitle.vue'
 import ContentDescription from '@/components/content/fields/ContentDescription.vue'
 import ContentIndexed from '@/components/content/fields/ContentIndexed.vue'

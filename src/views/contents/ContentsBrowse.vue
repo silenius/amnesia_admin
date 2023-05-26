@@ -56,7 +56,7 @@ const doDeleteSelection = async () => {
 const doSelect = (content, evt) => {
   evt.target.checked 
     ? selected.value.set(content.id, content)
-    : selected.value.delete(content.id)                  
+    : selected.value.delete(content.id)
 }
 
 watch(() => props.content.id, async () => {

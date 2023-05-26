@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <label class="block">
-      <span>Title</span>
+  <div class="mb-4">
+    <label>
+      <p>Body</p>
       <EditorTinyMCE v-model="value" />
       <span class="text-red-500" v-if="errors.body">
         {{ errors.body }}

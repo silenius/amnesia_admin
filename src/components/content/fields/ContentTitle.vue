@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <label class="block">
-      <span>Title</span>
-      <input v-model.trim="value" class="block" type="text" placeholder="" />
-      <span class="text-red-500" v-if="errors.title">
-        {{ errors.title }}
-      </span>
+  <div class="mb-4">
+    <label>
+      <p>Title</p>
+      <input v-model.trim="value" class="focus:ring-0 focus:border-indigo-500 border-slate-300 focus:text-slate-800 focus:bg-slate-100 bg-slate-50 w-full" type="text" placeholder="" />
+      <span class="text-red-500" v-if="errors.title">{{ errors.title }}</span>
     </label>
   </div>
 </template>

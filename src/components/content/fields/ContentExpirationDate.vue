@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="block">
+    <label>
       <span>Expiration date</span>
 
       <flat-pickr

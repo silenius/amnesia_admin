@@ -1,5 +1,5 @@
 <template>
-  <table class="table-auto border-spacing-4 text-xs">
+  <table class="table-auto border-spacing-4 w-full">
     <thead>
       <tr class="text-left bg-slate-100">
         <th class="p-2"></th>
@@ -51,7 +51,7 @@
       <tfoot>
       <tr>
         <td>
-          <select v-model="selectedAllow">
+          <select v-model="selectedAllow" class="w-full">
             <option value="yes">allow</option>
             <option value="no">deny</option>
           </select>
@@ -77,7 +77,7 @@
 
   PARENT ACLS:
 
-  <table class="table-auto border-spacing-4 text-xs">
+  <table class="w-full table-auto border-spacing-4">
     <thead>
       <tr class="text-left bg-slate-100">
         <th>Type</th>

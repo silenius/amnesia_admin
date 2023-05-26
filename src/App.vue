@@ -5,9 +5,11 @@ import { RouterView } from 'vue-router'
 <template>
   <header>
   </header>
-  <div class="container mx-auto">
-    <div class="grid gap-4">
-      <RouterView />
+  <div class="text-slate-600">
+    <div class="container mx-auto">
+      <div class="grid gap-4">
+        <RouterView />
+      </div>
     </div>
   </div>
 </template>
