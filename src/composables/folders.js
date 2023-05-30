@@ -60,6 +60,17 @@ const browse = async (id, opts = {}) => {
     return useFetchBackend(`${id}/browse?${options}`)
 }
 
+const paste = async (folder, ids) => {
+    const data = new FormData()
+    
+    unref(ids).forEach((x) => data.append('ids', x))
+    
+    return useFetchBackend(`${folder.id}/paste`, {
+        method: 'POST',
+        body: data
+    })
+}
+
 const createFolder = async(container, folder) => {
     const data = folder_to_formdata(folder)
 
@@ -111,6 +122,7 @@ export function useFolder() {
         createFolder,
         getIndexCandidates,
         browse,
+        paste,
         getOrders,
         destroyManyContent
     }

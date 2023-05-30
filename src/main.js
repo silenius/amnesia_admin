@@ -31,7 +31,8 @@ import {
     faCaretDown,
     faCaretRight,
     faHandPointRight,
-    faList
+    faList,
+    faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -61,6 +62,7 @@ library.add(faCaretDown)
 library.add(faCaretRight)
 library.add(faHandPointRight)
 library.add(faList)
+library.add(faArrowUpRightFromSquare)
 
 const app = createApp(App)
 const pinia = createPinia()

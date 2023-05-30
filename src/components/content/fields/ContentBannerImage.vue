@@ -40,7 +40,7 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-lg font-medium leading-6 text-gray-900"
+                  class="text-lg font-medium text-gray-900"
                 >
                   Browse
                 </DialogTitle>

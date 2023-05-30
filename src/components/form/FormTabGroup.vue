@@ -1,6 +1,6 @@
 <template>
   <TabGroup>
-    <TabList class="border-b flex mb-8 flex-col sm:flex-row">
+    <TabList class="border-b flex mb-4 flex-col sm:flex-row">
       <Tab class="pb-4" v-for="tab in tabs" :key="tab.key" v-slot="{ selected }">
         <span :class="[ 'pb-4 px-12', selected ? 'border-b-2 border-indigo-500 text-indigo-500 font-bold' : 'font-thin' ]">{{ tab.title }}</span>
       </Tab>
