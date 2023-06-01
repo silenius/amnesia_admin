@@ -95,6 +95,10 @@ const getIndexCandidates = async (id) => {
     })
 }
 
+const getLineage = async (folder_id) => {
+    return useFetchBackend(`${folder_id}/lineage`)
+}
+
 const getOrders = async (opts = {}) => {
     const options = new URLSearchParams()
 
@@ -124,6 +128,7 @@ export function useFolder() {
         browse,
         paste,
         getOrders,
+        getLineage,
         destroyManyContent
     }
 }

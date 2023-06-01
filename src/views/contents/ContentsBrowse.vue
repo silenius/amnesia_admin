@@ -22,7 +22,7 @@ const props = defineProps({
 const router = useRouter()
 
 const { browse, paste, destroyManyContent } = useFolder()
-const { destroyContent, getContent } = useContent()
+const { setWeight, destroyContent, getContent } = useContent()
 const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
@@ -37,7 +37,8 @@ const move_folder = ref(null)
 
 const doMoveBrowse = async (id) => {
   const { data } = await browse(id, [
-    ['filter_types', 'folder']
+    ['filter_types', 'folder'],
+    ['sort_folder_first', true]
   ])
   const { data: folder_data } = await getContent(id)
   move_contents.value = data
@@ -45,7 +46,10 @@ const doMoveBrowse = async (id) => {
 }
 
 const reload = async () => {
-  const { data } = await browse(props.content.id)
+  const { data } = await browse(props.content.id, [
+    ['sort_folder_first', true]
+  ])
+
   contents.value = data
 }
 
@@ -64,6 +68,11 @@ const doEdit = async (content) => {
 const doDelete = async (content) => {
   await destroyContent(content.id)
   selected.value.delete(content.id)
+  reload()
+}
+
+const doChangeWeight = async (content, weight) => {
+  await setWeight(content.id, weight)
   reload()
 }
 
@@ -119,6 +128,7 @@ onMounted(async () => {
             <p class="text-sm text-gray-500">
               <FolderBrowser
                 @browse="doMoveBrowse"
+                @breadcrumb-select="(content) => doMoveBrowse(content.id)"
                 :actions="null"
                 :selectActions="null"
                 :folder="move_folder"
@@ -158,8 +168,10 @@ onMounted(async () => {
     @delete-content="doDelete"
     @select-content="doSelect"
     @edit-content="doEdit"
+    @change-weight-content="doChangeWeight"
     @delete-selection="doDeleteSelection"
     @move-selection="doMoveSelection"
+    @breadcrumb-select="(content) => doBrowse(content.id)"
     :folder="content"
     :contents="contents" 
     :selected="selected"

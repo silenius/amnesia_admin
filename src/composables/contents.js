@@ -53,6 +53,16 @@ const destroyContent = async (id) => {
     })
 }
 
+const setWeight = async(id, weight) => {
+    const data = new FormData()
+    data.append('weight', weight)
+
+    return useFetchBackend(`${id}/weight`, {
+        method: 'POST',
+        body: data
+    })
+}
+
 const validateTitle = (value) => {
     return !value ? isEmpty('title', value) : minLength('title', value, 4)
 }
@@ -71,6 +81,7 @@ export function useContent() {
         deleteContentACL,
         patchContentACL,
         destroyContent,
+        setWeight,
         validateTitle,
         validateDescription
     }

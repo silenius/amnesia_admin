@@ -30,9 +30,12 @@ import {
     faFilePdf,
     faCaretDown,
     faCaretRight,
+    faAngleRight,
     faHandPointRight,
     faList,
-    faArrowUpRightFromSquare
+    faArrowUpRightFromSquare,
+    faSliders,
+    faHouse
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -60,9 +63,12 @@ library.add(faImage)
 library.add(faFilePdf)
 library.add(faCaretDown)
 library.add(faCaretRight)
+library.add(faAngleRight)
 library.add(faHandPointRight)
 library.add(faList)
 library.add(faArrowUpRightFromSquare)
+library.add(faSliders)
+library.add(faHouse)
 
 const app = createApp(App)
 const pinia = createPinia()
