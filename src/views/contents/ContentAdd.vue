@@ -7,7 +7,6 @@ import DocumentAdd from '@/views/documents/DocumentAdd.vue'
 import FileAdd from '@/views/files/FileAdd.vue'
 import EventAdd from '@/views/events/EventAdd.vue'
 
-
 const props = defineProps({
   content: Object,
   type: String

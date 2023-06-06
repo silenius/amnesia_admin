@@ -94,6 +94,13 @@ const doMove = async () => {
   move_modal_open.value = false
 }
 
+const doAdd = async (folder, t) => {
+  await router.push({
+    name: 'add-content', 
+    query: { type: t }
+  })
+}
+
 const doSelect = (content, evt) => {
   evt.target.checked 
     ? selected.value.set(content.id, content)
@@ -149,22 +156,13 @@ onMounted(async () => {
     </div>
   </Dialog>
 
-  <h1 class="text-2xl underline decoration-solid decoration-sky-500 decoration-2 underline-offset-4 mb-2 font-bold">
-
-    <font-awesome-icon class="mr-2" icon="fa-solid fa-folder-tree" />{{ content.title }}
+  <h1 class="text-xl font-bold">
+    {{ content.title }}
   </h1>
-
-  <Menu as="div">
-    <MenuButton>Add to folder</MenuButton>
-    <MenuItems as="div">
-      <MenuItem as="div" v-slot="{ active }" v-for="t in types" :key="t.id">
-      <RouterLink :to="{ name: 'add-content', query: { type: t.name } }">{{ t.name }}</RouterLink>
-      </MenuItem>
-    </MenuItems>
-  </Menu>
 
   <FolderBrowser
     @browse="doBrowse"
+    @add-content="doAdd"
     @delete-content="doDelete"
     @select-content="doSelect"
     @edit-content="doEdit"
@@ -176,5 +174,7 @@ onMounted(async () => {
     :contents="contents" 
     :selected="selected"
     :canChangeWeight="true"
+    :addTypes="types"
   />
+
 </template>

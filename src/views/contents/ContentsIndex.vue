@@ -19,7 +19,7 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="container mx-auto">
     <RouterView 
       :content="content"
       v-if="content.id"

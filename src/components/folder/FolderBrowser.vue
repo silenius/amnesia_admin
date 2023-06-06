@@ -8,7 +8,7 @@ import {
   MenuItem, 
   Popover,
   PopoverButton,
-  PopoverPanel
+  PopoverPanel,
 } from '@headlessui/vue'
 import Avatar from "vue-boring-avatars";
 import { 
@@ -45,12 +45,16 @@ const props = defineProps({
   canChangeWeight: {
     type: Boolean,
     default: false
+  },
+  addTypes: {
+    type: Array,
+    default: null
   }
 })
 
 const emit = defineEmits([
   'browse', 'delete-content', 'select-content', 'move-content', 'edit-content',
-  'change-weight-content', 'delete-selection', 'move-selection'
+  'add-content', 'change-weight-content', 'delete-selection', 'move-selection'
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
@@ -91,6 +95,8 @@ const end = (evt) => {
 
 const enter = (evt) => {
   console.debug('===> ENTER', evt)
+  const tr = get_container(evt.target)
+  tr.classList.add('border-lime-500', 'border')
   evt.preventDefault()
 }
 
@@ -99,12 +105,11 @@ const leave = (evt) => {
 
   const tr = get_container(evt.target)
   tr.classList.remove('border-lime-500', 'border')
+  evt.preventDefault()
 }
 
 const over = (evt) => {
   console.debug('===> OVER', evt)
-  const tr = get_container(evt.target)
-  tr.classList.add('border-lime-500', 'border')
   evt.preventDefault()
 }
 
@@ -127,27 +132,56 @@ const drop = (evt) => {
 <template>
 
   <div class="flex flex-col">
-    <div class="self-end">
+    <div class="flex">
 
-      <!-- SETTINGS -->
+      <!-- BREADCRUMB -->
 
-      <Popover class="relative inline">
-        <PopoverButton class="mr-4 hover:bg-slate-200 p-2 hover:rounded">
-          <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" icon="fa-solid fa-sliders" />
-        </PopoverButton>
+      <div class="grow flex align-center">
+        <ContentBreadcrumb 
+          :content="folder" 
+          @item-select="(content) => $emit('breadcrumb-select', content)" 
+        />
+      </div>
 
-        <PopoverPanel class="absolute right-0 w-max p-4 bg-slate-200 z-10">
-          <h1 class="text-2xl">lol</h1>
-          <p>test test</p>
-          <input type="checkbox" /> Sort folder first
-        </PopoverPanel>
-      </Popover>
+      <div class="flex gap-1 items-center justify-end">
 
-      <!-- VIEW -->
+        <!-- ADD CONTENT TO FOLDER -->
 
-      <button class="mr-4 hover:bg-slate-200 p-2 hover:rounded" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
-        <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" :icon="view_icon" />
-      </button>
+        <Menu as="div" class="relative inline" v-if="addTypes">
+          <MenuButton>
+            <font-awesome-icon class="h-6 w-6 align-middle"
+              icon="fa-regular fa-square-plus" />
+          </MenuButton>
+          <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
+            rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <MenuItem as="div" v-slot="{ active }" v-for="t in addTypes" :key="t.id">
+              <button @click="$emit('add-content', folder, t.name)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md p-2 text-sm', ]" > 
+                <font-awesome-icon class="w-4 h-4 mr-2" :icon="['fa-solid', t.icons.fa]" /> {{ t.name }}
+              </button>
+            </MenuItem>
+          </MenuItems>
+        </Menu>
+
+        <!-- SETTINGS -->
+
+        <Popover class="relative inline">
+          <PopoverButton class="hover:bg-slate-200 p-2 hover:rounded">
+            <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" icon="fa-solid fa-sliders" />
+          </PopoverButton>
+
+          <PopoverPanel class="absolute right-0 w-max p-4 bg-slate-200 z-10">
+            <h1 class="text-2xl">lol</h1>
+            <p>test test</p>
+            <input type="checkbox" /> Sort folder first
+          </PopoverPanel>
+        </Popover>
+
+        <!-- VIEW -->
+
+        <button class="mr-4 hover:bg-slate-200 p-2 hover:rounded" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
+          <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" :icon="view_icon" />
+        </button>
+      </div>
     </div>
 
     <!-- SELECTED ITEMS -->
@@ -190,27 +224,18 @@ const drop = (evt) => {
       </Menu>
     </div>
 
-    <!-- BREADCRUMB -->
-
-    <ContentBreadcrumb 
-      :content="folder" 
-      @item-select="(content) => $emit('breadcrumb-select', content)" 
-      class="mb-4" 
-    />
-
     <!-- TABULAR VIEW -->
 
-    <table class="table-auto box-border" v-if="view == 'tabular'">
+    <table class="mt-4 table-auto box-border" v-if="view == 'tabular'">
       <thead>
-        <tr class="text-left">
-          <th class="p-2" v-if="selectActions"><input type="checkbox" /></th>
+        <tr class="text-left text-white bg-slate-500">
+          <th class="p-2" v-if="selectActions"><input disabled type="checkbox" /></th>
           <th class="p-2">Title</th>
           <th class="p-2">Owner</th>
-          <th class="p-2" v-if="actions">Actions</th>
+          <th class="p-2" v-if="actions"></th>
           <slot name="tabular-th" />
         </tr>
       </thead>
-
       <tbody>
         <tr 
           v-for="content in contents" 
@@ -229,8 +254,8 @@ const drop = (evt) => {
             canChangeWeight ? 'cursor-move' : '']"
         >
           <td class="pl-2 w-0" v-if="selectActions"><input :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
-          <td class="p-2 flex items-center gap-2">
-            <font-awesome-icon class="h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
+          <td class="p-2 w-full whitespace-nowrap">
+            <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
             <template v-if="content.type.name!='folder'">{{ content.title }}</template>

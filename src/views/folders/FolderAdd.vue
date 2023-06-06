@@ -34,8 +34,6 @@ const create = async () => {
     console.log(e)
   }
 }
-
-
 </script>
 
 <template>

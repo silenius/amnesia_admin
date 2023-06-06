@@ -18,7 +18,9 @@ const routes = [
             {
                 name: 'browse-content',
                 path: 'browse',
-                component: () => import('../views/contents/ContentsBrowse.vue')
+                components: {
+                    default: () => import('../views/contents/ContentsBrowse.vue'),
+                }
             },
             {
                 name: 'edit-content',
