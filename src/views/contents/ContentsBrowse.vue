@@ -175,5 +175,6 @@ onMounted(async () => {
     :folder="content"
     :contents="contents" 
     :selected="selected"
+    :canChangeWeight="true"
   />
 </template>

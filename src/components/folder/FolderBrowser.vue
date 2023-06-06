@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, watch } from 'vue'
+import { ref, unref, computed, watch } from 'vue'
 import { 
   Menu, 
   MenuButton, 
@@ -41,6 +41,10 @@ const props = defineProps({
   selectActions : {
     type: Array,
     default: select_actions.slice()
+  },
+  canChangeWeight: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -57,15 +61,15 @@ const view_icon = computed(
   () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
 )
 
-
-const get_tr = (node) => {
+const get_container = (node) => {
   let target = node
+  const elem = unref(view) == 'tabular' ? 'tr' : 'li'
 
   if (target.nodeType != Node.ELEMENT_NODE) {
     target = target.parentNode
   }
 
-  return target.closest('tr')
+  return target.closest(elem)
 }
 
 const drag = (evt) => {
@@ -81,7 +85,7 @@ const start = (content, evt) => {
 
 const end = (evt) => {
   console.debug('===> END', evt)
-  const tr = get_tr(evt.target)
+  const tr = get_container(evt.target)
   tr.classList.remove('opacity-25', 'border-indigo-500', 'border')
 }
 
@@ -93,22 +97,21 @@ const enter = (evt) => {
 const leave = (evt) => {
   console.debug('===> LEAVE', evt)
 
-  const tr = get_tr(evt.target)
+  const tr = get_container(evt.target)
   tr.classList.remove('border-lime-500', 'border')
 }
 
 const over = (evt) => {
   console.debug('===> OVER', evt)
-  evt.preventDefault()
-
-  const tr = get_tr(evt.target)
+  const tr = get_container(evt.target)
   tr.classList.add('border-lime-500', 'border')
+  evt.preventDefault()
 }
 
 const drop = (evt) => {
   console.debug('===> DROP', evt)
 
-  const tr = get_tr(evt.target)
+  const tr = get_container(evt.target)
   tr.classList.remove('border-lime-500', 'border')
 
   const src = JSON.parse(evt.dataTransfer.getData('application/json'))
@@ -119,16 +122,9 @@ const drop = (evt) => {
   evt.preventDefault()
 }
 
-
-
-
-
-
-
 </script>
 
 <template>
-
 
   <div class="flex flex-col">
     <div class="self-end">
@@ -153,6 +149,8 @@ const drop = (evt) => {
         <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" :icon="view_icon" />
       </button>
     </div>
+
+    <!-- SELECTED ITEMS -->
 
     <div v-if="selectActions && selected.size > 0">
 
@@ -192,7 +190,13 @@ const drop = (evt) => {
       </Menu>
     </div>
 
-    <ContentBreadcrumb :content="folder" @item-select="(content) => $emit('breadcrumb-select', content)" class="mb-4" />
+    <!-- BREADCRUMB -->
+
+    <ContentBreadcrumb 
+      :content="folder" 
+      @item-select="(content) => $emit('breadcrumb-select', content)" 
+      class="mb-4" 
+    />
 
     <!-- TABULAR VIEW -->
 
@@ -211,7 +215,7 @@ const drop = (evt) => {
         <tr 
           v-for="content in contents" 
           :key="content.id" 
-          :draggable="true"
+          :draggable="canChangeWeight"
           @drag="drag"
           @dragstart="start(content, $event)"
           @dragend="end"
@@ -221,14 +225,14 @@ const drop = (evt) => {
           @drop="drop"
           :data-id="content.id"
           :data-weight="content.weight"
-          class="cursor-move odd:bg-white even:bg-slate-50 text-slate-600"
+          :class="['odd:bg-white even:bg-slate-50 text-slate-600',
+            canChangeWeight ? 'cursor-move' : '']"
         >
           <td class="pl-2 w-0" v-if="selectActions"><input :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
           <td class="p-2 flex items-center gap-2">
             <font-awesome-icon class="h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
-              v-if="content.type.name=='folder'" class="underline
-              decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
+              v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
             <template v-if="content.type.name!='folder'">{{ content.title }}</template>
           </td>
           <td class="p-2 whitespace-nowrap">
@@ -282,7 +286,21 @@ const drop = (evt) => {
 
       <ul class="flex flex-wrap text-slate-600 flex-row justify-start gap-8">
 
-        <li v-for="content in contents" :key="content.id">
+        <li 
+          v-for="content in contents" 
+          :key="content.id"
+          :draggable="canChangeWeight"
+          @drag="drag"
+          @dragstart="start(content, $event)"
+          @dragend="end"
+          @dragleave="leave"
+          @dragenter="enter"
+          @dragover="over"
+          @drop="drop"
+          :data-id="content.id"
+          :data-weight="content.weight"
+          :class="[canChangeWeight ? 'cursor-move' : '']"
+        >
 
           <input v-if="selectActions" :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" class="relative border-slate-300 top-6 left-1" />
 

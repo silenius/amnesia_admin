@@ -1,59 +1,62 @@
 <template>
   <div class="relative w-full">
-    <Combobox v-model="selected">
+    <label>
+      <p>Address</p>
+      <Combobox v-model="selected">
 
-      <div class="relative mt-1">
-        <div
-          class="flex w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
-        >
-          <ComboboxInput
-            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-            @change="query = $event.target.value"
-          />
-          <button @click.prevent="reset" class="bg-red-400 text-white p-2 hover:bg-red-600 rounded">Reset</button>
-        </div>
-        <TransitionRoot
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          @after-leave="query = ''"
-        >
-          <ComboboxOptions
-            class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+        <div class="relative mt-1">
+          <div
+            class="flex w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
           >
-            <div
-              v-if="addresses_matches.length === 0 && query !== ''"
-              class="relative cursor-default select-none py-2 px-4 text-gray-700"
+            <ComboboxInput
+              class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              @change="query = $event.target.value"
+            />
+            <button @click.prevent="reset" class="bg-red-400 text-white p-2 hover:bg-red-600 rounded">Reset</button>
+          </div>
+          <TransitionRoot
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            @after-leave="query = ''"
+          >
+            <ComboboxOptions
+              class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             >
-              Nothing found.
-            </div>
-
-            <ComboboxOption
-              v-for="c in addresses_matches"
-              as="template"
-              :key="c.place_id"
-              :value="c"
-              v-slot="{ selected, active }"
-            >
-              <li
-                class="relative cursor-default select-none py-2 pl-10 pr-4"
-                :class="{
-                  'bg-teal-600 text-white': active,
-                  'text-gray-900': !active,
-                }"
+              <div
+                v-if="addresses_matches.length === 0 && query !== ''"
+                class="relative cursor-default select-none py-2 px-4 text-gray-700"
               >
-                <span
-                  class="block truncate"
-                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                Nothing found.
+              </div>
+
+              <ComboboxOption
+                v-for="c in addresses_matches"
+                as="template"
+                :key="c.place_id"
+                :value="c"
+                v-slot="{ selected, active }"
+              >
+                <li
+                  class="relative cursor-default select-none py-2 pl-10 pr-4"
+                  :class="{
+                    'bg-teal-600 text-white': active,
+                    'text-gray-900': !active,
+                  }"
                 >
-                  {{ c.display_name }}
-                </span>
-              </li>
-            </ComboboxOption>
-          </ComboboxOptions>
-        </TransitionRoot>
-      </div>
-    </Combobox>
+                  <span
+                    class="block truncate"
+                    :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                  >
+                    {{ c.display_name }}
+                  </span>
+                </li>
+              </ComboboxOption>
+            </ComboboxOptions>
+          </TransitionRoot>
+        </div>
+      </Combobox>
+    </label>
   </div>
 </template>
 

@@ -15,6 +15,7 @@ import {
     faUserGroup,
     faCircleCheck,
     faCircleXmark,
+    faCirclePlus,
     faShieldHalved,
     faFolderTree,
     faFolder,
@@ -47,6 +48,7 @@ library.add(faUserAstronaut)
 library.add(faUserGroup)
 library.add(faCircleCheck)
 library.add(faCircleXmark)
+library.add(faCirclePlus)
 library.add(faShieldHalved)
 library.add(faFolderTree)
 library.add(faFolder)
