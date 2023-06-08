@@ -44,7 +44,7 @@ const emit = defineEmits([
             <tr v-for="account in accounts" :key="account.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
                 <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
                     <div class="grid grid-flow-col w-fit gap-4">
-                        <Avatar :size="32" :name="account.full_name" variant="bauhaus" />
+                        <img :src="account.gravatar" class="h-10 w-10 rounded-full" />
                         <span class="flex flex-col">
                             <strong>{{ account.full_name }}</strong>
                             <small>{{ account.email }}</small>

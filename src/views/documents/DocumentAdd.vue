@@ -7,7 +7,7 @@ import DocumentForm from '@/components/document/DocumentForm.vue'
 import { useDocument } from '@/composables/documents.js'
 
 const props = defineProps({
-    container: Object
+  container: Object
 })
 
 const router = useRouter()
@@ -32,16 +32,15 @@ const create = async () => {
     console.log(e)
   }
 }
-
-
 </script>
 
 <template>
-    <h1>Add document</h1>
-    <DocumentForm 
-      :doc="doc" 
-      :container="container"
-      :action="'Add document'"
-      @submit-document="create" 
-    />
+  <h1>Add document</h1>
+
+  <DocumentForm 
+    :doc="doc" 
+    :container="container"
+    :action="'Add document'"
+    @submit-document="create" 
+  />
 </template>

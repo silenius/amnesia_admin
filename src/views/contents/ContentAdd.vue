@@ -1,16 +1,20 @@
 <script setup>
 
 import { provide, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import FolderAdd from '@/views/folders/FolderAdd.vue'
 import DocumentAdd from '@/views/documents/DocumentAdd.vue'
 import FileAdd from '@/views/files/FileAdd.vue'
 import EventAdd from '@/views/events/EventAdd.vue'
+import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 
 const props = defineProps({
   content: Object,
   type: String
 })
+
+const router = useRouter()
 
 const errors = ref({})
 
@@ -30,10 +34,20 @@ provide('errors', {
   setError
 })
 
+const doBrowse = async (id) => await router.push({
+  name: 'browse-content', 
+  params: { id: id }
+})
+
 </script>
 
 <template>
-  <h1>Add content</h1>
+
+  <ContentBreadcrumb 
+    :content="props.content" 
+    @item-select="(content) => doBrowse(content.id)"
+  />
+
   <component 
     :is="mapping[props.type]" 
     :container="content"

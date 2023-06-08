@@ -19,7 +19,9 @@ const { getLineage } = useFolder()
 const items = ref([])
 
 const props = defineProps({
-  content: Object,
+  content: {
+    type: Object
+  },
 })
 const emit = defineEmits(['item-select'])
 

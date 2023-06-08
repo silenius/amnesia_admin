@@ -37,7 +37,8 @@ import {
     faArrowUpRightFromSquare,
     faSliders,
     faHouse,
-    faFlask
+    faFlask,
+    faBrain
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -75,6 +76,7 @@ library.add(faSliders)
 library.add(faHouse)
 library.add(faFlask)
 library.add(faSquarePlus)
+library.add(faBrain)
 
 const app = createApp(App)
 const pinia = createPinia()

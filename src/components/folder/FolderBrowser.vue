@@ -270,7 +270,7 @@ const drop = (evt) => {
           </td>
           <td class="p-2" v-if="actions">
             <div class="text-right">
-              <Menu as="div" class="relative text-left">
+              <Menu as="div" class="text-left">
                 <div>
                   <MenuButton class="rounded inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                     actions

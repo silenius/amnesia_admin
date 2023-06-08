@@ -1,6 +1,9 @@
 import { useFetchBackend } from '@/composables/fetch.js'
 
 export function useAccounts() {
+    const my = async () => {
+        return useFetchBackend('auth/my')
+    }
 
     const getAccounts = async () => {
         return useFetchBackend('auth/browse')
@@ -26,6 +29,7 @@ export function useAccounts() {
     }
 
     return {
+        my,
         getAccounts,
         patchAccount,
         destroyAccount

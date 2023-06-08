@@ -9,17 +9,21 @@ const routes = [
 
     {
         path: '/:id(\\d+)',
-        name: 'contents',
         component: () => import('../views/contents/ContentsIndex.vue'),
         props: (route) => ({ 
             content_id: parseInt(route.params.id) 
         }),
         children: [
+            {   name: 'show-content',
+                path: '',
+                component: () => import('../views/contents/ContentShow.vue')
+            },
             {
                 name: 'browse-content',
                 path: 'browse',
                 components: {
                     default: () => import('../views/contents/ContentsBrowse.vue'),
+                    Header: () => import('../components/headers/DefaultHeader.vue')
                 }
             },
             {
