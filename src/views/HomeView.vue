@@ -16,7 +16,6 @@ const sectionClass = ref([
 </script>
 
 <template>
-  
   <div :class="sectionClass">
     <button @click="$router.push({name: 'browse-content', params: {id: 1}})" :class="buttonClass">
       <font-awesome-icon :class="faClass" icon="fa-solid fa-folder-tree" />
@@ -41,6 +40,5 @@ const sectionClass = ref([
       <div>Security</div>
     </button>
   </div>
-
 
 </template>

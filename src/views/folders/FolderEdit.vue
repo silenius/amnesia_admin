@@ -14,7 +14,7 @@ const { updateFolder } = useFolder()
 
 const update = async () => {
   await updateFolder(props.content)
-  router.push({name: 'contents', params: {id: props.content.id}})
+  router.push({name: 'show-content', params: {id: props.content.id}})
 }
 
 </script>

@@ -4,15 +4,23 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import('../views/HomeView.vue')
+        components: {
+            default: () => import('../views/HomeView.vue'),
+            Header: () => import('../components/headers/DefaultHeader.vue'),
+        },
     },
 
     {
         path: '/:id(\\d+)',
-        component: () => import('../views/contents/ContentsIndex.vue'),
-        props: (route) => ({ 
-            content_id: parseInt(route.params.id) 
-        }),
+        components: {
+            default: () => import('../views/contents/ContentsIndex.vue'),
+            Header: () => import('../components/headers/DefaultHeader.vue'),
+        },
+        props: {
+            default: (route) => ({ 
+                content_id: parseInt(route.params.id) 
+            }),
+        },
         children: [
             {   name: 'show-content',
                 path: '',
@@ -23,21 +31,26 @@ const routes = [
                 path: 'browse',
                 components: {
                     default: () => import('../views/contents/ContentsBrowse.vue'),
-                    Header: () => import('../components/headers/DefaultHeader.vue')
                 }
             },
             {
                 name: 'edit-content',
                 path: 'edit',
-                component: () => import('../views/contents/ContentEdit.vue'),
+                components: {
+                    default: () => import('../views/contents/ContentEdit.vue'),
+                }
             },
             {
                 name: 'add-content',
                 path: 'add',
-                component: () => import('../views/contents/ContentAdd.vue'),
-                props: (route) => ({
-                    type: route.query.type,
-                })
+                components: {
+                    default: () => import('../views/contents/ContentAdd.vue'),
+                },
+                props: {
+                    default: (route) => ({
+                        type: route.query.type,
+                    })
+                }
             },
 
         ]
@@ -47,7 +60,10 @@ const routes = [
     {
         path: '/accounts',
         name: 'accounts',
-        component: () => import('../views/accounts/AccountsIndex.vue'),
+        components: {
+            default: () => import('../views/accounts/AccountsIndex.vue'),
+            Header: () => import('../components/headers/DefaultHeader.vue'),
+        },
         children: [
             {
                 name: 'browse_accounts',
@@ -60,7 +76,10 @@ const routes = [
     {
         path: '/roles',
         name: 'roles',
-        component: () => import('../views/roles/RolesIndex.vue'),
+        components:{
+            default: () => import('../views/roles/RolesIndex.vue'),
+            Header: () => import('../components/headers/DefaultHeader.vue'),
+        },
         children: [
             {
                 name: 'browse_role',
@@ -97,7 +116,6 @@ const routes = [
                 path: 'permissions',
                 component: () => import('../views/roles/RolePermissions.vue'),
             }
-
         ]
     }
 ]

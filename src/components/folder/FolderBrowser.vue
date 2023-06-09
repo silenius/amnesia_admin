@@ -127,6 +127,15 @@ const drop = (evt) => {
   evt.preventDefault()
 }
 
+const formatDate = (d) => {
+  return new Date(d).toLocaleString(
+    navigator.language, { 
+      dateStyle: "medium",
+      timeStyle: "short"
+    }
+  )
+}
+
 </script>
 
 <template>
@@ -226,12 +235,13 @@ const drop = (evt) => {
 
     <!-- TABULAR VIEW -->
 
-    <table class="mt-4 table-auto box-border" v-if="view == 'tabular'">
+    <table class="table-auto box-border" v-if="view == 'tabular'">
       <thead>
         <tr class="text-left text-white bg-slate-500">
           <th class="p-2" v-if="selectActions"><input disabled type="checkbox" /></th>
           <th class="p-2">Title</th>
           <th class="p-2">Owner</th>
+          <th class="p-2 whitespace-nowrap">Last update</th>
           <th class="p-2" v-if="actions"></th>
           <slot name="tabular-th" />
         </tr>
@@ -253,13 +263,22 @@ const drop = (evt) => {
           :class="['odd:bg-white even:bg-slate-50 text-slate-600',
             canChangeWeight ? 'cursor-move' : '']"
         >
+
+          <!-- SELECT CHECKBOX -->
+
           <td class="pl-2 w-0" v-if="selectActions"><input :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
+
+          <!-- TITLE -->
+
           <td class="p-2 w-full whitespace-nowrap">
             <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
             <template v-if="content.type.name!='folder'">{{ content.title }}</template>
           </td>
+
+          <!-- OWNER -->
+
           <td class="p-2 whitespace-nowrap">
             <div class="grid grid-flow-col w-fit gap-2">
               <Avatar :size="24" :name="content.owner.full_name" variant="bauhaus" />
@@ -268,6 +287,15 @@ const drop = (evt) => {
               </span>
             </div>
           </td>
+
+          <!-- LAST UPDATE -->
+
+          <td class="p-2 text-center text-xs">
+            {{ formatDate(content.last_update) }}
+          </td>
+
+          <!-- ACTIONS -->
+
           <td class="p-2" v-if="actions">
             <div class="text-right">
               <Menu as="div" class="text-left">

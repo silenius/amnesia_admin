@@ -26,7 +26,7 @@ const { errors, setError } = inject('errors')
 const create = async () => {
   try {
     const { data } = await createDocument(props.container, doc)
-    router.push({name: 'contents', params: {id: data.id}})
+    router.push({name: 'show-content', params: {id: data.id}})
   } catch (e) {
     // TODO
     console.log(e)
