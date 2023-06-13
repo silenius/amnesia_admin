@@ -1,14 +1,7 @@
+import { unref } from 'vue'
 import { useFetchBackend } from '@/composables/fetch.js'
 
 export function useAccounts() {
-    const my = async () => {
-        return useFetchBackend('auth/my')
-    }
-
-    const logout = async() => {
-        return useFetchBackend('auth/logout')
-    }
-
     const getAccounts = async () => {
         return useFetchBackend('auth/browse')
     }
@@ -34,6 +27,7 @@ export function useAccounts() {
 
     return {
         my,
+        login,
         logout,
         getAccounts,
         patchAccount,

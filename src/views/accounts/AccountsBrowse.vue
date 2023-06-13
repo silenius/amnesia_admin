@@ -2,41 +2,31 @@
 
 import { ref, onMounted } from 'vue'
 import AccountTable from '@/components/account/AccountTable.vue'
-import { useAccounts } from '@/composables/accounts.js'
+import { useUsersStore } from '@/stores/users.js'
 
-
-const accounts = ref([])
-
-const { destroyAccount, patchAccount, getAccounts } = useAccounts()
+const user_store = useUsersStore()
 
 onMounted( async () => {
-  await loadAccounts()
+  await user_store.getAll()
 })
 
-const loadAccounts = async () => {
-  const { data } = await getAccounts()
-  accounts.value = data.data.accounts
-}
-
 const toggleEnabled = async (account) => {
-  await patchAccount(account.id, {
+  await user_store.patch(account.id, {
     enabled: !account.enabled
   })
-  loadAccounts()
 }
 
-const destroy = async (account) => {
-  await destroyAccount(account.id)
+const doDestroy = async (account) => {
+  await user_store.deleteUser(account.id)
 }
 
 </script>
 
 <template>
   <AccountTable 
-    v-if="accounts"
-    :accounts="accounts" 
-    :actions="true" 
-    @delete-account="destroy"
-    @toggle-enabled="toggleEnabled" 
-  />
+  :accounts="user_store.users" 
+  :actions="true" 
+  @delete-account="doDestroy"
+  @toggle-enabled="toggleEnabled" 
+/>
 </template>

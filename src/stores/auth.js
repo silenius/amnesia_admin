@@ -7,18 +7,14 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref({})
     const router = useRouter()
 
-    const is_logged = computed(() => {
-        return user.value.id !== undefined
-    })
+    const is_logged = computed(() => user.value.id !== undefined)
 
     onMounted(async () => {
         const { data } = await me()
         user.value = data
     })
 
-    const me = async () => {
-        return useFetchBackend('auth/me')
-    }
+    const me = async () => useFetchBackend('auth/me')
 
     const login = async(username, password) => {
         const data = new FormData()
@@ -53,5 +49,4 @@ export const useAuthStore = defineStore('auth', () => {
         login,
         logout
     }
-
 })
