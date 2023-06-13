@@ -5,6 +5,10 @@ export function useAccounts() {
         return useFetchBackend('auth/my')
     }
 
+    const logout = async() => {
+        return useFetchBackend('auth/logout')
+    }
+
     const getAccounts = async () => {
         return useFetchBackend('auth/browse')
     }
@@ -30,6 +34,7 @@ export function useAccounts() {
 
     return {
         my,
+        logout,
         getAccounts,
         patchAccount,
         destroyAccount
