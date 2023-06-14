@@ -1,8 +1,9 @@
 <template>
   <div>
     <label class="block">
-      <input v-model="value" type="checkbox" />
-      <span>Searchable through the website</span>
+      <input class="align-middle mr-2" v-model="value" type="checkbox" />
+      <span class="font-bold">Indexed</span>
+      <p class="text-xs">If selected, the content will be searchable.</p>
     </label>
   </div>
 </template>

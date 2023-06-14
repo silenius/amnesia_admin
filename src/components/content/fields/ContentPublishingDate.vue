@@ -1,9 +1,12 @@
 <template>
   <div>
     <label class="block">
-      <span>Publishing date</span>
+      <p class="font-bold">Publishing date</p>
+      <p class="text-xs">If this date is in the future, the content will not show up in
+        listings and searches until this date.</p>
 
       <flat-pickr
+        class="p-0 border-slate-300 bg-slate-50"
         v-model="value"
         :config="config"
         placeholder="Select date"

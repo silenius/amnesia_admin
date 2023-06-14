@@ -51,10 +51,10 @@ provide('editable', computed(() => props.folder))
         <ContentDescription v-model:description="folder.description" />
       </template>
       <template #settings>
-        <ContentPublishingDate v-model:effective="folder.effective" />
-        <ContentExpirationDate v-model:expiration="folder.expiration" />
-        <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
-        <ContentBreadcrumb v-model:breadcrumb="folder.breadcrumb" />
+        <ContentPublishingDate class="mb-4" v-model:effective="folder.effective" />
+        <ContentExpirationDate class="mb-4" v-model:expiration="folder.expiration" />
+        <FolderExcludeNav class="mb-4" v-model:exclude_nav="folder.exclude_nav" />
+        <ContentBreadcrumb class="mb-4" v-model:breadcrumb="folder.breadcrumb" />
         <ContentIndexed v-model:is_fts="folder.is_fts" />
         <ContentBannerImage v-model:banner_image="folder.banner_image" />
         <FolderDefaultLimit v-model:default_limit="folder.default_limit" />

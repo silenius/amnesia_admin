@@ -1,9 +1,12 @@
 <template>
   <div>
     <label>
-      <span>Expiration date</span>
+      <p class="font-bold">Expiration date</p>
+      <p class="text-xs">When this date is reached, the content will no longer
+        be visible in listings and searches.</p>
 
       <flat-pickr
+        class="p-0 border-slate-300 bg-slate-50"
         v-model="value"
         :config="config"
         placeholder="Select date"

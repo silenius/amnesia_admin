@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="inset-0 flex">
+      <img class="h-32 w-auto" v-if="banner_image" :src="'/bbpf/' + banner_image.id + '/download'" />
       <button
         type="button"
         @click="openModal"
@@ -90,6 +91,10 @@ import {
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
+
+const props = defineProps({
+  banner_image: Number
+})
 
 const emits = defineEmits([
   'update:banner_image'

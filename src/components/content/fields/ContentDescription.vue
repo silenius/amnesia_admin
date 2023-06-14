@@ -1,7 +1,8 @@
 <template>
   <div class="mb-4">
     <label>
-      <p>Description</p>
+      <p class="font-bold">Description</p>
+      <p class="text-xs">Used in item listings and search results.</p>
       <textarea v-model.trim="value" class="focus:ring-0
         focus:border-indigo-500 border-slate-300 focus:text-slate-800
         focus:bg-slate-100 bg-slate-50 w-full" type="text" placeholder=""></textarea>

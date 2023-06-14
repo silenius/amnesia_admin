@@ -1,8 +1,9 @@
 <template>
   <div>
     <label class="block">
-      <input v-model="value" type="checkbox" />
-      <span>Exclude from navigation tree</span>
+      <input class="align-middle mr-2" v-model="value" type="checkbox" />
+      <span class="font-bold">Exclude from navigation tree</span>
+      <p class="text-xs">If selected, this item will not appear in the navigation tree.</p>
     </label>
   </div>
 </template>

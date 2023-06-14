@@ -1,8 +1,9 @@
 <template>
   <div>
     <label class="block">
-      <input v-model.number="value" type="checkbox" />
-      <span>Breadcrumb</span>
+      <input class="align-middle mr-2" v-model.number="value" type="checkbox" />
+      <span class="font-bold">Breadcrumb</span>
+      <p class="text-xs">If selected, a breadcrumb will be displayed.</p>
     </label>
   </div>
 </template>

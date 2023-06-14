@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref({})
     const router = useRouter()
 
-    const is_logged = computed(() => user.value.id !== undefined)
+    const is_logged = computed(() => user.value?.id !== undefined)
 
     onMounted(async () => {
         const { data } = await me()
