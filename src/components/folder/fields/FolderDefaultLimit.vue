@@ -1,12 +1,14 @@
 <template>
   <div>
     <label class="block">
-      Default browsing limit: 
-      <select class="form-select" v-model.number="value">
+      <p class="font-bold">Default browsing limit</p>
+      <p class="text-xs">Number of items to show by default when browsing the
+      folder</p>
+      <select class="form-select mt-2" v-model.number="value">
         <option v-for="option in options">
           {{ option }}
         </option>
-      </select>
+      </select> per page
     </label>
   </div>
 </template>

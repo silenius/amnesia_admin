@@ -4,13 +4,19 @@
       <p class="font-bold">Banner</p>
       <p class="text-xs">Custom banner</p>
       <img class="h-32 w-auto" v-if="banner_image" :src="'/bbpf/' + banner_image.id + '/download'" />
-      <button
-        type="button"
-        @click="openModal"
-        class="rounded-md bg-green-300 px-4 py-2 hover:bg-opacity-30">
-        Select
+      <div class="mt-4">
+      <button type="button" @click="openModal" class="w-32 hover:bg-green-300
+        hover:text-green-800 rounded-md bg-green-200 text-green-700 p-1
+        border border-green-300">
+        {{ banner_image ? 'Replace' : 'Select' }}
       </button>
-      <button type="button" class="bg-red-500">Remove</button>
+      <button type="button" @click="banner_image=null" v-if="banner_image"
+        class="border border-red-300 hover:bg-red-300 hover:text-red-800
+        bg-red-200 text-red-700 p-1 ml-2 rounded-md
+        w-32">
+        Remove
+      </button>
+        </div>
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="closeModal" class="relative z-10">
@@ -52,6 +58,7 @@
                     <FolderBrowser
                       @browse="doBrowse"
                       @select-banner="doSelectBanner"
+                      @breadcrumb-select="(content) => doBrowse(content.id)"
                       :contents="contents"
                       :folder="folder"
                       :actions="actions"

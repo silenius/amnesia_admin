@@ -61,9 +61,9 @@ provide('editable', computed(() => props.folder))
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
           <ContentBreadcrumb v-model:breadcrumb="folder.breadcrumb" />
           <ContentIndexed v-model:is_fts="folder.is_fts" />
-          <ContentBannerImage v-model:banner_image="folder.banner_image" />
-          <FolderDefaultLimit v-model:default_limit="folder.default_limit" />
-          <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.banner_image" />
+          <FolderDefaultLimit class="border-b pb-4" v-model:default_limit="folder.default_limit" />
+          <FolderDefaultPage class="border-b pb-4" v-model:index_content_id="folder.index_content_id" />
           <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
           <ContentTypes 
             v-model:polymorphic_children="folder.polymorphic_children" 

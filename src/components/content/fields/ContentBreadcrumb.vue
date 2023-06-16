@@ -1,9 +1,11 @@
 <template>
   <div>
-    <label class="block">
-      <input class="align-middle mr-2" v-model.number="value" type="checkbox" />
-      <span class="font-bold">Breadcrumb</span>
-      <p class="text-xs">If selected, a breadcrumb will be displayed.</p>
+    <label class="block flex items-center gap-2">
+      <input class="text-green-500 align-middle h-8 w-8" v-model.number="value" type="checkbox" />
+      <div class="flex flex-col">
+        <span class="font-bold">Breadcrumb</span>
+        <p class="text-xs">If selected, a breadcrumb will be displayed.</p>
+      </div>
     </label>
   </div>
 </template>

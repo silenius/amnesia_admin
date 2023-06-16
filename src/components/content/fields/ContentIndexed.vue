@@ -1,9 +1,11 @@
 <template>
   <div>
-    <label class="block">
-      <input class="align-middle mr-2" v-model="value" type="checkbox" />
-      <span class="font-bold">Indexed</span>
-      <p class="text-xs">If selected, the content will be searchable.</p>
+    <label class="block flex items-center gap-2">
+      <input class="align-middle h-8 w-8" v-model="value" type="checkbox" />
+      <div class="flex flex-col">
+        <span class="font-bold">Indexed</span>
+        <p class="text-xs">If selected, the content will be searchable.</p>
+      </div>
     </label>
   </div>
 </template>
