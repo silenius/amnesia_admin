@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4">
+  <div>
     <label>
       <p class="font-bold">Description</p>
       <p class="text-xs">Used in item listings and search results.</p>

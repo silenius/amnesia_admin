@@ -1,14 +1,16 @@
 <template>
   <div>
-    <div class="inset-0 flex">
+    <div>
+      <p class="font-bold">Banner</p>
+      <p class="text-xs">Custom banner</p>
       <img class="h-32 w-auto" v-if="banner_image" :src="'/bbpf/' + banner_image.id + '/download'" />
       <button
         type="button"
         @click="openModal"
-        class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-      >
-        Select banner
+        class="rounded-md bg-green-300 px-4 py-2 hover:bg-opacity-30">
+        Select
       </button>
+      <button type="button" class="bg-red-500">Remove</button>
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="closeModal" class="relative z-10">

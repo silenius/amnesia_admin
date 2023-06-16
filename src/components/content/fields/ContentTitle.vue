@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4">
+  <div>
     <label>
       <p class="font-bold">Title</p>
       <p class="text-xs">Main content title</p>

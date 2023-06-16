@@ -32,6 +32,8 @@ const props = defineProps({
   }
 })
 
+const section_cls="flex flex-col gap-4"
+
 const emit = defineEmits([
   'submit-folder'
 ])
@@ -47,38 +49,42 @@ provide('editable', computed(() => props.folder))
   <form @submit.prevent="$emit('submit-folder')">
     <FormTabGroup>
       <template #default>
+        <section :class="section_cls">
         <ContentTitle v-model:title="folder.title" />
         <ContentDescription v-model:description="folder.description" />
+        </section>
       </template>
       <template #settings>
-        <ContentPublishingDate class="mb-4" v-model:effective="folder.effective" />
-        <ContentExpirationDate class="mb-4" v-model:expiration="folder.expiration" />
-        <FolderExcludeNav class="mb-4" v-model:exclude_nav="folder.exclude_nav" />
-        <ContentBreadcrumb class="mb-4" v-model:breadcrumb="folder.breadcrumb" />
-        <ContentIndexed v-model:is_fts="folder.is_fts" />
-        <ContentBannerImage v-model:banner_image="folder.banner_image" />
-        <FolderDefaultLimit v-model:default_limit="folder.default_limit" />
-        <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
-        <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
-        <ContentTypes 
-          v-model:polymorphic_children="folder.polymorphic_children" 
-          :polymorphic_loading="folder.polymorphic_loading"
-        />
+        <section :class="section_cls">
+          <ContentPublishingDate v-model:effective="folder.effective" />
+          <ContentExpirationDate v-model:expiration="folder.expiration" />
+          <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
+          <ContentBreadcrumb v-model:breadcrumb="folder.breadcrumb" />
+          <ContentIndexed v-model:is_fts="folder.is_fts" />
+          <ContentBannerImage v-model:banner_image="folder.banner_image" />
+          <FolderDefaultLimit v-model:default_limit="folder.default_limit" />
+          <FolderDefaultPage v-model:index_content_id="folder.index_content_id" />
+          <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
+          <ContentTypes 
+            v-model:polymorphic_children="folder.polymorphic_children" 
+            :polymorphic_loading="folder.polymorphic_loading"
+          />
 
-        <FolderOrdering 
-          v-model:default_order="folder.default_order"
-          :polymorphic_children="folder.polymorphic_children" 
-          :polymorphic_loading="folder.polymorphic_loading"
-        />
+          <FolderOrdering 
+            v-model:default_order="folder.default_order"
+            :polymorphic_children="folder.polymorphic_children" 
+            :polymorphic_loading="folder.polymorphic_loading"
+          />
+        </section>
 
       </template>
-      <template #security>
+      <template #security :class="section_cls">
         <ContentSecurity 
           v-model:acls="folder.acls"
         />
       </template>
     </FormTabGroup>
-    <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    <button type="submit" class="mt-4 rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>

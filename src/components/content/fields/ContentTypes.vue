@@ -1,4 +1,5 @@
 <template>
+  <div>
   <Listbox v-model="value" multiple by="id" v-if="polymorphic_loading">
     <ListboxButton>
       {{ value.length > 0 ? value.map((t) => t.name).join(', ') : "ALL" }}
@@ -9,6 +10,7 @@
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
+    </div>
 </template>
 
 <script setup>

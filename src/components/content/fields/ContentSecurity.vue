@@ -1,10 +1,6 @@
 <template>
-  <h1 class="text-2xl underline decoration-solid decoration-sky-500 decoration-2 underline-offset-4 mb-2 font-bold">
-    <font-awesome-icon class="mr-2" icon="fa-solid fa-shield-halved" />Access Control List
-  </h1>
-  <h2 class="text-xl mb-2">You can control who can view and edit your item using the list below.</h2>
   <h3 class="text-lg">Local ACLS</h3>
-  <table class="table-auto border-spacing-4 w-full mb-4">
+  <table class="table-auto border-spacing-4 mb-4">
     <thead>
       <tr class="text-left bg-slate-100">
         <th class="p-2"></th>
@@ -84,7 +80,7 @@
     Parent ACLS
   </p>
 
-  <table class="w-full table-auto border-spacing-4">
+  <table class="table-auto border-spacing-4">
     <thead>
       <tr class="text-left bg-slate-100">
         <th>Type</th>
