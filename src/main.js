@@ -40,7 +40,11 @@ import {
     faSliders,
     faHouse,
     faFlask,
-    faBrain
+    faBrain,
+    faSquareCheck,
+    faSquareXmark,
+    faSquare,
+    faSquareVirus,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -49,6 +53,10 @@ import {
     faCircle
 } from '@fortawesome/free-regular-svg-icons'
 
+library.add(faSquareCheck)
+library.add(faSquareXmark)
+library.add(faSquare)
+library.add(faSquareVirus)
 library.add(faUpDownLeftRight)
 library.add(faUserAstronaut)
 library.add(faUserGroup)

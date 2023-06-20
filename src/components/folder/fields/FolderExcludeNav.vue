@@ -1,8 +1,7 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-      <InputCheckbox :default="false"/>
-      <input class="text-green-500 h-8 w-8 align-middle" v-model="value" type="checkbox" />
+      <InputCheckbox @change="(n) => value = n" :default="value"/>
       <div class="flex flex-col">
         <span class="font-bold">Exclude from navigation tree</span>
         <p class="text-xs">If selected, this item will not appear in the navigation tree.</p>
@@ -29,8 +28,8 @@ const value = computed({
     return props.exclude_nav
   },
 
-  set(value) {
-    emit('update:exclude_nav', value)
+  set(newValue) {
+    emit('update:exclude_nav', newValue)
   }
 
 })

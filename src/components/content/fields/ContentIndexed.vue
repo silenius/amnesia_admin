@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-      <input class="text-green-500 align-middle h-8 w-8" v-model="value" type="checkbox" />
+      <InputCheckbox @change="(n) => value = n" :default="value"/>
       <div class="flex flex-col">
         <span class="font-bold">Indexed</span>
         <p class="text-xs">If selected, the content will be searchable.</p>
@@ -12,6 +12,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import InputCheckbox from '@/components/form/InputCheckbox.vue'
 
 const props = defineProps({
   is_fts: Boolean

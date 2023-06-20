@@ -1,53 +1,45 @@
 <template>
-  <font-awesome-icon @click="next" :class="[class_, 'hover:cursor-pointer text-white h-8 w-8 align-middle']" :icon="icon" />
+  <font-awesome-icon @click="cycle" :class="[class_, 'hover:cursor-pointer h-8 w-8']" :icon="icon" />
 </template>
 
-
 <script setup>
-
-  import { ref } from 'vue'
+  import { ref, computed, watch, unref } from 'vue'
 
   const props = defineProps({
     icons: {
       type: Object,
       default: {
-        true: 'fa-solid fa-check',
-        false: 'fa-solid fa-xmark',
-        undefined: 'fa-regular fa-circle'
+        true: 'fa-solid fa-square-check',
+        false: 'fa-solid fa-square-xmark',
+        null: 'fa-solid fa-square-virus'
       }
     },
     default: {
       type: Boolean,
-      default: undefined
+      default: null
     },
     cls: {
       type: Object,
       default: {
-        true: 'bg-green-500 bg-green-600',
-        false: 'bg-red-500 hover:bg-red-600',
-        undefined: 'bg-sky-500 bg-sky-600',
+        true: 'text-green-500 hover:text-green-600',
+        false: 'text-red-500 hover:text-red-600',
+        null: 'text-sky-500 hover:text-sky-600',
       }
     }
   })
 
-  const next = () => {
-    let found = false
+  const emit = defineEmits(['change'])
 
-    for (const key of Object.keys(props.icons)) {
-      console.log('VALUE ', value.value)
-      console.log('KEY ', key)
-      if (found) {
-        value.value = key
-        break
-      }
-      if (key === value.value) {
-        found = true
-      }
-    }
+  const cycle = () => {
+    const keys = Object.keys(props.icons)
+    const idx = keys.indexOf(value.value?.toString())
+    value.value = idx+1 == keys.length ? keys[0] : keys[idx+1]
   }
 
   const value = ref(props.default)
-  const class_ = props.cls[value.value]
-  const icon = props.icons[value.value]
+  const class_ = computed( () => props.cls[value.value])
+  const icon = computed( () => props.icons[value.value])
+
+  watch(value, () => emit('change', unref(value)))
 
 </script>
