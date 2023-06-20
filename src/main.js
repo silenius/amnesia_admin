@@ -14,6 +14,8 @@ import {
     faUserAstronaut,
     faUserGroup,
     faCircleCheck,
+    faCheck,
+    faXmark,
     faCircleXmark,
     faCirclePlus,
     faShieldHalved,
@@ -43,7 +45,8 @@ import {
 
 import {
     faSquarePlus,
-    faImage
+    faImage,
+    faCircle
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(faUpDownLeftRight)
@@ -51,7 +54,10 @@ library.add(faUserAstronaut)
 library.add(faUserGroup)
 library.add(faCircleCheck)
 library.add(faCircleXmark)
+library.add(faXmark)
+library.add(faCheck)
 library.add(faCirclePlus)
+library.add(faCircle)
 library.add(faShieldHalved)
 library.add(faFolderTree)
 library.add(faFolder)
