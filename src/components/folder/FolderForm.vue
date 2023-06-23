@@ -59,9 +59,7 @@ provide('editable', computed(() => props.folder))
           <ContentPublishingDate v-model:effective="folder.effective" />
           <ContentExpirationDate v-model:expiration="folder.expiration" />
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
-          <ContentBreadcrumb v-model:breadcrumb="folder.breadcrumb" />
           <ContentIndexed v-model:is_fts="folder.is_fts" />
-          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.banner_image" />
           <FolderDefaultLimit class="border-b pb-4" v-model:default_limit="folder.default_limit" />
           <FolderDefaultPage class="border-b pb-4" v-model:index_content_id="folder.index_content_id" />
           <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
@@ -77,6 +75,10 @@ provide('editable', computed(() => props.folder))
           />
         </section>
 
+      </template>
+      <template #props>
+          <ContentBreadcrumb v-model:breadcrumb="folder.props.breadcrumb" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.banner_image" />
       </template>
       <template #security :class="section_cls">
         <ContentSecurity 

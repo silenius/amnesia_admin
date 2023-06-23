@@ -16,15 +16,11 @@ const folder_to_formdata = (folder_data) => {
         'index_content_id',
         'polymorphic_loading',
         'default_limit',
-        'breadcrumb'
+        'breadcrumb',
     ]
 
     for (let key of fields) {
-        if ((folder[key] === null) || (folder[key] === undefined)) {
-            data.append(key, '')
-        } else {
-            data.append(key, folder[key])
-        }
+        data.append(key, folder[key])
     }
 
     if (folder.polymorphic_loading 
@@ -36,6 +32,10 @@ const folder_to_formdata = (folder_data) => {
 
     if (folder.default_order) {
         data.append('default_order', JSON.stringify(folder.default_order))
+    }
+
+    if (folder.props) {
+        data.append('props', JSON.stringify(folder.props))
     }
 
     if (folder.acls) {

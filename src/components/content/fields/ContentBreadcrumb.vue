@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
 
 const props = defineProps({

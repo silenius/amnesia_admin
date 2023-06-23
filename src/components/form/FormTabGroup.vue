@@ -29,6 +29,10 @@ const props = defineProps({
         key: 'settings'
       },
       {
+        title: 'Properties',
+        key: 'props'
+      },
+      {
         title: 'Security',
         key: 'security'
       },
