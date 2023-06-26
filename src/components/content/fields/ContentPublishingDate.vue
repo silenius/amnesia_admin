@@ -29,7 +29,10 @@ import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 
 const config = ref({
-  wrap: true
+  wrap: true,
+  altInput: true,
+  altFormat: 'F j, Y',
+  dateFormat: 'Z'
 })
 
 const props = defineProps({

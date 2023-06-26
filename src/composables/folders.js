@@ -20,7 +20,11 @@ const folder_to_formdata = (folder_data) => {
     ]
 
     for (let key of fields) {
-        data.append(key, folder[key])
+        const value = folder[key]
+
+        console.log(key, ': ', value, ': ', typeof(value))
+
+        data.append(key, value === null ? '' : value)
     }
 
     if (folder.polymorphic_loading 

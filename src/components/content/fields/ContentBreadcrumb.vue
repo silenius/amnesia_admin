@@ -32,6 +32,7 @@ const value = computed({
   },
 
   set(value) {
+    value = value === 'null' ? null : value === 'true' ? true : false
     emit('update:breadcrumb', value)
   }
 
