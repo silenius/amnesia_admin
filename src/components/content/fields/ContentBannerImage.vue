@@ -1,25 +1,22 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-      <InputCheckbox @change="(n) => value = n" :default="value"/>
+     <InputCheckbox @change="(n) => value = n" :default="bool_value"/>
       <div class="flex flex-col">
         <span class="font-bold">Banner</span>
-        <p class="text-xs">Custom banner.</p>
+        <p class="text-xs" v-if="value===true">A custom banner will be
+          displayed.</p>
+        <p class="text-xs" v-else-if="value===false">No banner will be
+          displayed.</p>
+        <p class="text-xs" v-else>Use default</p>
       </div>
     </label>
-
-    <img class="h-32 w-auto" v-if="banner_image" :src="'/bbpf/' + banner_image.id + '/download'" />
-    <div class="mt-4">
+    <img class="h-32 w-auto" v-if="int_value" :src="'/bbpf/' + banner_image + '/download'" />
+    <div class="mt-4" v-if="value">
       <button type="button" @click="openModal" class="w-32 hover:bg-green-300
         hover:text-green-800 rounded-md bg-green-200 text-green-700 p-1
         border border-green-300">
-        {{ banner_image ? 'Replace' : 'Select' }}
-      </button>
-      <button type="button" @click="banner_image=null" v-if="banner_image"
-        class="border border-red-300 hover:bg-red-300 hover:text-red-800
-        bg-red-200 text-red-700 p-1 ml-2 rounded-md
-        w-32">
-        Remove
+        Select
       </button>
     </div>
   <TransitionRoot appear :show="isOpen" as="template">
@@ -92,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import {
   TransitionRoot,
   TransitionChild,
@@ -104,9 +101,12 @@ import {
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
+import InputCheckbox from '@/components/form/InputCheckbox.vue'
 
 const props = defineProps({
-  banner_image: Number
+  banner_image: {
+    default: null
+  }
 })
 
 const emits = defineEmits([
@@ -133,7 +133,7 @@ const { getContent } = useContent()
 
 const doBrowse = id => folder_id.value = id
 const doSelectBanner = (content) => {
-  emits('update:banner_image', content) 
+  emits('update:banner_image', content.id) 
   closeModal()
 }
 
@@ -154,6 +154,33 @@ watchEffect( async () => {
   )
   folder.value = folder_data
   contents.value = contents_data
+})
+
+const value = computed({
+
+  get() {
+    return props.banner_image
+  },
+
+  set(value) {
+    value = value === 'null' ? null : value === 'true' ? true : false
+    emits('update:banner_image', value)
+  }
+
+})
+
+const bool_value = computed(() => {
+
+  // XXX Fix this shit
+  if (props.banner_image !== null && props.banner_image !== false && !isNaN(parseInt(props.banner_image))) {
+    return true  
+  }
+
+  return props.banner_image
+})
+
+const int_value = computed(() => {
+  return parseInt(props.banner_image)
 })
 
 const closeModal = () => isOpen.value = false

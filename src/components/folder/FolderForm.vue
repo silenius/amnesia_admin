@@ -77,8 +77,8 @@ provide('editable', computed(() => props.folder))
 
       </template>
       <template #props>
-          <ContentBreadcrumb v-model:breadcrumb="folder.props.breadcrumb" />
-          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.banner_image" />
+          <ContentBreadcrumb class="pb-4" v-model:breadcrumb="folder.props.breadcrumb" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.props.banner_image" />
       </template>
       <template #security :class="section_cls">
         <ContentSecurity 

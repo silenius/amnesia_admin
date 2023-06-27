@@ -4,7 +4,9 @@
       <InputCheckbox @change="(n) => value = n" :default="value"/>
       <div class="flex flex-col">
         <span class="font-bold">Breadcrumb</span>
-        <p class="text-xs">If selected, a breadcrumb will be displayed.</p>
+        <p class="text-xs" v-if="value===true">A breadcrumb will be displayed.</p>
+        <p class="text-xs" v-else-if="value===false">A breadcrumb will <span class="font-bold">NOT</span> be displayed.</p>
+        <p class="text-xs" v-else>Use default</p>
       </div>
     </label>
   </div>

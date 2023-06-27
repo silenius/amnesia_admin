@@ -16,14 +16,10 @@ const folder_to_formdata = (folder_data) => {
         'index_content_id',
         'polymorphic_loading',
         'default_limit',
-        'breadcrumb',
     ]
 
     for (let key of fields) {
         const value = folder[key]
-
-        console.log(key, ': ', value, ': ', typeof(value))
-
         data.append(key, value === null ? '' : value)
     }
 
@@ -50,10 +46,6 @@ const folder_to_formdata = (folder_data) => {
                 permission_id: x.permission.id
             }
         })))
-    }
-
-    if (folder.banner_image) {
-        data.append('banner_image', folder.banner_image.id)
     }
 
     return data
