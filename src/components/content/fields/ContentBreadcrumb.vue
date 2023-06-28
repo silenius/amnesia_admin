@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-      <InputCheckbox @change="(n) => value = n" :default="value"/>
+      <InputCheckbox @change="(n) => value = n" :values="yes_no_unknown" :checked="value"/>
       <div class="flex flex-col">
         <span class="font-bold">Breadcrumb</span>
         <p class="text-xs" v-if="value===true">A breadcrumb will be displayed.</p>
@@ -15,6 +15,7 @@
 <script setup>
 import { computed } from 'vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
+import { yes_no_unknown } from '@/components/form/InputCheckboxDefaults.js'
 
 const props = defineProps({
   breadcrumb: {

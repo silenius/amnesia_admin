@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-     <InputCheckbox @change="(n) => value = n" :default="bool_value"/>
+     <InputCheckbox @change="(n) => value = n" :values="yes_no_unknown" :checked="bool_value"/>
       <div class="flex flex-col">
         <span class="font-bold">Banner</span>
         <p class="text-xs" v-if="value===true">A custom banner will be
@@ -102,6 +102,7 @@ import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
+import { yes_no_unknown } from '@/components/form/InputCheckboxDefaults.js'
 
 const props = defineProps({
   banner_image: {

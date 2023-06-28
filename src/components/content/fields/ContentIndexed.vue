@@ -1,10 +1,12 @@
 <template>
   <div>
     <label class="block flex items-center gap-2">
-      <InputCheckbox @change="(n) => value = n" :default="value"/>
+      <InputCheckbox @change="(n) => value = n" :checked="value"/>
       <div class="flex flex-col">
-        <span class="font-bold">Indexed</span>
-        <p class="text-xs">If selected, the content will be searchable.</p>
+        <span class="font-bold">Searchable</span>
+        <p class="text-xs" v-if="value===true">The content will be indexed and therefore searchable.</p>
+        <p class="text-xs" v-else-if="value===false">The content will <span class="font-bold">NOT</span> be searchable.</p>
+        <p class="text-xs" v-else>Use default.</p>
       </div>
     </label>
   </div>
@@ -29,6 +31,7 @@ const value = computed({
   },
 
   set(value) {
+    value = value === 'null' ? null : value === 'true' ? true : false
     emit('update:is_fts', value)
   }
 

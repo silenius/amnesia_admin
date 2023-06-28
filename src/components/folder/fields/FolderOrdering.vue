@@ -1,45 +1,48 @@
 <template>
-  <table class="border-collapse table-fixed">
-    <thead>
-      <tr class="text-left">
-        <th class="p-2">Field</th>
-        <th class="p-2">Direction</th>
-        <th class="p-2">Nulls</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="order in orders.orders" 
-        :key="order.key"
-        :draggable="order.checked"
-        :class="{ 'cursor-move': order.checked }"
-        @drag="drag"
-        @dragstart="start"
-        @dragend="end"
-        @dragleave="leave"
-        @dragenter="enter"
-        @dragover="over"
-        @drop="drop"
-        class="odd:bg-white even:bg-slate-50 text-slate-600"
-      >
-        <td>
-          <input type="checkbox" v-model="order.checked" />
-          {{ order.doc }} ({{ order.cls }} {{ order.prop }})
-        </td>
-        <td>
-          <select v-model="order.direction">
-            <option value="asc">asc</option>
-            <option value="desc">desc</option>
-          </select>
-        </td>
-        <td>
-          <select v-model="order.nulls">
-            <option value="first">first</option>
-            <option value="last">last</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    Ordering
+    <table>
+      <thead>
+        <tr class="text-left text-white bg-slate-500">
+          <th class="p-2">Field</th>
+          <th class="p-2">Direction</th>
+          <th class="p-2">Nulls</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders.orders" 
+          :key="order.key"
+          :draggable="order.checked"
+          :class="{ 'cursor-move': order.checked }"
+          @drag="drag"
+          @dragstart="start"
+          @dragend="end"
+          @dragleave="leave"
+          @dragenter="enter"
+          @dragover="over"
+          @drop="drop"
+          class="odd:bg-white even:bg-slate-50 text-slate-600"
+        >
+          <td>
+            <input type="checkbox" v-model="order.checked" />
+            {{ order.doc }} ({{ order.cls }} {{ order.prop }})
+          </td>
+          <td>
+            <select v-model="order.direction">
+              <option value="asc">asc</option>
+              <option value="desc">desc</option>
+            </select>
+          </td>
+          <td>
+            <select v-model="order.nulls">
+              <option value="first">first</option>
+              <option value="last">last</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 
