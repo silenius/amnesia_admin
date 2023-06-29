@@ -1,7 +1,9 @@
 <template>
   <div>
-    Ordering
-    <table>
+    <p class="font-bold">Ordering</p>
+    <p class="text-xs">This will change the folder's default sort order. Everyone accessing this
+    folder will initially see it sorted this way.</p>
+    <table class="mt-4">
       <thead>
         <tr class="text-left text-white bg-slate-500">
           <th class="p-2">Field</th>

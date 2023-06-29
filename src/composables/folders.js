@@ -20,7 +20,12 @@ const folder_to_formdata = (folder_data) => {
 
     for (let key of fields) {
         const value = folder[key]
-        data.append(key, value === null ? '' : value)
+
+        if (value !== undefined) {
+            data.append(key, value === null ? '' : value)
+        } else {
+            console.log('===> Skipping ', key)
+        }
     }
 
     if (folder.polymorphic_loading 

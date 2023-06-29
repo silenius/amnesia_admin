@@ -5,6 +5,7 @@
       <p class="text-xs">Number of items to show by default when browsing the
       folder.</p>
       <select class="form-select mt-2" v-model.number="value">
+        <option :value="null">default</option>
         <option v-for="option in options">
           {{ option }}
         </option>

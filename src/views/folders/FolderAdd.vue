@@ -17,9 +17,8 @@ const { createFolder } = useFolder()
 const folder = ref({
   is_fts: true,
   polymorphic_loading: false,
-  exclude_nav: false,
   container_id: props.container.id,
-  default_limit: 50,
+  exclude_nav: false,
   breadcrumb: true
 })
 
