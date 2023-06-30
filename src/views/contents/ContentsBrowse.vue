@@ -156,11 +156,15 @@ onMounted(async () => {
     </div>
   </Dialog>
 
-  <h1 class="text-xl font-bold">
+  <h1 class="text-xl font-bold mt-2">
     {{ content.title }}
   </h1>
+  <p class="text-xs">
+    {{ content.description }}
+  </p>
 
   <FolderBrowser
+    class="mt-4"
     @browse="doBrowse"
     @add-content="doAdd"
     @delete-content="doDelete"

@@ -10,7 +10,6 @@ import {
   PopoverButton,
   PopoverPanel,
 } from '@headlessui/vue'
-import Avatar from "vue-boring-avatars";
 import { 
   actions as default_actions,
   selectActions as select_actions
@@ -164,9 +163,9 @@ const formatDate = (d) => {
           <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
             rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <MenuItem as="div" v-slot="{ active }" v-for="t in addTypes" :key="t.id">
-              <button @click="$emit('add-content', folder, t.name)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md p-2 text-sm', ]" > 
-                <font-awesome-icon class="w-4 h-4 mr-2" :icon="['fa-solid', t.icons.fa]" /> {{ t.name }}
-              </button>
+            <button @click="$emit('add-content', folder, t.name)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md p-2 text-sm', ]" > 
+              <font-awesome-icon class="w-4 h-4 mr-2" :icon="['fa-solid', t.icons.fa]" /> {{ t.name }}
+            </button>
             </MenuItem>
           </MenuItems>
         </Menu>
@@ -235,7 +234,7 @@ const formatDate = (d) => {
 
     <!-- TABULAR VIEW -->
 
-    <table class="table-auto box-border" v-if="view == 'tabular'">
+    <table class="table-auto w-full box-border border" v-if="view == 'tabular'">
       <thead>
         <tr class="text-left text-white bg-slate-500">
           <th class="p-2" v-if="selectActions"><input disabled type="checkbox" /></th>
@@ -270,7 +269,7 @@ const formatDate = (d) => {
 
           <!-- TITLE -->
 
-          <td class="p-2 w-full whitespace-nowrap">
+          <td class="p-2">
             <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
@@ -279,24 +278,20 @@ const formatDate = (d) => {
 
           <!-- OWNER -->
 
-          <td class="p-2 whitespace-nowrap">
-            <div class="grid grid-flow-col w-fit gap-2">
-              <Avatar :size="24" :name="content.owner.full_name" variant="bauhaus" />
-              <span class="flex flex-col">
-                {{ content.owner.full_name }}
-              </span>
-            </div>
+          <td class="p-2 text-xs whitespace-nowrap">
+            <img :src="content.owner.gravatar" class="mr-2 h-10 w-10 inline rounded-full" />
+            <span>{{ content.owner.full_name }}</span>
           </td>
 
           <!-- LAST UPDATE -->
 
-          <td class="p-2 text-center text-xs">
+          <td class="p-2 w-0 text-center text-xs whitespace-nowrap">
             {{ formatDate(content.last_update) }}
           </td>
 
           <!-- ACTIONS -->
 
-          <td class="p-2" v-if="actions">
+          <td class="p-2 w-0" v-if="actions">
             <div class="text-right">
               <Menu as="div" class="text-left">
                 <div>
