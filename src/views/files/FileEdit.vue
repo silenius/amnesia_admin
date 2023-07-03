@@ -16,7 +16,7 @@ const { updateFile } = useFile()
 const update = async () => {
   try {
     await updateFile(props.content)
-    router.push({name: 'contents', params: {id: props.content.id}})
+    router.push({name: 'show-content', params: {id: props.content.id}})
   } catch (e) {
     // TODO
     console.log(e)

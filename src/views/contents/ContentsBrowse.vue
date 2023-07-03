@@ -26,6 +26,7 @@ const { setWeight, destroyContent, getContent } = useContent()
 const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
+const contents_meta = ref({})
 const selected = ref(new Map())
 const selected_ids = computed(() => Array.from(selected.value.keys()))
 
@@ -41,7 +42,7 @@ const doMoveBrowse = async (id) => {
     ['sort_folder_first', true]
   ])
   const { data: folder_data } = await getContent(id)
-  move_contents.value = data
+  move_contents.value = data.data
   move_folder.value = folder_data
 }
 
@@ -50,7 +51,8 @@ const reload = async () => {
     ['sort_folder_first', true]
   ])
 
-  contents.value = data
+  contents.value = data.data
+  contents_meta.value = data.meta
 }
 
 const doBrowse = async (id) => await router.push({
@@ -176,6 +178,7 @@ onMounted(async () => {
     @breadcrumb-select="(content) => doBrowse(content.id)"
     :folder="content"
     :contents="contents" 
+    :contents_meta="contents_meta" 
     :selected="selected"
     :canChangeWeight="true"
     :addTypes="types"

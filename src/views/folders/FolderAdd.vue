@@ -19,7 +19,7 @@ const folder = ref({
   polymorphic_loading: false,
   container_id: props.container.id,
   exclude_nav: false,
-  breadcrumb: true
+  props: {}
 })
 
 const { errors, setError } = inject('errors')
@@ -27,7 +27,7 @@ const { errors, setError } = inject('errors')
 const create = async () => {
   try {
     const { data } = await createFolder(props.container, folder)
-    router.push({name: 'contents', params: {id: data.id}})
+    router.push({name: 'show-content', params: {id: data.id}})
   } catch (e) {
     // TODO
     console.log(e)

@@ -153,12 +153,15 @@ const formatDate = (d) => {
 
       <div class="flex gap-1 items-center justify-end">
 
+        <!-- EDIT FOLDER -->
+
+        <button @click.prevent="$emit('edit-content', folder)"><font-awesome-icon class="h-6 w-6 align-middle" icon="fa-pen-to-square" /></button>
+
         <!-- ADD CONTENT TO FOLDER -->
 
         <Menu as="div" class="relative inline" v-if="addTypes">
           <MenuButton>
-            <font-awesome-icon class="h-6 w-6 align-middle"
-              icon="fa-regular fa-square-plus" />
+            <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-regular fa-square-plus" />
           </MenuButton>
           <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
             rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -269,7 +272,7 @@ const formatDate = (d) => {
 
           <!-- TITLE -->
 
-          <td class="p-2">
+          <td class="p-2 whitespace-nowrap">
             <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>

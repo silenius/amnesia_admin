@@ -49,9 +49,11 @@ provide('editable', computed(() => props.file))
       <template #settings>
         <ContentPublishingDate v-model:effective="file.effective" />
         <ContentExpirationDate v-model:expiration="file.expiration" />
-        <ContentBreadcrumb v-model:breadcrumb="file.breadcrumb" />
         <ContentIndexed v-model:is_fts="file.is_fts" />
-        <ContentBannerImage v-model:banner_image="file.banner_image" />
+      </template>
+      <template #props>
+          <ContentBreadcrumb class="pb-4" v-model:breadcrumb="file.props.breadcrumb" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="file.props.banner_image" />
       </template>
       <template #security>
         <ContentSecurity v-model:acls="file.acls" />

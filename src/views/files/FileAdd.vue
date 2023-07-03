@@ -18,7 +18,6 @@ const file = ref({
   is_fts: true,
   exclude_nav: false,
   container_id: props.container.id,
-  breadcrumb: true
 })
 
 const { errors, setError } = inject('errors')
@@ -26,7 +25,7 @@ const { errors, setError } = inject('errors')
 const create = async () => {
   try {
     const { data } = await createFile(props.container, file)
-    router.push({name: 'contents', params: {id: data.id}})
+    router.push({name: 'show-content', params: {id: data.id}})
   } catch (e) {
     // TODO
     console.log(e)
