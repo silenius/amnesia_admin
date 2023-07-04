@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="(page, idx) in page_total">
-      {{ idx }}
+      {{ idx }} {{ page }}
     </li>
   </ul>
 

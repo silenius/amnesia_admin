@@ -16,11 +16,16 @@ import {
 } from '@/components/folder/FolderBrowserActions.js'
 
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
   contents: {
     type: Array,
     default: []
+  },
+  contents_meta: {
+    type: Object,
+    default: {}
   },
   selected: {
     type: Map,
@@ -272,7 +277,7 @@ const formatDate = (d) => {
 
           <!-- TITLE -->
 
-          <td class="p-2 whitespace-nowrap">
+          <td class="p-2 whitespace-nowrap truncate max-w-md">
             <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
