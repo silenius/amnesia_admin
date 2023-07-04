@@ -154,7 +154,7 @@ watchEffect( async () => {
     ]
   )
   folder.value = folder_data
-  contents.value = contents_data
+  contents.value = contents_data.data
 })
 
 const value = computed({

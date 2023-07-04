@@ -18,6 +18,7 @@ const file = ref({
   is_fts: true,
   exclude_nav: false,
   container_id: props.container.id,
+  props: {}
 })
 
 const { errors, setError } = inject('errors')

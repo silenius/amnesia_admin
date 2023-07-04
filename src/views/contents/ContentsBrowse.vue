@@ -7,13 +7,13 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
-  DialogDescription,
 } from '@headlessui/vue'
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 
 import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
+import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
   content: Object
@@ -178,10 +178,17 @@ onMounted(async () => {
     @breadcrumb-select="(content) => doBrowse(content.id)"
     :folder="content"
     :contents="contents" 
-    :contents_meta="contents_meta" 
     :selected="selected"
     :canChangeWeight="true"
     :addTypes="types"
+  />
+
+  <DefaultPagination
+    v-if="contents_meta.count"
+    :limit="contents_meta.limit"
+    :offset="contents_meta.offset"
+    :total="contents_meta.count"
+    @goto-page="(page) => console.log(page)"
   />
 
 </template>

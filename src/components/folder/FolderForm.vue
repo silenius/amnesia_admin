@@ -50,8 +50,8 @@ provide('editable', computed(() => props.folder))
     <FormTabGroup>
       <template #default>
         <section :class="section_cls">
-        <ContentTitle v-model:title="folder.title" />
-        <ContentDescription v-model:description="folder.description" />
+          <ContentTitle v-model:title="folder.title" />
+          <ContentDescription v-model:description="folder.description" />
         </section>
       </template>
       <template #settings>
@@ -77,8 +77,8 @@ provide('editable', computed(() => props.folder))
 
       </template>
       <template #props>
-          <ContentBreadcrumb class="pb-4" v-model:breadcrumb="folder.props.breadcrumb" />
-          <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.props.banner_image" />
+        <ContentBreadcrumb class="pb-4" v-model:breadcrumb="folder.props.breadcrumb" />
+        <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.props.banner_image" />
       </template>
       <template #security :class="section_cls">
         <ContentSecurity 

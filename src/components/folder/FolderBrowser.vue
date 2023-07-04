@@ -16,16 +16,11 @@ import {
 } from '@/components/folder/FolderBrowserActions.js'
 
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
-import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
   contents: {
     type: Array,
     default: []
-  },
-  contents_meta: {
-    type: Object,
-    default: {}
   },
   selected: {
     type: Map,

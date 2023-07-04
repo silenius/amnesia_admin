@@ -20,7 +20,6 @@ const update = async () => {
 </script>
 
 <template>
-    <h1>Edit folder</h1>
     <FolderForm 
       :folder="content" 
       :action="'Update folder'"

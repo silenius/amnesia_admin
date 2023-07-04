@@ -26,6 +26,8 @@ const props = defineProps({
   }
 })
 
+const section_cls="flex flex-col gap-4"
+
 const emit = defineEmits([
   'submit-document'
 ])
@@ -42,19 +44,29 @@ provide('editable', computed(() => props.doc))
   <form @submit.prevent="$emit('submit-document')">
     <FormTabGroup>
       <template #default>
-        <ContentTitle v-model:title="doc.title" />
-        <ContentDescription v-model:description="doc.description" />
-        <DocumentBody v-model:body="doc.body" />
+        <section :class="section_cls">
+          <ContentTitle v-model:title="doc.title" />
+          <ContentDescription v-model:description="doc.description" />
+          <DocumentBody v-model:body="doc.body" />
+        </section>
       </template>
       <template #settings>
-        <ContentPublishingDate v-model:effective="doc.effective" />
-        <ContentExpirationDate v-model:expiration="doc.expiration" />
-        <ContentBreadcrumb v-model:breadcrumb="doc.breadcrumb" />
+        <section :class="section_cls">
+          <ContentPublishingDate v-model:effective="doc.effective" />
+          <ContentExpirationDate class="border-b pb-4" v-model:expiration="doc.expiration" />
+        </section>
         <ContentIndexed v-model:is_fts="doc.is_fts" />
-        <ContentBannerImage v-model:banner_image="doc.banner_image" />
+      </template>
+      <template #props>
+        <section :class="section_cls">
+          <ContentBreadcrumb v-model:breadcrumb="doc.props.breadcrumb" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="doc.props.banner_image" />
+        </section>
       </template>
       <template #security>
-        <ContentSecurity v-model:acls="doc.acls" />
+        <section :class="section_cls">
+          <ContentSecurity v-model:acls="doc.acls" />
+        </section>
       </template>
     </FormTabGroup>
     <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">

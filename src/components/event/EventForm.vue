@@ -75,9 +75,11 @@ onMounted( async () => {
       <template #settings>
         <ContentPublishingDate v-model:effective="event.effective" />
         <ContentExpirationDate v-model:expiration="event.expiration" />
-        <ContentBreadcrumb v-model:breadcrumb="event.breadcrumb" />
         <ContentIndexed v-model:is_fts="event.is_fts" />
-        <ContentBannerImage v-model:banner_image="event.banner_image" />
+      </template>
+      <template #props>
+          <ContentBreadcrumb class="pb-4" v-model:breadcrumb="event.props.breadcrumb" />
+          <ContentBannerImage class="border-b pb-4" v-model:banner_image="event.props.banner_image" />
       </template>
       <template #security>
         <ContentSecurity v-model:acls="event.acls" />

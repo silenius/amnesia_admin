@@ -18,7 +18,7 @@ const event = ref({
   is_fts: true,
   exclude_nav: false,
   container_id: props.container.id,
-  breadcrumb: true
+  props: {}
 })
 
 const { errors, setError } = inject('errors')

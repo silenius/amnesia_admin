@@ -4,6 +4,8 @@
     {{ content.title }}
   </h1>
   <h2>{{ content.description }}</h2>
+
+  <div v-html="content.body"></div>
 </template>
 
 <script setup>

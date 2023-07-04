@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect, ref } from 'vue'
+import { onMounted, watchEffect, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { useContent } from '@/composables/contents.js'
 
@@ -14,6 +14,10 @@ const { getContent } = useContent()
 watchEffect(async () => {
   const { data } = await getContent(props.content_id)
   content.value = data
+  // FIXME
+  if (content.value.props === null) {
+    content.value.props = {}
+  }
 })
 
 </script>

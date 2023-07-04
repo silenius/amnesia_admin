@@ -1,16 +1,20 @@
 <template>
-  <ul>
-    <li v-for="(page, idx) in page_total">
-      {{ idx }} {{ page }}
-    </li>
-  </ul>
-
+  <div v-if="total">
+    <nav class="isolate gap-2 inline-flex rounded-md shadow-sm" aria-label="Pagination">
+      <a class="border px-2" @click.prevent="$emit('goto-page', page)" href="" v-for="page in Array(page_total).keys()">
+        <span class="text-red-500" v-if="page == page_current">{{ page }}</span>
+        <span v-else>{{ page }}</span>
+      </a>
+    </nav>
+  </div>
 </template>
 
 
 <script setup>
 
 import { ref, computed } from 'vue'
+
+const emit = defineEmits(['goto-page'])
 
 const props = defineProps({
   limit: {
@@ -22,7 +26,8 @@ const props = defineProps({
     default: 0
   },
   total: {
-    type: Number
+    type: Number,
+    default: 0
   }
 })
 

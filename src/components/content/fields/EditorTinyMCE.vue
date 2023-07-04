@@ -44,8 +44,8 @@
                     :actions="actions"
                     :selectActions=null
                     :view="'gallery'"
-                    v-if="folder && contents">
-                  </FolderBrowser>
+                    v-if="folder && contents"
+                  />
                 </p>
               </div>
 
@@ -160,7 +160,7 @@ watchEffect( async () => {
   const { data: folder_data } = await getContent(folder_id.value)
   const { data: contents_data } = await browse(folder_data.id, opts)
   folder.value = folder_data
-  contents.value = contents_data
+  contents.value = contents_data.data
 })
 
 const closeModal = () => isOpen.value = false
@@ -319,6 +319,5 @@ export default {
     }
   }
 }
-
 
 </script>
