@@ -36,6 +36,12 @@ const move_modal_open = ref(false)
 const move_contents = ref([])
 const move_folder = ref(null)
 
+const limit = computed( () => contents_meta.value?.limit)
+const offset = computed( () => {
+  const v = parseInt(contents_meta.value?.offset)
+  return isNaN(v) ? 0 : v
+})
+
 const doMoveBrowse = async (id) => {
   const { data } = await browse(id, [
     ['filter_types', 'folder'],
@@ -46,10 +52,20 @@ const doMoveBrowse = async (id) => {
   move_folder.value = folder_data
 }
 
-const reload = async () => {
-  const { data } = await browse(props.content.id, [
+const reload = async (offset, limit) => {
+  const params = [
     ['sort_folder_first', true]
-  ])
+  ]
+
+  if (limit) {
+    params.push(['limit', limit])
+  }
+
+  if (offset) {
+    params.push(['offset', offset])
+  }
+
+  const { data } = await browse(props.content.id, params)
 
   contents.value = data.data
   contents_meta.value = data.meta
@@ -185,10 +201,12 @@ onMounted(async () => {
 
   <DefaultPagination
     v-if="contents_meta.count"
-    :limit="contents_meta.limit"
-    :offset="contents_meta.offset"
+    :limit="limit"
+    :offset="offset"
     :total="contents_meta.count"
-    @goto-page="(page) => console.log(page)"
+    :max_pages="10"
+    @goto-page="(page) => reload((page-1)*limit)"
+    class="flex justify-center my-4"
   />
 
 </template>
