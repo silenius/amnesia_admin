@@ -27,6 +27,13 @@ const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
 const contents_meta = ref({})
+
+const limit = computed( () => contents_meta.value?.limit)
+const offset = computed( () => {
+  const v = parseInt(contents_meta.value?.offset)
+  return isNaN(v) ? 0 : v
+})
+
 const selected = ref(new Map())
 const selected_ids = computed(() => Array.from(selected.value.keys()))
 
@@ -35,22 +42,6 @@ const types = ref([])
 const move_modal_open = ref(false)
 const move_contents = ref([])
 const move_folder = ref(null)
-
-const limit = computed( () => contents_meta.value?.limit)
-const offset = computed( () => {
-  const v = parseInt(contents_meta.value?.offset)
-  return isNaN(v) ? 0 : v
-})
-
-const doMoveBrowse = async (id) => {
-  const { data } = await browse(id, [
-    ['filter_types', 'folder'],
-    ['sort_folder_first', true]
-  ])
-  const { data: folder_data } = await getContent(id)
-  move_contents.value = data.data
-  move_folder.value = folder_data
-}
 
 const reload = async (offset, limit) => {
   const params = [
@@ -71,11 +62,22 @@ const reload = async (offset, limit) => {
   contents_meta.value = data.meta
 }
 
+const doMoveBrowse = async (id) => {
+  const { data } = await browse(id, [
+    ['filter_types', 'folder'],
+    ['sort_folder_first', true]
+  ])
+  const { data: folder_data } = await getContent(id)
+  move_contents.value = data.data
+  move_folder.value = folder_data
+}
+
 const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
   params: { id: id }
 })
 
+// Edit a content
 const doEdit = async (content) => { 
   await router.push({
     name: 'edit-content', 
@@ -83,17 +85,20 @@ const doEdit = async (content) => {
   })
 }
 
+// Delete a content
 const doDelete = async (content) => {
   await destroyContent(content.id)
   selected.value.delete(content.id)
   reload()
 }
 
+// Change content's weight within it's container
 const doChangeWeight = async (content, weight) => {
   await setWeight(content.id, weight)
   reload()
 }
 
+// Delete selected content
 const doDeleteSelection = async () => {
   await destroyManyContent(props.content, selected_ids)
   selected.value.clear()
@@ -204,7 +209,7 @@ onMounted(async () => {
     :limit="limit"
     :offset="offset"
     :total="contents_meta.count"
-    :max_pages="10"
+    :max_pages="9"
     @goto-page="(page) => reload((page-1)*limit)"
     class="flex justify-center my-4"
   />

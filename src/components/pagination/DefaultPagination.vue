@@ -31,7 +31,7 @@ const props = defineProps({
   },
   max_pages: {
     type: Number,
-    default: 8
+    default: 4
   }
 
 })
@@ -51,16 +51,20 @@ const pages = computed( () => {
   } 
 
   let start = 1
-  let stop = start + props.max_pages
+  let stop = Math.min(props.max_pages, page_total.value)
 
   if (page_current.value > parseInt(stop / 2)) {
     start = page_current.value - parseInt(props.max_pages / 2)
-    stop = start + props.max_pages 
+    stop = start + props.max_pages - 1
 
     if (stop > page_total.value) {
       stop = page_total.value
       start = stop - props.max_pages
     }
+  }
+
+  if (start <= 0) {
+    start = 1
   }
 
   return range(start, stop, 1)
