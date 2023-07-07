@@ -45,6 +45,8 @@ import {
     faSquareXmark,
     faSquare,
     faSquareVirus,
+    faAnglesLeft,
+    faAnglesRight
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -91,6 +93,8 @@ library.add(faHouse)
 library.add(faFlask)
 library.add(faSquarePlus)
 library.add(faBrain)
+library.add(faAnglesLeft)
+library.add(faAnglesRight)
 
 const app = createApp(App)
 const pinia = createPinia()

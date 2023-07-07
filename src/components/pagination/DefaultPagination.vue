@@ -1,9 +1,15 @@
 <template>
   <div v-if="pages.length > 0">
     <nav class="isolate gap-2 inline-flex rounded-md shadow p-2" aria-label="Pagination">
+      <a class="px-2" @click.prevent="$emit('goto-page', 1)" href="">
+        <font-awesome-icon :icon="['fas', 'angles-left']" class="h-4 w-4" />
+      </a>
       <a class="px-2" @click.prevent="$emit('goto-page', page)" href="" v-for="page in pages">
         <span class="font-bold" v-if="page == page_current">{{ page }}</span>
         <span v-else>{{ page }}</span>
+      </a>
+      <a class="px-2" @click.prevent="$emit('goto-page', page_total)" href="">
+        <font-awesome-icon :icon="['fas', 'angles-right']" class="h-4 w-4" />
       </a>
     </nav>
   </div>
@@ -12,7 +18,7 @@
 
 <script setup>
 
-import { ref, watch, computed } from 'vue'
+import { computed } from 'vue'
 
 const emit = defineEmits(['goto-page'])
 
@@ -31,7 +37,7 @@ const props = defineProps({
   },
   max_pages: {
     type: Number,
-    default: 4
+    default: 9
   }
 
 })
@@ -59,7 +65,6 @@ const pages = computed( () => {
 
     if (stop > page_total.value) {
       stop = page_total.value
-      start = stop - props.max_pages
     }
   }
 

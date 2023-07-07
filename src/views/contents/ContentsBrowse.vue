@@ -150,7 +150,7 @@ onMounted(async () => {
     <div class="fixed inset-0 overflow-y-auto">
       <div class="flex min-h-full items-center justify-center p-4 text-center">
         <DialogPanel
-          class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+          class="w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
           <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
             Move selection
           </DialogTitle>
@@ -209,7 +209,6 @@ onMounted(async () => {
     :limit="limit"
     :offset="offset"
     :total="contents_meta.count"
-    :max_pages="9"
     @goto-page="(page) => reload((page-1)*limit)"
     class="flex justify-center my-4"
   />
