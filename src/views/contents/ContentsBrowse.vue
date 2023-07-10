@@ -202,6 +202,7 @@ onMounted(async () => {
     :selected="selected"
     :canChangeWeight="true"
     :addTypes="types"
+    :editButton="true"
   />
 
   <DefaultPagination

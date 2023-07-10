@@ -48,6 +48,10 @@ const props = defineProps({
   addTypes: {
     type: Array,
     default: null
+  },
+  editButton: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -144,7 +148,7 @@ const formatDate = (d) => {
 
       <!-- BREADCRUMB -->
 
-      <div class="grow flex align-center">
+      <div class="grow flex items-center">
         <ContentBreadcrumb 
           :content="folder" 
           @item-select="(content) => $emit('breadcrumb-select', content)" 
@@ -155,13 +159,15 @@ const formatDate = (d) => {
 
         <!-- EDIT FOLDER -->
 
-        <button @click.prevent="$emit('edit-content', folder)"><font-awesome-icon class="h-6 w-6 align-middle" icon="fa-pen-to-square" /></button>
+        <button v-if="editButton" @click.prevent="$emit('edit-content',
+          folder)" class="focus:outline-none text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-amber-900"><font-awesome-icon class="h-4 w-4" icon="fa-pen-to-square" />Edit</button>
 
         <!-- ADD CONTENT TO FOLDER -->
 
         <Menu as="div" class="relative inline" v-if="addTypes">
-          <MenuButton>
-            <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-regular fa-square-plus" />
+          <MenuButton class="focus:outline-none text-white bg-emerald-400 hover:bg-emerald-500 focus:ring-4 focus:ring-emerald-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-emerald-900">
+            <font-awesome-icon class="h-4 w-4" icon="fa-regular fa-square-plus" />
+            Add
           </MenuButton>
           <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
             rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">

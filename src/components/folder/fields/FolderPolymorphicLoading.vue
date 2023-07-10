@@ -8,7 +8,7 @@
           Loading of inheritance hierarchies is enabled. You can
           afterwards select which specific content should be included within the query.
         </p> 
-        <p v-else>
+        <p v-else class="text-xs">
           No loading of inheritance hierarchies will be done.
         </p>
       </div>
