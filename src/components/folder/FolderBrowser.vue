@@ -18,6 +18,11 @@ import {
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 
 const props = defineProps({
+  // The folder being browsed
+  folder: {
+    type: Object
+  },
+  // The content of the folder being browsed
   contents: {
     type: Array,
     default: []
@@ -25,9 +30,6 @@ const props = defineProps({
   selected: {
     type: Map,
     default: new Map()
-  },
-  folder: {
-    type: Object
   },
   view: {
     type: String,
