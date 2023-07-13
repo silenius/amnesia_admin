@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, unref, computed, watch } from 'vue'
+import { ref, unref, computed } from 'vue'
 import { 
   Menu, 
   MenuButton, 
@@ -132,6 +132,14 @@ const drop = (evt) => {
   evt.preventDefault()
 }
 
+const stateClass = (state) => {
+  return {
+    'published': 'border-green-400 text-green-500 shadow-green-100',
+    'draft': 'border-yellow-400 text-yellow-500 shadow-yellow-100',
+    'private': 'border-red-400 text-red-500 shadow-red-100'
+  }[state.name.toLowerCase()]
+}
+
 const formatDate = (d) => {
   return new Date(d).toLocaleString(
     navigator.language, { 
@@ -251,6 +259,7 @@ const formatDate = (d) => {
           <th class="p-2" v-if="selectActions"><input disabled type="checkbox" /></th>
           <th class="p-2">Title</th>
           <th class="p-2">Owner</th>
+          <th class="p-2 text-center">State</th>
           <th class="p-2 whitespace-nowrap">Last update</th>
           <th class="p-2" v-if="actions"></th>
           <slot name="tabular-th" />
@@ -292,6 +301,13 @@ const formatDate = (d) => {
           <td class="p-2 text-xs whitespace-nowrap">
             <img :src="content.owner.gravatar" class="mr-2 h-10 w-10 inline rounded-full" />
             <span>{{ content.owner.full_name }}</span>
+          </td>
+
+          <!-- STATE -->
+
+          <td class="text-center">
+            <span :class="stateClass(content.state)" class=" text-xs
+              inline-block font-medium rounded-full p-2">{{ content.state.name }}</span>
           </td>
 
           <!-- LAST UPDATE -->
@@ -359,9 +375,14 @@ const formatDate = (d) => {
           :data-id="content.id"
           :data-weight="content.weight"
           :class="[canChangeWeight ? 'cursor-move' : '']"
+          class="relative"
         >
 
-          <input v-if="selectActions" :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" class="relative border-slate-300 top-6 left-1" />
+          <input v-if="selectActions" :checked="selected.has(content.id)"
+            @click="$emit('select-content', content, $event)" type="checkbox"
+            class="absolute border-slate-300 top-1 left-1" />
+
+            <font-awesome-icon icon="fa-solid fa-square" class="absolute right-1 top-0.5 h-5 w-5 text-green-300" />
 
           <div class="flex flex-col h-32 w-32 overflow-scroll mb-1 border">
 
