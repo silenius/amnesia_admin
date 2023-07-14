@@ -63,6 +63,14 @@ const setWeight = async(id, weight) => {
     })
 }
 
+const publishContent = async (id) => useFetchBackend(`${id}/publish`, {
+    method: 'POST'
+})
+
+const unpublishContent = async (id) => useFetchBackend(`${id}/unpublish`, {
+    method: 'POST'
+})
+
 const validateTitle = (value) => {
     return !value ? isEmpty('title', value) : minLength('title', value, 4)
 }
@@ -83,7 +91,9 @@ export function useContent() {
         destroyContent,
         setWeight,
         validateTitle,
-        validateDescription
+        validateDescription,
+        publishContent,
+        unpublishContent,
     }
 
 }

@@ -22,7 +22,13 @@ const props = defineProps({
 const router = useRouter()
 
 const { browse, paste, destroyManyContent } = useFolder()
-const { setWeight, destroyContent, getContent } = useContent()
+const { 
+  setWeight, 
+  destroyContent, 
+  getContent,
+  publishContent,
+  unpublishContent
+} = useContent()
 const { getContentTypes } = useContentTypes()
 
 const contents = ref([])
@@ -96,6 +102,14 @@ const doDelete = async (content) => {
 const doChangeWeight = async (content, weight) => {
   await setWeight(content.id, weight)
   reload()
+}
+
+const doPublish = async (content) => {
+  await publishContent(content.id)
+}
+
+const doUnpublish = async (content) => {
+  await unpublishContent(content.id)
 }
 
 // Delete selected content
@@ -193,6 +207,8 @@ onMounted(async () => {
     @delete-content="doDelete"
     @select-content="doSelect"
     @edit-content="doEdit"
+    @publish-content="doPublish"
+    @unpublish-content="doUnpublish"
     @change-weight-content="doChangeWeight"
     @delete-selection="doDeleteSelection"
     @move-selection="doMoveSelection"

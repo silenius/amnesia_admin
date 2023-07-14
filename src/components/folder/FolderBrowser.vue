@@ -8,6 +8,7 @@ import {
   MenuItem, 
   Popover,
   PopoverButton,
+  PopoverOverlay,
   PopoverPanel,
 } from '@headlessui/vue'
 import { 
@@ -58,8 +59,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'browse', 'delete-content', 'select-content', 'move-content', 'edit-content',
-  'add-content', 'change-weight-content', 'delete-selection', 'move-selection'
+  'browse', 'delete-content', 'select-content', 'move-content', 'edit-content', 'add-content', 'change-weight-content', 'delete-selection', 'move-selection'
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
@@ -134,9 +134,9 @@ const drop = (evt) => {
 
 const stateClass = (state) => {
   return {
-    'published': 'border-green-400 text-green-500 shadow-green-100',
-    'draft': 'border-yellow-400 text-yellow-500 shadow-yellow-100',
-    'private': 'border-red-400 text-red-500 shadow-red-100'
+    'published': 'text-green-400 shadow-green-100',
+    'draft': 'text-yellow-400 shadow-yellow-100',
+    'private': 'text-red-400 shadow-red-100'
   }[state.name.toLowerCase()]
 }
 
@@ -170,12 +170,16 @@ const formatDate = (d) => {
         <!-- EDIT FOLDER -->
 
         <button v-if="editButton" @click.prevent="$emit('edit-content',
-          folder)" class="focus:outline-none text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-amber-900"><font-awesome-icon class="h-4 w-4" icon="fa-pen-to-square" />Edit</button>
+          folder)" class="hover:outline-none text-white bg-amber-400
+          hover:bg-amber-500 hover:ring-4 hover:ring-amber-100 font-medium
+          rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-amber-900"><font-awesome-icon class="h-4 w-4" icon="fa-pen-to-square" />Edit</button>
 
         <!-- ADD CONTENT TO FOLDER -->
 
         <Menu as="div" class="relative inline" v-if="addTypes">
-          <MenuButton class="focus:outline-none text-white bg-emerald-400 hover:bg-emerald-500 focus:ring-4 focus:ring-emerald-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-emerald-900">
+          <MenuButton class="hover:outline-none text-white bg-emerald-400
+            hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100
+            font-medium rounded-full text-sm px-3 py-2.5 mr-2 mb-2 dark:focus:ring-emerald-900">
             <font-awesome-icon class="h-4 w-4" icon="fa-regular fa-square-plus" />
             Add
           </MenuButton>
@@ -195,18 +199,18 @@ const formatDate = (d) => {
           <PopoverButton class="hover:bg-slate-200 p-2 hover:rounded">
             <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" icon="fa-solid fa-sliders" />
           </PopoverButton>
+          <PopoverOverlay class="fixed inset-0 bg-black opacity-5" />
 
           <PopoverPanel class="absolute right-0 w-max p-4 bg-slate-200 z-10">
-            <h1 class="text-2xl">lol</h1>
-            <p>test test</p>
-            <input type="checkbox" /> Sort folder first
+
+
           </PopoverPanel>
         </Popover>
 
         <!-- VIEW -->
 
-        <button class="mr-4 hover:bg-slate-200 p-2 hover:rounded" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
-          <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" :icon="view_icon" />
+        <button class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
+          <font-awesome-icon class="h-6 w-6 align-middle" :icon="view_icon" />
         </button>
       </div>
     </div>
@@ -290,7 +294,7 @@ const formatDate = (d) => {
           <!-- TITLE -->
 
           <td class="p-2 whitespace-nowrap truncate max-w-md">
-            <font-awesome-icon class="inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
+            <font-awesome-icon class="drop-shadow-lg inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
             <button @click="$emit('browse', content.id)"
               v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
             <template v-if="content.type.name!='folder'">{{ content.title }}</template>
@@ -299,15 +303,16 @@ const formatDate = (d) => {
           <!-- OWNER -->
 
           <td class="p-2 text-xs whitespace-nowrap">
-            <img :src="content.owner.gravatar" class="mr-2 h-10 w-10 inline rounded-full" />
+            <img :src="content.owner.gravatar" class="mr-2 h-10 w-10 inline rounded-full shadow-md" />
             <span>{{ content.owner.full_name }}</span>
           </td>
 
           <!-- STATE -->
 
           <td class="text-center">
-            <span :class="stateClass(content.state)" class=" text-xs
-              inline-block font-medium rounded-full p-2">{{ content.state.name }}</span>
+            <font-awesome-icon :class="stateClass(content.state)"
+              class="inline-block drop-shadow align-middle mr-2" icon="fa-solid fa-circle" />
+            <span class="text-xs">{{ content.state.name }}</span>
           </td>
 
           <!-- LAST UPDATE -->
@@ -382,7 +387,8 @@ const formatDate = (d) => {
             @click="$emit('select-content', content, $event)" type="checkbox"
             class="absolute border-slate-300 top-1 left-1" />
 
-            <font-awesome-icon icon="fa-solid fa-square" class="absolute right-1 top-0.5 h-5 w-5 text-green-300" />
+            <font-awesome-icon :class="stateClass(content.state)"
+            class="absolute right-1 top-0.5 h-4 w-4 drop-shadow" icon="fa-solid fa-circle" />
 
           <div class="flex flex-col h-32 w-32 overflow-scroll mb-1 border">
 

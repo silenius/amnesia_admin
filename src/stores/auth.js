@@ -38,7 +38,9 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const logout = async() => {
-        await useFetchBackend('auth/logout')
+        await useFetchBackend('auth/logout', {
+            method: 'POST'
+        })
         user.value = {}
         router.push('/')
     }
