@@ -1,9 +1,8 @@
 <script setup>
 
-import { ref, computed, onMounted, onUpdated, watch } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { 
-  Menu, MenuButton, MenuItems, MenuItem, 
   Dialog,
   DialogPanel,
   DialogTitle,
@@ -104,12 +103,16 @@ const doChangeWeight = async (content, weight) => {
   reload()
 }
 
+// Publish content
 const doPublish = async (content) => {
   await publishContent(content.id)
+  reload()
 }
 
+// Unpublish content
 const doUnpublish = async (content) => {
   await unpublishContent(content.id)
+  reload()
 }
 
 // Delete selected content

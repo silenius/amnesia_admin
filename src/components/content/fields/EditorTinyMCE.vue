@@ -65,7 +65,7 @@
     </Dialog>
   </TransitionRoot>
 
-  <Editor api-key="" v-bind="$attrs" :init="conf" />
+  <Editor api-key="no-api-key" v-bind="$attrs" :init="conf" />
 </template>
 
 <script>
@@ -76,11 +76,58 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
+
 import { ref, watchEffect } from 'vue'
-import Editor from '@tinymce/tinymce-vue'
+
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
+
+// Tinymce
+
+/*
+import tinymce from 'tinymce';
+
+import 'tinymce/icons/default';
+
+import 'tinymce/themes/silver';
+import 'tinymce/models/dom';
+
+import 'tinymce/skins/ui/oxide/skin.css';
+
+import 'tinymce/plugins/advlist';
+import 'tinymce/plugins/code';
+import 'tinymce/plugins/emoticons';
+import 'tinymce/plugins/emoticons/js/emojis';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/table';
+import 'tinymce/plugins/anchor';
+import 'tinymce/plugins/autolink';
+import 'tinymce/plugins/autoresize';
+import 'tinymce/plugins/autosave';
+import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/codesample';
+import 'tinymce/plugins/fullscreen';
+import 'tinymce/plugins/help';
+import 'tinymce/plugins/image';
+import 'tinymce/plugins/media';
+import 'tinymce/plugins/nonbreaking';
+import 'tinymce/plugins/pagebreak';
+import 'tinymce/plugins/preview';
+import 'tinymce/plugins/quickbars';
+import 'tinymce/plugins/save';
+import 'tinymce/plugins/searchreplace';
+import 'tinymce/plugins/template';
+import 'tinymce/plugins/visualblocks';
+import 'tinymce/plugins/visualchars';
+import 'tinymce/plugins/wordcount';
+
+import contentUiSkinCss from 'tinymce/skins/ui/oxide/content.css';
+import contentCss from 'tinymce/skins/content/default/content.css';
+*/
+
+import Editor from '@tinymce/tinymce-vue'
 
 const isOpen = ref(false)
 const folder_id = ref(1)
