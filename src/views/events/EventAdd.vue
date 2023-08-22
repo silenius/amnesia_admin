@@ -21,18 +21,16 @@ const event = ref({
   props: {}
 })
 
-const { errors, setError } = inject('errors')
+const { setErrorFromResponse } = inject('errors')
 
 const create = async () => {
   try {
     const { data } = await createEvent(props.container, event)
     router.push({name: 'contents', params: {id: data.id}})
   } catch (e) {
-    // TODO
-    console.log(e)
+    setErrorFromResponse(e.response)
   }
 }
-
 
 </script>
 

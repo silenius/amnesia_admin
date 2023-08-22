@@ -26,6 +26,8 @@ const props = defineProps({
   }
 })
 
+const section_cls="flex flex-col gap-4"
+
 const emit = defineEmits([
   'submit-file'
 ])
@@ -42,24 +44,32 @@ provide('editable', computed(() => props.file))
   <form @submit.prevent="$emit('submit-file')">
     <FormTabGroup>
       <template #default>
-        <ContentTitle v-model:title="file.title" />
-        <ContentDescription v-model:description="file.description" />
-        <FileData v-model:content="file.content" />
+        <section :class="section_cls">
+          <ContentTitle v-model:title="file.title" />
+          <ContentDescription v-model:description="file.description" />
+          <FileData v-model:content="file.content" />
+        </section>
       </template>
       <template #settings>
-        <ContentPublishingDate v-model:effective="file.effective" />
-        <ContentExpirationDate v-model:expiration="file.expiration" />
-        <ContentIndexed v-model:is_fts="file.is_fts" />
+        <section :class="section_cls">
+          <ContentPublishingDate v-model:effective="file.effective" />
+          <ContentExpirationDate v-model:expiration="file.expiration" />
+          <ContentIndexed v-model:is_fts="file.is_fts" />
+        </section>
       </template>
       <template #props>
+        <section :class="section_cls">
           <ContentBreadcrumb class="pb-4" v-model:breadcrumb="file.props.breadcrumb" />
           <ContentBannerImage class="border-b pb-4" v-model:banner_image="file.props.banner_image" />
+        </section>
       </template>
       <template #security>
-        <ContentSecurity v-model:acls="file.acls" />
+        <section :class="section_cls">
+          <ContentSecurity v-model:acls="file.acls" />
+        </section>
       </template>
     </FormTabGroup>
-    <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    <button type="submit" class="mt-4 rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>

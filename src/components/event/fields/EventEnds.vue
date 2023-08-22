@@ -1,9 +1,11 @@
 <template>
   <div>
-    <label class="block">
-      <span>End date</span>
+    <label>
+      <p class="font-bold">End date</p>
+      <p class="text-xs">Date when the event ends</p>
 
       <flat-pickr
+        class="p-0 border-slate-300 bg-slate-50"
         v-model="value"
         :config="config"
         placeholder="Select end date"

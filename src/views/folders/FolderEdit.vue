@@ -1,4 +1,6 @@
 <script setup>
+
+import { inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
@@ -8,13 +10,19 @@ const props = defineProps({
   content: Object
 })
 
+const { setErrorFromResponse } = inject('errors')
+
 const router = useRouter()
 
 const { updateFolder } = useFolder()
 
 const update = async () => {
-  await updateFolder(props.content)
-  router.push({name: 'show-content', params: {id: props.content.id}})
+  try {
+    await updateFolder(props.content)
+    router.push({name: 'show-content', params: {id: props.content.id}})
+  } catch (e) {
+    setErrorFromResponse(e.response)
+  }
 }
 
 </script>

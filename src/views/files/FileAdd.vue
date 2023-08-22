@@ -21,15 +21,14 @@ const file = ref({
   props: {}
 })
 
-const { errors, setError } = inject('errors')
+const { setErrorFromResponse } = inject('errors')
 
 const create = async () => {
   try {
     const { data } = await createFile(props.container, file)
     router.push({name: 'show-content', params: {id: data.id}})
   } catch (e) {
-    // TODO
-    console.log(e)
+    setErrorFromResponse(e.response)
   }
 }
 

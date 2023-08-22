@@ -22,6 +22,14 @@ const setError = (key, value) => {
   errors.value[key] = value
 }
 
+const setErrorFromResponse = async(r) => {
+  const errors = await r.json()
+
+  for (const [k, v] of Object.entries(errors)) {
+    setError(k, v.join(''))
+  }
+}
+
 const mapping = {
   folder: FolderAdd,
   document: DocumentAdd,
@@ -31,7 +39,8 @@ const mapping = {
 
 provide('errors', {
   errors,
-  setError
+  setError,
+  setErrorFromResponse
 })
 
 const doBrowse = async (id) => await router.push({

@@ -22,15 +22,14 @@ const folder = ref({
   props: {}
 })
 
-const { errors, setError } = inject('errors')
+const { setErrorFromResponse } = inject('errors')
 
 const create = async () => {
   try {
     const { data } = await createFolder(props.container, folder)
     router.push({name: 'show-content', params: {id: data.id}})
   } catch (e) {
-    // TODO
-    console.log(e)
+    setErrorFromResponse(e.response)
   }
 }
 </script>
