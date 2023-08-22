@@ -150,7 +150,7 @@ watchEffect( async () => {
     [
       ['filter_types', 'folder'],
       ['filter_types', 'file'], 
-      ['filter_mime', 'image/*']
+      ['filter_mimes', 'image/*']
     ]
   )
   folder.value = folder_data

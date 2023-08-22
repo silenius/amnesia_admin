@@ -43,6 +43,8 @@ provide('editable', computed(() => props.event))
 const countries = ref([])
 const { getCountries } = useCountry()
 
+const section_cls="flex flex-col gap-4"
+
 onMounted( async () => {
   const { data } = await getCountries()
   countries.value = data
@@ -55,22 +57,24 @@ onMounted( async () => {
   <form @submit.prevent="$emit('submit-event')">
     <FormTabGroup>
       <template #default>
-        <ContentTitle v-model:title="event.title" />
-        <ContentDescription v-model:description="event.description" />
-        <EventStart v-model:starts="event.starts" />
-        <EventEnds v-model:ends="event.ends" />
-        <EventBody v-model:body="event.body" />
-        <Countries class="z-20" :countries="countries" v-model:country="event.country" />
-        <Addresses 
-          class="z-10"
-          :country="event.country" v-model:address="event.address" 
-          v-model:address_longitude="event.address_longitude"
-          v-model:address_latitude="event.address_latitude"
-        />
-        <EventMap
-          class="h-64 w-full"
-          :lat="event.address_latitude"
-          :lon="event.address_longitude" />
+        <section :class="section_cls">
+          <ContentTitle v-model:title="event.title" />
+          <ContentDescription v-model:description="event.description" />
+          <EventStart v-model:starts="event.starts" />
+          <EventEnds v-model:ends="event.ends" />
+          <EventBody v-model:body="event.body" />
+          <Countries class="z-20" :countries="countries" v-model:country="event.country" />
+          <Addresses 
+            class="z-10"
+            :country="event.country" v-model:address="event.address" 
+            v-model:address_longitude="event.address_longitude"
+            v-model:address_latitude="event.address_latitude"
+          />
+          <EventMap
+            class="h-64 w-full"
+            :lat="event.address_latitude"
+            :lon="event.address_longitude" />
+        </section>
       </template>
       <template #settings>
         <ContentPublishingDate v-model:effective="event.effective" />
@@ -85,7 +89,7 @@ onMounted( async () => {
         <ContentSecurity v-model:acls="event.acls" />
       </template>
     </FormTabGroup>
-    <button type="submit" class="rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    <button type="submit" class="mt-4 rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>

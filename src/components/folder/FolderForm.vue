@@ -59,7 +59,7 @@ provide('editable', computed(() => props.folder))
           <ContentPublishingDate v-model:effective="folder.effective" />
           <ContentExpirationDate class="border-b pb-4" v-model:expiration="folder.expiration" />
           <FolderExcludeNav v-model:exclude_nav="folder.exclude_nav" />
-          <ContentIndexed v-model:is_fts="folder.is_fts" />
+          <ContentIndexed v-model:is_fts="folder.is_fts" class="border-b pb-4"/>
           <FolderDefaultLimit class="border-b pb-4" v-model:default_limit="folder.default_limit" />
           <FolderDefaultPage class="border-b pb-4" v-model:index_content_id="folder.index_content_id" />
           <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />

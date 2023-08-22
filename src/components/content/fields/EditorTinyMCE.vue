@@ -39,6 +39,7 @@
                   <FolderBrowser
                     @browse="doBrowse"
                     @select="doSelect"
+                    @breadcrumb-select="(content) => doBrowse(content.id)"
                     :contents="contents"
                     :folder="folder"
                     :actions="actions"

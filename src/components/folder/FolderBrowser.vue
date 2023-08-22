@@ -59,7 +59,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'browse', 'delete-content', 'select-content', 'move-content', 'edit-content', 'add-content', 'change-weight-content', 'delete-selection', 'move-selection'
+  'browse', 'delete-content', 'select-content', 'move-content', 
+  'edit-content', 'add-content', 'change-weight-content',
+  'publish-content', 'unpublish-content',
+  'delete-selection', 'move-selection'
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
