@@ -11,12 +11,14 @@ import {
   PopoverOverlay,
   PopoverPanel,
 } from '@headlessui/vue'
+
 import { 
   actions as default_actions,
   selectActions as select_actions
 } from '@/components/folder/FolderBrowserActions.js'
 
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+import InputCheckbox from '@/components/form/InputCheckbox.vue'
 
 const props = defineProps({
   // The folder being browsed
@@ -55,14 +57,19 @@ const props = defineProps({
   editButton: {
     type: Boolean,
     default: false
+  },
+  sortFolderFirst: {
+    type: Boolean,
+    default: true
   }
 })
 
 const emit = defineEmits([
-  'browse', 'delete-content', 'select-content', 'move-content', 
+  'reload', 'browse', 'delete-content', 'select-content', 'move-content', 
   'edit-content', 'add-content', 'change-weight-content',
   'publish-content', 'unpublish-content',
-  'delete-selection', 'move-selection'
+  'delete-selection', 'move-selection',
+  'breadcrumb-select'
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
@@ -168,7 +175,7 @@ const formatDate = (d) => {
         />
       </div>
 
-      <div class="flex gap-1 items-center justify-end">
+      <div class="flex items-center justify-end">
 
         <!-- EDIT FOLDER -->
 
@@ -199,14 +206,20 @@ const formatDate = (d) => {
         <!-- SETTINGS -->
 
         <Popover class="relative inline">
-          <PopoverButton class="hover:bg-slate-200 p-2 hover:rounded">
-            <font-awesome-icon class="h-6 w-6 align-middle text-gray-600" icon="fa-solid fa-sliders" />
+          <PopoverButton class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900">
+            <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-solid fa-sliders" />
           </PopoverButton>
-          <PopoverOverlay class="fixed inset-0 bg-black opacity-5" />
+          <PopoverOverlay class="fixed inset-0 bg-black opacity-25" />
 
-          <PopoverPanel class="absolute right-0 w-max p-4 bg-slate-200 z-10">
-
-
+          <PopoverPanel class="absolute right-0 w-max p-4 bg-white z-10">
+            <div class="flex items-start">
+              <InputCheckbox :checked="sortFolderFirst" @change="(n) =>
+                $emit('reload', {sort_folder_first: n === 'true'})"/>
+              <div class="flex flex-col items-start">
+                Folder first
+                <span class="text-xs">coucou</span>
+                </div>
+            </div>
           </PopoverPanel>
         </Popover>
 
@@ -390,7 +403,7 @@ const formatDate = (d) => {
             @click="$emit('select-content', content, $event)" type="checkbox"
             class="absolute border-slate-300 top-1 left-1" />
 
-            <font-awesome-icon :class="stateClass(content.state)"
+          <font-awesome-icon :class="stateClass(content.state)"
             class="absolute right-1 top-0.5 h-4 w-4 drop-shadow" icon="fa-solid fa-circle" />
 
           <div class="flex flex-col h-32 w-32 overflow-scroll mb-1 border">

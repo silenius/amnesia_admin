@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, unref } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   Dialog,
@@ -30,13 +30,21 @@ const {
 } = useContent()
 const { getContentTypes } = useContentTypes()
 
-const contents = ref([])
-const contents_meta = ref({})
+const contents = ref([])  // Data
+const contents_meta = ref({})  // Metadata
 
-const limit = computed( () => contents_meta.value?.limit)
-const offset = computed( () => {
+const backend_limit = computed( 
+  () => contents_meta.value?.limit
+)
+
+const backend_offset = computed( () => {
   const v = parseInt(contents_meta.value?.offset)
   return isNaN(v) ? 0 : v
+})
+
+const backend_sort_folder_first = computed( () => {
+  const v = contents_meta.value?.sort_folder_first
+  return typeof v == 'boolean' ? v : true
 })
 
 const selected = ref(new Map())
@@ -48,17 +56,19 @@ const move_modal_open = ref(false)
 const move_contents = ref([])
 const move_folder = ref(null)
 
-const reload = async (offset, limit) => {
+const reload = async ({
+    offset=unref(backend_offset), 
+    limit=unref(backend_limit),
+    sort_folder_first=unref(backend_sort_folder_first) 
+  } = {}
+) => {
   const params = [
-    ['sort_folder_first', true]
+    ['sort_folder_first', sort_folder_first],
+    ['offset', offset]
   ]
 
   if (limit) {
     params.push(['limit', limit])
-  }
-
-  if (offset) {
-    params.push(['offset', offset])
   }
 
   const { data } = await browse(props.content.id, params)
@@ -70,7 +80,7 @@ const reload = async (offset, limit) => {
 const doMoveBrowse = async (id) => {
   const { data } = await browse(id, [
     ['filter_types', 'folder'],
-    ['sort_folder_first', true]
+    ['sort_folder_first', backend_sort_order_first]
   ])
   const { data: folder_data } = await getContent(id)
   move_contents.value = data.data
@@ -81,6 +91,10 @@ const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
   params: { id: id }
 })
+
+const doReload = async(n) => {
+  await reload(n)
+}
 
 // Edit a content
 const doEdit = async (content) => { 
@@ -205,6 +219,7 @@ onMounted(async () => {
 
   <FolderBrowser
     class="mt-4"
+    @reload="doReload"
     @browse="doBrowse"
     @add-content="doAdd"
     @delete-content="doDelete"
@@ -222,14 +237,15 @@ onMounted(async () => {
     :canChangeWeight="true"
     :addTypes="types"
     :editButton="true"
+    :sortFolderFirst="backend_sort_folder_first"
   />
 
   <DefaultPagination
     v-if="contents_meta.count"
-    :limit="limit"
-    :offset="offset"
+    :limit="backend_limit"
+    :offset="backend_offset"
     :total="contents_meta.count"
-    @goto-page="(page) => reload((page-1)*limit)"
+    @goto-page="(page) => reload({offset: (page-1)*backend_limit})"
     class="flex justify-center my-4"
   />
 

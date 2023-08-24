@@ -77,9 +77,11 @@ onMounted( async () => {
         </section>
       </template>
       <template #settings>
+        <section :class="section_cls">
         <ContentPublishingDate v-model:effective="event.effective" />
-        <ContentExpirationDate v-model:expiration="event.expiration" />
-        <ContentIndexed v-model:is_fts="event.is_fts" />
+        <ContentExpirationDate class="border-b pb-4" v-model:expiration="event.expiration" />
+          </section>
+        <ContentIndexed class="mt-2" v-model:is_fts="event.is_fts" />
       </template>
       <template #props>
           <ContentBreadcrumb class="pb-4" v-model:breadcrumb="event.props.breadcrumb" />

@@ -5,7 +5,7 @@
       <p class="text-xs">Date when the event begins</p>
 
       <flat-pickr
-        class="p-0 border-slate-300 bg-slate-50"
+        class="p-2 border-slate-300 bg-slate-50"
         v-model="value"
         :config="config"
         placeholder="Select start date"

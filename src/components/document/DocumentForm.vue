@@ -55,7 +55,7 @@ provide('editable', computed(() => props.doc))
           <ContentPublishingDate v-model:effective="doc.effective" />
           <ContentExpirationDate class="border-b pb-4" v-model:expiration="doc.expiration" />
         </section>
-        <ContentIndexed v-model:is_fts="doc.is_fts" />
+        <ContentIndexed class="mt-2" v-model:is_fts="doc.is_fts" />
       </template>
       <template #props>
         <section :class="section_cls">
