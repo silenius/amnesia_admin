@@ -162,7 +162,7 @@ const doSelect = (content, evt) => {
 }
 
 watch(() => props.content.id, async () => {
-  reload()
+  reload({offset:0})
   selected.value.clear()
 }, { immediate: true })
 
@@ -174,6 +174,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div>
 
   <Dialog as="div" :open="move_modal_open" class="relative z-10">
     <div class="fixed inset-0 bg-black bg-opacity-25" />
@@ -248,5 +249,6 @@ onMounted(async () => {
     @goto-page="(page) => reload({offset: (page-1)*backend_limit})"
     class="flex justify-center my-4"
   />
+  </div>
 
 </template>

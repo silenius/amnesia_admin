@@ -7,6 +7,7 @@ const routes = [
         components: {
             default: () => import('../views/HomeView.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
+            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
         },
     },
 
@@ -15,6 +16,7 @@ const routes = [
         components: {
             default: () => import('../views/contents/ContentsIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
+            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
         },
         props: {
             default: (route) => ({ 
@@ -59,14 +61,14 @@ const routes = [
 
     {
         path: '/accounts',
-        name: 'accounts',
         components: {
             default: () => import('../views/accounts/AccountsIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
+            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
         },
         children: [
             {
-                name: 'browse_accounts',
+                name: 'browse-accounts',
                 path: '',
                 component: () => import('../views/accounts/AccountsBrowse.vue')
             },

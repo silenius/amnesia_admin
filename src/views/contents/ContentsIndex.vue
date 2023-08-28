@@ -23,5 +23,5 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <RouterView :content="content" v-if="content.id" />
+  <RouterView class="m-4" :content="content" v-if="content.id" />
 </template>
