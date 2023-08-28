@@ -216,8 +216,10 @@ const formatDate = (d) => {
               <InputCheckbox :checked="sortFolderFirst" @change="(n) =>
                 $emit('reload', {sort_folder_first: n === 'true'})"/>
               <div class="flex flex-col items-start">
-                Folder first
-                <span class="text-xs">coucou</span>
+                Folders first
+                <span v-if="sortFolderFirst" class="text-xs">Folders will
+                  appear first in the selected order</span>
+                <span v-else class="text-xs">Folders won't specially appear first</span>
                 </div>
             </div>
           </PopoverPanel>
