@@ -81,6 +81,7 @@ const routes = [
         components:{
             default: () => import('../views/roles/RolesIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
+            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
         },
         children: [
             {

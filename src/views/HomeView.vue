@@ -6,7 +6,7 @@ const faClass = ref([
 ])
 
 const buttonClass = ref([
-  'p-4', 'rounded-full', 'border-slate-100', 'h-32', 'w-32',
+  'p-4', 'rounded-full', 'border-slate-100',
   'hover:border-slate-200 hover:bg-slate-100 text-slate-600 hover:border-dotted'
 ])
 
@@ -16,6 +16,7 @@ const sectionClass = ref([
 </script>
 
 <template>
+  <p class="m-4 pb-2 border-b-2 text-xl font-bold">Dashboard</p>
   <div :class="sectionClass">
     <button @click="$router.push({name: 'browse-content', params: {id: 1}})" :class="buttonClass">
       <font-awesome-icon :class="faClass" icon="fa-solid fa-folder-tree" />

@@ -175,6 +175,7 @@ onMounted(async () => {
 
 <template>
   <div>
+  <p class="m-4 pb-2 border-b-2 text-xl font-bold">Content</p>
 
   <Dialog as="div" :open="move_modal_open" class="relative z-10">
     <div class="fixed inset-0 bg-black bg-opacity-25" />
@@ -211,12 +212,15 @@ onMounted(async () => {
     </div>
   </Dialog>
 
+
+    <!--
   <h1 class="text-xl font-bold mt-2">
     {{ content.title }}
   </h1>
   <p class="text-xs">
     {{ content.description }}
   </p>
+-->
 
   <FolderBrowser
     class="mt-4"
