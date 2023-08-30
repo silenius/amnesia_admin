@@ -175,7 +175,7 @@ const formatDate = (d) => {
         />
       </div>
 
-      <div class="flex items-center justify-end">
+      <div class="hidden md:block flex items-center justify-end">
 
         <!-- EDIT FOLDER -->
 

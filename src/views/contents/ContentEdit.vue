@@ -42,13 +42,13 @@ const doBrowse = async (id) => await router.push({
 
 <template>
   <div>
-    <div class="flex mb-8 items-center justify-center">
-    <ContentBreadcrumb 
-      :content="props.content" 
-      @item-select="(content) => doBrowse(content.id)"
-      class="p-4 shadow-md"
-    />
-      </div>
+    <div class="flex mb-4">
+      <ContentBreadcrumb 
+        :content="props.content" 
+        @item-select="(content) => doBrowse(content.id)"
+        class="p-2 shadow-md"
+      />
+    </div>
 
     <component 
       :is="mapping[content.type.name]" 

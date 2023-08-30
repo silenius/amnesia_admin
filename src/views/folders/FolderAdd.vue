@@ -35,7 +35,6 @@ const create = async () => {
 </script>
 
 <template>
-    <h1>Add folder</h1>
     <FolderForm 
       :folder="folder" 
       :container="container"
