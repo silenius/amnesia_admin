@@ -18,6 +18,30 @@ const props = defineProps({
   content: Object
 })
 
+const browsers = Object.fromEntries(
+  Array.from(
+    ['main', 'move'], (x) => {
+      const meta = ref({})
+
+      return [x, {
+        data: ref([]),
+        meta: meta,
+        computed: {
+          limit: computed(() => meta.value?.limit),
+          offset: computed(() => {
+            const v = parseInt(meta.value?.offset)
+            return isNaN(v) ? 0 : v
+          }),
+          sort_folder_first: computed(() => {
+            const v = meta.value?.sort_folder_first
+            return typeof v == 'boolean' ? v : true
+          })
+        }
+      }]
+    }
+  )  // Array.from
+)
+
 const router = useRouter()
 
 const { browse, paste, destroyManyContent } = useFolder()
@@ -30,60 +54,44 @@ const {
 } = useContent()
 const { getContentTypes } = useContentTypes()
 
-const contents = ref([])  // Data
-const contents_meta = ref({})  // Metadata
-
-const backend_limit = computed( 
-  () => contents_meta.value?.limit
-)
-
-const backend_offset = computed( () => {
-  const v = parseInt(contents_meta.value?.offset)
-  return isNaN(v) ? 0 : v
-})
-
-const backend_sort_folder_first = computed( () => {
-  const v = contents_meta.value?.sort_folder_first
-  return typeof v == 'boolean' ? v : true
-})
-
 const selected = ref(new Map())
 const selected_ids = computed(() => Array.from(selected.value.keys()))
 
 const types = ref([])
 
 const move_modal_open = ref(false)
-const move_contents = ref([])
 const move_folder = ref(null)
 
+//XXX: add filter_types, ...
 const reload = async ({
-    offset=unref(backend_offset), 
-    limit=unref(backend_limit),
-    sort_folder_first=unref(backend_sort_folder_first) 
+    browser=browsers.main,
+    oid=props.content.id,
+    offset=unref(browser.computed.offset), 
+    limit=unref(browser.computed.limit),
+    sort_folder_first=unref(browser.computed.sort_folder_first),
   } = {}
 ) => {
-  const params = [
+  const p = [
     ['sort_folder_first', sort_folder_first],
-    ['offset', offset]
+    ['offset', offset],
   ]
 
   if (limit) {
-    params.push(['limit', limit])
+    p.push(['limit', limit])
   }
 
-  const { data } = await browse(props.content.id, params)
+  const { data } = await browse(oid, p)
 
-  contents.value = data.data
-  contents_meta.value = data.meta
+  browser.data.value = data.data
+  browser.meta.value = data.meta
 }
 
 const doMoveBrowse = async (id) => {
-  const { data } = await browse(id, [
-    ['filter_types', 'folder'],
-    ['sort_folder_first', backend_sort_order_first]
-  ])
+  reload({
+    browser: browsers.move,
+    oid: id,
+  })
   const { data: folder_data } = await getContent(id)
-  move_contents.value = data.data
   move_folder.value = folder_data
 }
 
@@ -91,10 +99,6 @@ const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
   params: { id: id }
 })
-
-const doReload = async(n) => {
-  await reload(n)
-}
 
 // Edit a content
 const doEdit = async (content) => { 
@@ -162,7 +166,7 @@ const doSelect = (content, evt) => {
 }
 
 watch(() => props.content.id, async () => {
-  reload({offset:0})
+  await reload({offset:0})
   selected.value.clear()
 }, { immediate: true })
 
@@ -175,84 +179,86 @@ onMounted(async () => {
 
 <template>
   <div>
-  <p class="m-4 pb-2 border-b-2 text-xl font-bold">Content</p>
+    <p class="m-4 pb-2 border-b-2 text-xl font-bold">Content</p>
 
-  <Dialog as="div" :open="move_modal_open" class="relative z-10">
-    <div class="fixed inset-0 bg-black bg-opacity-25" />
+    <Dialog as="div" :open="move_modal_open" class="relative z-10">
+      <div class="fixed inset-0 bg-black bg-opacity-25" />
 
-    <div class="fixed inset-0 overflow-y-auto">
-      <div class="flex min-h-full items-center justify-center p-4 text-center">
-        <DialogPanel
-          class="w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-          <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
-            Move selection
-          </DialogTitle>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">
-              <FolderBrowser
-                @browse="doMoveBrowse"
-                @breadcrumb-select="(content) => doMoveBrowse(content.id)"
-                :actions="null"
-                :selectActions="null"
-                :folder="move_folder"
-                :contents="move_contents" 
-              />
-            </p>
-          </div>
-          <div class="mt-4">
-            <button type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="doMove"> Move here </button>
-            <button type="button" class="inline-flex justify-center rounded-md
-              border border-transparent bg-slate-100 px-4 py-2 text-sm
-              font-medium text-slate-900 hover:bg-slate-200 focus:outline-none
-              focus-visible:ring-2 focus-visible:ring-slate-500
-              focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button>
-          </div>
-        </DialogPanel>
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <DialogPanel
+            class="w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+              Move selection
+            </DialogTitle>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <FolderBrowser
+                  @browse="doMoveBrowse"
+                  @breadcrumb-select="(content) => doMoveBrowse(content.id)"
+                  :actions="null"
+                  :selectActions="null"
+                  :folder="move_folder"
+                  :contents="unref(browsers.move.data)" 
+                  :sortFolderFirst="unref(browsers.move.computed.sort_folder_first)"
+                />
+
+                <DefaultPagination
+                  :limit="unref(browsers.move.computed.limit)"
+                  :offset="unref(browsers.move.computed.offset)"
+                  :total="unref(browsers.move.meta.value.count)"
+                  @goto-page="(page) => reload({
+                    oid: move_folder.id,
+                    browser: browsers.move,
+                    offset: (page-1)*unref(browsers.move.computed.limit)
+                  })"
+                  class="flex justify-center my-4"
+                />
+              </p>
+            </div>
+            <div class="mt-4">
+              <button type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="doMove"> Move here </button>
+              <button type="button" class="inline-flex justify-center rounded-md
+                border border-transparent bg-slate-100 px-4 py-2 text-sm
+                font-medium text-slate-900 hover:bg-slate-200 focus:outline-none
+                focus-visible:ring-2 focus-visible:ring-slate-500
+                focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button>
+            </div>
+          </DialogPanel>
+        </div>
       </div>
-    </div>
-  </Dialog>
+    </Dialog>
 
+    <FolderBrowser
+      class="mt-4"
+      @reload="async (n) => await reload(n)"
+      @browse="doBrowse"
+      @add-content="doAdd"
+      @delete-content="doDelete"
+      @select-content="doSelect"
+      @edit-content="doEdit"
+      @publish-content="doPublish"
+      @unpublish-content="doUnpublish"
+      @change-weight-content="doChangeWeight"
+      @delete-selection="doDeleteSelection"
+      @move-selection="doMoveSelection"
+      @breadcrumb-select="(content) => doBrowse(content.id)"
+      :folder="content"
+      :contents="unref(browsers.main.data)" 
+      :selected="selected"
+      :canChangeWeight="true"
+      :addTypes="types"
+      :editButton="true"
+      :sortFolderFirst="unref(browsers.main.computed.sort_folder_first)"
+    />
 
-    <!--
-  <h1 class="text-xl font-bold mt-2">
-    {{ content.title }}
-  </h1>
-  <p class="text-xs">
-    {{ content.description }}
-  </p>
--->
-
-  <FolderBrowser
-    class="mt-4"
-    @reload="doReload"
-    @browse="doBrowse"
-    @add-content="doAdd"
-    @delete-content="doDelete"
-    @select-content="doSelect"
-    @edit-content="doEdit"
-    @publish-content="doPublish"
-    @unpublish-content="doUnpublish"
-    @change-weight-content="doChangeWeight"
-    @delete-selection="doDeleteSelection"
-    @move-selection="doMoveSelection"
-    @breadcrumb-select="(content) => doBrowse(content.id)"
-    :folder="content"
-    :contents="contents" 
-    :selected="selected"
-    :canChangeWeight="true"
-    :addTypes="types"
-    :editButton="true"
-    :sortFolderFirst="backend_sort_folder_first"
-  />
-
-  <DefaultPagination
-    v-if="contents_meta.count"
-    :limit="backend_limit"
-    :offset="backend_offset"
-    :total="contents_meta.count"
-    @goto-page="(page) => reload({offset: (page-1)*backend_limit})"
-    class="flex justify-center my-4"
-  />
+    <DefaultPagination
+      :limit="unref(browsers.main.computed.limit)"
+      :offset="unref(browsers.main.computed.offset)"
+      :total="unref(browsers.main.meta.value.count)"
+      @goto-page="(page) => reload({offset: (page-1)*unref(browsers.main.computed.limit)})"
+      class="flex justify-center my-4"
+    />
   </div>
 
 </template>
