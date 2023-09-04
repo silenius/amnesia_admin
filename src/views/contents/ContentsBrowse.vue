@@ -35,7 +35,16 @@ const browsers = Object.fromEntries(
           sort_folder_first: computed(() => {
             const v = meta.value?.sort_folder_first
             return typeof v == 'boolean' ? v : true
-          })
+          }),
+          filter_types: computed(() => {
+            const v = meta.value?.filter_types
+
+            if (Array.isArray(v) && v.length > 0) {
+              return v
+            }
+            
+            return false
+          }),
         }
       }]
     }
@@ -62,13 +71,13 @@ const types = ref([])
 const move_modal_open = ref(false)
 const move_folder = ref(null)
 
-//XXX: add filter_types, ...
 const reload = async ({
     browser=browsers.main,
     oid=props.content.id,
     offset=unref(browser.computed.offset), 
     limit=unref(browser.computed.limit),
     sort_folder_first=unref(browser.computed.sort_folder_first),
+    filter_types=unref(browser.computed.filter_types),
   } = {}
 ) => {
   const p = [
@@ -80,6 +89,10 @@ const reload = async ({
     p.push(['limit', limit])
   }
 
+  if (filter_types) {
+    p.push(['filter_types', filter_types])
+  }
+
   const { data } = await browse(oid, p)
 
   browser.data.value = data.data
@@ -88,7 +101,9 @@ const reload = async ({
 
 const doMoveBrowse = async (id) => {
   reload({
+    offset: 0,
     browser: browsers.move,
+    filter_types: ['folder'],
     oid: id,
   })
   const { data: folder_data } = await getContent(id)
