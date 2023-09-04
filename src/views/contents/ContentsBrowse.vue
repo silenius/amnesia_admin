@@ -18,6 +18,7 @@ const props = defineProps({
   content: Object
 })
 
+// Keeps data/metadata for FolderBrowser instances
 const browsers = Object.fromEntries(
   Array.from(
     ['main', 'move'], (x) => {
@@ -194,8 +195,6 @@ onMounted(async () => {
 
 <template>
   <div>
-    <p class="m-4 pb-2 border-b-2 text-xl font-bold">Content</p>
-
     <Dialog as="div" :open="move_modal_open" class="relative z-10">
       <div class="fixed inset-0 bg-black bg-opacity-25" />
 

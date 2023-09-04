@@ -162,6 +162,7 @@ const formatDate = (d) => {
 </script>
 
 <template>
+  <slot name="top" />
   <div class="flex flex-col" v-if="contents">
     <div class="flex">
 
@@ -175,6 +176,14 @@ const formatDate = (d) => {
       </div>
 
       <div class="hidden md:block flex items-center justify-end">
+
+        <!-- PER PAGE -->
+
+        <select class="text-sm rounded-full" @change="$emit('change-limit')">
+          <option>10</option>
+          <option>50</option>
+          <option>100</option>
+        </select> <span class="mr-2 text-xs">per page</span>
 
         <!-- EDIT FOLDER -->
 
@@ -469,4 +478,5 @@ const formatDate = (d) => {
       </ul>
     </div>
   </div>
+  <slot name="bottom" />
 </template>

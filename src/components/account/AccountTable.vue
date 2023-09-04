@@ -30,19 +30,22 @@ const emit = defineEmits([
 </script>
 
 <template>
-  <table class="table-auto border-spacing-4 text-xs">
+  <table class="table-auto w-full box-border border">
     <thead>
-      <tr class="text-left bg-slate-100">
+      <tr class="text-left text-white bg-slate-500">
         <th class="p-2">Name</th>
-        <th v-if="enabled">Enabled</th>
+        <th class="p-2" v-if="enabled">Enabled</th>
         <slot name="headers"></slot>
-        <th v-if="actions">Actions</th>
+        <th class="p-2" v-if="actions">Actions</th>
       </tr>
     </thead>
 
     <tbody>
       <tr v-for="account in accounts" :key="account.id" class="odd:bg-white even:bg-slate-50 text-slate-600">
-        <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
+
+        <!-- ACCOUNT NAME / PIC / ... -->
+
+        <td class="p-2 max-w-md font-semibold whitespace-nowrap">
           <div class="grid grid-flow-col w-fit gap-4">
             <img :src="account.gravatar" class="h-10 w-10 rounded-full" />
             <span class="flex flex-col">
