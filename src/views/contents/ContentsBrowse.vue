@@ -43,7 +43,7 @@ const browsers = Object.fromEntries(
             if (Array.isArray(v) && v.length > 0) {
               return v
             }
-            
+
             return false
           }),
         }
@@ -73,13 +73,13 @@ const move_modal_open = ref(false)
 const move_folder = ref(null)
 
 const reload = async ({
-    browser=browsers.main,
-    oid=props.content.id,
-    offset=unref(browser.computed.offset), 
-    limit=unref(browser.computed.limit),
-    sort_folder_first=unref(browser.computed.sort_folder_first),
-    filter_types=unref(browser.computed.filter_types),
-  } = {}
+  browser=browsers.main,
+  oid=props.content.id,
+  offset=unref(browser.computed.offset), 
+  limit=unref(browser.computed.limit),
+  sort_folder_first=unref(browser.computed.sort_folder_first),
+  filter_types=unref(browser.computed.filter_types),
+} = {}
 ) => {
   const p = [
     ['sort_folder_first', sort_folder_first],
@@ -175,6 +175,7 @@ const doAdd = async (folder, t) => {
   })
 }
 
+// A content is selected through a checkbox
 const doSelect = (content, evt) => {
   evt.target.checked 
     ? selected.value.set(content.id, content)
@@ -210,23 +211,25 @@ onMounted(async () => {
                 <FolderBrowser
                   @browse="doMoveBrowse"
                   @breadcrumb-select="(content) => doMoveBrowse(content.id)"
+                  @change-limit="async (n) => await reload({
+                    oid: move_folder.id,
+                    browser: browsers.move,
+                    offset: 0, 
+                    limit: n})"
+                  @goto-page="async (page) => await reload({
+                    oid: move_folder.id,
+                    browser: browsers.move,
+                    offset: (page-1)*unref(browsers.move.computed.limit)
+                  })"
+
+                  :current_limit="unref(browsers.move.computed.limit)"
+                  :offset="unref(browsers.move.computed.offset)"
+                  :total="unref(browsers.move.meta.value.count)"
                   :actions="null"
                   :selectActions="null"
                   :folder="move_folder"
                   :contents="unref(browsers.move.data)" 
                   :sortFolderFirst="unref(browsers.move.computed.sort_folder_first)"
-                />
-
-                <DefaultPagination
-                  :limit="unref(browsers.move.computed.limit)"
-                  :offset="unref(browsers.move.computed.offset)"
-                  :total="unref(browsers.move.meta.value.count)"
-                  @goto-page="(page) => reload({
-                    oid: move_folder.id,
-                    browser: browsers.move,
-                    offset: (page-1)*unref(browsers.move.computed.limit)
-                  })"
-                  class="flex justify-center my-4"
                 />
               </p>
             </div>
@@ -246,6 +249,8 @@ onMounted(async () => {
     <FolderBrowser
       class="mt-4"
       @reload="async (n) => await reload(n)"
+      @change-limit="async (n) => await reload({offset: 0, limit: n})"
+      @goto-page="async (n) => await reload({offset: (n-1)*unref(browsers.main.computed.limit)})"
       @browse="doBrowse"
       @add-content="doAdd"
       @delete-content="doDelete"
@@ -264,14 +269,9 @@ onMounted(async () => {
       :addTypes="types"
       :editButton="true"
       :sortFolderFirst="unref(browsers.main.computed.sort_folder_first)"
-    />
-
-    <DefaultPagination
-      :limit="unref(browsers.main.computed.limit)"
+      :current_limit="unref(browsers.main.computed.limit)"
       :offset="unref(browsers.main.computed.offset)"
       :total="unref(browsers.main.meta.value.count)"
-      @goto-page="(page) => reload({offset: (page-1)*unref(browsers.main.computed.limit)})"
-      class="flex justify-center my-4"
     />
   </div>
 

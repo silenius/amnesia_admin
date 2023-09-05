@@ -15,7 +15,6 @@
   </div>
 </template>
 
-
 <script setup>
 
 import { computed } from 'vue'
@@ -46,10 +45,10 @@ const page_total = computed( () => Math.ceil(props.total / props.limit ))
 const page_current = computed( () => (props.offset / props.limit) + 1)
 
 const range = (start, stop, step) => Array.from({ 
-    length: (stop - start) / step + 1 
-  },
-    (value, index) => start + index * step
-  )
+  length: (stop - start) / step + 1 
+},
+  (value, index) => start + index * step
+)
 
 const pages = computed( () => {
   if (page_total.value <= 1) {
