@@ -12,7 +12,6 @@ import { useContent } from '@/composables/contents.js'
 
 import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
-import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
   content: Object
@@ -54,7 +53,12 @@ const browsers = Object.fromEntries(
 
 const router = useRouter()
 
-const { browse, paste, destroyManyContent } = useFolder()
+const { 
+  browse, 
+  paste, 
+  destroyManyContent 
+} = useFolder()
+
 const { 
   setWeight, 
   destroyContent, 
@@ -62,6 +66,7 @@ const {
   publishContent,
   unpublishContent
 } = useContent()
+
 const { getContentTypes } = useContentTypes()
 
 const selected = ref(new Map())
