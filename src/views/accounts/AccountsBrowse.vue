@@ -28,5 +28,6 @@ const doDestroy = async (account) => {
   :actions="true" 
   @delete-account="doDestroy"
   @toggle-enabled="toggleEnabled" 
+  clas="mt-4"
 />
 </template>

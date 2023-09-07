@@ -187,10 +187,11 @@ const formatDate = (d) => {
 
         <!-- BREADCRUMB -->
 
-        <div class="grow flex items-center">
+        <div class="grow flex mb-4 items-center">
           <ContentBreadcrumb 
             :content="folder" 
             @item-select="(content) => $emit('breadcrumb-select', content)" 
+            class="p-2 shadow-md"
           />
         </div>
 
