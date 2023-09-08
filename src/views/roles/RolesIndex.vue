@@ -4,7 +4,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
     <div>
-        <h1>ROLES</h1>
-        <RouterView />
+        <RouterView class="m-4" />
     </div>
 </template>

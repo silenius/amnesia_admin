@@ -12,7 +12,7 @@ import { RouterView } from 'vue-router'
         <aside class="basis-0 p-2 md:p-4 fixed w-32 md:w-48 bg-gray-700">
           <RouterView name="LeftSideBar" />
         </aside>
-        <div class="grow overflow-scroll ml-32 md:ml-48">
+        <div class="grow min-h-screen overflow-scroll ml-32 md:ml-48">
           <RouterView />
         </div>
         <div class="basis-0">

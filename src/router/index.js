@@ -85,7 +85,7 @@ const routes = [
         },
         children: [
             {
-                name: 'browse_role',
+                name: 'browse-roles',
                 path: '',
                 component: () => import('../views/roles/RolesBrowse.vue')
             },

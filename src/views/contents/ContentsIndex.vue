@@ -1,11 +1,13 @@
 <script setup>
-import { onMounted, watchEffect, ref } from 'vue'
-import { RouterView } from 'vue-router'
+import { watchEffect, ref } from 'vue'
+import { RouterView, useRouter } from 'vue-router'
 import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({
   content_id: Number
 })
+
+const router = useRouter()
 
 const content = ref({})
 
@@ -20,8 +22,15 @@ watchEffect(async () => {
   }
 })
 
+const doEdit = async (content) => { 
+  await router.push({
+    name: 'edit-content', 
+    params: { id: content.id }
+  })
+}
+
 </script>
 
 <template>
-  <RouterView class="m-4" :content="content" v-if="content.id" />
+  <RouterView @edit-content="(n) => doEdit(n)" class="m-4" :content="content" v-if="content.id" />
 </template>

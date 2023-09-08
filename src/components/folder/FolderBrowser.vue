@@ -20,6 +20,7 @@ import {
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
 import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
+import EditContentButton from '@/components/buttons/EditContentButton.vue'
 
 const props = defineProps({
   // The folder being browsed
@@ -77,7 +78,7 @@ const props = defineProps({
   },
   total: {
     type: Number,
-    required: true
+    default: 0
   }
 })
 
@@ -195,7 +196,7 @@ const formatDate = (d) => {
           />
         </div>
 
-        <div class="hidden md:block flex items-center justify-end">
+        <div class="hidden md:flex items-center justify-end">
 
           <!-- PER PAGE -->
 
@@ -205,10 +206,7 @@ const formatDate = (d) => {
 
           <!-- EDIT FOLDER -->
 
-          <button v-if="editButton" @click.prevent="$emit('edit-content',
-            folder)" class="hover:outline-none text-white bg-amber-400
-            hover:bg-amber-500 hover:ring-4 hover:ring-amber-100 font-medium
-            rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-amber-900"><font-awesome-icon class="h-4 w-4" icon="fa-pen-to-square" />Edit</button>
+          <EditContentButton @click.prevent="$emit('edit-content', folder)" />
 
           <!-- ADD CONTENT TO FOLDER -->
 

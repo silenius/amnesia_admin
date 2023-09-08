@@ -40,9 +40,9 @@ const edit_members = (id) => {
 </script>
 
 <template>
-    <table class="table-auto border-spacing-4 text-xs">
+    <table class="table-auto box-border border">
         <thead>
-            <tr class="text-left bg-slate-100">
+            <tr class="text-left text-white bg-slate-500">
                 <th class="p-2">Name</th>
                 <th></th>
                 <th>Description</th>

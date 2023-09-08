@@ -10,7 +10,7 @@
       <font-awesome-icon class="w-4 h-4" icon="fa-solid fa-user-astronaut" /> Accounts
     </button>
     
-    <button @click="$router.push({name: 'roles'})" class="flex gap-1 items-center">
+    <button @click="$router.push({name: 'browse-roles'})" class="flex gap-1 items-center">
       <font-awesome-icon class="w-4 h-4" icon="fa-solid fa-user-group" /> Roles
     </button>
     
