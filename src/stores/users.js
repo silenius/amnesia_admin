@@ -8,7 +8,6 @@ export const useUsersStore = defineStore('user', () => {
     const authStore = useAuthStore()
 
     const users = ref([])
-    const user = ref({})
 
     const getAll = async() => { 
         try {
@@ -56,7 +55,6 @@ export const useUsersStore = defineStore('user', () => {
 
     return {
         users,
-        user,
         getAll,
         patch,
         deleteUser

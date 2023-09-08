@@ -12,6 +12,7 @@ function add_role() {
 </script>
 
 <template>
+  <div>
     <button class="rounded w-fit hover:bg-green-200 bg-green-100
         px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2
         focus-visible:ring-white focus-visible:ring-opacity-75"
@@ -19,4 +20,5 @@ function add_role() {
         Add Role
     </button>
     <RoleTable />
+  </div>
 </template>

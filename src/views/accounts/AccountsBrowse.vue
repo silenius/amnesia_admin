@@ -24,12 +24,12 @@ const doDestroy = async (account) => {
 
 <template>
   <div>
-  <AccountTable 
-  :accounts="user_store.users" 
-  :actions="true" 
-  @delete-account="doDestroy"
-  @toggle-enabled="toggleEnabled" 
-  class="mt-4"
-/>
-    </div>
+    <AccountTable 
+      :accounts="user_store.users" 
+      :actions="true" 
+      @delete-account="doDestroy"
+      @toggle-enabled="toggleEnabled" 
+      class="mt-4"
+    />
+  </div>
 </template>

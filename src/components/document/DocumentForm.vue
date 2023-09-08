@@ -40,7 +40,6 @@ provide('editable', computed(() => props.doc))
 </script>
 
 <template>
-  <span class="text-slate-600">{{ doc.title }}</span>
   <form @submit.prevent="$emit('submit-document')">
     <FormTabGroup>
       <template #default>

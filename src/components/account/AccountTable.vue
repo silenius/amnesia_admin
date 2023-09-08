@@ -1,10 +1,8 @@
 <script setup>
 
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
-
-import Avatar from "vue-boring-avatars";
-
+import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
+import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
   accounts: {
@@ -18,7 +16,24 @@ const props = defineProps({
   enabled: {
     type: Boolean,
     default: true
+  },
+  limits: {
+    type: Array,
+    default: [10, 50, 100, 500]
+  },
+  current_limit: {
+    type: Number,
+    default: 50
+  },
+  offset: {
+    type: Number,
+    default: 0
+  },
+  total: {
+    type: Number,
+    default: 0
   }
+
 })
 
 const emit = defineEmits([
@@ -101,5 +116,14 @@ const emit = defineEmits([
         </tr>
       </tbody>
     </table>
+    <slot name="pagination">
+      <DefaultPagination
+        :limit="current_limit"
+        :offset="offset"
+        :total="total"
+        @goto-page="(page) => $emit('goto-page', page)"
+        class="flex justify-center my-4"
+      />
+    </slot>
   </div>
 </template>

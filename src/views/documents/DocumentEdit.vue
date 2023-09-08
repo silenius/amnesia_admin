@@ -7,7 +7,7 @@ import DocumentForm from '@/components/document/DocumentForm.vue'
 import { useDocument } from '@/composables/documents.js'
 
 const props = defineProps({
-    content: Object
+  content: Object
 })
 
 const { setErrorFromResponse } = inject('errors')
@@ -28,10 +28,9 @@ const update = async () => {
 </script>
 
 <template>
-    <h1>Update document</h1>
-    <DocumentForm 
-      :doc="content" 
-      :action="'Update document'"
-      @submit-document="update" 
-    />
+  <DocumentForm 
+  :doc="content" 
+  :action="'Update document'"
+  @submit-document="update" 
+/>
 </template>

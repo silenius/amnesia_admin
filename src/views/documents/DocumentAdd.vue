@@ -34,8 +34,6 @@ const create = async () => {
 </script>
 
 <template>
-  <h1>Add document</h1>
-
   <DocumentForm 
     :doc="doc" 
     :container="container"

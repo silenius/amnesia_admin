@@ -44,7 +44,7 @@ const props = defineProps({
     type: Array,
     default: default_actions.slice()
   },
-  selectActions : {
+  selectActions: {
     type: Array,
     default: select_actions.slice()
   },
@@ -188,15 +188,15 @@ const formatDate = (d) => {
 
         <!-- BREADCRUMB -->
 
-        <div class="grow flex mb-4 items-center">
+        <div class="flex mb-4 items-center grow">
           <ContentBreadcrumb 
             :content="folder" 
             @item-select="(content) => $emit('breadcrumb-select', content)" 
             class="p-2 shadow-md"
           />
         </div>
-
-        <div class="hidden md:flex items-center justify-end">
+        <div class="justify-self-end">
+        <div class="hidden md:flex items-center">
 
           <!-- PER PAGE -->
 
@@ -254,6 +254,7 @@ const formatDate = (d) => {
           <button class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
             <font-awesome-icon class="h-6 w-6 align-middle" :icon="view_icon" />
           </button>
+        </div>
         </div>
       </div>
 
