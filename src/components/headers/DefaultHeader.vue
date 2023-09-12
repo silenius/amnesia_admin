@@ -51,8 +51,8 @@
           >
             <TransitionChild
               as="template"
-              enter="duration-300 ease-out"
-              enter-from="opacity-0 scale-95"
+              enter="duration-500 ease-out"
+              enter-from="opacity-0 scale-75"
               enter-to="opacity-100 scale-100"
               leave="duration-200 ease-in"
               leave-from="opacity-100 scale-100"
