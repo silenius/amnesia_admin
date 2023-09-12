@@ -23,14 +23,16 @@ const move_folder = ref(null)
 const move_folder_id = computed(() => move_folder.value.id)
 
 const { 
-  browse, 
-  paste, 
-  destroyManyContent 
+  browse, paste, destroyManyContent 
 } = useFolder()
+
+// Main browser
 
 const { 
   reload, meta, data, limit, offset, sort_folder_first,
 } = createBrowser(content_id, browse)
+
+// Move browser
 
 const { 
   reload: move_reload, 
@@ -61,8 +63,8 @@ const types = ref([])
 const move_modal_open = ref(false)
 
 const doMoveBrowse = async (id) => {
-  const { data: folder_data } = await getContent(id)
-  move_folder.value = folder_data
+  const { data } = await getContent(id)
+  move_folder.value = data
 
   move_reload({
     offset: 0,

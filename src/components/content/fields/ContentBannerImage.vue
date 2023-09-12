@@ -10,6 +10,7 @@ import {
 
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
+import { createBrowser } from '@/composables/browser.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
 import { yes_no_unknown } from '@/components/form/InputCheckboxDefaults.js'
@@ -23,6 +24,16 @@ const props = defineProps({
 const emits = defineEmits([
   'update:banner_image'
 ])
+
+const { browse } = useFolder()
+const { getContent } = useContent()
+
+const folder_id = computed(() => folder.value.id)
+const folder = ref(null)
+
+const { 
+  reload, meta, data, limit, offset, sort_folder_first,
+} = createBrowser(folder_id, browse)
 
 const actions = ref([
   {
@@ -39,33 +50,22 @@ const actions = ref([
   }
 ])
 
-const { browse } = useFolder()
-const { getContent } = useContent()
+const doBrowse = async (id) => {
+  const { data: folder_data } = await getContent(id)
+  folder.value = folder_data
 
-const doBrowse = id => folder_id.value = id
+  reload({
+    offset: 0,
+    filter_types: ['folder', 'file']
+  })
+}
+
 const doSelectBanner = (content) => {
   emits('update:banner_image', content.id) 
   closeModal()
 }
 
 const isOpen = ref(false)
-const folder_id = ref(1)
-const folder = ref({})
-const contents = ref([])
-
-watchEffect( async () => {
-  const { data: folder_data } = await getContent(folder_id.value)
-  const { data: contents_data } = await browse(
-    folder_data.id, 
-    [
-      ['filter_types', 'folder'],
-      ['filter_types', 'file'], 
-      ['filter_mimes', 'image/*']
-    ]
-  )
-  folder.value = folder_data
-  contents.value = contents_data.data
-})
 
 const value = computed({
 
@@ -96,7 +96,7 @@ const int_value = computed(() => {
 
 const closeModal = () => isOpen.value = false
 const openModal = () => {
-  folder_id.value = 1
+  doBrowse(1)
   isOpen.value = true
 }
 </script>
@@ -163,12 +163,19 @@ const openModal = () => {
                       @browse="doBrowse"
                       @select-banner="doSelectBanner"
                       @breadcrumb-select="(content) => doBrowse(content.id)"
-                      :contents="contents"
+                      @change-limit="async (n) => await reload({offset: 0, limit: n})"
+                      @change-pagination="async (n) => await reload(n)"
+
+                      :contents="data"
                       :folder="folder"
                       :actions="actions"
                       :selectActions="null"
                       :view="'gallery'"
-                      v-if="folder && contents">
+                      :sortFolderFirst="sort_folder_first"
+                      :current_limit="limit"
+                      :offset="offset"
+                      :total="meta.count"
+                      v-if="folder && data">
                     </FolderBrowser>
                   </p>
                 </div>

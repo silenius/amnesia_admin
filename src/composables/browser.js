@@ -43,7 +43,11 @@ export function createBrowser(oid, browse) {
         }
 
         if (filter_types) {
-            p.push(['filter_types', filter_types])
+            if (Array.isArray(filter_types)) {
+                filter_types.forEach((x) => p.push(['filter_types', x]))
+            } else {
+                p.push(['filter_types', filter_types])
+            }
         }
 
         const { data: res } = await browse(folder_id.value, p)
