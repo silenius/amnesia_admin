@@ -1,14 +1,14 @@
 <template>
   <div v-if="pages.length > 0">
     <nav class="isolate gap-2 inline-flex rounded-md shadow p-2" aria-label="Pagination">
-      <a class="px-2" @click.prevent="$emit('goto-page', 1)" href="">
+      <a class="px-2" @click.prevent="change_page(1)" href="">
         <font-awesome-icon :icon="['fas', 'angles-left']" class="h-4 w-4" />
       </a>
-      <a class="px-2" @click.prevent="$emit('goto-page', page)" href="" v-for="page in pages">
+      <a class="px-2" @click.prevent="change_page(page)" href="" v-for="page in pages">
         <span class="font-bold" v-if="page == page_current">{{ page }}</span>
         <span v-else>{{ page }}</span>
       </a>
-      <a class="px-2" @click.prevent="$emit('goto-page', page_total)" href="">
+      <a class="px-2" @click.prevent="change_page(page_total)" href="">
         <font-awesome-icon :icon="['fas', 'angles-right']" class="h-4 w-4" />
       </a>
     </nav>
@@ -19,7 +19,14 @@
 
 import { computed } from 'vue'
 
-const emit = defineEmits(['goto-page'])
+const emit = defineEmits(['change'])
+
+const change_page = (p) => {
+  emit('change', {
+    page: p,
+    offset: (p-1) * (props.limit)
+  })
+}
 
 const props = defineProps({
   limit: {
@@ -74,6 +81,5 @@ const pages = computed( () => {
   return range(start, stop, 1)
 
 })
-
 
 </script>

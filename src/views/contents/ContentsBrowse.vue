@@ -9,6 +9,7 @@ import {
 } from '@headlessui/vue'
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
+import { createBrowser } from '@/composables/browser.js'
 
 import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
@@ -17,47 +18,30 @@ const props = defineProps({
   content: Object
 })
 
-// Keeps data/metadata for FolderBrowser instances
-const browsers = Object.fromEntries(
-  Array.from(
-    ['main', 'move'], (x) => {
-      const meta = ref({})
-
-      return [x, {
-        data: ref([]),
-        meta: meta,
-        computed: {
-          limit: computed(() => meta.value?.limit),
-          offset: computed(() => {
-            const v = parseInt(meta.value?.offset)
-            return isNaN(v) ? 0 : v
-          }),
-          sort_folder_first: computed(() => {
-            const v = meta.value?.sort_folder_first
-            return typeof v == 'boolean' ? v : true
-          }),
-          filter_types: computed(() => {
-            const v = meta.value?.filter_types
-
-            if (Array.isArray(v) && v.length > 0) {
-              return v
-            }
-
-            return false
-          }),
-        }
-      }]
-    }
-  )  // Array.from
-)
-
-const router = useRouter()
+const content_id = computed(() => props.content.id)
+const move_folder = ref(null)
+const move_folder_id = computed(() => move_folder.value.id)
 
 const { 
   browse, 
   paste, 
   destroyManyContent 
 } = useFolder()
+
+const { 
+  reload, meta, data, limit, offset, sort_folder_first,
+} = createBrowser(content_id, browse)
+
+const { 
+  reload: move_reload, 
+  meta: move_meta, 
+  data: move_data, 
+  limit: move_limit, 
+  offset: move_offset,
+  sort_folder_first: move_sort_folder_first,
+} = createBrowser(move_folder_id, browse)
+
+const router = useRouter()
 
 const { 
   setWeight, 
@@ -75,45 +59,15 @@ const selected_ids = computed(() => Array.from(selected.value.keys()))
 const types = ref([])
 
 const move_modal_open = ref(false)
-const move_folder = ref(null)
-
-const reload = async ({
-  browser=browsers.main,
-  oid=props.content.id,
-  offset=unref(browser.computed.offset), 
-  limit=unref(browser.computed.limit),
-  sort_folder_first=unref(browser.computed.sort_folder_first),
-  filter_types=unref(browser.computed.filter_types),
-} = {}
-) => {
-  const p = [
-    ['sort_folder_first', sort_folder_first],
-    ['offset', offset],
-  ]
-
-  if (limit) {
-    p.push(['limit', limit])
-  }
-
-  if (filter_types) {
-    p.push(['filter_types', filter_types])
-  }
-
-  const { data } = await browse(oid, p)
-
-  browser.data.value = data.data
-  browser.meta.value = data.meta
-}
 
 const doMoveBrowse = async (id) => {
-  reload({
-    offset: 0,
-    browser: browsers.move,
-    filter_types: ['folder'],
-    oid: id,
-  })
   const { data: folder_data } = await getContent(id)
   move_folder.value = folder_data
+
+  move_reload({
+    offset: 0,
+    filter_types: ['folder'],
+  })
 }
 
 const doBrowse = async (id) => await router.push({
@@ -216,25 +170,16 @@ onMounted(async () => {
                 <FolderBrowser
                   @browse="doMoveBrowse"
                   @breadcrumb-select="(content) => doMoveBrowse(content.id)"
-                  @change-limit="async (n) => await reload({
-                    oid: move_folder.id,
-                    browser: browsers.move,
-                    offset: 0, 
-                    limit: n})"
-                  @goto-page="async (page) => await reload({
-                    oid: move_folder.id,
-                    browser: browsers.move,
-                    offset: (page-1)*unref(browsers.move.computed.limit)
-                  })"
-
-                  :current_limit="unref(browsers.move.computed.limit)"
-                  :offset="unref(browsers.move.computed.offset)"
-                  :total="unref(browsers.move.meta.value.count)"
+                  @change-limit="async (n) => await move_reload({offset: 0, limit: n})"
+                  @change-pagination="async (n) => await move_reload(n)"
+                  :current_limit="move_limit"
+                  :offset="move_offset"
+                  :total="move_meta.count"
                   :actions="null"
                   :selectActions="null"
                   :folder="move_folder"
-                  :contents="unref(browsers.move.data)" 
-                  :sortFolderFirst="unref(browsers.move.computed.sort_folder_first)"
+                  :contents="move_data" 
+                  :sortFolderFirst="move_sort_folder_first"
                 />
               </p>
             </div>
@@ -255,7 +200,7 @@ onMounted(async () => {
       class="mt-4"
       @reload="async (n) => await reload(n)"
       @change-limit="async (n) => await reload({offset: 0, limit: n})"
-      @goto-page="async (n) => await reload({offset: (n-1)*unref(browsers.main.computed.limit)})"
+      @change-pagination="async (n) => await reload(n)"
       @browse="doBrowse"
       @add-content="doAdd"
       @delete-content="doDelete"
@@ -268,15 +213,15 @@ onMounted(async () => {
       @move-selection="doMoveSelection"
       @breadcrumb-select="(content) => doBrowse(content.id)"
       :folder="content"
-      :contents="unref(browsers.main.data)" 
+      :contents="data" 
       :selected="selected"
       :canChangeWeight="true"
       :addTypes="types"
       :editButton="true"
-      :sortFolderFirst="unref(browsers.main.computed.sort_folder_first)"
-      :current_limit="unref(browsers.main.computed.limit)"
-      :offset="unref(browsers.main.computed.offset)"
-      :total="unref(browsers.main.meta.value.count)"
+      :sortFolderFirst="sort_folder_first"
+      :current_limit="limit"
+      :offset="offset"
+      :total="meta.count"
     />
   </div>
 

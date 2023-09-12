@@ -89,7 +89,7 @@ const emit = defineEmits([
   'delete-selection', 'move-selection',
   'breadcrumb-select',  
   'change-limit',  // change the current browsing limit 
-  'goto-page'  // change pagination
+  'change-pagination'  // change pagination
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
@@ -201,12 +201,12 @@ const formatDate = (d) => {
           <!-- PER PAGE -->
 
           <select class="text-sm rounded-full" @change="$emit('change-limit', $event.target.value)">
-            <option :selected="limit==current_limit" v-for="limit in limits">{{ limit }}</option>
+              <option :key="limit" :selected="limit==current_limit" v-for="limit in limits">{{ limit }}</option>
           </select> <span class="mr-2 text-xs">per page</span>
 
           <!-- EDIT FOLDER -->
 
-          <EditContentButton @click.prevent="$emit('edit-content', folder)" />
+          <EditContentButton v-if="editButton" @click.prevent="$emit('edit-content', folder)" />
 
           <!-- ADD CONTENT TO FOLDER -->
 
@@ -500,7 +500,7 @@ const formatDate = (d) => {
         :limit="current_limit"
         :offset="offset"
         :total="total"
-        @goto-page="(page) => $emit('goto-page', page)"
+        @change="(n) => $emit('change-pagination', n)"
         class="flex justify-center my-4"
       />
     </slot>
