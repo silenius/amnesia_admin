@@ -1,7 +1,6 @@
 <script setup>
 
-import { ref, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 import DocumentForm from '@/components/document/DocumentForm.vue'
 import { useDocument } from '@/composables/documents.js'
@@ -10,7 +9,7 @@ const props = defineProps({
   container: Object
 })
 
-const router = useRouter()
+const emit = defineEmits(['create'])
 
 const { createDocument } = useDocument()
 
@@ -21,23 +20,13 @@ const doc = ref({
   props: {}
 })
 
-const { setErrorFromResponse } = inject('errors')
-
-const create = async () => {
-  try {
-    const { data } = await createDocument(props.container, doc)
-    router.push({name: 'show-content', params: {id: data.id}})
-  } catch (e) {
-    setErrorFromResponse(e.response)
-  }
-}
 </script>
 
 <template>
   <DocumentForm 
-    :doc="doc" 
-    :container="container"
-    :action="'Add document'"
-    @submit-document="create" 
-  />
+  :doc="doc" 
+  :container="container"
+  :action="'Add document'"
+  @submit-document="$emit('create', createDocument, doc)" 
+/>
 </template>

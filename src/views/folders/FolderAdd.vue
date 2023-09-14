@@ -1,7 +1,6 @@
 <script setup>
 
-import { ref, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 import FolderForm from '@/components/folder/FolderForm.vue'
 import { useFolder } from '@/composables/folders.js'
@@ -10,7 +9,7 @@ const props = defineProps({
     container: Object
 })
 
-const router = useRouter()
+const emit = defineEmits(['create'])
 
 const { createFolder } = useFolder()
 
@@ -22,16 +21,6 @@ const folder = ref({
   props: {}
 })
 
-const { setErrorFromResponse } = inject('errors')
-
-const create = async () => {
-  try {
-    const { data } = await createFolder(props.container, folder)
-    router.push({name: 'show-content', params: {id: data.id}})
-  } catch (e) {
-    setErrorFromResponse(e.response)
-  }
-}
 </script>
 
 <template>
@@ -39,6 +28,6 @@ const create = async () => {
       :folder="folder" 
       :container="container"
       :action="'Add folder'"
-      @submit-folder="create" 
+      @submit-folder="$emit('create', createFolder, folder)" 
     />
 </template>

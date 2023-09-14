@@ -9,6 +9,8 @@ import FileAdd from '@/views/files/FileAdd.vue'
 import EventAdd from '@/views/events/EventAdd.vue'
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 
+import { HTTPError } from '@/composables/fetch.js'
+
 const props = defineProps({
   content: Object,
   type: String
@@ -27,6 +29,17 @@ const setErrorFromResponse = async(r) => {
 
   for (const [k, v] of Object.entries(errors)) {
     setError(k, v.join(''))
+  }
+}
+
+const create = async(factory, obj) => {
+  try {
+    const { data } = await factory(props.content, obj)
+    router.push({name: 'contents', params: {id: data.id}})
+  } catch (e) {
+    if (e instanceof HTTPError) {
+      setErrorFromResponse(e.response)
+    }
   }
 }
 
@@ -62,6 +75,7 @@ const doBrowse = async (id) => await router.push({
     <component 
       :is="mapping[props.type]" 
       :container="content"
+      @create="create"
     />
 
   </div>

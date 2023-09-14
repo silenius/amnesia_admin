@@ -1,7 +1,6 @@
 <script setup>
 
-import { ref, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 import FileForm from '@/components/file/FileForm.vue'
 import { useFile } from '@/composables/files.js'
@@ -10,7 +9,7 @@ const props = defineProps({
     container: Object
 })
 
-const router = useRouter()
+const emit = defineEmits(['create'])
 
 const { createFile } = useFile()
 
@@ -21,18 +20,6 @@ const file = ref({
   props: {}
 })
 
-const { setErrorFromResponse } = inject('errors')
-
-const create = async () => {
-  try {
-    const { data } = await createFile(props.container, file)
-    router.push({name: 'show-content', params: {id: data.id}})
-  } catch (e) {
-    setErrorFromResponse(e.response)
-  }
-}
-
-
 </script>
 
 <template>
@@ -41,6 +28,6 @@ const create = async () => {
       :file="file" 
       :container="container"
       :action="'Add file'"
-      @submit-file="create" 
+      @submit-file="$emit('create', createFile, file)" 
     />
 </template>
