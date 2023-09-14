@@ -1,6 +1,6 @@
 import { unref, } from 'vue'
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
     constructor(message, response) {
         super(message)
         this.name = 'HTTPError'
