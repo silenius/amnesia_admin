@@ -22,7 +22,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
-  'update:banner_image'
+  'update:banner_image',
+  'select-banner'
 ])
 
 const { browse } = useFolder()
