@@ -44,7 +44,9 @@ const event_to_formdata = (event_data) => {
         data.append('banner_image', event.banner_image.id)
     }
 
-    data.append('country_iso', event.country.iso)
+    if (event.country) {
+        data.append('country_iso', event.country.iso)
+    }
 
     return data
 }

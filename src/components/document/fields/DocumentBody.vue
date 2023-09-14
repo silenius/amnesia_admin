@@ -8,14 +8,12 @@
         {{ errors.body }}
       </span>
     </label>
-      <EditorTipTap />
   </div>
 </template>
 
 <script setup>
 import { inject, computed } from 'vue'
 import EditorTinyMCE from '@/components/content/fields/EditorTinyMCE.vue'
-//import EditorTipTap from '@/components/content/fields/EditorTipTap.vue'
 import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({

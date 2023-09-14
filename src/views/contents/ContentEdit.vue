@@ -9,6 +9,8 @@ import FileEdit from '@/views/files/FileEdit.vue'
 import EventEdit from '@/views/events/EventEdit.vue'
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 
+import { HTTPError } from '@/composables/fetch.js'
+
 const props = defineProps({
   content: Object
 })
@@ -19,6 +21,14 @@ const errors = ref({})
 
 const setError = (key, value) => {
   errors.value[key] = value
+}
+
+const setErrorFromResponse = async(r) => {
+  const errors = await r.json()
+
+  for (const [k, v] of Object.entries(errors)) {
+    setError(k, v.join(''))
+  }
 }
 
 const update = async (factory) => {
