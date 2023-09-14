@@ -21,6 +21,17 @@ const setError = (key, value) => {
   errors.value[key] = value
 }
 
+const update = async (factory) => {
+  try {
+    await factory(props.content)
+    router.push({name: 'show-content', params: {id: props.content.id}})
+  } catch (e) {
+    if (e instanceof HTTPError) {
+      setErrorFromResponse(e.response)
+    }
+  }
+}
+
 const mapping = {
   folder: FolderEdit,
   document: DocumentEdit,
@@ -51,6 +62,7 @@ const doBrowse = async (id) => await router.push({
     <component 
       :is="mapping[content.type.name]" 
       :content="content"
+      @update="update"
     />
   </div>
 </template>
