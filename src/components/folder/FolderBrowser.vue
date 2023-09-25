@@ -100,6 +100,11 @@ const view_icon = computed(
   () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
 )
 
+const canEdit = computed(() => {
+  return props.editButton === true
+})
+
+
 const get_container = (node) => {
   let target = node
   const elem = unref(view) == 'tabular' ? 'tr' : 'li'
@@ -206,7 +211,7 @@ const formatDate = (d) => {
 
           <!-- EDIT FOLDER -->
 
-          <EditContentButton v-if="editButton" @click.prevent="$emit('edit-content', folder)" />
+          <EditContentButton v-if="canEdit" @click.prevent="$emit('edit-content', folder)" />
 
           <!-- ADD CONTENT TO FOLDER -->
 

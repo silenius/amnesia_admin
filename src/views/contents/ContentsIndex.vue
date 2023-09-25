@@ -11,11 +11,16 @@ const router = useRouter()
 
 const content = ref({})
 
-const { getContent } = useContent()
+const { 
+  getContent,
+  getContentParentACLS
+} = useContent()
 
 watchEffect(async () => {
   const { data } = await getContent(props.content_id)
+  const { data: acls } = await getContentParentACLS(props.content_id)
   content.value = data
+  content.value['__acls'] = acls
   // FIXME
   if (content.value.props === null) {
     content.value.props = {}

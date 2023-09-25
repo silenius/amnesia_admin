@@ -31,8 +31,7 @@ export function createBrowser(oid, browse) {
         limit=c_limit.value,
         sort_folder_first=c_sort_folder_first.value,
         filter_types=c_filter_types.value
-    } = {}
-    ) => {
+    } = {}) => {
         const p = [
             ['sort_folder_first', sort_folder_first],
             ['offset', offset],

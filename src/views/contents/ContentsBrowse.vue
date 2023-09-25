@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted, watch, unref } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   Dialog,
@@ -10,6 +10,7 @@ import {
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import { createBrowser } from '@/composables/browser.js'
+import { useAuthStore } from '@/stores/auth.js'
 
 import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'

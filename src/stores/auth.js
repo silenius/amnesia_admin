@@ -16,6 +16,16 @@ export const useAuthStore = defineStore('auth', () => {
 
     const me = async () => useFetchBackend('auth/me')
 
+    const allow = (permission, acls) => {
+        const found = acls.find(
+            acl => user.roles.find(
+                role => acl.role.id === role.id && acl.permission.name === permission
+            )
+        )
+
+        return found ? found.allow : false
+    }
+
     const login = async(username, password) => {
         const data = new FormData()
 
@@ -48,6 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         is_logged,
         user,
+        allow,
         login,
         logout
     }
