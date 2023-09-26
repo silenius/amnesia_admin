@@ -345,7 +345,10 @@ const formatDate = (d) => {
               <font-awesome-icon class="drop-shadow-lg inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
               <button @click="$emit('browse', content.id)"
                 v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
-              <template v-if="content.type.name!='folder'">{{ content.title }}</template>
+              <template v-else>
+                <RouterLink :to="{name: 'show-content', params: {id:
+                  content.id}}">{{ content.title }}</RouterLink>
+              </template>
             </td>
 
             <!-- OWNER -->

@@ -27,10 +27,7 @@ const props = defineProps({
 const emit = defineEmits(['item-select'])
 
 watch(() => props.content, async () => {
-  const target = props.content.type.name == 'folder' ? props.content.id :
-    props.content.parent.id
-
-  const { data } = await getLineage(target)
+  const { data } = await getLineage(props.content.id)
   items.value = data
 }, { immediate: true })
 

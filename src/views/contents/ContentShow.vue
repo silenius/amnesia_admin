@@ -1,19 +1,28 @@
 <template>
-    <div class="relative top-0 right-0">
-      <EditContentButton @click.prevent="$emit('edit-content', content)" />
+  <div class="m-4">
+    <div class="flex mb-4 items-center grow">
+      <ContentBreadcrumb 
+        :content="content" 
+        @item-select="doBreadcrumbSelect" 
+        class="p-2 shadow-md"
+      />
     </div>
 
-    <h1 class="text-xl border-b font-bold my-4">
-      <font-awesome-icon :icon="content.type.icons.fa" />
-      {{ content.title }}
-    </h1>
-    <h2>{{ content.description }}</h2>
+    <component 
+      :is="mapping[content.type.name]" 
+      :content="content"
+    />
 
-    <div v-html="content.body"></div>
+  </div>
 </template>
 
 <script setup>
-import EditContentButton from '@/components/buttons/EditContentButton.vue'
+import { useRouter } from 'vue-router'
+
+import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+
+import DocumentShow from '@/views/documents/DocumentShow.vue'
+import FolderShow from '@/views/folders/FolderShow.vue'
 
 const props = defineProps({
   content: {
@@ -21,5 +30,18 @@ const props = defineProps({
     required: true
   }
 })
+
+const mapping = {
+  document: DocumentShow,
+  folder: FolderShow,
+}
+
+const router = useRouter()
+
+const doBreadcrumbSelect = (item) => {
+  router.push(
+    {name: 'show-content', params: {id: item.id}}
+  )
+}
 
 </script>

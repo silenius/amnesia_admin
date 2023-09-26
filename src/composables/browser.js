@@ -1,7 +1,6 @@
-import { computed, ref } from 'vue'
+import { computed, ref, unref } from 'vue'
 
 export function createBrowser(oid, browse) {
-    const folder_id = oid
     const meta = ref({})
     const data = ref([])
 
@@ -49,7 +48,7 @@ export function createBrowser(oid, browse) {
             }
         }
 
-        const { data: res } = await browse(folder_id.value, p)
+        const { data: res } = await browse(unref(oid), p)
 
         data.value = res.data
         meta.value = res.meta
