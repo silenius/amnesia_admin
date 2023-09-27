@@ -18,11 +18,13 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { onBeforeMount, onMounted, onUpdated, onUnmounted } from 'vue'
 
 import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 
 import DocumentShow from '@/views/documents/DocumentShow.vue'
 import FolderShow from '@/views/folders/FolderShow.vue'
+import EventShow from '@/views/events/EventShow.vue'
 
 const props = defineProps({
   content: {
@@ -34,7 +36,13 @@ const props = defineProps({
 const mapping = {
   document: DocumentShow,
   folder: FolderShow,
+  event: EventShow,
 }
+
+onBeforeMount(() => console.log('===> ContentShow before mounted'))
+onMounted(() => console.log('===> ContentShow mounted'))
+onUnmounted(() => console.log('===> ContentShow unmounted'))
+onUpdated(() => console.log('===> ContentShow updated'))
 
 const router = useRouter()
 

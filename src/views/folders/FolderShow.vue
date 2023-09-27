@@ -51,12 +51,16 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onBeforeMount, onUnmounted, onMounted, onUpdated } from 'vue'
 import { useFolder } from '@/composables/folders.js'
 import { createBrowser } from '@/composables/browser.js'
 import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 import EditContentButton from '@/components/buttons/EditContentButton.vue'
 
+onBeforeMount(() => console.log('===> FolderShow before mounted'))
+onMounted(() => console.log('===> FolderShow mounted'))
+onUnmounted(() => console.log('===> FolderShow unmounted'))
+onUpdated(() => console.log('===> FolderShow updated'))
 const { browse } = useFolder()
 
 const base = import.meta.env.VITE_BASE_BACKEND
