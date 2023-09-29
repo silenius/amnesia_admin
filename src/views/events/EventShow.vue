@@ -2,19 +2,21 @@
   <article class="mt-4 prose">
     <h1 class="drop-shadow-lg">{{ content.title }}</h1>
     <p v-if="content.description">{{ content.description }}</p>
-    <p class="flex gap-2 bg-lime-500 p-4 text-white items-center">
+    <p class="flex gap-2 bg-lime-500 p-2 text-white items-center">
       <font-awesome-icon class="h-6 w-6" icon="fa-regular fa-clock" />
       from <span class="font-bold">{{ starts }}</span> to <span
         class="font-bold">{{ ends }}</span>
     </p>
     <div v-if="is_georeferenced" class="w-full h-64" id="event_map_detail"></div>
-    <p class="flex gap-2 bg-slate-500 p-4 text-white items-center font-bold">
-      <font-awesome-icon class="h-6 w-6" icon="fa-solid fa-building" />
-      <span>{{ content.location }}</span>
-    </p>
-    <p class="flex gap-2 bg-slate-500 p-4 text-white items-center font-bold">
-      <font-awesome-icon class="h-6 w-6" icon="fa-solid fa-location-dot" />
-      <span>{{ content.address }}</span>
+    <p class="flex gap-4 bg-slate-500 p-2 text-white">
+      <span class="flex gap-2 items-center">
+        <font-awesome-icon class="h-6 w-6" icon="fa-solid fa-building" />
+        <span>{{ content.location }}</span>
+      </span>
+      <span class="flex gap-2 items-center">
+        <font-awesome-icon class="h-6 w-6" icon="fa-solid fa-location-dot" />
+        <span class="text-justify">{{ content.address }}</span>
+      </span>
     </p>
     <p v-html="content.body" />
   </article>
