@@ -48,13 +48,16 @@ import {
     faAnglesLeft,
     faAnglesRight,
     faPaperPlane,
-    faCircle as faCircleSolid
+    faCircle as faCircleSolid,
+    faLocationDot,
+    faBuilding
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
     faSquarePlus,
     faImage,
-    faCircle
+    faCircle,
+    faClock
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(faSquareCheck)
@@ -99,6 +102,9 @@ library.add(faAnglesLeft)
 library.add(faAnglesRight)
 library.add(faPaperPlane)
 library.add(faCircleSolid)
+library.add(faClock)
+library.add(faLocationDot)
+library.add(faBuilding)
 
 const app = createApp(App)
 const pinia = createPinia()
