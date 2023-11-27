@@ -64,7 +64,7 @@ onUpdated(() => console.log('===> FolderShow updated'))
 const { browse } = useFolder()
 
 const base = import.meta.env.VITE_BASE_BACKEND
-const image_url = (id) => new URL(`${id}/download`, base)
+const image_url = (id) => new URL(`${id}`, base)
 
 const props = defineProps({
   content: {
