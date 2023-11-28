@@ -25,6 +25,7 @@ import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
 import DocumentShow from '@/views/documents/DocumentShow.vue'
 import FolderShow from '@/views/folders/FolderShow.vue'
 import EventShow from '@/views/events/EventShow.vue'
+import FileShow from '@/views/files/FileShow.vue'
 
 const props = defineProps({
   content: {
@@ -37,6 +38,7 @@ const mapping = {
   document: DocumentShow,
   folder: FolderShow,
   event: EventShow,
+  file: FileShow,
 }
 
 onBeforeMount(() => console.log('===> ContentShow before mounted'))

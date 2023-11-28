@@ -3,6 +3,7 @@
     <h1 class="drop-shadow-lg">{{ content.title }}</h1>
     <p v-if="content.description">{{ content.description }}</p>
     <p v-html="content.body" />
+    <p>{{ bar }}</p>
   </article>
 </template>
 
