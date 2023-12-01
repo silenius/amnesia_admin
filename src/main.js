@@ -51,7 +51,12 @@ import {
     faCircle as faCircleSolid,
     faLocationDot,
     faBuilding,
-    faBold
+    faBold,
+    faItalic,
+    faAlignLeft,
+    faAlignRight,
+    faAlignCenter,
+    faAlignJustify,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -107,6 +112,11 @@ library.add(faClock)
 library.add(faLocationDot)
 library.add(faBuilding)
 library.add(faBold)
+library.add(faItalic)
+library.add(faAlignLeft)
+library.add(faAlignRight)
+library.add(faAlignCenter)
+library.add(faAlignJustify)
 
 const app = createApp(App)
 const pinia = createPinia()
