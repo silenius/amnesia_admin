@@ -129,7 +129,8 @@ import {
 import StarterKit from "@tiptap/starter-kit";
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
-import Image from '@/components/editor/tiptap/image/image.js'
+//import Image from '@/components/editor/tiptap/image/image.js'
+import { ResizableMedia } from '@/components/editor/tiptap/resizableMedia'
 
 import {
   TransitionRoot,
@@ -199,8 +200,9 @@ const doSelect = (content) => {
 }
 
 const insertImage = (value, meta) => {
-  editor.value.commands.setImage({
-    src: '/bbpf/' + value
+  editor.value.commands.setMedia({
+    src: '/bbpf/' + value,
+    'media-type': 'img'
   })
 }
 
@@ -274,7 +276,8 @@ const editor = useEditor({
     TextAlign.configure({
       types: ['heading', 'paragraph'],
     }),
-    Image
+    ResizableMedia
+    //Image
   ]
 })
 

@@ -9,28 +9,11 @@ export default TipTapImage.extend({
 
 			width: {
 				default: '100%',
-				renderHTML: (attributes) => {
-					return {
-						width: attributes.width
-					};
-				}
 			},
 
 			height: {
 				default: 'auto',
-				renderHTML: (attributes) => {
-					return {
-						height: attributes.height
-					};
-				}
 			},
-
-			isDraggable: {
-				default: true,
-				renderHTML: (attributes) => {
-					return {};
-				}
-			}
 		};
 	},
 
@@ -50,7 +33,29 @@ export default TipTapImage.extend({
 		};
 	},
 
+
+addNodeView() {
+    return () => {
+      const container = document.createElement('div')
+
+      container.addEventListener('click', event => {
+        alert('clicked on the container')
+      })
+
+      const content = document.createElement('div')
+      container.append(content)
+
+      return {
+        dom: container,
+        contentDOM: content,
+      }
+    }
+  },
+    
+
+    /*
 	addNodeView() {
 		return VueNodeViewRenderer(Image);
 	}
+    */
 });
