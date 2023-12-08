@@ -97,13 +97,13 @@
 
       <font-awesome-icon icon="fa-regular fa-image"
         @click="openModal('image')"
-        :class="{ 'is-active': editor.isActive({ textAlign: 'justify' })
-        }" />
+        v-if="!editor.isActive('image')" />
     </div>
 
     <bubble-menu
       :editor="editor"
       :tippy-options="{ duration: 500 }"
+      :shouldShow="() => !editor.isActive('image')"
       class="flex gap-2 border p-2 bg-white"
     >
       <font-awesome-icon icon="fa-solid fa-bold"

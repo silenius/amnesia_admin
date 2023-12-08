@@ -9,7 +9,6 @@ export default TipTapImage.extend({
             ...this.parent?.(),
 
             width: {
-                default: 'auto',
                 renderHTML: attrs => {
                     return {
                         width: `${attrs.width}`
@@ -18,7 +17,6 @@ export default TipTapImage.extend({
             },
 
             height: {
-                default: 'auto',
             },
         };
     },

@@ -4,26 +4,36 @@
     class="relative flex"
   >
     <div class="w-fit flex relative">
-      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" />
+      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true"
+        :class="[selected ? 'outline-2 outline-indigo-700 outline-dotted' : '']" />
 
       <div
-        class="absolute hover:bg-blue-200 z-50 opacity-50 h-full w-2 top-0 right-0 cursor-col-resize" title="Resize"
+        class="absolute hover:bg-indigo-500 z-50 opacity-50 h-full w-2 top-0 right-0 cursor-col-resize" title="Resize"
         @mousedown="startHorizontalResize"
         @mouseup="stopHorizontalResize"
+        v-if="selected"
       />
 
       <div
-        class="absolute hover:bg-blue-200 z-50 opacity-50 w-full h-2 bottom-0 left-0 cursor-row-resize" title="Resize"
+        class="absolute hover:bg-indigo-500 z-50 opacity-50 w-full h-2 bottom-0 left-0 cursor-row-resize" title="Resize"
         @mousedown="startVerticalResize"
         @mouseup="stopVerticalResize"
+        v-if="selected"
       />
+<!--
+      <span class="absolute z-50 h-2 w-2 -top-1 -left-1 bg-indigo-500" />
+      <span class="absolute z-50 h-2 w-2 -top-1 -right-1 bg-indigo-500" />
+      <span class="absolute z-50 h-2 w-2 -bottom-1 -left-1 bg-indigo-500" />
+      <span class="absolute z-50 h-2 w-2 -bottom-1 -right-1 bg-indigo-500" />
+
+-->
     </div>
   </node-view-wrapper>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
+import { watch, ref, computed } from 'vue'
+import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3';
 import { Node as ProseMirrorNode } from 'prosemirror-model'
 
 const img = ref(null)
@@ -33,9 +43,10 @@ const aspectRatio = computed(() => img?.value.naturalWidth / img?.value.naturalH
 const active_resize = ref(false)
 const lastCursorX = ref(-1)
 const lastCursorY = ref(-1)
-const props = defineProps({
-  updateAttributes: null,
-  node: ProseMirrorNode
+const props = defineProps(nodeViewProps)
+
+watch(() => props.selected, () => {
+  console.log(`Selected: ${props.selected}`)
 })
 
 const onResize = (direction, diff) => {
@@ -90,6 +101,7 @@ const onResize = (direction, diff) => {
 }
 
 const startHorizontalResize = (e) => {
+  console.log(e)
   active_resize.value = 'x'
   lastCursorX.value = e.clientX
 
@@ -122,7 +134,9 @@ const stopVerticalResize = () => {
   document.removeEventListener('mouseup', stopVerticalResize)
 }
 
-const onHorizontalMouseMove = ({ clientX } = e) => {
+const onHorizontalMouseMove = (e) => {
+  console.log(e)
+  const { clientX } = e
   if (!active_resize.value === 'x') return
 
   const diff = lastCursorX.value - clientX
