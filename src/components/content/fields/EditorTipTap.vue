@@ -99,7 +99,7 @@
         @click="openModal('image')"
         v-if="!editor.isActive('image')" />
     </div>
-
+<!--
     <bubble-menu
       :editor="editor"
       :tippy-options="{ duration: 500 }"
@@ -115,6 +115,7 @@
         'text-slate-900': editor.isActive('italic') }" />
 
     </bubble-menu>
+-->
     <EditorContent :editor="editor" />
   </div>
 </template>
@@ -273,7 +274,7 @@ const editor = useEditor({
     }),
     Typography,
     TextAlign.configure({
-      types: ['heading', 'paragraph'],
+      types: ['image', 'paragraph'],
     }),
     //ResizableMedia
     Image

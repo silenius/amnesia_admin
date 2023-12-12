@@ -1,31 +1,30 @@
 <template>
-  <node-view-wrapper
-    as="article"
-    class="relative flex"
-  >
-    <div class="w-fit flex relative">
+  <node-view-wrapper as="div" class="relative flex w-fit">
+      <img :src="node.attrs.src" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
+    <!--
       <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 
+-->
       <div v-if="selected" @mousedown="startResize" @mouseup="stopResize">
-        <span :class="resize_cls" class="cursor-nwse-resize -top-1 -left-1" />
-        <span :class="resize_cls" class="cursor-nesw-resize -top-1 -right-1" />
-        <span :class="resize_cls" class="cursor-nesw-resize -bottom-1 -left-1" />
-        <span :class="resize_cls" class="cursor-nwse-resize -bottom-1 -right-1" />
+        <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
+        <span :class="resize_cls" data-resize="tr" class="cursor-nesw-resize -top-1 -right-1" />
+        <span :class="resize_cls" data-resize="bl" class="cursor-nesw-resize -bottom-1 -left-1" />
+        <span :class="resize_cls" data-resize="br" class="cursor-nwse-resize -bottom-1 -right-1" />
       </div>
 
-    </div>
   </node-view-wrapper>
 </template>
 
 <script setup>
 import { watch, ref, computed } from 'vue'
-import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3';
+import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
 const img_ratio = computed(() => img?.value.naturalWidth / img?.value.naturalHeight)
 const cursorX = ref(null)
 const cursorY = ref(null)
+const resize_from = ref(null)
 const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 
@@ -36,9 +35,11 @@ const img_cls = computed(() => ({
 
 watch(() => props.selected, () => {
   console.log(`Selected: ${props.selected}`)
+  console.log(props.node.attrs)
 })
 
 const startResize = (e) => {
+  resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
   cursorY.value = e.clientY
 
@@ -47,6 +48,7 @@ const startResize = (e) => {
 }
 
 const stopResize = () => {
+  resize_from.value = null
   cursorX.value = null
   cursorY.value = null
 
@@ -72,7 +74,7 @@ const startResizeMove = (e) => {
 
   const new_size = {
     width: img.value.width,
-    height: img.value.height,
+    height: img.value.height
   }
 
   if (dirs.x == 'left') {
