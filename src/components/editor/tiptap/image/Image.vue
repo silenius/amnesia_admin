@@ -4,29 +4,15 @@
     class="relative flex"
   >
     <div class="w-fit flex relative">
-      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true"
-        :class="[selected ? 'outline-2 outline-indigo-700 outline-dotted' : '']" />
+      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 
-      <div
-        class="absolute hover:bg-indigo-500 z-50 opacity-50 h-full w-2 top-0 right-0 cursor-col-resize" title="Resize"
-        @mousedown="startResize"
-        @mouseup="stopResize"
-        v-if="selected"
-      />
+      <div v-if="selected" @mousedown="startResize" @mouseup="stopResize">
+        <span :class="resize_cls" class="cursor-nwse-resize -top-1 -left-1" />
+        <span :class="resize_cls" class="cursor-nesw-resize -top-1 -right-1" />
+        <span :class="resize_cls" class="cursor-nesw-resize -bottom-1 -left-1" />
+        <span :class="resize_cls" class="cursor-nwse-resize -bottom-1 -right-1" />
+      </div>
 
-      <div
-        class="absolute hover:bg-indigo-500 z-50 opacity-50 w-full h-2 bottom-0 left-0 cursor-row-resize" title="Resize"
-        @mousedown="startResize"
-        @mouseup="stopResize"
-        v-if="selected"
-      />
-      <!--
-<span class="absolute z-50 h-2 w-2 -top-1 -left-1 bg-indigo-500" />
-<span class="absolute z-50 h-2 w-2 -top-1 -right-1 bg-indigo-500" />
-<span class="absolute z-50 h-2 w-2 -bottom-1 -left-1 bg-indigo-500" />
-<span class="absolute z-50 h-2 w-2 -bottom-1 -right-1 bg-indigo-500" />
-
--->
     </div>
   </node-view-wrapper>
 </template>
@@ -34,52 +20,23 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
 import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3';
-import { Node as ProseMirrorNode } from 'prosemirror-model'
 
-const img = ref(null)
-const container = document.querySelector('.ProseMirror')
-const container_width = computed(() => container?.clientWidth)
-const aspectRatio = computed(() => img?.value.naturalWidth / img?.value.naturalHeight)
-const cursorX = ref(-1)
-const cursorY = ref(-1)
 const props = defineProps(nodeViewProps)
+const img = ref(null)
+const img_ratio = computed(() => img?.value.naturalWidth / img?.value.naturalHeight)
+const cursorX = ref(null)
+const cursorY = ref(null)
+const container = props.editor.view.dom
+const container_width = computed(() => container?.clientWidth)
+
+const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
+const img_cls = computed(() => ({
+  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected 
+}))
 
 watch(() => props.selected, () => {
   console.log(`Selected: ${props.selected}`)
 })
-
-const doResize = (dirs, diffs) => {
-  const new_size = {
-    width: img.value.width,
-    height: img.value.height,
-  }
-
-  if (dirs.x == 'left') {
-    new_size.width = new_size.width - Math.abs(diffs.x)
-  } else {
-    new_size.width = new_size.width + Math.abs(diffs.x)
-  }
-
-  new_size.height = new_size.width / aspectRatio.value
-
-  if (dirs.y == 'up') {
-    new_size.height = new_size.height - Math.abs(diffs.y)
-  } else {
-    new_size.height = new_size.height + Math.abs(diffs.y)
-  }
-
-  new_size.width = new_size.height * aspectRatio.value
-
-  /* 
-
-  if (new_size.width > container_width.value) {
-    new_size.width = container_width.value
-    new_size.height = new_size.width / aspectRatio.value
-  }
-  */
-
-  props.updateAttributes(new_size)
-}
 
 const startResize = (e) => {
   cursorX.value = e.clientX
@@ -90,8 +47,8 @@ const startResize = (e) => {
 }
 
 const stopResize = () => {
-  cursorX.value = -1
-  cursorY.value = -1
+  cursorX.value = null
+  cursorY.value = null
 
   document.removeEventListener('mousemove', startResizeMove)
   document.removeEventListener('mouseup', stopResize)
@@ -113,7 +70,33 @@ const startResizeMove = (e) => {
   cursorX.value = clientX
   cursorY.value = clientY
 
-  doResize(dirs, diffs)
+  const new_size = {
+    width: img.value.width,
+    height: img.value.height,
+  }
+
+  if (dirs.x == 'left') {
+    new_size.width = new_size.width - Math.abs(diffs.x)
+  } else {
+    new_size.width = new_size.width + Math.abs(diffs.x)
+  }
+
+  new_size.height = new_size.width / img_ratio.value
+
+  if (dirs.y == 'up') {
+    new_size.height = new_size.height - Math.abs(diffs.y)
+  } else {
+    new_size.height = new_size.height + Math.abs(diffs.y)
+  }
+
+  new_size.width = new_size.height * img_ratio.value
+
+  if (new_size.width > container_width.value) {
+    new_size.width = container_width.value
+    new_size.height = new_size.width / img_ratio.value
+  }
+
+  props.updateAttributes(new_size)
 }
 
 </script>
