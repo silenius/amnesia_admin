@@ -9,11 +9,6 @@ export default TipTapImage.extend({
             ...this.parent?.(),
 
             width: {
-                renderHTML: attrs => {
-                    return {
-                        width: `${attrs.width}`
-                    }
-                }
             },
 
             height: {
