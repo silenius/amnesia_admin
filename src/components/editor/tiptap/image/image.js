@@ -12,6 +12,10 @@ export default TipTapImage.extend({
 
             height: {
             },
+
+            "data-objectid": {
+
+            }
         };
     },
 

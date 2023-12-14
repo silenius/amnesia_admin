@@ -69,7 +69,7 @@
 
 
   <div v-if="editor">
-    <div class="flex gap-4 p-4 bg-white border">
+    <div v-if="editor.editable" class="flex gap-4 p-4 bg-white border">
       <font-awesome-icon icon="fa-solid fa-bold"
         @click="editor.chain().focus().toggleBold().run()" :class="{
         'text-slate-900': editor.isActive('bold') }" />
@@ -131,7 +131,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@/components/editor/tiptap/image/image'
-import { ResizableMedia } from '@/components/editor/tiptap/resizableMedia'
 
 import {
   TransitionRoot,
@@ -144,9 +143,6 @@ import {
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
-
-
-
 
 const isOpen = ref(false)
 const folder_id = ref(1)
@@ -250,7 +246,15 @@ const doBrowse = id => folder_id.value = id
 
 
 const props = defineProps({
-  content: String
+  content: String,
+  editable: {
+    type: Boolean,
+    default: true
+  },
+  injectCSS: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const emit = defineEmits([
@@ -259,6 +263,8 @@ const emit = defineEmits([
 
 const editor = useEditor({
   content: props.content,
+  editable: props.editable,
+  injectCSS: props.injectCSS,
   onUpdate: () => {
     emit('update:content', editor.value.getHTML())
   },

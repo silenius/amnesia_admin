@@ -1,8 +1,9 @@
 <template>
-  <node-view-wrapper as="div" class="relative flex w-fit">
+  <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
+    <div class="w-fit flex relative">
       <img :src="node.attrs.src" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
-    <!--
-      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
+      <!--
+<img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 
 -->
       <div v-if="selected" @mousedown="startResize" @mouseup="stopResize">
@@ -11,6 +12,7 @@
         <span :class="resize_cls" data-resize="bl" class="cursor-nesw-resize -bottom-1 -left-1" />
         <span :class="resize_cls" data-resize="br" class="cursor-nwse-resize -bottom-1 -right-1" />
       </div>
+    </div>
 
   </node-view-wrapper>
 </template>
@@ -29,8 +31,15 @@ const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
+
 const img_cls = computed(() => ({
-  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected 
+  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected,
+}))
+
+const wrapper_cls = computed(() => ({
+  'justify-start': props.node.attrs.textAlign === 'left',
+  'justify-end': props.node.attrs.textAlign === 'right',
+  'justify-center': props.node.attrs.textAlign === 'center',
 }))
 
 watch(() => props.selected, () => {
