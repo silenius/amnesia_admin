@@ -1,7 +1,7 @@
 <template>
   <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
-      <img :src="node.attrs.src" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
+      <img :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       <!--
 <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 

@@ -67,9 +67,8 @@
     </Dialog>
   </TransitionRoot>
 
-
   <div v-if="editor">
-    <div v-if="editor.editable" class="flex gap-4 p-4 bg-white border">
+    <div v-if="editable" class="flex gap-4 p-4 bg-white border">
       <font-awesome-icon icon="fa-solid fa-bold"
         @click="editor.chain().focus().toggleBold().run()" :class="{
         'text-slate-900': editor.isActive('bold') }" />
@@ -198,7 +197,7 @@ const doSelect = (content) => {
 
 const insertImage = (value, meta) => {
   editor.value.commands.setImage({
-    src: '/bbpf/' + value,
+    'data-objectid': value
   })
 }
 
@@ -238,12 +237,6 @@ const openModal = (filetype) => {
   isOpen.value = true
 }
 const doBrowse = id => folder_id.value = id
-
-
-
-
-
-
 
 const props = defineProps({
   content: String,

@@ -36,5 +36,9 @@ export async function useFetchBackend(url, options) {
 export function backend_url(src) {
     const base = import.meta.env.VITE_BASE_BACKEND
 
-    return src.startsWith('http') ? new URL(src) : new URL(src, base) 
+    try {
+        return src.startsWith('http') ? new URL(src) : new URL(src, base) 
+    } catch(e) {
+        return null
+    }
 }
