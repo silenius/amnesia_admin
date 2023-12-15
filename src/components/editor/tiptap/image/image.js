@@ -9,11 +9,9 @@ export default TipTapImage.extend({
             ...this.parent?.(),
 
             width: {
-                default: null
             },
 
             height: {
-                default: null
             },
 
             src: {

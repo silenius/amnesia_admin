@@ -37,6 +37,7 @@ export function backend_url(src) {
     const base = import.meta.env.VITE_BASE_BACKEND
 
     try {
+        src = src.toString()
         return src.startsWith('http') ? new URL(src) : new URL(src, base) 
     } catch(e) {
         return null

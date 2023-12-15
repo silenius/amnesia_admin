@@ -1,7 +1,7 @@
 <template>
   <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
-      <img :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
+      <img :src="src" :data-objectid="node.attrs['data-objectid']" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       <!--
 <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 
@@ -20,6 +20,7 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
+import { backend_url } from '@/composables/fetch.js';
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -29,6 +30,7 @@ const cursorY = ref(null)
 const resize_from = ref(null)
 const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
+const src = computed(() => backend_url(props.node.attrs['data-objectid']))
 
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
 
@@ -42,9 +44,8 @@ const wrapper_cls = computed(() => ({
   'justify-center': props.node.attrs.textAlign === 'center',
 }))
 
-watch(() => props.selected, () => {
-  console.log(`Selected: ${props.selected}`)
-  console.log(props.node.attrs)
+watch(() => props.node, () => {
+  console.log(`Node: ${props.node}`)
 })
 
 const startResize = (e) => {

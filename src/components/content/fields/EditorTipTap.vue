@@ -199,6 +199,7 @@ const insertImage = (value, meta) => {
   editor.value.commands.setImage({
     'data-objectid': value
   })
+  console.log(editor)
 }
 
 watchEffect( async () => {
