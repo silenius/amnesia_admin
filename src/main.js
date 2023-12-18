@@ -56,6 +56,7 @@ import {
     faAlignRight,
     faAlignCenter,
     faAlignJustify,
+    faImages,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -116,6 +117,7 @@ library.add(faAlignLeft)
 library.add(faAlignRight)
 library.add(faAlignCenter)
 library.add(faAlignJustify)
+library.add(faImages)
 
 const app = createApp(App)
 const pinia = createPinia()

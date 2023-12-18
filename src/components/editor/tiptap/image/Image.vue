@@ -1,11 +1,41 @@
 <template>
   <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
-      <img :src="src" :data-objectid="node.attrs['data-objectid']" :width="node.attrs.width" :height="node.attrs.height" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
-      <!--
-<img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
 
--->
+      <div v-if="selected" class="absolute flex gap-2 outline outline-slate-200
+        outline-1 white m-2 p-1 opacity-90 bg-white">
+        <font-awesome-icon icon="fa-solid fa-align-left" :class="icon_cls"
+          @click="editor.chain().focus().setTextAlign('left').run()"
+        />
+
+        <font-awesome-icon icon="fa-solid fa-align-center"
+          @click="editor.chain().focus().setTextAlign('center').run()"
+          :class="icon_cls"
+        />
+
+        <font-awesome-icon icon="fa-solid fa-align-right"
+          @click="editor.chain().focus().setTextAlign('right').run()"
+          :class="icon_cls"
+        />
+
+        <font-awesome-icon icon="fa-solid fa-images"
+          @click="editor.chain().focus().setTextAlign('right').run()"
+          :class="icon_cls"
+        />
+
+        <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
+          @click="editor.chain().focus().setTextAlign('right').run()"
+          :class="icon_cls"
+        />
+
+      </div>
+
+      <img :src="src" :data-objectid="node.attrs['data-objectid']"
+        :width="node.attrs.width" :height="node.attrs.height" ref="img"
+        class="rounded-lg" draggable="true" :class="img_cls" />
+      <!--
+      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
+      -->
       <div v-if="selected" @mousedown="startResize" @mouseup="stopResize">
         <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
         <span :class="resize_cls" data-resize="tr" class="cursor-nesw-resize -top-1 -right-1" />
@@ -38,15 +68,15 @@ const img_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected,
 }))
 
+const icon_cls = computed(() => ({
+  'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded': true
+}))
+
 const wrapper_cls = computed(() => ({
   'justify-start': props.node.attrs.textAlign === 'left',
   'justify-end': props.node.attrs.textAlign === 'right',
   'justify-center': props.node.attrs.textAlign === 'center',
 }))
-
-watch(() => props.node, () => {
-  console.log(`Node: ${props.node}`)
-})
 
 const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')

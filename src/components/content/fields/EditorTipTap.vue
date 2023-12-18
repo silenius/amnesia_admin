@@ -1,6 +1,6 @@
 <template>
 
-  <TransitionRoot appear :show="isOpen" as="template">
+  <TransitionRoot appear :show="file_browser_modal_open" as="template">
     <Dialog as="div" @close="closeModal" class="relative z-[1500]">
       <TransitionChild
         as="template"
@@ -143,7 +143,7 @@ import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
 
-const isOpen = ref(false)
+const file_browser_modal_open = ref(false)
 const folder_id = ref(1)
 const folder = ref({})
 const contents = ref([])
@@ -199,7 +199,6 @@ const insertImage = (value, meta) => {
   editor.value.commands.setImage({
     'data-objectid': value
   })
-  console.log(editor)
 }
 
 watchEffect( async () => {
@@ -231,11 +230,11 @@ watchEffect( async () => {
   contents.value = contents_data.data
 })
 
-const closeModal = () => isOpen.value = false
+const closeModal = () => file_browser_modal_open.value = false
 const openModal = (filetype) => {
   _meta.value.filetype = filetype
   folder_id.value = 1
-  isOpen.value = true
+  file_browser_modal_open.value = true
 }
 const doBrowse = id => folder_id.value = id
 
