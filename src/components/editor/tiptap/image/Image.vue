@@ -18,12 +18,12 @@
           :class="icon_cls"
         />
 
-        <font-awesome-icon icon="fa-solid fa-images"
+        <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
           @click="editor.chain().focus().setTextAlign('right').run()"
           :class="icon_cls"
         />
 
-        <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
+        <font-awesome-icon icon="fa-solid fa-images"
           @click="editor.chain().focus().setTextAlign('right').run()"
           :class="icon_cls"
         />
