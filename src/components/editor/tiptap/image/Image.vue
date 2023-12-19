@@ -19,13 +19,13 @@
         />
 
         <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
-          @click="editor.chain().focus().setTextAlign('right').run()"
-          :class="icon_cls"
+          @click="editor.chain().focus().setFloat('left').run()"
+          :class="[icon_cls, float_left_cls]"
         />
 
         <font-awesome-icon icon="fa-solid fa-images"
-          @click="editor.chain().focus().setTextAlign('right').run()"
-          :class="icon_cls"
+          @click="editor.chain().focus().setFloat('right').run()"
+          :class="[icon_cls, float_right_cls]"
         />
 
       </div>
@@ -62,20 +62,32 @@ const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 const src = computed(() => backend_url(props.node.attrs['data-objectid']))
 
+/*
+watch(() => props.node.attrs, () => {
+  console.log(props.node.attrs)
+})
+*/
+
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
 
 const img_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected,
 }))
 
-const icon_cls = computed(() => ({
-  'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded': true
+const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'
+const float_right_cls = computed(() => ({
+  'text-indigo-500': props.editor.isActive({float: 'right'})
+}))
+const float_left_cls = computed(() => ({
+  'text-indigo-500': props.editor.isActive({float: 'left'})
 }))
 
 const wrapper_cls = computed(() => ({
   'justify-start': props.node.attrs.textAlign === 'left',
   'justify-end': props.node.attrs.textAlign === 'right',
   'justify-center': props.node.attrs.textAlign === 'center',
+  'float-left': props.node.attrs.float == 'left',
+  'float-right': props.node.attrs.float == 'right',
 }))
 
 const startResize = (e) => {

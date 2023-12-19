@@ -130,6 +130,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@/components/editor/tiptap/image/image'
+import { Float } from '@/components/editor/tiptap/float-extension.js'
 
 import {
   TransitionRoot,
@@ -276,7 +277,10 @@ const editor = useEditor({
       types: ['image', 'paragraph'],
     }),
     //ResizableMedia
-    Image
+    Image,
+    Float.configure({
+      types: ['image', 'paragraph'],
+    })
   ]
 })
 
