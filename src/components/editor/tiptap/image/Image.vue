@@ -20,12 +20,12 @@
 
         <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
           @click="editor.chain().focus().setFloat('left').run()"
-          :class="[icon_cls, float_left_cls]"
+          :class="[icon_cls, float_cls('left')]"
         />
 
         <font-awesome-icon icon="fa-solid fa-images"
           @click="editor.chain().focus().setFloat('right').run()"
-          :class="[icon_cls, float_right_cls]"
+          :class="[icon_cls, float_cls('right')]"
         />
 
       </div>
@@ -75,12 +75,9 @@ const img_cls = computed(() => ({
 }))
 
 const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'
-const float_right_cls = computed(() => ({
-  'text-indigo-500': props.editor.isActive({float: 'right'})
-}))
-const float_left_cls = computed(() => ({
-  'text-indigo-500': props.editor.isActive({float: 'left'})
-}))
+const float_cls = (dir) => ({
+  'text-indigo-500': props.editor.isActive({float: dir})
+})
 
 const wrapper_cls = computed(() => ({
   'justify-start': props.node.attrs.textAlign === 'left',

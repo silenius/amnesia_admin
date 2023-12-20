@@ -29,11 +29,22 @@ export default TipTapImage.extend({
             }
         };
     },
+    
+    parseHTML() {
+        return [
+            {
+                tag: this.options.allowBase64
+                    ? 'img[src][data-objectid]'
+                    : 'img[src][data-objectid]:not([src^="data:"])',
+                //getAttrs: elem => elem.hasAttribute('data-objectid')
+            },
+        ]
+    },
 
     addCommands() {
         return {
             ...this.parent?.(),
-        };
+};
     },
 
     addNodeView() {

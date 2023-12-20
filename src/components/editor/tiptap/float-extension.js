@@ -18,15 +18,13 @@ export const Float = Extension.create({
                 attributes: {
                     float: {
                         default: null,
-                        parseHTML: element => { 
-                            return element.style.float ? element.style.float :
-                                element.classList.contains('float-left') ? 'left' :
-                                    element.classList.contains('float-right') ? 'right' :
-                                        this.options.default_direction
-                        },
-                        renderHTML: attributes => {
-                            if (attributes.float) {
-                                return { class: `float-${attributes.float}` }
+                        parseHTML: elem => elem.style.float ? elem.style.float :
+                            elem.classList.contains('float-left') ? 'left' :
+                                elem.classList.contains('float-right') ? 'right' :
+                                    this.options.default_direction,
+                        renderHTML: attrs => {
+                            if (attrs.float) {
+                                return { class: `float-${attrs.float}` }
                             }
                         },
                     },
