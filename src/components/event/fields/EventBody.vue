@@ -3,7 +3,7 @@
     <label>
       <p class="font-bold">Body</p>
       <p class="text-xs">The content of the event</p>
-      <EditorTinyMCE v-model="value" />
+      <EditorTipTap v-model:content="value" />
       <span class="text-red-500" v-if="errors.body">
         {{ errors.body }}
       </span>
@@ -13,7 +13,7 @@
 
 <script setup>
 import { inject, computed } from 'vue'
-import EditorTinyMCE from '@/components/content/fields/EditorTinyMCE.vue'
+import EditorTipTap from '@/components/content/fields/EditorTipTap.vue'
 import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({
