@@ -1,7 +1,9 @@
 <template>
 
-  <TransitionRoot appear :show="choose_image_modal_open" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-[1500]">
+  <!-- MODAL CHOOSE IMAGE -->
+
+  <TransitionRoot appear :show="modals.choose_image" as="template">
+    <Dialog as="div" @close="closeModal('choose_image')" class="relative z-[1500]">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -29,37 +31,41 @@
               class="transform overflow-hidden rounded-2xl bg-white p-6
               text-left w-fit align-middle shadow-xl transition-all"
             >
-              <DialogTitle
-                as="h3"
-                class="text-lg font-medium leading-6 text-gray-900"
-              >
+              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
                 Insert an image
               </DialogTitle>
-              <p class="mt-4 text-sm">
-              Browse the site, upload an image, or type an URL
-              </p>
-              <div class="mt-2 py-8">
-                <div class="text-sm text-gray-500 flex gap-4">
-                  <div class="flex flex-col">
-                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900 w-8 h-8" />
-                    <span>Browse</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <font-awesome-icon icon="fa-solid fa-upload" class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900 w-8 h-8"/>
-                    <span>Upload</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <input type="url" placeholder="Type an URL"/>
-                  </div>
+              <DialogDescription as="h4" class="mt-2">
+                Browse the site, upload an image, or type an URL
+              </DialogDescription>
+              <div class="flex text-sm gap-4 mt-2 py-8">
+
+                <!-- BROWSE SITE -->
+
+                <div class="flex flex-col gap-2">
+                  <button @click="modals.file_browser=true" class="p-2 hover:outline-none text-white bg-rose-500
+                    hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
+                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="h-8 w-8" />
+                  </button>
+                  Browse
                 </div>
+
+                <!-- UPLOAD IMAGE -->
+
+                <div class="flex flex-col gap-2">
+                  <button class="p-2 hover:outline-none text-white bg-rose-500
+                    hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
+                    <font-awesome-icon icon="fa-solid fa-upload" class="h-8 w-8" />
+                  </button>
+                  Upload
+                </div>
+
               </div>
 
               <div class="mt-4">
                 <button
                   type="button"
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="closeModal"
-                >
+                  @click="closeModal('choose_image')">
                   Close
                 </button>
               </div>
@@ -70,10 +76,10 @@
     </Dialog>
   </TransitionRoot>
 
+  <!-- MODAL FILE BROWSER -->
 
-
-  <TransitionRoot appear :show="file_browser_modal_open" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-[1500]">
+  <TransitionRoot appear :show="modals.file_browser" as="template">
+    <Dialog as="div" @close="closeModal('file_browser')" class="relative z-[1500]">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -127,8 +133,7 @@
                 <button
                   type="button"
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="closeModal"
-                >
+                  @click="closeModal('file_browser')">
                   Close
                 </button>
               </div>
@@ -167,7 +172,7 @@
         }" />
 
       <font-awesome-icon icon="fa-regular fa-image"
-        @click="openModal('image')"
+        @click="add_image"
         v-if="!editor.isActive('image')" />
     </div>
     <!--
@@ -192,7 +197,7 @@ class="flex gap-2 border p-2 bg-white"
 </template>
 
 <script setup>
-import { ref, watchEffect, onBeforeUnmount, onMounted } from 'vue'
+import { ref, watchEffect, onBeforeUnmount } from 'vue'
 import { 
   useEditor, 
   EditorContent,
@@ -211,14 +216,18 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
+  DialogDescription
 } from '@headlessui/vue'
 
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
 
-const choose_image_modal_open = ref(false)
-const file_browser_modal_open = ref(false)
+const modals = ref({
+  choose_image: false,
+  file_browser: false
+})
+
 const folder_id = ref(1)
 const folder = ref({})
 const contents = ref([])
@@ -305,17 +314,20 @@ watchEffect( async () => {
   contents.value = contents_data.data
 })
 
-const closeModal = () => {
-  //file_browser_modal_open.value = false
-  choose_image_modal_open.value = false
+const closeModal = (...modal) => {
+  const src = modal.length === 0 ? Object.keys(modals.value) : modal
+
+  for (const m of src) {
+    modals.value[m] = false
+  }
 }
 
-const openModal = (filetype) => {
-  _meta.value.filetype = filetype
+const add_image = () => {
+  _meta.value.filetype = 'image'
   folder_id.value = 1
-  //file_browser_modal_open.value = true
-  choose_image_modal_open.value = true
+  modals.value.choose_image = true
 }
+
 const doBrowse = id => folder_id.value = id
 
 const props = defineProps({
@@ -340,8 +352,6 @@ const editor = useEditor({
   injectCSS: props.injectCSS,
   onUpdate: () => {
     emit('update:content', editor.value.getHTML())
-    const tw = document.createTreeWalker(editor.value.view.dom)
-    console.log(tw)
   },
   extensions: [
     StarterKit.configure({
