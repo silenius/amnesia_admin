@@ -57,6 +57,8 @@ import {
     faAlignCenter,
     faAlignJustify,
     faImages,
+    faPalette,
+    faUpload,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -118,6 +120,8 @@ library.add(faAlignRight)
 library.add(faAlignCenter)
 library.add(faAlignJustify)
 library.add(faImages)
+library.add(faPalette)
+library.add(faUpload)
 
 const app = createApp(App)
 const pinia = createPinia()

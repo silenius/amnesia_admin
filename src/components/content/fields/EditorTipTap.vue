@@ -1,5 +1,77 @@
 <template>
 
+  <TransitionRoot appear :show="choose_image_modal_open" as="template">
+    <Dialog as="div" @close="closeModal" class="relative z-[1500]">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="transform overflow-hidden rounded-2xl bg-white p-6
+              text-left w-fit align-middle shadow-xl transition-all"
+            >
+              <DialogTitle
+                as="h3"
+                class="text-lg font-medium leading-6 text-gray-900"
+              >
+                Insert an image
+              </DialogTitle>
+              <p class="mt-4 text-sm">
+              Browse the site, upload an image, or type an URL
+              </p>
+              <div class="mt-2 py-8">
+                <div class="text-sm text-gray-500 flex gap-4">
+                  <div class="flex flex-col">
+                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900 w-8 h-8" />
+                    <span>Browse</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <font-awesome-icon icon="fa-solid fa-upload" class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900 w-8 h-8"/>
+                    <span>Upload</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <input type="url" placeholder="Type an URL"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal"
+                >
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+
+
+
   <TransitionRoot appear :show="file_browser_modal_open" as="template">
     <Dialog as="div" @close="closeModal" class="relative z-[1500]">
       <TransitionChild
@@ -71,15 +143,15 @@
     <div v-if="editable" class="flex gap-4 p-4 bg-white border">
       <font-awesome-icon icon="fa-solid fa-bold"
         @click="editor.chain().focus().toggleBold().run()" :class="{
-        'text-slate-900': editor.isActive('bold') }" />
+          'text-slate-900': editor.isActive('bold') }" />
 
       <font-awesome-icon icon="fa-solid fa-italic"
         @click="editor.chain().focus().toggleItalic().run()" :class="{
-        'text-slate-900': editor.isActive('italic') }" />
+          'text-slate-900': editor.isActive('italic') }" />
 
       <font-awesome-icon icon="fa-solid fa-align-left"
         @click="editor.chain().focus().setTextAlign('left').run()" :class="{
-        'is-active': editor.isActive({ textAlign: 'left' }) }" />
+          'is-active': editor.isActive({ textAlign: 'left' }) }" />
 
       <font-awesome-icon icon="fa-solid fa-align-center"
         @click="editor.chain().focus().setTextAlign('center').run()"
@@ -98,22 +170,22 @@
         @click="openModal('image')"
         v-if="!editor.isActive('image')" />
     </div>
-<!--
-    <bubble-menu
-      :editor="editor"
-      :tippy-options="{ duration: 500 }"
-      :shouldShow="() => !editor.isActive('image')"
-      class="flex gap-2 border p-2 bg-white"
-    >
-      <font-awesome-icon icon="fa-solid fa-bold"
-        @click="editor.chain().focus().toggleBold().run()" :class="{
-        'text-slate-900': editor.isActive('bold') }" />
+    <!--
+<bubble-menu
+:editor="editor"
+:tippy-options="{ duration: 500 }"
+:shouldShow="() => !editor.isActive('image')"
+class="flex gap-2 border p-2 bg-white"
+>
+<font-awesome-icon icon="fa-solid fa-bold"
+@click="editor.chain().focus().toggleBold().run()" :class="{
+'text-slate-900': editor.isActive('bold') }" />
 
-      <font-awesome-icon icon="fa-solid fa-italic"
-        @click="editor.chain().focus().toggleItalic().run()" :class="{
-        'text-slate-900': editor.isActive('italic') }" />
+<font-awesome-icon icon="fa-solid fa-italic"
+@click="editor.chain().focus().toggleItalic().run()" :class="{
+'text-slate-900': editor.isActive('italic') }" />
 
-    </bubble-menu>
+</bubble-menu>
 -->
     <EditorContent :editor="editor" />
   </div>
@@ -126,7 +198,8 @@ import {
   EditorContent,
   BubbleMenu
 } from '@tiptap/vue-3'
-import StarterKit from "@tiptap/starter-kit";
+import StarterKit from "@tiptap/starter-kit"
+import { Color } from '@tiptap/extension-color'
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@/components/editor/tiptap/image/image'
@@ -144,6 +217,7 @@ import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
 
+const choose_image_modal_open = ref(false)
 const file_browser_modal_open = ref(false)
 const folder_id = ref(1)
 const folder = ref({})
@@ -231,11 +305,16 @@ watchEffect( async () => {
   contents.value = contents_data.data
 })
 
-const closeModal = () => file_browser_modal_open.value = false
+const closeModal = () => {
+  //file_browser_modal_open.value = false
+  choose_image_modal_open.value = false
+}
+
 const openModal = (filetype) => {
   _meta.value.filetype = filetype
   folder_id.value = 1
-  file_browser_modal_open.value = true
+  //file_browser_modal_open.value = true
+  choose_image_modal_open.value = true
 }
 const doBrowse = id => folder_id.value = id
 
@@ -261,6 +340,8 @@ const editor = useEditor({
   injectCSS: props.injectCSS,
   onUpdate: () => {
     emit('update:content', editor.value.getHTML())
+    const tw = document.createTreeWalker(editor.value.view.dom)
+    console.log(tw)
   },
   extensions: [
     StarterKit.configure({
@@ -280,7 +361,8 @@ const editor = useEditor({
     Image,
     Float.configure({
       types: ['image', 'paragraph'],
-    })
+    }),
+    Color
   ]
 })
 

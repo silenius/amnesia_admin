@@ -15,6 +15,7 @@
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
     "@tailwindcss/language-server": "^0.0.10",
+    "@tiptap/extension-color": "^2.1.16",
     "@tiptap/extension-image": "^2.1.13",
     "@tiptap/extension-text-align": "^2.1.13",
     "@tiptap/extension-typography": "^2.1.12",
