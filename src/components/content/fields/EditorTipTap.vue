@@ -3,7 +3,7 @@
   <!-- MODAL CHOOSE IMAGE -->
 
   <TransitionRoot appear :show="modals.choose_image" as="template">
-    <Dialog as="div" @close="closeModal('choose_image')" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-[1500]">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -57,6 +57,7 @@
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-8 w-8" />
                   </button>
                   Upload
+                  <input type="file" class="hidden" />
                 </div>
 
               </div>
@@ -79,7 +80,7 @@
   <!-- MODAL FILE BROWSER -->
 
   <TransitionRoot appear :show="modals.file_browser" as="template">
-    <Dialog as="div" @close="closeModal('file_browser')" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-[1500]">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -222,6 +223,7 @@ import {
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
+import FileData from '@/components/file/fields/FileData.vue'
 
 const modals = ref({
   choose_image: false,
