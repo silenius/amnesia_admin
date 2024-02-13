@@ -1,5 +1,62 @@
 <template>
 
+  <!-- MODAL UPLOAD IMAGE -->
+
+  <TransitionRoot appear :show="modals.upload_image" as="template">
+    <Dialog as="div" class="relative z-[1500]">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="transform overflow-hidden rounded-2xl bg-white p-6
+              text-left w-fit align-middle shadow-xl transition-all"
+            >
+              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
+                Upload an image
+              </DialogTitle>
+              <DialogDescription as="h4" class="mt-2">
+                Upload an image to the website
+              </DialogDescription>
+
+              <div class="flex text-sm gap-4 mt-2 py-8">
+                <FileData v-model:content="file.content" />
+              </div>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal('upload_image')">
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+
   <!-- MODAL CHOOSE IMAGE -->
 
   <TransitionRoot appear :show="modals.choose_image" as="template">
@@ -52,13 +109,13 @@
                 <!-- UPLOAD IMAGE -->
 
                 <div class="flex flex-col gap-2">
-                  <button class="p-2 hover:outline-none text-white bg-rose-500
+                  <button @click="modals.upload_image=true" class="p-2 hover:outline-none text-white bg-rose-500
                     hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-8 w-8" />
                   </button>
                   Upload
-                  <input type="file" class="hidden" />
                 </div>
+
 
               </div>
 
@@ -227,6 +284,7 @@ import FileData from '@/components/file/fields/FileData.vue'
 
 const modals = ref({
   choose_image: false,
+  upload_image: false,
   file_browser: false
 })
 
@@ -343,6 +401,16 @@ const props = defineProps({
     default: true
   }
 })
+
+const file = ref({
+  is_fts: true,
+  exclude_nav: false,
+  container_id: 1,
+  props: {},
+})
+
+
+
 
 const emit = defineEmits([
   'update:content'
