@@ -41,12 +41,6 @@ export default TipTapImage.extend({
         ]
     },
 
-    addCommands() {
-        return {
-            ...this.parent?.(),
-};
-    },
-
     addNodeView() {
         return VueNodeViewRenderer(Image);
     }

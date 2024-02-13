@@ -1,5 +1,5 @@
 <template>
-  <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
+  <node-view-wrapper draggable data-drag-handle as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
 
       <div v-if="selected" class="absolute flex gap-2 outline outline-slate-200
@@ -32,7 +32,7 @@
 
       <img :src="src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
-        class="rounded-lg" draggable="true" :class="img_cls" />
+        class="rounded-lg" :class="img_cls" />
       <!--
       <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       -->
@@ -60,7 +60,7 @@ const cursorY = ref(null)
 const resize_from = ref(null)
 const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
-const src = computed(() => backend_url(props.node.attrs['data-objectid']))
+const src = backend_url(props.node.attrs['data-objectid'])
 
 /*
 watch(() => props.node.attrs, () => {

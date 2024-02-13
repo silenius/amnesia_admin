@@ -100,6 +100,10 @@ const getLineage = async (folder_id) => {
     return useFetchBackend(`${folder_id}/lineage`)
 }
 
+const getDefaultMediaFolder = async() => {
+    return useFetchBackend('folder/default_media')
+}
+
 const getOrders = async (opts = {}) => {
     const options = new URLSearchParams()
 
@@ -126,6 +130,7 @@ export function useFolder() {
         updateFolder,
         createFolder,
         getIndexCandidates,
+        getDefaultMediaFolder,
         browse,
         paste,
         getOrders,

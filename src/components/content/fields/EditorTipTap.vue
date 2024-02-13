@@ -1,62 +1,5 @@
 <template>
 
-  <!-- MODAL UPLOAD IMAGE -->
-
-  <TransitionRoot appear :show="modals.upload_image" as="template">
-    <Dialog as="div" class="relative z-[1500]">
-      <TransitionChild
-        as="template"
-        enter="duration-300 ease-out"
-        enter-from="opacity-0"
-        enter-to="opacity-100"
-        leave="duration-200 ease-in"
-        leave-from="opacity-100"
-        leave-to="opacity-0"
-      >
-        <div class="fixed inset-0 bg-black bg-opacity-25" />
-      </TransitionChild>
-
-      <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
-          <TransitionChild
-            as="template"
-            enter="duration-300 ease-out"
-            enter-from="opacity-0 scale-95"
-            enter-to="opacity-100 scale-100"
-            leave="duration-200 ease-in"
-            leave-from="opacity-100 scale-100"
-            leave-to="opacity-0 scale-95"
-          >
-            <DialogPanel
-              class="transform overflow-hidden rounded-2xl bg-white p-6
-              text-left w-fit align-middle shadow-xl transition-all"
-            >
-              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
-                Upload an image
-              </DialogTitle>
-              <DialogDescription as="h4" class="mt-2">
-                Upload an image to the website
-              </DialogDescription>
-
-              <div class="flex text-sm gap-4 mt-2 py-8">
-                <FileData v-model:content="file.content" />
-              </div>
-
-              <div class="mt-4">
-                <button
-                  type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="closeModal('upload_image')">
-                  Close
-                </button>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
-        </div>
-      </div>
-    </Dialog>
-  </TransitionRoot>
-
   <!-- MODAL CHOOSE IMAGE -->
 
   <TransitionRoot appear :show="modals.choose_image" as="template">
@@ -109,13 +52,13 @@
                 <!-- UPLOAD IMAGE -->
 
                 <div class="flex flex-col gap-2">
-                  <button @click="modals.upload_image=true" class="p-2 hover:outline-none text-white bg-rose-500
+                  <button @click="upload_image" class="p-2 hover:outline-none text-white bg-rose-500
                     hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-8 w-8" />
                   </button>
+                  <input @change="onFileChange" accept="image/*" type="file" ref="input_upload_file" class="hidden" />
                   Upload
                 </div>
-
 
               </div>
 
@@ -255,7 +198,7 @@ class="flex gap-2 border p-2 bg-white"
 </template>
 
 <script setup>
-import { ref, watchEffect, onBeforeUnmount } from 'vue'
+import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { 
   useEditor, 
   EditorContent,
@@ -265,6 +208,7 @@ import StarterKit from "@tiptap/starter-kit"
 import { Color } from '@tiptap/extension-color'
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
+//import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 
@@ -280,19 +224,42 @@ import {
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
-import FileData from '@/components/file/fields/FileData.vue'
+import { useFile } from '@/composables/files.js'
+
+const props = defineProps({
+  content: String,
+  editable: {
+    type: Boolean,
+    default: true
+  },
+  injectCSS: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const emit = defineEmits([
+  'update:content'
+])
+
+class NotAnImage extends Error {
+    constructor(message) {
+        super(message)
+    }
+}
 
 const modals = ref({
   choose_image: false,
-  upload_image: false,
   file_browser: false
 })
 
+const { browse, getDefaultMediaFolder } = useFolder()
+const { getContent } = useContent()
+
 const folder_id = ref(1)
 const folder = ref({})
+const default_media_folder = ref()
 const contents = ref([])
-const { browse } = useFolder()
-const { getContent } = useContent()
 const actions = ref([
   {
     label: 'Select',
@@ -338,6 +305,8 @@ const doSelect = (content) => {
   _cb(cb_value, cb_meta); 
   closeModal()
 }
+
+const input_upload_file = ref()
 
 const insertImage = (value, meta) => {
   editor.value.commands.setImage({
@@ -388,33 +357,34 @@ const add_image = () => {
   modals.value.choose_image = true
 }
 
-const doBrowse = id => folder_id.value = id
+const upload_image = () => input_upload_file.value.click()
+const { createFile } = useFile()
 
-const props = defineProps({
-  content: String,
-  editable: {
-    type: Boolean,
-    default: true
-  },
-  injectCSS: {
-    type: Boolean,
-    default: true
+const onFileChange = async (event) => {
+  const uploaded_file = event.target.files[0]
+
+  try {
+    if (!uploaded_file.type.startsWith('image/')) {
+      throw new NotAnImage('The provided file is not an image')
+    }
+
+    const { data } = await createFile(default_media_folder, { 
+      title: uploaded_file.name,
+      content: uploaded_file
+    })
+
+    if (data.mime.major.name !== 'image') {
+      throw new NotAnImage('The uploaded file is not an image')
+    }
+
+    insertImage(data.id)
+    closeModal()
+  } catch (e) {
+    alert(`Error: ${e.message}`)
   }
-})
+}
 
-const file = ref({
-  is_fts: true,
-  exclude_nav: false,
-  container_id: 1,
-  props: {},
-})
-
-
-
-
-const emit = defineEmits([
-  'update:content'
-])
+const doBrowse = id => folder_id.value = id
 
 const editor = useEditor({
   content: props.content,
@@ -447,5 +417,13 @@ const editor = useEditor({
 })
 
 onBeforeUnmount(() => editor.value.destroy())
+onMounted( async () => {
+  try {
+    const { data } = await getDefaultMediaFolder()
+    default_media_folder.value = data
+  } catch (e) {
+  }
+
+})
 
 </script>

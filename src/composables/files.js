@@ -44,8 +44,9 @@ const file_to_formdata = (file_data) => {
 
 const createFile = async(container, file) => {
     const data = file_to_formdata(file)
+    const container_ = unref(container)
 
-    return useFetchBackend(`${container.id}/@@add_file`, {
+    return useFetchBackend(`${container_.id}/@@add_file`, {
         method: 'POST',
         body: data
     })
