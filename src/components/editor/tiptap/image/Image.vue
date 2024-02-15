@@ -1,8 +1,8 @@
 <template>
-  <node-view-wrapper draggable data-drag-handle as="div" class="flex relative not-prose" :class="wrapper_cls">
+  <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
 
-      <div v-if="selected" class="absolute flex gap-2 outline outline-slate-200
+      <div v-if="selected && editable" class="absolute flex gap-2 outline outline-slate-200
         outline-1 white m-2 p-1 opacity-90 bg-white">
         <font-awesome-icon icon="fa-solid fa-align-left" :class="icon_cls"
           @click="editor.chain().focus().setTextAlign('left').run()"
@@ -30,13 +30,13 @@
 
       </div>
 
-      <img :src="src" :data-objectid="node.attrs['data-objectid']"
+      <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
         class="rounded-lg" :class="img_cls" />
       <!--
       <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       -->
-      <div v-if="selected" @mousedown="startResize" @mouseup="stopResize">
+      <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
         <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
         <span :class="resize_cls" data-resize="tr" class="cursor-nesw-resize -top-1 -right-1" />
         <span :class="resize_cls" data-resize="bl" class="cursor-nesw-resize -bottom-1 -left-1" />
@@ -60,18 +60,16 @@ const cursorY = ref(null)
 const resize_from = ref(null)
 const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
-const src = backend_url(props.node.attrs['data-objectid'])
+const editable = computed(() => props.editor.view.editable)
 
-/*
-watch(() => props.node.attrs, () => {
-  console.log(props.node.attrs)
-})
-*/
+console.log('===>>> Image component props: ', props)
+
 
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
 
 const img_cls = computed(() => ({
-  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected,
+  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&
+    editable.value,
 }))
 
 const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'

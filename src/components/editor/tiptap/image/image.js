@@ -1,47 +1,106 @@
-import { Image as TipTapImage } from '@tiptap/extension-image';
+
+import {
+    mergeAttributes,
+    Node,
+    nodeInputRule,
+} from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 import { backend_url } from '@/composables/fetch.js';
 import Image from './Image.vue';
 
-export default TipTapImage.extend({
+export const inputRegex = /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\))$/
+
+export default Node.create({
+    name: 'image',
+
+    addOptions() {
+        return {
+            inline: false,
+            allowBase64: false,
+            HTMLAttributes: {},
+        }
+    },
+
+    inline() {
+        return this.options.inline
+    },
+
+    group() {
+        return this.options.inline ? 'inline' : 'block'
+    },
+
+    draggable: true,
+
     addAttributes() {
         return {
-            ...this.parent?.(),
-
-            width: {
-            },
-
-            height: {
-            },
-
             src: {
                 default: null,
-                parseHTML: elem => backend_url(elem.getAttribute('data-objectid')),
-                renderHTML: attrs => {
-                    return {
-                        src: backend_url(attrs['data-objectid'])
-                    }
-                }   
+                parseHTML: elem => {
+                    console.log('===>>> Image src parseHTML: ', elem)
+                    const oid = elem.getAttribute('data-objectid')
+                    return oid ? backend_url(oid) : null
+                },
             },
-
-            "data-objectid": {
+            'data-objectid': {
+                default: null,
+            },
+            alt: {
+                default: null,
+            },
+            title: {
+                default: null,
+            },
+            width: {
+                default: null,
+            },
+            height: {
                 default: null
             }
-        };
+        }
     },
-    
+
     parseHTML() {
+        console.log('===>>> Image parseHTML')
         return [
             {
                 tag: this.options.allowBase64
-                    ? 'img[src][data-objectid]'
-                    : 'img[src][data-objectid]:not([src^="data:"])',
-                //getAttrs: elem => elem.hasAttribute('data-objectid')
+                    ? 'img[src]'
+                    : 'img[src]:not([src^="data:"])',
             },
+        ]
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        console.log('===>>> Image renderHTML: ', HTMLAttributes)
+        return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+    },
+
+    addCommands() {
+        return {
+            setImage: options => ({ commands }) => {
+                return commands.insertContent({
+                    type: this.name,
+                    attrs: options,
+                })
+            },
+        }
+    },
+
+    addInputRules() {
+        return [
+            nodeInputRule({
+                find: inputRegex,
+                type: this.type,
+                getAttributes: match => {
+                    const [,, alt, src, title] = match
+
+                    return { src, alt, title }
+                },
+            }),
         ]
     },
 
     addNodeView() {
         return VueNodeViewRenderer(Image);
     }
-});
+})

@@ -225,6 +225,7 @@ import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
 import { useFile } from '@/composables/files.js'
+import { backend_url } from '@/composables/fetch.js';
 
 const props = defineProps({
   content: String,
@@ -302,15 +303,16 @@ const doSelect = (content) => {
       break;
   }
 
-  _cb(cb_value, cb_meta); 
+  _cb(cb_value); 
   closeModal()
 }
 
 const input_upload_file = ref()
 
-const insertImage = (value, meta) => {
+const insertImage = (value) => {
   editor.value.commands.setImage({
-    'data-objectid': value
+    'data-objectid': value,
+    'src': backend_url(value)
   })
 }
 
@@ -377,6 +379,7 @@ const onFileChange = async (event) => {
       throw new NotAnImage('The uploaded file is not an image')
     }
 
+    console.log(`===>>> Insert image ${data.id}`)
     insertImage(data.id)
     closeModal()
   } catch (e) {
