@@ -208,6 +208,10 @@ import StarterKit from "@tiptap/starter-kit"
 import { Color } from '@tiptap/extension-color'
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
 //import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
@@ -415,7 +419,11 @@ const editor = useEditor({
     Float.configure({
       types: ['image', 'paragraph'],
     }),
-    Color
+    Color,
+    Table,
+    TableHeader,
+    TableRow,
+    TableCell,
   ]
 })
 

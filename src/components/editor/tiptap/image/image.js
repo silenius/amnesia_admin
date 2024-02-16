@@ -1,4 +1,3 @@
-
 import {
     mergeAttributes,
     Node,
@@ -38,7 +37,7 @@ export default Node.create({
                 parseHTML: elem => {
                     console.log('===>>> Image src parseHTML: ', elem)
                     const oid = elem.getAttribute('data-objectid')
-                    return oid ? backend_url(oid) : null
+                    return oid ? backend_url(oid) : elem.getAttribute('src')
                 },
             },
             'data-objectid': {
