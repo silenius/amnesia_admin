@@ -59,6 +59,8 @@ import {
     faImages,
     faPalette,
     faUpload,
+    faLink,
+    faLinkSlash,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -122,6 +124,8 @@ library.add(faAlignJustify)
 library.add(faImages)
 library.add(faPalette)
 library.add(faUpload)
+library.add(faLink)
+library.add(faLinkSlash)
 
 const app = createApp(App)
 const pinia = createPinia()

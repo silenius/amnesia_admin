@@ -1,5 +1,71 @@
 <template>
 
+  <!-- MODAL CHOOSE LINK -->
+
+  <TransitionRoot appear :show="modals.choose_link" as="template">
+    <Dialog as="div" class="relative z-[1500]">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="transform overflow-hidden rounded-2xl bg-white p-6
+              text-left w-fit align-middle shadow-xl transition-all"
+            >
+              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
+                Link
+              </DialogTitle>
+              <DialogDescription as="h4" class="mt-2">
+                Link selection
+              </DialogDescription>
+              <div class="flex text-sm gap-4 mt-2 py-8">
+
+                <!-- BROWSE SITE -->
+
+                <div class="flex flex-col gap-2">
+                  <button @click="modals.file_browser=true" class="p-2 hover:outline-none text-white bg-rose-500
+                    hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
+                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="h-8 w-8" />
+                  </button>
+                  Browse
+                </div>
+
+              </div>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal('choose_image')">
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+
   <!-- MODAL CHOOSE IMAGE -->
 
   <TransitionRoot appear :show="modals.choose_image" as="template">
@@ -175,6 +241,10 @@
       <font-awesome-icon icon="fa-regular fa-image"
         @click="add_image"
         v-if="!editor.isActive('image')" />
+
+      <font-awesome-icon icon="fa-solid fa-link" 
+        @click="add_link"
+        v-if="!editor.state.selection.empty" />
     </div>
     <!--
 <bubble-menu
@@ -212,6 +282,7 @@ import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
+import Link from '@tiptap/extension-link'
 //import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
@@ -255,6 +326,7 @@ class NotAnImage extends Error {
 
 const modals = ref({
   choose_image: false,
+  choose_link: false,
   file_browser: false
 })
 
@@ -320,6 +392,13 @@ const insertImage = (value) => {
   })
 }
 
+const insertLink = (value) => {
+  console.log(editor.value)
+  editor.value.commands.setLink({
+    'href': "http://www.google.be"
+  })
+}
+
 watchEffect( async () => {
   let opts = [];
 
@@ -340,6 +419,9 @@ watchEffect( async () => {
           ['filter_mimes', 'video/*']
         ]
         break;
+      case 'file':
+        _cb = insertLink
+        break
     }
   }
 
@@ -363,6 +445,12 @@ const add_image = () => {
   modals.value.choose_image = true
 }
 
+const add_link = () => {
+  _meta.value.filetype = 'file'
+  folder_id.value = 1
+  modals.value.choose_link = true
+}
+
 const upload_image = () => input_upload_file.value.click()
 const { createFile } = useFile()
 
@@ -383,11 +471,11 @@ const onFileChange = async (event) => {
       throw new NotAnImage('The uploaded file is not an image')
     }
 
-    console.log(`===>>> Insert image ${data.id}`)
+    console.info(`===>>> Insert image ${data.id}`)
     insertImage(data.id)
     closeModal()
   } catch (e) {
-    alert(`Error: ${e.message}`)
+    console.error(`===>>> Error: ${e.message}`)
   }
 }
 
@@ -424,6 +512,7 @@ const editor = useEditor({
     TableHeader,
     TableRow,
     TableCell,
+    Link,
   ]
 })
 
