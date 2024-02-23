@@ -64,7 +64,6 @@ const editable = computed(() => props.editor.view.editable)
 
 console.log('===>>> Image component props: ', props)
 
-
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
 
 const img_cls = computed(() => ({
@@ -86,6 +85,7 @@ const wrapper_cls = computed(() => ({
 }))
 
 const startResize = (e) => {
+  console.log('===>>>> resize props ', props)
   resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
   cursorY.value = e.clientY

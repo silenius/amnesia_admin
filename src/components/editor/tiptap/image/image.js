@@ -29,13 +29,14 @@ export default Node.create({
     },
 
     draggable: true,
+    marks: '',
 
     addAttributes() {
         return {
             src: {
                 default: null,
                 parseHTML: elem => {
-                    console.log('===>>> Image src parseHTML: ', elem)
+                    console.debug('===>>> Image src parseHTML: ', elem)
                     const oid = elem.getAttribute('data-objectid')
                     return oid ? backend_url(oid) : elem.getAttribute('src')
                 },
@@ -59,7 +60,7 @@ export default Node.create({
     },
 
     parseHTML() {
-        console.log('===>>> Image parseHTML')
+        console.debug('===>>> Image parseHTML')
         return [
             {
                 tag: this.options.allowBase64
@@ -70,7 +71,7 @@ export default Node.create({
     },
 
     renderHTML({ HTMLAttributes }) {
-        console.log('===>>> Image renderHTML: ', HTMLAttributes)
+        console.debug('===>>> Image renderHTML: ', HTMLAttributes)
         return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
     },
 

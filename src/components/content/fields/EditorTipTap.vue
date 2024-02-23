@@ -245,6 +245,10 @@
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
         v-if="!editor.state.selection.empty" />
+
+      <font-awesome-icon icon="fa-solid fa-link-slash" 
+        @click="remove_link"
+        v-if="!editor.state.selection.empty" />
     </div>
     <!--
 <bubble-menu
@@ -393,10 +397,13 @@ const insertImage = (value) => {
 }
 
 const insertLink = (value) => {
-  console.log(editor.value)
   editor.value.commands.setLink({
-    'href': "http://www.google.be"
+    'href': backend_url(value).href
   })
+}
+
+const remove_link = (value) => {
+  editor.value.commands.unsetLink()
 }
 
 watchEffect( async () => {
@@ -503,7 +510,9 @@ const editor = useEditor({
       types: ['image', 'paragraph'],
     }),
     //ResizableMedia
-    Image,
+    Image.configure({
+      inline: true
+    }),
     Float.configure({
       types: ['image', 'paragraph'],
     }),
