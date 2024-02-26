@@ -493,6 +493,7 @@ const editor = useEditor({
   editable: props.editable,
   injectCSS: props.injectCSS,
   onUpdate: () => {
+    console.debug('===>>> Editor update: ', editor.value)
     emit('update:content', editor.value.getHTML())
   },
   extensions: [
@@ -511,7 +512,7 @@ const editor = useEditor({
     }),
     //ResizableMedia
     Image.configure({
-      inline: true
+      inline: true,
     }),
     Float.configure({
       types: ['image', 'paragraph'],
@@ -521,7 +522,9 @@ const editor = useEditor({
     TableHeader,
     TableRow,
     TableCell,
-    Link,
+    Link.configure({
+      spanning: false
+    }),
   ]
 })
 
@@ -531,6 +534,7 @@ onMounted( async () => {
     const { data } = await getDefaultMediaFolder()
     default_media_folder.value = data
   } catch (e) {
+    console.error('===>>> Error getting default media folder: ', e)
   }
 
 })

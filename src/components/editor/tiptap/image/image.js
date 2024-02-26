@@ -16,6 +16,7 @@ export default Node.create({
         return {
             inline: false,
             allowBase64: false,
+            selectable: true,
             HTMLAttributes: {},
         }
     },
@@ -28,7 +29,12 @@ export default Node.create({
         return this.options.inline ? 'inline' : 'block'
     },
 
+    selectable() {
+        return this.options.selectable
+    },
+
     draggable: true,
+
     marks: '',
 
     addAttributes() {
@@ -37,8 +43,13 @@ export default Node.create({
                 default: null,
                 parseHTML: elem => {
                     console.debug('===>>> Image src parseHTML: ', elem)
-                    const oid = elem.getAttribute('data-objectid')
-                    return oid ? backend_url(oid) : elem.getAttribute('src')
+                    if (elem.hasAttribute('data-objectid')) {
+                        return backend_url(elem.getAttribute('data-objectid'))
+                    } else if (elem.hasAttribute('src')) {
+                        return elem.getAttribute('src')
+                    } else {
+                        return null
+                    }
                 },
             },
             'data-objectid': {
