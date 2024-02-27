@@ -249,6 +249,9 @@
       <font-awesome-icon icon="fa-solid fa-link-slash" 
         @click="remove_link"
         v-if="!editor.state.selection.empty" />
+
+      <font-awesome-icon icon="fa-solid fa-link-slash" 
+        @click="editor.commands.setFlex({})" />
     </div>
     <!--
 <bubble-menu
@@ -289,6 +292,7 @@ import TableHeader from '@tiptap/extension-table-header'
 import Link from '@tiptap/extension-link'
 //import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
+import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 
 import {
@@ -517,6 +521,7 @@ const editor = useEditor({
     Float.configure({
       types: ['image', 'paragraph'],
     }),
+    Flex,
     Color,
     Table,
     TableHeader,

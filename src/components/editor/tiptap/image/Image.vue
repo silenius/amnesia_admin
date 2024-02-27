@@ -2,8 +2,7 @@
   <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
     <div class="w-fit flex relative">
 
-      <div v-if="selected && editable" class="absolute flex gap-2 outline outline-slate-200
-        outline-1 white m-2 p-1 opacity-90 bg-white">
+      <div v-if="selected && editable" class="absolute flex flex-wrap gap-2 outline outline-slate-200 outline-1 white m-2 p-1 opacity-90 bg-white">
         <font-awesome-icon icon="fa-solid fa-align-left" :class="icon_cls"
           @click="editor.chain().focus().setTextAlign('left').run()"
         />
