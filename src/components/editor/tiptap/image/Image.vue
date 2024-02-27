@@ -29,7 +29,6 @@
         />
 
       </div>
-
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
         class="rounded-lg" :class="img_cls" />
@@ -85,7 +84,6 @@ const wrapper_cls = computed(() => ({
 }))
 
 const startResize = (e) => {
-  console.log('===>>>> resize props ', props)
   resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
   cursorY.value = e.clientY
