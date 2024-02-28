@@ -18,10 +18,12 @@ export const Float = Extension.create({
                 attributes: {
                     float: {
                         default: null,
+                        
                         parseHTML: elem => elem.style.float ? elem.style.float :
                             elem.classList.contains('float-left') ? 'left' :
                                 elem.classList.contains('float-right') ? 'right' :
                                     this.options.default_direction,
+                        
                         renderHTML: attrs => {
                             if (attrs.float) {
                                 return { class: `float-${attrs.float}` }
@@ -35,20 +37,24 @@ export const Float = Extension.create({
 
     addCommands() {
         return {
-            setFloat: (direction) => (p) => {
+            setFloat: (direction) => ({commands, tr}) => {
                 if (!this.options.directions.includes(direction)) {
                     return false
                 }
 
-                if (p.tr.curSelection.node.attrs.float == direction) {
-                    return p.commands.unsetFloat()
+                if (tr.curSelection.node.attrs.float == direction) {
+                    return commands.unsetFloat()
                 }
 
-                return this.options.types.every(type => p.commands.updateAttributes(type, { float: direction }))
+                return this.options.types.every(
+                    type => commands.updateAttributes(type, { float: direction })
+                )
             },
 
             unsetFloat: () => ({ commands }) => {
-                return this.options.types.every(type => commands.resetAttributes(type, 'float'))
+                return this.options.types.every(
+                    type => commands.resetAttributes(type, 'float')
+                )
             },
         }
     },

@@ -61,6 +61,7 @@ import {
     faUpload,
     faLink,
     faLinkSlash,
+    faTextHeight,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -126,6 +127,7 @@ library.add(faPalette)
 library.add(faUpload)
 library.add(faLink)
 library.add(faLinkSlash)
+library.add(faTextHeight)
 
 const app = createApp(App)
 const pinia = createPinia()

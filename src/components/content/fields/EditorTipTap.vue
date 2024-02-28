@@ -250,8 +250,10 @@
         @click="remove_link"
         v-if="!editor.state.selection.empty" />
 
-      <font-awesome-icon icon="fa-solid fa-link-slash" 
-        @click="editor.commands.setFlex({})" />
+      <font-awesome-icon icon="fa-solid fa-text-height" 
+        @click="editor.chain().focus().setFontSize('4xl').run()"
+      />
+
     </div>
     <!--
 <bubble-menu
@@ -289,9 +291,11 @@ import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
+import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
 //import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
+import FontSize from '@/components/editor/tiptap/fontsize'
 import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 
@@ -521,7 +525,12 @@ const editor = useEditor({
     Float.configure({
       types: ['image', 'paragraph'],
     }),
-    Flex,
+//    Flex,
+//    CustomText,
+    TextStyle,
+    FontSize.configure({
+      types: ['paragraph', 'image', 'block', 'inline']
+    }),
     Color,
     Table,
     TableHeader,
