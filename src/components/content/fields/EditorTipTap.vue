@@ -212,7 +212,7 @@
   </TransitionRoot>
 
   <div v-if="editor">
-    <div v-if="editable" class="flex gap-4 p-4 bg-white border">
+    <div v-if="editable" class="items-center flex gap-4 p-4 bg-white border">
       <font-awesome-icon icon="fa-solid fa-bold"
         @click="editor.chain().focus().toggleBold().run()" :class="{
           'text-slate-900': editor.isActive('bold') }" />
@@ -250,28 +250,11 @@
         @click="remove_link"
         v-if="!editor.state.selection.empty" />
 
-      <font-awesome-icon icon="fa-solid fa-text-height" 
-        @click="editor.chain().focus().setFontSize('4xl').run()"
+      <DropDownSize 
+        @select-size="(size, ) => editor.chain().focus().setFontSize(size).run()"
       />
 
     </div>
-    <!--
-<bubble-menu
-:editor="editor"
-:tippy-options="{ duration: 500 }"
-:shouldShow="() => !editor.isActive('image')"
-class="flex gap-2 border p-2 bg-white"
->
-<font-awesome-icon icon="fa-solid fa-bold"
-@click="editor.chain().focus().toggleBold().run()" :class="{
-'text-slate-900': editor.isActive('bold') }" />
-
-<font-awesome-icon icon="fa-solid fa-italic"
-@click="editor.chain().focus().toggleItalic().run()" :class="{
-'text-slate-900': editor.isActive('italic') }" />
-
-</bubble-menu>
--->
     <EditorContent :editor="editor" />
   </div>
 </template>
@@ -296,6 +279,7 @@ import Link from '@tiptap/extension-link'
 //import Image from '@tiptap/extension-image'
 import Image from '@/components/editor/tiptap/image/image'
 import FontSize from '@/components/editor/tiptap/fontsize'
+import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 

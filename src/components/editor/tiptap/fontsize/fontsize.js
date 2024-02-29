@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core'
+import { sizes }  from './constants'
 
 export const FontSize = Extension.create({
     name: 'fontSize',
@@ -6,10 +7,7 @@ export const FontSize = Extension.create({
     addOptions() {
         return {
             types: [],
-            sizes: [
-                'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', 
-                '6xl', '7xl', '8xl', '9xl'
-            ]
+            sizes: sizes
         }
     },
 
@@ -25,18 +23,19 @@ export const FontSize = Extension.create({
                             if (elem.style.fontSize) {
                                 return elem.style.fontSize
                             } else {
-                                for (const size of this.options.sizes) {
-                                    if (elem.classList.contains(`text-${size}`)) {
+                                for (const [size, props] of Object.entries(this.options.sizes)) {
+                                    if (elem.classList.contains(props.class)) {
                                         return size
                                     }
                                 }
                             }
                         },
-                        
+
                         renderHTML: attrs => {
                             if (attrs.fontSize) {
-                                if (this.options.sizes.indexOf(attrs.fontSize)) {
-                                    return { class: `text-${attrs.fontSize}` }
+                                const v = this.options.sizes[attrs.fontSize]
+                                if (v) {
+                                    return { class: v.class }
                                 } else {
                                     return { style: attrs.fontSize }
                                 }
@@ -51,7 +50,7 @@ export const FontSize = Extension.create({
     addCommands() {
         return {
             setFontSize: (size) => ({commands, tr}) => {
-                if (!this.options.sizes.includes(size)) {
+                if (!this.options.sizes[size]) {
                     return false
                 }
 
