@@ -1,8 +1,14 @@
-import { Extension } from '@tiptap/core'
+import { 
+    Extension,
+    mergeAttributes
+} from '@tiptap/core'
+
+import '@tiptap/extension-text-style';
 import { sizes }  from './constants'
 
 export const FontSize = Extension.create({
     name: 'fontSize',
+    group: 'inline',
 
     addOptions() {
         return {
@@ -34,11 +40,12 @@ export const FontSize = Extension.create({
                         renderHTML: attrs => {
                             if (attrs.fontSize) {
                                 const v = this.options.sizes[attrs.fontSize]
+
                                 if (v) {
                                     return { class: v.class }
-                                } else {
-                                    return { style: attrs.fontSize }
                                 }
+
+                                return { style: `font-size: ${attrs.fontSize}` }
                             }
                         }
                     }
@@ -49,20 +56,13 @@ export const FontSize = Extension.create({
 
     addCommands() {
         return {
-            setFontSize: (size) => ({commands, tr}) => {
+            setFontSize: (size) => ({ chain, editor, commands, tr }) => {
                 if (!this.options.sizes[size]) {
                     return false
                 }
 
-                return this.options.types.every(
-                    type => commands.updateAttributes(type, { fontSize: size })
-                )
-            },
+                return chain().setMark('textStyle', { fontSize: size }).run()
 
-            unsetFontSize: () => ({ commands }) => {
-                return this.options.types.every(
-                    type => commands.resetAttributes(type, 'fontSize')
-                )
             },
         }
     },

@@ -280,7 +280,7 @@ import Link from '@tiptap/extension-link'
 import Image from '@/components/editor/tiptap/image/image'
 import FontSize from '@/components/editor/tiptap/fontsize'
 import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
-import Flex from '@/components/editor/tiptap/flex-container/flex'
+//import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 
 import {
@@ -491,11 +491,7 @@ const editor = useEditor({
   extensions: [
     StarterKit.configure({
       bold: {
-        /*
-        HTMLAttributes: {
-          class: 'font-bold'
-        }
-        */
+        types: ['textStyle', 'fontSize']
       },
     }),
     Typography,
@@ -513,7 +509,7 @@ const editor = useEditor({
 //    CustomText,
     TextStyle,
     FontSize.configure({
-      types: ['paragraph', 'image', 'block', 'inline']
+      types: ['textStyle', 'paragraph', 'bold']
     }),
     Color,
     Table,
