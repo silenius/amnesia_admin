@@ -13,6 +13,10 @@ module.exports = {
   safelist: [
     {
       pattern: /(h|w)-\d+/
+    },
+    {
+      pattern: /(text|bg|outline)-(\w+)-(\d+)/,
+      variants: ['hover']
     }
   ]
 }

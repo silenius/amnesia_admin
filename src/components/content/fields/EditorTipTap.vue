@@ -254,6 +254,12 @@
         @select-size="(size, ) => editor.chain().focus().setFontSize(size).run()"
       />
 
+      <SelectColor 
+        @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
+        :colors="color_names"
+        :variants="color_variants"
+      />
+
     </div>
     <EditorContent :editor="editor" />
   </div>
@@ -267,7 +273,6 @@ import {
   BubbleMenu
 } from '@tiptap/vue-3'
 import StarterKit from "@tiptap/starter-kit"
-import { Color } from '@tiptap/extension-color'
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
 import Table from '@tiptap/extension-table'
@@ -283,6 +288,9 @@ import TextClass from '@/components/editor/tiptap/text-class'
 import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 //import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
+import SelectColor from '@/components/editor/tiptap/text-color/SelectColor.vue'
+import TextColor from '@/components/editor/tiptap/text-color'
+import { color_names, color_variants } from '@/components/editor/tiptap/text-color/constants'
 
 import {
   TransitionRoot,
@@ -513,7 +521,9 @@ const editor = useEditor({
     FontSize.configure({
       types: ['textClass', 'paragraph', 'bold']
     }),
-    Color,
+    TextColor.configure({
+      types: ['textClass']
+    }),
     Table,
     TableHeader,
     TableRow,
