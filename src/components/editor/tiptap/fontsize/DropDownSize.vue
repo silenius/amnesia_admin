@@ -1,5 +1,5 @@
 <template>
-  <Menu :open="open" as="div" class="relative z-10">
+  <Menu v-slot="{ close }" as="div" class="relative z-10">
     <div>
       <MenuButton as="span">
         <font-awesome-icon icon="fa-solid fa-text-height" />
@@ -20,7 +20,7 @@
         <div class="px-1 py-1">
           <MenuItem v-slot="{ active }" v-for="(value, key) in sizes">
           <button
-            @click.prevent="onSelectSize(key, value)"
+            @click.prevent="close() ; onSelectSize(key, value)"
             :class="[
               active ? 'bg-violet-500 text-white' : 'text-gray-900',
               'group flex w-full items-center rounded-md px-2 py-2',
@@ -47,8 +47,9 @@ import { sizes }  from './constants'
 
 const emits = defineEmits(['select-size'])
 
-const onSelectSize = (size, props) => emits('select-size', size, props)
-const open = ref(false)
+const onSelectSize = (size, props) => {
+  emits('select-size', size, props)
+}
 
 </script>
 

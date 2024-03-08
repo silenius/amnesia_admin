@@ -1,16 +1,13 @@
-import { 
-    Extension,
-} from '@tiptap/core'
+import {
+    Extension
+} from '@titap/core'
 
-import { sizes }  from './constants'
-
-export const FontSize = Extension.create({
-    name: 'fontSize',
+export const TextColor = Extension.create({
+    name: 'textColor',
 
     addOptions() {
         return {
             types: [],
-            sizes: sizes
         }
     },
 
@@ -19,12 +16,12 @@ export const FontSize = Extension.create({
             {
                 types: this.options.types,
                 attributes: {
-                    fontSize: {
+                    color: {
                         default: null,
 
                         parseHTML: (elem) => { 
-                            if (elem.style.fontSize) {
-                                return elem.style.fontSize
+                            if (elem.style.color) {
+                                return elem.style.color
                             } else {
                                 for (const [size, props] of Object.entries(this.options.sizes)) {
                                     if (elem.classList.contains(props.class)) {
@@ -51,26 +48,5 @@ export const FontSize = Extension.create({
         ]
     },
 
-    addCommands() {
-        return {
-            setFontSize: (size) => ({ chain, editor, view, state, commands, tr }) => {
-                if (!this.options.sizes[size]) {
-                    return false
-                }
 
-                if (tr.selection.node?.type.isText === false) {
-                    return false
-                }
-
-                /*
-                if (tr.selection.empty) {
-                    return this.options.types.every(
-                        type => commands.updateAttributes(type, { fontSize: size })
-                    )
-                }*/
-
-                return chain().setMark('textClass', { fontSize: size }).run()
-            },
-        }
-    },
 })
