@@ -256,8 +256,9 @@
 
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
-        :colors="color_names"
-        :variants="color_variants"
+        :shaded_colors="shaded_colors"
+        :unshaded_colors="unshaded_colors"
+        :shades="shades"
       />
 
     </div>
@@ -290,7 +291,7 @@ import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
 import SelectColor from '@/components/editor/tiptap/text-color/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
-import { color_names, color_variants } from '@/components/editor/tiptap/text-color/constants'
+import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
 
 import {
   TransitionRoot,
@@ -496,6 +497,9 @@ const editor = useEditor({
   onUpdate: () => {
     console.debug('===>>> Editor update: ', editor.value)
     emit('update:content', editor.value.getHTML())
+  },
+  onSelectionUpdate: () => {
+    console.debug('===>>> Editor selection update: ', editor.value)
   },
   extensions: [
     StarterKit.configure({

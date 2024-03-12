@@ -1,11 +1,11 @@
-import { build_color_class } from './utils'
+export const unshaded_colors = ['white', 'black', 'transparent', 'current', 'inherit']
 
-export const color_names = [
+export const shaded_colors = [
     'slate', 'gray', 'zinc', 'neutral', 'stone', 'red', 'orange', 'amber',
     'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 
     'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'
 ]
 
-export const color_variants = [
+export const shades = [
     50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
 ]

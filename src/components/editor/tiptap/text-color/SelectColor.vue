@@ -1,14 +1,20 @@
 <template>
 
-  <Popover v-slot="{ close }" class="relative">
-    <PopoverButton>
-      <font-awesome-icon icon="fa-solid fa-paintbrush"  />
+  <Popover v-slot="{ close }" as="div" class="relative">
+    <PopoverButton as="span">
+      <font-awesome-icon :icon="icon"  />
     </PopoverButton>
-    <PopoverPanel class="absolute z-10 border p-4 bg-white">
-      <div v-for="color in colors" class="flex mb-1 justify-end gap-1">
+    <PopoverPanel class="absolute z-10 border p-4 bg-white rounded-lg">
+      <div v-for="color in unshaded_colors" class="flex">
+        <button @click.prevent="close(); onSelectColor(color)"
+          :class="[`bg-${color}`, `hover:outline-${color}`]"
+          class="hover:outline hover:outline-2 hover:outline-offset-2 w-4 h-4">
+        </button>
+      </div>
+      <div v-for="color in shaded_colors" class="flex mb-1 justify-end gap-1">
         <span class="text-xs">{{ color }}</span>
         <button 
-          v-for="variant in variants" 
+          v-for="variant in shades" 
           @click.prevent="close() ; onSelectColor(color, variant)"
           :class="[`bg-${color}-${variant}`, `hover:outline-${color}-${variant}`]"
           class="hover:outline hover:outline-2 hover:outline-offset-2 w-4 h-4">
@@ -20,7 +26,6 @@
 </template>
 
 <script setup>
-import { ref }  from 'vue'
 
 import { 
   Popover, 
@@ -29,8 +34,13 @@ import {
 } from '@headlessui/vue'
 
 const props = defineProps({
-  colors: Array,
-  variants: Array
+  unshaded_colors: Array,
+  shaded_colors: Array,
+  shades: Array,
+  icon: {
+    type: String,
+    default: 'fa-solid fa-paintbrush'
+  }
 })
 
 const emits = defineEmits(['select-color'])

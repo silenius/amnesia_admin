@@ -2,8 +2,11 @@ import {
     Extension
 } from '@tiptap/core'
 
-import { color_names, color_variants } from './constants'
-import { build_color_class } from './utils'
+import {
+    unshaded_colors,
+    shaded_colors,
+    shades
+} from '../colors'
 
 export const TextColor = Extension.create({
     name: 'textColor',
@@ -11,9 +14,10 @@ export const TextColor = Extension.create({
     addOptions() {
         return {
             types: [],
-            color_names: color_names,
-            color_variants: color_variants,
-            allColors: () => build_color_class(this.color_names, this.color_variants)
+            unshaded_colors: unshaded_colors,
+            shaded_colors: shaded_colors,
+            shades: shades,
+            class_re: /^text-(?<color>[a-z]+)(?:-(?<shade>\d{2,3}))?$/
         }
     },
 
@@ -28,19 +32,46 @@ export const TextColor = Extension.create({
                         parseHTML: (elem) => { 
                             if (elem.style.color) {
                                 return elem.style.color
-                            } else {
-                                for (const name of elem.classList) {
-                                    if (this.options.colors.has(`${text}-name`)) {
-                                        return name
-                                    }
+                            } 
+
+                            for (const name of elem.classList) {
+                                const match = name.match(this.options.class_re)
+
+                                if (match !== null) {
+                                    // Do we have text-xxx or text-xxx-yyy ?
+                                    return (
+                                        match.groups.shade !== undefined
+                                        && this.options.shaded_colors.indexOf(
+                                            match.groups.color) !== -1
+                                        && this.options.shades.indexOf(
+                                            parseInt(match.groups.shade)) !== -1
+                                    ) ? {
+                                        color: match.groups.color,
+                                        shade: match.groups.shade
+                                    } : (
+                                        this.options.unshaded_colors.indexOf(
+                                            match.groups.color
+                                        ) !== -1
+                                    ) ? {
+                                        color: match.groups.color
+                                    } : false
                                 }
                             }
+
+                            return false
                         },
 
                         renderHTML: (attrs) => {
-                            if (attrs.textColor?.color && attrs.textColor?.variant) {
+                            if (attrs.textColor?.color) {
+
+                                if (attrs.textColor.shade) {
+                                    return { 
+                                        class: `text-${attrs.textColor.color}-${attrs.textColor.shade}` 
+                                    }
+                                }
+
                                 return { 
-                                    class: `text-${attrs.textColor.color}-${attrs.textColor.variant}` 
+                                    class: `text-${attrs.textColor.color}`
                                 }
                             }
 
@@ -54,25 +85,26 @@ export const TextColor = Extension.create({
 
     addCommands() {
         return {
-            setTextColor: (color, variant) => ({ chain, editor, view, state, commands, tr }) => {
-                /*
-                if (!this.options.sizes[size]) {
-                    return false
-                }
-                */
-
-                if (tr.selection.node?.type.isText === false) {
-                    return false
-                }
-
-                return chain().setMark(
+            setTextColor: (color, shade) => ({ chain, tr }) => {
+                return ( 
+                    tr.selection.node?.type.isText === false
+                    || (
+                        shade !== undefined
+                        && (this.options.shaded_colors.indexOf(color) === -1
+                        || this.options.shades.indexOf(parseInt(shade)) === -1)
+                    )
+                    || (
+                        shade === undefined
+                        && this.options.unshaded_colors.indexOf(color) === -1
+                    )
+                ) ? false : chain().setMark(
                     'textClass', { 
                         textColor: { 
                             color: color, 
-                            variant: variant 
+                            shade: shade 
                         }
                     }
-                ).run()
+                ).run() 
             },
         }
     },
