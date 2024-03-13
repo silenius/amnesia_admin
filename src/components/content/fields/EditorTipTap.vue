@@ -261,6 +261,14 @@
         :shades="shades"
       />
 
+      <SelectColor 
+        @select-color="(color, variant) => editor.chain().focus().setBackgroundColor(color, variant).run()"
+        :shaded_colors="shaded_colors"
+        :unshaded_colors="unshaded_colors"
+        :shades="shades"
+      />
+
+
     </div>
     <EditorContent :editor="editor" />
   </div>
@@ -289,8 +297,9 @@ import TextClass from '@/components/editor/tiptap/text-class'
 import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 //import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension.js'
-import SelectColor from '@/components/editor/tiptap/text-color/SelectColor.vue'
+import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
+import BackgroundColor from '@/components/editor/tiptap/background-color'
 import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
 
 import {
@@ -526,6 +535,9 @@ const editor = useEditor({
       types: ['textClass', 'paragraph', 'bold']
     }),
     TextColor.configure({
+      types: ['textClass']
+    }),
+    BackgroundColor.configure({
       types: ['textClass']
     }),
     Table,
