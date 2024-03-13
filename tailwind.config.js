@@ -15,7 +15,7 @@ module.exports = {
       pattern: /(h|w)-\d+/
     },
     {
-      pattern: /(text|bg|outline)-(\w+)-(\d+)/,
+      pattern: /(text|bg|outline)-/,
       variants: ['hover']
     }
   ]

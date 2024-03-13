@@ -259,6 +259,7 @@
         :shaded_colors="shaded_colors"
         :unshaded_colors="unshaded_colors"
         :shades="shades"
+        icon="fa-solid fa-palette"
       />
 
       <SelectColor 
@@ -266,6 +267,7 @@
         :shaded_colors="shaded_colors"
         :unshaded_colors="unshaded_colors"
         :shades="shades"
+        icon="fa-solid fa-paint-roller"
       />
 
 
