@@ -270,7 +270,6 @@
         icon="fa-solid fa-paint-roller"
       />
 
-
     </div>
     <EditorContent :editor="editor" />
   </div>
@@ -510,6 +509,7 @@ const editor = useEditor({
     emit('update:content', editor.value.getHTML())
   },
   onSelectionUpdate: () => {
+    emit('update:selection', editor)
     console.debug('===>>> Editor selection update: ', editor.value)
   },
   extensions: [

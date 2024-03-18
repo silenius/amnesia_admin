@@ -8,16 +8,16 @@ import { RouterView } from 'vue-router'
       <RouterView name="Header" />
     </div>
     <div class="col-span-12">
-      <div class="flex flex-col">
-        <aside class="basis-0 p-2 md:p-4 fixed w-32 md:w-48 bg-gray-700">
-          <RouterView name="LeftSideBar" />
+      <div class="flex flex-row">
+        <aside class="basis-0 backdrop-blur-sm shadow-gray-900 shadow-md bg-gray-700">
+          <RouterView class="p-2 md:p-4" name="LeftSideBar" />
         </aside>
-        <div class="grow min-h-screen overflow-scroll ml-32 md:ml-48">
+        <div class="grow overflow-scroll ">
           <RouterView />
         </div>
-        <div class="basis-0">
-          <RouterView name="RightSideBar" />
-        </div>
+        <aside class="basis-0 backdrop-blur-sm shadow-gray-900 shadow-md bg-gray-700">
+          <RouterView class="p-2 md:p-4" name="RightSideBar" />
+        </aside>
       </div>
     </div>
     <div class="col-span-12">

@@ -37,5 +37,19 @@ const doEdit = async (content) => {
 </script>
 
 <template>
-  <RouterView @edit-content="(n) => doEdit(n)" class="m-4" :content="content" v-if="content.id" />
+
+  <div class="flex flex-row border border-red-500">
+    <RouterView 
+      @edit-content="(n) => doEdit(n)" 
+      class="m-4 grow" 
+      :content="content" 
+      v-if="content.id" 
+    />
+
+    <RouterView 
+      name="RightSideBar" 
+      :content="content"
+      v-if="content.id"
+    />
+  </div>
 </template>

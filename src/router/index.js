@@ -40,6 +40,7 @@ const routes = [
                 path: 'edit',
                 components: {
                     default: () => import('../views/contents/ContentEdit.vue'),
+                    RightSideBar: () => import('../components/sidebars/ContentSidebar.vue'),
                 }
             },
             {
