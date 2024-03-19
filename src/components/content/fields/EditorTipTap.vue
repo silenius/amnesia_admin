@@ -302,6 +302,7 @@ import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
 import BackgroundColor from '@/components/editor/tiptap/background-color'
 import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
+import { useEditorStore } from '@/stores/editor'
 
 import {
   TransitionRoot,
@@ -510,11 +511,15 @@ const editor = useEditor({
   },
   onSelectionUpdate: ({editor: e, transaction: tr}) => {
     emit('update:selection', e)
-    console.debug('===>>> Editor selection update, editor: ', e, ' transaction: ', tr)
+    console.debug(
+      '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
+    )
   },
+  /*
   onTransaction: (p) => {
     console.debug('===>>> Editor transaction: ', p)
   },
+  */
   extensions: [
     StarterKit.configure({
       bold: {
@@ -537,10 +542,10 @@ const editor = useEditor({
     TextStyle,
     TextClass,
     FontSize.configure({
-      types: ['textClass', 'paragraph', 'bold']
+      types: ['textClass', 'paragraph']
     }),
     TextColor.configure({
-      types: ['textClass']
+      types: ['textClass', ]
     }),
     BackgroundColor.configure({
       types: ['textClass']
@@ -554,6 +559,9 @@ const editor = useEditor({
     }),
   ]
 })
+
+const { setEditor } = useEditorStore()
+setEditor('current', editor)
 
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {

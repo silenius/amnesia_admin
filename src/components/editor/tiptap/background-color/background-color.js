@@ -54,11 +54,9 @@ export const BackgroundColor = Extension.create({
                                         ) !== -1
                                     ) ? {
                                         color: match.groups.color
-                                    } : false
+                                    } : null
                                 }
                             }
-
-                            return false
                         },
 
                         renderHTML: (attrs) => {
@@ -73,9 +71,9 @@ export const BackgroundColor = Extension.create({
                                 return { 
                                     class: `bg-${attrs.backgroundColor.color}`
                                 }
+                            } else if (attrs.backgroundColor) {
+                                return { style: `backgroundColor: ${attrs.backgroundColor}` }
                             }
-
-                            return { style: `backgroundColor: ${attrs.backgroundColor}` }
                         }
                     }
                 }
@@ -97,7 +95,7 @@ export const BackgroundColor = Extension.create({
                         shade === undefined
                         && this.options.unshaded_colors.indexOf(color) === -1
                     )
-                ) ? false : chain().setMark(
+                ) ? null : chain().setMark(
                     'textClass', { 
                         backgroundColor: { 
                             color: color, 

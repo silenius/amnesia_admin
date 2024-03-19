@@ -17,7 +17,7 @@ export const TextColor = Extension.create({
             unshaded_colors: unshaded_colors,
             shaded_colors: shaded_colors,
             shades: shades,
-            class_re: /^text-(?<color>[a-z]+)(?:-(?<shade>\d{2,3}))?$/
+            class_re: /^(md:)?text-(?<color>[a-z]+)(?:-(?<shade>\d{2,3}))?$/
         }
     },
 
@@ -54,14 +54,13 @@ export const TextColor = Extension.create({
                                         ) !== -1
                                     ) ? {
                                         color: match.groups.color
-                                    } : false
+                                    } : null
                                 }
                             }
-
-                            return false
                         },
 
                         renderHTML: (attrs) => {
+                            console.log(attrs)
                             if (attrs.textColor?.color) {
 
                                 if (attrs.textColor.shade) {
@@ -73,9 +72,9 @@ export const TextColor = Extension.create({
                                 return { 
                                     class: `text-${attrs.textColor.color}`
                                 }
+                            } else if (attrs.textColor) {
+                                return { style: `color: ${attrs.textColor}` }
                             }
-
-                            return { style: `color: ${attrs.textColor}` }
                         }
                     }
                 }
@@ -97,7 +96,7 @@ export const TextColor = Extension.create({
                         shade === undefined
                         && this.options.unshaded_colors.indexOf(color) === -1
                     )
-                ) ? false : chain().setMark(
+                ) ? null : chain().setMark(
                     'textClass', { 
                         textColor: { 
                             color: color, 
