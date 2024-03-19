@@ -504,13 +504,16 @@ const editor = useEditor({
   content: props.content,
   editable: props.editable,
   injectCSS: props.injectCSS,
-  onUpdate: () => {
-    console.debug('===>>> Editor update: ', editor.value)
-    emit('update:content', editor.value.getHTML())
+  onUpdate: ({editor: e, transaction: tr}) => {
+    console.debug('===>>> Editor update: ', e)
+    emit('update:content', e.getHTML())
   },
-  onSelectionUpdate: () => {
-    emit('update:selection', editor)
-    console.debug('===>>> Editor selection update: ', editor.value)
+  onSelectionUpdate: ({editor: e, transaction: tr}) => {
+    emit('update:selection', e)
+    console.debug('===>>> Editor selection update, editor: ', e, ' transaction: ', tr)
+  },
+  onTransaction: (p) => {
+    console.debug('===>>> Editor transaction: ', p)
   },
   extensions: [
     StarterKit.configure({
