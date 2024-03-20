@@ -90,12 +90,12 @@ export const BackgroundColor = Extension.create({
                     p.tr.selection.node?.type.isText === false
                         || (
                             shade !== undefined
-                                && (this.options.shaded_colors.has(color) === -1
-                                    || this.options.shades.has(parseInt(shade)) === -1)
+                                && (!this.options.shaded_colors.has(color)
+                                    || !this.options.shades.has(parseInt(shade)))
                         )
                         || (
                             shade === undefined
-                                && this.options.unshaded_colors.has(color) === -1
+                                && !this.options.unshaded_colors.has(color)
                         )
                 ) {
                     return null
