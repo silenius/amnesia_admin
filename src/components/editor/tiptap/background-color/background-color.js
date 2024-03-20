@@ -8,6 +8,8 @@ import {
     shades
 } from '../colors'
 
+const is_bg = new Set(['bg', 'sm:bg', 'md:bg', 'lg:bg', 'xl:bg', '2xl:bg'])
+
 export const BackgroundColor = Extension.create({
     name: 'backgroundColor',
 
@@ -17,7 +19,6 @@ export const BackgroundColor = Extension.create({
             unshaded_colors: unshaded_colors,
             shaded_colors: shaded_colors,
             shades: shades,
-            class_re: /^bg-(?<color>[a-z]+)(?:-(?<shade>\d{2,3}))?$/
         }
     },
 
@@ -34,43 +35,44 @@ export const BackgroundColor = Extension.create({
                                 return elem.style.backgroundColor
                             } 
 
+                            const matches = []
+
                             for (const name of elem.classList) {
-                                const match = name.match(this.options.class_re)
+                                const result = name.split('-')
 
-                                if (match !== null) {
-                                    // Do we have bg-xxx or bg-xxx-yyy ?
-                                    return (
-                                        match.groups.shade !== undefined
-                                        && this.options.shaded_colors.indexOf(
-                                            match.groups.color) !== -1
-                                        && this.options.shades.indexOf(
-                                            parseInt(match.groups.shade)) !== -1
-                                    ) ? {
-                                        color: match.groups.color,
-                                        shade: match.groups.shade
-                                    } : (
-                                        this.options.unshaded_colors.indexOf(
-                                            match.groups.color
-                                        ) !== -1
-                                    ) ? {
-                                        color: match.groups.color
-                                    } : null
-                                }
-                            }
-                        },
-
-                        renderHTML: (attrs) => {
-                            if (attrs.backgroundColor?.color) {
-
-                                if (attrs.backgroundColor.shade) {
-                                    return { 
-                                        class: `bg-${attrs.backgroundColor.color}-${attrs.backgroundColor.shade}` 
+                                if (result.length > 1 && is_bg.has(result[0])) {
+                                    // bg-black, bg-transparent, md:bg-white
+                                    if (result.length == 2 && unshaded_colors.has(result[1])) {
+                                        matches.push({
+                                            breakpoint: result[0],
+                                            color: result[1]
+                                        })
+                                        // bg-red-500, md:bg-green-800, etc 
+                                    } else if(
+                                        result.length == 3 
+                                            && shaded_colors.has(result[1]) 
+                                            && shades.has(parseInt(result[2]))
+                                    ) {
+                                        matches.push({
+                                            breakpoint: result[0],
+                                            color: result[1],
+                                            shade: result[2]
+                                        })
                                     }
                                 }
 
-                                return { 
-                                    class: `bg-${attrs.backgroundColor.color}`
+                            }
+
+                            return matches.length ? matches : null
+
+                        },
+
+                        renderHTML: (attrs) => {
+                            if (Array.isArray(attrs.backgroundColor)) {
+                                return {
+                                    class: `${attrs.backgroundColor.map((x) => Object.values(x).join('-')).join(' ')}`
                                 }
+
                             } else if (attrs.backgroundColor) {
                                 return { style: `backgroundColor: ${attrs.backgroundColor}` }
                             }
@@ -83,29 +85,50 @@ export const BackgroundColor = Extension.create({
 
     addCommands() {
         return {
-            setBackgroundColor: (color, shade) => ({ chain, tr }) => {
-                return ( 
-                    tr.selection.node?.type.isText === false
-                    || (
-                        shade !== undefined
-                        && (this.options.shaded_colors.indexOf(color) === -1
-                        || this.options.shades.indexOf(parseInt(shade)) === -1)
-                    )
-                    || (
-                        shade === undefined
-                        && this.options.unshaded_colors.indexOf(color) === -1
-                    )
-                ) ? null : chain().setMark(
-                    'textClass', { 
-                        backgroundColor: { 
-                            color: color, 
-                            shade: shade 
-                        }
+            setBackgroundColor: (color, shade, breakpoint) => (p) => {
+                if ( 
+                    p.tr.selection.node?.type.isText === false
+                        || (
+                            shade !== undefined
+                                && (this.options.shaded_colors.has(color) === -1
+                                    || this.options.shades.has(parseInt(shade)) === -1)
+                        )
+                        || (
+                            shade === undefined
+                                && this.options.unshaded_colors.has(color) === -1
+                        )
+                ) {
+                    return null
+                }
+
+                if (!breakpoint) {
+                    breakpoint = 'text'
+                }
+
+                const oldAttrs = getAttributes(p.state, 'textClass').backgroundColor
+                const newAttrs = {
+                    breakpoint: breakpoint,
+                    color: color, 
+                    shade: shade 
+                }
+
+                let mark
+
+                if (Array.isArray(oldAttrs)) {
+                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    mark.push(newAttrs)
+                } else {
+                    mark = [newAttrs]
+                }
+
+                return p.chain().setMark(
+                    'textClass', {
+                        backgroundColor: mark
                     }
-                ).run() 
+                ).run()
+
             },
+
         }
     },
-
-
 })
