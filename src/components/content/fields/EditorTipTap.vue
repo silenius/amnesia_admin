@@ -545,10 +545,10 @@ const editor = useEditor({
       types: ['textClass', 'paragraph']
     }),
     TextColor.configure({
-      types: ['textClass', 'textStyle' ]
+      types: ['textClass', 'textStyle']
     }),
     BackgroundColor.configure({
-      types: ['textClass']
+      types: ['textClass', 'textStyle']
     }),
     Table,
     TableHeader,

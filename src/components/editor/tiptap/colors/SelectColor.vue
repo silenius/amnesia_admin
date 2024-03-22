@@ -39,9 +39,9 @@ import {
 } from '@headlessui/vue'
 
 const props = defineProps({
-  unshaded_colors: Array,
-  shaded_colors: Array,
-  shades: Array,
+  unshaded_colors: Set,
+  shaded_colors: Set,
+  shades: Set,
   icon: {
     type: String,
     default: 'fa-solid fa-paintbrush'

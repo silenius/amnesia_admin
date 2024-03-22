@@ -71,7 +71,7 @@ export const TextColor = Extension.create({
                         renderHTML: (attrs) => {
                             if (Array.isArray(attrs.textColor)) {
                                 return {
-                                    class: `${attrs.textColor.map((x) => Object.values(x).join('-')).join(' ')}`
+                                    class: `${attrs.textColor.map((x) => Object.values(x).filter((y) => y !== undefined).join('-')).join(' ')}`
                                 }
                             } else if (attrs.textColor) {
                                 return { style: `color: ${attrs.textColor}` }
@@ -104,7 +104,7 @@ export const TextColor = Extension.create({
                 if (!breakpoint) {
                     breakpoint = 'text'
                 }
-
+                
                 const oldAttrs = getAttributes(p.state, 'textClass').textColor
                 const newAttrs = {
                     breakpoint: breakpoint,

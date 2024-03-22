@@ -1,5 +1,6 @@
 import {
-    Extension
+    Extension,
+    getAttributes
 } from '@tiptap/core'
 
 import {
@@ -68,13 +69,13 @@ export const BackgroundColor = Extension.create({
                         },
 
                         renderHTML: (attrs) => {
+                            console.log('ATTRS: ', attrs)
                             if (Array.isArray(attrs.backgroundColor)) {
                                 return {
-                                    class: `${attrs.backgroundColor.map((x) => Object.values(x).join('-')).join(' ')}`
+                                    class: `${attrs.backgroundColor.map((x) => Object.values(x).filter((y) => y !== undefined).join('-')).join(' ')}`
                                 }
-
                             } else if (attrs.backgroundColor) {
-                                return { style: `backgroundColor: ${attrs.backgroundColor}` }
+                                return { style: `background-color: ${attrs.backgroundColor}` }
                             }
                         }
                     }
@@ -102,7 +103,7 @@ export const BackgroundColor = Extension.create({
                 }
 
                 if (!breakpoint) {
-                    breakpoint = 'text'
+                    breakpoint = 'bg'
                 }
 
                 const oldAttrs = getAttributes(p.state, 'textClass').backgroundColor
