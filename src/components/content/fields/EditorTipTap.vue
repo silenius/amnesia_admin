@@ -256,6 +256,7 @@
 
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
+        v-if="!editor.state.selection.empty"
         :shaded_colors="shaded_colors"
         :unshaded_colors="unshaded_colors"
         :shades="shades"
@@ -264,6 +265,7 @@
 
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setBackgroundColor(color, variant).run()"
+        v-if="!editor.state.selection.empty"
         :shaded_colors="shaded_colors"
         :unshaded_colors="unshaded_colors"
         :shades="shades"
@@ -301,6 +303,7 @@ import { Float } from '@/components/editor/tiptap/float-extension.js'
 import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
 import BackgroundColor from '@/components/editor/tiptap/background-color'
+import Padding from '@/components/editor/tiptap/padding'
 import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
 import { useEditorStore } from '@/stores/editor'
 
@@ -548,6 +551,9 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     BackgroundColor.configure({
+      types: ['textClass', 'textStyle']
+    }),
+    Padding.configure({
       types: ['textClass', 'textStyle']
     }),
     Table,

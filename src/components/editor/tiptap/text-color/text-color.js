@@ -126,7 +126,6 @@ export const TextColor = Extension.create({
                         textColor: mark
                     }
                 ).run()
-
             },
 
         }

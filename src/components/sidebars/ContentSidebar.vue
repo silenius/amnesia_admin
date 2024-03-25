@@ -9,8 +9,8 @@
 
 
     CLASS: {{ ed.getAttributes(TextClass) }}
-    {{ ed.getAttributes(TextAlign) }}
-    {{ ed.getAttributes(TextStyle) }}
+    ALIGN: {{ ed.getAttributes(TextAlign) }}
+    STYLE: {{ ed.getAttributes(TextStyle) }}
     PARAGRAPH: {{ ed.getAttributes('paragraph') }}
     IMAGE: {{ ed.getAttributes('image') }}
     BOLD: {{ ed.getAttributes('bold') }}

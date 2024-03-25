@@ -23,7 +23,6 @@ export const TextClass = Mark.create({
     },
 
     renderHTML({ HTMLAttributes }) {
-        console.log('TEXT CLASS: ', HTMLAttributes)
         return ['span', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
     },
 
