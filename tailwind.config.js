@@ -12,11 +12,12 @@ module.exports = {
   ],
   safelist: [
     {
-      pattern: /(h|w)-\d+/
+      pattern: /(h|w|px|py|pt|pb|pl|pr)-\d+/,
+      variants: ['hover', 'sm', 'md', 'lg', 'xl', '2xl']
     },
     {
       pattern: /(text|bg|outline)-/,
-      variants: ['hover']
+      variants: ['hover', 'sm', 'md', 'lg', 'xl', '2xl']
     }
   ]
 }

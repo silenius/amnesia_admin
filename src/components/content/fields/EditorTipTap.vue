@@ -509,14 +509,16 @@ const editor = useEditor({
   editable: props.editable,
   injectCSS: props.injectCSS,
   onUpdate: ({editor: e, transaction: tr}) => {
-    console.debug('===>>> Editor update: ', e)
+    //console.debug('===>>> Editor update: ', e)
     emit('update:content', e.getHTML())
   },
   onSelectionUpdate: ({editor: e, transaction: tr}) => {
     emit('update:selection', e)
+    /*
     console.debug(
       '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
     )
+    */
   },
   /*
   onTransaction: (p) => {
@@ -554,7 +556,7 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     Padding.configure({
-      types: ['textClass', 'textStyle']
+      types: ['image', 'textClass', 'textStyle']
     }),
     Table,
     TableHeader,

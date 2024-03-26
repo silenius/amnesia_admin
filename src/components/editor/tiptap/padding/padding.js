@@ -47,7 +47,10 @@ export const Padding = Extension.create({
     addOptions() {
         return {
             types: [],
-            levels: new Set([0, 0.5, 1, 1.5, 2, 3, 3.5, 4])
+            levels: new Set([
+                0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
+                14, 16, 20, 24, 28, 32
+            ])
         }
     },
 
@@ -85,7 +88,6 @@ export const Padding = Extension.create({
                         default: null,
                         parseHTML: (elem) => _parse('pl', elem, this.options.levels),
                         renderHTML: (attrs) => _render(attrs, 'pl')
-
                     },
                 }
             }
@@ -110,9 +112,17 @@ export const Padding = Extension.create({
                     mark = [newAttrs]
                 }
 
-                return p.chain().setMark(
-                    'textClass', Object.fromEntries([[`${side}`, mark]])
-                ).run()
+                if (p.state.selection.node) {
+                    return this.options.types.every(
+                        type => p.commands.updateAttributes(
+                            type, Object.fromEntries([[`${side}`, mark]])
+                        )
+                    )
+                } else {
+                    return p.chain().setMark(
+                        'textClass', Object.fromEntries([[`${side}`, mark]])
+                    ).run()
+                }
             }
         }
     }

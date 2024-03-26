@@ -42,6 +42,8 @@
       </div>
     </div>
 
+    {{ node.attrs }}
+
   </node-view-wrapper>
 </template>
 
