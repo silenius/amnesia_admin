@@ -9,7 +9,11 @@ import {
     shades
 } from '../colors'
 
-const is_bg = new Set(['bg', 'sm:bg', 'md:bg', 'lg:bg', 'xl:bg', '2xl:bg'])
+import {
+    generate_responsive_cls
+} from '../utils'
+
+const is_bg = generate_responsive_cls('bg')
 
 export const BackgroundColor = Extension.create({
     name: 'backgroundColor',
@@ -42,10 +46,13 @@ export const BackgroundColor = Extension.create({
                                 const result = name.split('-')
 
                                 if (result.length > 1 && is_bg.has(result[0])) {
+                                    // bg or md:bg, lg:bg ?
+                                    const [part1, part2] = result[0].split(':')
+                                    const breakpoint = part2 !== undefined ? part1 : null
                                     // bg-black, bg-transparent, md:bg-white
                                     if (result.length == 2 && unshaded_colors.has(result[1])) {
                                         matches.push({
-                                            breakpoint: result[0],
+                                            breakpoint: breakpoint,
                                             color: result[1]
                                         })
                                         // bg-red-500, md:bg-green-800, etc 
@@ -55,7 +62,7 @@ export const BackgroundColor = Extension.create({
                                             && shades.has(parseInt(result[2]))
                                     ) {
                                         matches.push({
-                                            breakpoint: result[0],
+                                            breakpoint: breakpoint,
                                             color: result[1],
                                             shade: result[2]
                                         })
@@ -69,10 +76,9 @@ export const BackgroundColor = Extension.create({
                         },
 
                         renderHTML: (attrs) => {
-                            console.log('ATTRS: ', attrs)
                             if (Array.isArray(attrs.backgroundColor)) {
                                 return {
-                                    class: `${attrs.backgroundColor.map((x) => Object.values(x).filter((y) => y !== undefined).join('-')).join(' ')}`
+                                    class: `${attrs.backgroundColor.map((x) => [!x.breakpoint ? 'bg' : `${x.breakpoint}:bg`, x.color, x.shade].filter(Boolean).join('-')).join(' ')}`
                                 }
                             } else if (attrs.backgroundColor) {
                                 return { style: `background-color: ${attrs.backgroundColor}` }
@@ -100,10 +106,6 @@ export const BackgroundColor = Extension.create({
                         )
                 ) {
                     return null
-                }
-
-                if (!breakpoint) {
-                    breakpoint = 'bg'
                 }
 
                 const oldAttrs = getAttributes(p.state, 'textClass').backgroundColor

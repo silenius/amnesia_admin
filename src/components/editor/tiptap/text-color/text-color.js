@@ -9,7 +9,11 @@ import {
     shades
 } from '../colors'
 
-const is_text = new Set(['text', 'sm:text', 'md:text', 'lg:text', 'xl:text', '2xl:text'])
+import {
+    generate_responsive_cls
+} from '../utils'
+
+const is_text = generate_responsive_cls('text')
 
 export const TextColor = Extension.create({
     name: 'textColor',
@@ -42,10 +46,14 @@ export const TextColor = Extension.create({
                                 const result = name.split('-')
 
                                 if (result.length > 1 && is_text.has(result[0])) {
+                                    // text or md:text, lg:text ?
+                                    const [part1, part2] = result[0].split(':')
+                                    const breakpoint = part2 !== undefined ? part1 : null
+
                                     if (result.length == 2 && unshaded_colors.has(result[1])) {
                                         // text-black, text-transparent, md:text-white
                                         matches.push({
-                                            breakpoint: result[0],
+                                            breakpoint: breakpoint,
                                             color: result[1]
                                         })
                                     } else if(
@@ -55,7 +63,7 @@ export const TextColor = Extension.create({
                                             && shades.has(parseInt(result[2]))
                                     ) {
                                         matches.push({
-                                            breakpoint: result[0],
+                                            breakpoint: breakpoint,
                                             color: result[1],
                                             shade: result[2]
                                         })
@@ -71,7 +79,7 @@ export const TextColor = Extension.create({
                         renderHTML: (attrs) => {
                             if (Array.isArray(attrs.textColor)) {
                                 return {
-                                    class: `${attrs.textColor.map((x) => Object.values(x).filter((y) => y !== undefined).join('-')).join(' ')}`
+                                    class: `${attrs.textColor.map((x) => [!x.breakpoint ? 'text' : `${x.breakpoint}:text`, x.color, x.shade].filter(Boolean).join('-')).join(' ')}`
                                 }
                             } else if (attrs.textColor) {
                                 return { style: `color: ${attrs.textColor}` }
@@ -101,10 +109,6 @@ export const TextColor = Extension.create({
                     return null
                 }
 
-                if (!breakpoint) {
-                    breakpoint = 'text'
-                }
-                
                 const oldAttrs = getAttributes(p.state, 'textClass').textColor
                 const newAttrs = {
                     breakpoint: breakpoint,

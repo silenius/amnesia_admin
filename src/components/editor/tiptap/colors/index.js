@@ -1,4 +1,6 @@
-export const unshaded_colors = new Set(['white', 'black', 'transparent', 'current', 'inherit'])
+export const unshaded_colors = new Set([
+    'white', 'black', 'transparent', 'current', 'inherit'
+])
 
 export const shaded_colors = new Set([
     'slate', 'gray', 'zinc', 'neutral', 'stone', 'red', 'orange', 'amber',

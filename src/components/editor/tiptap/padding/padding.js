@@ -3,25 +3,28 @@ import {
     getAttributes
 } from '@tiptap/core'
 
-const _is_padding = (side) => new Set([
-    `${side}`,
-    `sm:${side}`,
-    `md:${side}`,
-    `lg:${side}`,
-    `xl:${side}`,
-    `2xl:${side}`,
-])
+import {
+    generate_responsive_cls
+} from '../utils'
 
 const _parse = (side, elem, levels) => {
-    const is_padding = _is_padding(side)
+    const is_padding = generate_responsive_cls(side)
     const matches = []
 
     for (const name of elem.classList) {
         const result = name.split('-')
 
-        if (result.length == 2 && is_padding.has(result[0])) {
+        if (
+            result.length == 2 
+                && is_padding.has(result[0])
+                && levels.has(parseInt(result[1]))
+        ) {
+            // text or md:text, lg:text ?
+            const [part1, part2] = result[0].split(':')
+            const breakpoint = part2 !== undefined ? part1 : null
+
             matches.push({
-                breakpoint: result[0],
+                breakpoint: breakpoint,
                 level: result[1]
             })
         }
@@ -33,12 +36,10 @@ const _parse = (side, elem, levels) => {
 const _render = (attrs, side) => {
     if (Array.isArray(attrs[side])) {
         return {
-            class: `${attrs[side].map((x) => Object.values(x).join('-')).join(' ')}`
+            class: `${attrs[side].map((x) => [!x.breakpoint ? side : `${x.breakpoint}:${side}`, x.level].filter(Boolean).join('-')).join(' ')}`
         }
     }
-
 }
-
 
 export const Padding = Extension.create({
     name: 'padding',
@@ -84,6 +85,7 @@ export const Padding = Extension.create({
                         default: null,
                         parseHTML: (elem) => _parse('pl', elem, this.options.levels),
                         renderHTML: (attrs) => _render(attrs, 'pl')
+
                     },
                 }
             }
@@ -93,6 +95,24 @@ export const Padding = Extension.create({
     addCommands() {
         return {
             setPadding: (side, level, breakpoint) => (p) => {
+                const oldAttrs = getAttributes(p.state, 'textClass')[side]
+                const newAttrs = {
+                    breakpoint: breakpoint,
+                    level: level
+                }
+
+                let mark
+
+                if (Array.isArray(oldAttrs)) {
+                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    mark.push(newAttrs)
+                } else {
+                    mark = [newAttrs]
+                }
+
+                return p.chain().setMark(
+                    'textClass', Object.fromEntries([[`${side}`, mark]])
+                ).run()
             }
         }
     }
