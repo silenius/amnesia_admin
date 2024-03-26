@@ -1,4 +1,4 @@
-export const reponsive_breakpoints = new Set([
+export const responsive_breakpoints = new Set([
     'sm', 'md', 'lg', 'xl', '2xl'
 ])
 
