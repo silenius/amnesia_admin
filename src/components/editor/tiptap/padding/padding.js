@@ -7,6 +7,10 @@ import {
     generate_responsive_cls
 } from '../utils'
 
+import {
+    render_padding_attrs
+} from './utils'
+
 const _parse = (side, elem, levels) => {
     const is_padding = generate_responsive_cls(side)
     const matches = []
@@ -34,11 +38,7 @@ const _parse = (side, elem, levels) => {
 }
 
 const _render = (attrs, side) => {
-    if (Array.isArray(attrs[side])) {
-        return {
-            class: `${attrs[side].map((x) => [!x.breakpoint ? side : `${x.breakpoint}:${side}`, x.level].filter(Boolean).join('-')).join(' ')}`
-        }
-    }
+    return render_padding_attrs(attrs, side)
 }
 
 export const Padding = Extension.create({

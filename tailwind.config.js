@@ -10,6 +10,7 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
   ],
+    /*
   safelist: [
     {
       pattern: /(h|w|px|py|pt|pb|pl|pr)-\d+/,
@@ -20,4 +21,5 @@ module.exports = {
       variants: ['hover', 'sm', 'md', 'lg', 'xl', '2xl']
     }
   ]
+    */
 }

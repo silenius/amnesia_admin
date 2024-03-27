@@ -37,7 +37,6 @@ const doEdit = async (content) => {
 </script>
 
 <template>
-
   <div class="flex flex-row">
     <RouterView 
       @edit-content="(n) => doEdit(n)" 

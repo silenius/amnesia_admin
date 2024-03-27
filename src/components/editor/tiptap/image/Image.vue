@@ -30,7 +30,7 @@
       </div>
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
-        class="rounded-lg" :class="img_cls" />
+        class="rounded-lg" :class="[img_cls, padding_cls]" />
       <!--
       <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       -->
@@ -51,6 +51,7 @@
 import { watch, ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { backend_url } from '@/composables/fetch.js';
+import { render_padding_attrs } from '../padding/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -70,6 +71,20 @@ const img_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&
     editable.value,
 }))
+
+const padding_cls = computed(() => {
+  const paddings = []
+
+  for (const padding of ['px', 'py', 'pt', 'pr', 'pb', 'pl']) {
+    const cls = render_padding_attrs(props.node.attrs, padding)?.class
+  
+    if (cls) {
+      paddings.push(cls)
+    }
+  }
+
+  return paddings
+})
 
 const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'
 const float_cls = (dir) => ({
