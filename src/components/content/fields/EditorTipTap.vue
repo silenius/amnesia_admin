@@ -304,6 +304,7 @@ import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
 import BackgroundColor from '@/components/editor/tiptap/background-color'
 import Padding from '@/components/editor/tiptap/padding'
+import Margin from '@/components/editor/tiptap/margin'
 import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
 import { useEditorStore } from '@/stores/editor'
 
@@ -556,6 +557,9 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     Padding.configure({
+      types: ['image', 'textClass', 'textStyle']
+    }),
+    Margin.configure({
       types: ['image', 'textClass', 'textStyle']
     }),
     Table,

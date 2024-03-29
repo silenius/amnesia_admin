@@ -41,9 +41,6 @@
         <span :class="resize_cls" data-resize="br" class="cursor-nwse-resize -bottom-1 -right-1" />
       </div>
     </div>
-
-    {{ node.attrs }}
-
   </node-view-wrapper>
 </template>
 
@@ -103,7 +100,7 @@ const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
   cursorY.value = e.clientY
-
+  
   document.addEventListener('mousemove', startResizeMove)
   document.addEventListener('mouseup', stopResize)
 }
@@ -134,8 +131,8 @@ const startResizeMove = (e) => {
   cursorY.value = clientY
 
   const new_size = {
-    width: img.value.width,
-    height: img.value.height
+    width: img.value.clientWidth,
+    height: img.value.clientHeight
   }
 
   if (dirs.x == 'left') {

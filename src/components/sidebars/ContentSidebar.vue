@@ -1,16 +1,16 @@
 <template>
-  <div v-if="ed" class="p-4 bg-gray-700 min-h-screen text-gray-200 flex flex-col">
+  <div v-if="ed" class="p-2 bg-gray-700 min-h-screen text-gray-200 flex flex-col">
     <section name="padding" v-if="ext_padding">
       <Disclosure>
         <DisclosureButton
           class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
         >
           <span>
-            <span class="font-bold pr-2">Padding</span>
-            <span class="text-xs">utilities for controlling an element's padding</span>.
+            <span class="font-bold">Padding</span>
           </span>
         </DisclosureButton>
-        <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
+        <DisclosurePanel class="text-sm">
+          <span>utilities for controlling an element's padding</span>.
           <SelectPadding 
             v-if="ext_padding" :extension="ext_padding" :tr="tr" 
             @select-padding="({side, level}) => ed.chain().setPadding(side, level).run()"
