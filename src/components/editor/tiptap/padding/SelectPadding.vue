@@ -1,14 +1,14 @@
 <template>
-  <div class="grid grid-rows-3">
+  <div class="grid grid-rows-3 relative justify-items-center items-center">
     <Listbox as="div">
       <ListboxButton>top</ListboxButton>
-      <ListboxOptions>
+      <ListboxOptions class="absolute max-h-24 px-4 bg-white overflow-scroll z-10">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
           <span>{{ level }}</span>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
-    <div class="grid grid-cols-3">
+    <div class="grid gap-2 grid-cols-3 justify-items-center items-center">
       <Listbox as="div">
         <ListboxButton>left</ListboxButton>
         <ListboxOptions>
