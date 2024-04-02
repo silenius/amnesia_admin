@@ -97,7 +97,9 @@ export const Margin = Extension.create({
     addCommands() {
         return {
             setMargin: (side, level, breakpoint) => (p) => {
-                const oldAttrs = getAttributes(p.state, 'textClass')[side]
+                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
+
+                const oldAttrs = getAttributes(p.state, type)[side]
                 const newAttrs = {
                     breakpoint: breakpoint,
                     level: level

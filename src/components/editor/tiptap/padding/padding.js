@@ -97,7 +97,9 @@ export const Padding = Extension.create({
     addCommands() {
         return {
             setPadding: (side, level, breakpoint) => (p) => {
-                const oldAttrs = getAttributes(p.state, 'textClass')[side]
+                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
+
+                const oldAttrs = getAttributes(p.state, type)[side]
                 const newAttrs = {
                     breakpoint: breakpoint,
                     level: level
@@ -123,6 +125,10 @@ export const Padding = Extension.create({
                         'textClass', Object.fromEntries([[`${side}`, mark]])
                     ).run()
                 }
+            },
+
+            removePadding: (side, breakpoint) => (p) => {
+                // TODO
             }
         }
     }

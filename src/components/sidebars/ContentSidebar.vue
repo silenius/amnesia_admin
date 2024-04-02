@@ -1,39 +1,36 @@
 <template>
-  <div v-if="ed" class="p-2 bg-gray-700 min-h-screen text-gray-200 flex flex-col">
+  <div v-if="ed" class="p-2 bg-gray-700 fixed right-0 max-w-64 min-h-screen text-gray-200 flex flex-col">
+
+    <!-- PADDING -->
+
     <section name="padding" v-if="ext_padding">
-      <Disclosure>
+      <Disclosure v-slot="{ open }">
         <DisclosureButton
-          class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
+          class="flex w-full gap-4 items-center justify-between rounded-lg
+          bg-gray-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
         >
           <span>
             <span class="font-bold">Padding</span>
           </span>
+
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel class="text-sm">
-          <span>utilities for controlling an element's padding</span>.
+          <div class="italic my-4">Utilities for controlling an element's padding.</div>
           <SelectPadding 
-            v-if="ext_padding" :extension="ext_padding" :tr="tr" 
-            @select-padding="({side, level}) => ed.chain().setPadding(side, level).run()"
+            v-if="ext_padding" 
+            :extension="ext_padding" 
+            :editor="ed"
+            :tr="tr" 
+            @select-padding="({side, level, breakpoint}) => ed.chain().setPadding(side, level, breakpoint).run()"
           />
         </DisclosurePanel>
       </Disclosure>
 
+      <!-- MARGIN -->
+
     </section>
-
-
-    <!--
-CLASS: {{ ed.getAttributes(TextClass) }}
-ALIGN: {{ ed.getAttributes(TextAlign) }}
-STYLE: {{ ed.getAttributes(TextStyle) }}
-PARAGRAPH: {{ ed.getAttributes('paragraph') }}
-IMAGE: {{ ed.getAttributes('image') }}
-BOLD: {{ ed.getAttributes('bold') }}
-{{ ed.isActive('link') }}
-{{ ed.isActive('image') }}
-{{ ed.isActive('paragraph') }}
-{{ ed.isActive('textClass') }}
-{{ ed.isActive({'fontSize': '2xl'}) }}
--->
 
   </div>
 </template>
@@ -55,6 +52,7 @@ const { getEditor } = useEditorStore()
 const ed = getEditor('current')
 
 const ext_padding = ref()
+const ext_margin = ref()
 
 const tr = ref()
 
@@ -62,9 +60,13 @@ watch(ed, () => {
   ext_padding.value = ed.value.extensionManager.extensions.find(
     ext => ext.name == 'padding'
   ),
+  ext_margin.value = ed.value.extensionManager.extensions.find(
+    ext => ext.name == 'margin'
+  ),
   ed.value.on(
-    'selectionUpdate', ({editor, transaction}) => {
+    'selectionUpdate', ({ editor, transaction }) => {
       tr.value = transaction
+      console.log('EDITOR ', editor)
       //editor.commands.updateAttributes('paragraph', {'fontSize': '6xl'})
     })
 })

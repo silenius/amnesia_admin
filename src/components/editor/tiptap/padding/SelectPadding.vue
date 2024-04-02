@@ -1,4 +1,6 @@
 <template>
+  <SelectBreakpoint @select-breakpoint="(value) => breakpoint = value "/>
+  
   <div class="grid grid-rows-3 relative justify-items-center items-center">
 
     <!-- pt: padding top -->
@@ -7,7 +9,7 @@
       <ListboxButton>top</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <span>{{ level }}</span>
+          <button>{{ level }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -51,27 +53,31 @@
     </Listbox>
   </div>
 
-  <!-- px: padding horizontal -->
+  <div class="flex gap-4">
 
-  <Listbox as="div" v-model="px">
-    <ListboxButton>horizontal</ListboxButton>
-    <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="level in levels" :key="level" :value="level" >
-        <span>{{ level }}</span>
-      </ListboxOption>
-    </ListboxOptions>
-  </Listbox>
+    <!-- px: padding horizontal -->
 
-  <!-- py: padding vertical -->
+    <Listbox as="div" v-model="px">
+      <ListboxButton>horizontal</ListboxButton>
+      <ListboxOptions :class="class_opts">
+        <ListboxOption v-for="level in levels" :key="level" :value="level" >
+          <span>{{ level }}</span>
+        </ListboxOption>
+      </ListboxOptions>
+    </Listbox>
 
-  <Listbox as="div" v-model="py">
-    <ListboxButton>vertical</ListboxButton>
-    <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="level in levels" :key="level" :value="level" >
-        <span>{{ level }}</span>
-      </ListboxOption>
-    </ListboxOptions>
-  </Listbox>
+    <!-- py: padding vertical -->
+
+    <Listbox as="div" v-model="py">
+      <ListboxButton>vertical</ListboxButton>
+      <ListboxOptions :class="class_opts">
+        <ListboxOption v-for="level in levels" :key="level" :value="level" >
+          <span>{{ level }}</span>
+        </ListboxOption>
+      </ListboxOptions>
+    </Listbox>
+
+  </div>
 
 </template>
 
@@ -79,6 +85,8 @@
 
 import { ref, computed, watch } from 'vue'
 import paddingSvg from "@/assets/padding.svg";
+
+import SelectBreakpoint from '../breakpoint/SelectBreakpoint.vue'
 
 import {
   Listbox,
@@ -89,14 +97,17 @@ import {
 
 const props = defineProps({
   extension: Object,
-  tr: Object
+  tr: Object,
+  editor: Object
 })
 
 const emits = defineEmits(['select-padding'])
 
 const class_opts = [
-  'absolute', 'max-h-24', 'px-4', 'bg-white', 'overflow-scroll', 'z-10'
+  'absolute', 'max-h-32', 'rounded', 'px-4', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
 ]
+
+const breakpoint = ref(null)
 
 const px = ref()
 const py = ref()
@@ -108,12 +119,29 @@ const pl = ref()
 
 const levels = computed(() => props.extension.options.levels)
 
-watch(px, () => emits('select-padding', {side: 'px', level: px.value}))
-watch(py, () => emits('select-padding', {side: 'py', level: py.value}))
+watch(() => props.tr, () => {
+  console.log('TR CHANGED')
+  console.log(props.tr)
+})
 
-watch(pt, () => emits('select-padding', {side: 'pt', level: pt.value}))
-watch(pr, () => emits('select-padding', {side: 'pr', level: pr.value}))
-watch(pb, () => emits('select-padding', {side: 'pb', level: pb.value}))
-watch(pl, () => emits('select-padding', {side: 'pl', level: pl.value}))
+watch(px, () => emits('select-padding', {
+  side: 'px', level: px.value, breakpoint: breakpoint.value
+}))
+watch(py, () => emits('select-padding', {
+  side: 'py', level: py.value, breakpoint: breakpoint.value
+}))
+
+watch(pt, () => emits('select-padding', {
+  side: 'pt', level: pt.value, breakpoint: breakpoint.value
+}))
+watch(pr, () => emits('select-padding', {
+  side: 'pr', level: pr.value, breakpoint: breakpoint.value
+}))
+watch(pb, () => emits('select-padding', {
+  side: 'pb', level: pb.value, breakpoint: breakpoint.value
+}))
+watch(pl, () => emits('select-padding', {
+  side: 'pl', level: pl.value, breakpoint: breakpoint.value
+}))
 
 </script>
