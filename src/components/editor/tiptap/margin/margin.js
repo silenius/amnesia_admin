@@ -21,7 +21,7 @@ const _parse = (side, elem, levels) => {
         if (
             result.length == 2 
                 && is_margin.has(result[0])
-                && levels.has(parseInt(result[1]))
+                && levels.has(parseFloat(result[1]))
         ) {
             // text or md:text, lg:text ?
             const [part1, part2] = result[0].split(':')

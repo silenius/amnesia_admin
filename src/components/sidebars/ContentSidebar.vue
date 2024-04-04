@@ -21,8 +21,8 @@
           <SelectPadding 
             v-if="ext_padding" 
             :extension="ext_padding" 
-            :editor="ed"
-            :tr="tr" 
+            :transaction="select_transaction"
+            :editor="select_editor"
             @select-padding="({side, level, breakpoint}) => ed.chain().setPadding(side, level, breakpoint).run()"
           />
         </DisclosurePanel>
@@ -54,7 +54,8 @@ const ed = getEditor('current')
 const ext_padding = ref()
 const ext_margin = ref()
 
-const tr = ref()
+const select_transaction = ref()
+const select_editor = ref()
 
 watch(ed, () => {
   ext_padding.value = ed.value.extensionManager.extensions.find(
@@ -65,9 +66,8 @@ watch(ed, () => {
   ),
   ed.value.on(
     'selectionUpdate', ({ editor, transaction }) => {
-      tr.value = transaction
-      console.log('EDITOR ', editor)
-      //editor.commands.updateAttributes('paragraph', {'fontSize': '6xl'})
+      select_transaction.value = transaction
+      select_editor.value = editor
     })
 })
 

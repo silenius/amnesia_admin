@@ -21,7 +21,7 @@ const _parse = (side, elem, levels) => {
         if (
             result.length == 2 
                 && is_padding.has(result[0])
-                && levels.has(parseInt(result[1]))
+                && levels.has(parseFloat(result[1]))
         ) {
             // text or md:text, lg:text ?
             const [part1, part2] = result[0].split(':')
@@ -97,24 +97,28 @@ export const Padding = Extension.create({
     addCommands() {
         return {
             setPadding: (side, level, breakpoint) => (p) => {
+                level = parseFloat(level)
+                console.debug('===>>> setPadding, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
                 const oldAttrs = getAttributes(p.state, type)[side]
-                const newAttrs = {
+                console.debug('===>>> setPadding, oldAttrs: ', oldAttrs)
+
+                const newAttrs = level > 0 ? {
                     breakpoint: breakpoint,
                     level: level
-                }
+                } : false
 
-                let mark
+                const mark = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
 
-                if (Array.isArray(oldAttrs)) {
-                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    mark.push(newAttrs)
-                } else {
-                    mark = [newAttrs]
-                }
+                mark.push(newAttrs)
+
+                console.debug('===>>> setPadding, mark: ', mark)
 
                 if (p.state.selection.node) {
+                    console.log('===>>> setPadding updateAttributes')
                     return this.options.types.every(
                         type => p.commands.updateAttributes(
                             type, Object.fromEntries([[`${side}`, mark]])

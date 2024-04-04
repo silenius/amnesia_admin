@@ -1,12 +1,12 @@
 <template>
-  <SelectBreakpoint @select-breakpoint="(value) => breakpoint = value "/>
+  <SelectBreakpoint @select-breakpoint="change_breakpoint" />
   
   <div class="grid grid-rows-3 relative justify-items-center items-center">
 
     <!-- pt: padding top -->
 
     <Listbox as="div" v-model="pt">
-      <ListboxButton>top</ListboxButton>
+      <ListboxButton>top: {{ pt }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
           <button>{{ level }}</button>
@@ -18,7 +18,7 @@
       <!-- pl: padding left -->
 
       <Listbox as="div" v-model="pl">
-        <ListboxButton>left</ListboxButton>
+        <ListboxButton>left: {{ pl }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
             <span>{{ level }}</span>
@@ -32,7 +32,7 @@
       <!-- pr: padding right -->
 
       <Listbox as="div" v-model="pr">
-        <ListboxButton>right</ListboxButton>
+        <ListboxButton>right: {{ pr }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
             <span>{{ level }}</span>
@@ -44,7 +44,7 @@
     <!-- pb: padding bottom -->
 
     <Listbox as="div" v-model="pb">
-      <ListboxButton>bottom</ListboxButton>
+      <ListboxButton>bottom: {{ pb }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
           <span>{{ level }}</span>
@@ -58,7 +58,7 @@
     <!-- px: padding horizontal -->
 
     <Listbox as="div" v-model="px">
-      <ListboxButton>horizontal</ListboxButton>
+      <ListboxButton>horizontal: {{ px }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
           <span>{{ level }}</span>
@@ -69,7 +69,7 @@
     <!-- py: padding vertical -->
 
     <Listbox as="div" v-model="py">
-      <ListboxButton>vertical</ListboxButton>
+      <ListboxButton>vertical: {{ py }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
           <span>{{ level }}</span>
@@ -97,7 +97,7 @@ import {
 
 const props = defineProps({
   extension: Object,
-  tr: Object,
+  transaction: Object,
   editor: Object
 })
 
@@ -109,39 +109,63 @@ const class_opts = [
 
 const breakpoint = ref(null)
 
-const px = ref()
-const py = ref()
-
-const pt = ref()
-const pr = ref()
-const pb = ref()
-const pl = ref()
-
 const levels = computed(() => props.extension.options.levels)
 
-watch(() => props.tr, () => {
-  console.log('TR CHANGED')
-  console.log(props.tr)
+const change_breakpoint = (value) => {
+  breakpoint.value = value
+}
+
+const attrs = computed(() => {
+  if (props.editor.isActive('image')) {
+    return props.editor.getAttributes('image')
+  } else {
+    return props.editor.getAttributes('textClass')
+  }
 })
 
-watch(px, () => emits('select-padding', {
-  side: 'px', level: px.value, breakpoint: breakpoint.value
-}))
-watch(py, () => emits('select-padding', {
-  side: 'py', level: py.value, breakpoint: breakpoint.value
-}))
+const get_side = (side) => {
+  if (Array.isArray(attrs.value[side])) {
+    const v = attrs.value[side].find((x) => x.breakpoint == breakpoint.value)
+    return v !== undefined ? v.level : 0
+  }
 
-watch(pt, () => emits('select-padding', {
-  side: 'pt', level: pt.value, breakpoint: breakpoint.value
-}))
-watch(pr, () => emits('select-padding', {
-  side: 'pr', level: pr.value, breakpoint: breakpoint.value
-}))
-watch(pb, () => emits('select-padding', {
-  side: 'pb', level: pb.value, breakpoint: breakpoint.value
-}))
-watch(pl, () => emits('select-padding', {
-  side: 'pl', level: pl.value, breakpoint: breakpoint.value
-}))
+  return 0
+}
+
+const set_side = (side, value) => emits('select-padding', {
+  side: side, 
+  level: parseFloat(value), 
+  breakpoint: breakpoint.value
+})
+
+const px = computed({
+  get() { return get_side('px') },
+  set(value) { return set_side('px', value) }
+})
+
+const py = computed({
+  get() { return get_side('py') },
+  set(value) { return set_side('py', value) }
+})
+
+const pt = computed({
+  get() { return get_side('pt') },
+  set(value) { return set_side('pt', value) }
+})
+
+const pr = computed({
+  get() { return get_side('pr') },
+  set(value) { return set_side('pr', value) }
+})
+
+const pb = computed({
+  get() { return get_side('pb') },
+  set(value) { return set_side('pb', value) }
+})
+
+const pl = computed({
+  get() { return get_side('pl') },
+  set(value) { return set_side('pl', value) }
+})
 
 </script>
