@@ -30,7 +30,7 @@
       </div>
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
-        class="rounded-lg" :class="[img_cls, padding_cls]" />
+        class="rounded-lg" :class="[img_cls, padding_cls, margin_cls]" />
       <!--
       <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
       -->
@@ -49,6 +49,7 @@ import { watch, ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { backend_url } from '@/composables/fetch.js';
 import { render_padding_attrs } from '../padding/utils'
+import { render_margin_attrs } from '../margin/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -81,6 +82,20 @@ const padding_cls = computed(() => {
   }
 
   return paddings
+})
+
+const margin_cls = computed(() => {
+  const margins = []
+
+  for (const margin of ['mx', 'my', 'mt', 'mr', 'mb', 'ml']) {
+    const cls = render_margin_attrs(props.node.attrs, margin)?.class
+  
+    if (cls) {
+      margins.push(cls)
+    }
+  }
+
+  return margins
 })
 
 const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'
