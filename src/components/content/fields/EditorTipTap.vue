@@ -336,13 +336,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'update:content'
+  'update:content',
+  'update:selection'
 ])
 
 class NotAnImage extends Error {
-    constructor(message) {
-        super(message)
-    }
+  constructor(message) {
+    super(message)
+  }
 }
 
 const modals = ref({
@@ -515,11 +516,10 @@ const editor = useEditor({
   },
   onSelectionUpdate: ({editor: e, transaction: tr}) => {
     emit('update:selection', e)
-    /*
+    setEditor('current', e)
     console.debug(
       '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
     )
-    */
   },
   /*
   onTransaction: (p) => {
@@ -543,8 +543,8 @@ const editor = useEditor({
     Float.configure({
       types: ['image', 'paragraph'],
     }),
-//    Flex,
-//    CustomText,
+    //    Flex,
+    //    CustomText,
     TextStyle,
     TextClass,
     FontSize.configure({
@@ -556,10 +556,10 @@ const editor = useEditor({
     BackgroundColor.configure({
       types: ['textClass', 'textStyle']
     }),
-    Padding.configure({
+    Margin.configure({
       types: ['image', 'textClass', 'textStyle']
     }),
-    Margin.configure({
+    Padding.configure({
       types: ['image', 'textClass', 'textStyle']
     }),
     Table,

@@ -1,6 +1,6 @@
 <template>
   <SelectBreakpoint @select-breakpoint="change_breakpoint" />
-  
+
   <div class="grid grid-rows-3 relative justify-items-center items-center">
 
     <!-- pt: padding top -->
@@ -9,7 +9,7 @@
       <ListboxButton>top: {{ pt }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <button>{{ level }}</button>
+          <button :class="class_opt">{{ level }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -21,7 +21,7 @@
         <ListboxButton>left: {{ pl }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
-            <span>{{ level }}</span>
+            <button :class="class_opt">{{ level }}</button>
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
@@ -35,7 +35,7 @@
         <ListboxButton>right: {{ pr }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
-            <span>{{ level }}</span>
+            <button :class="class_opt">{{ level }}</button>
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
@@ -47,13 +47,13 @@
       <ListboxButton>bottom: {{ pb }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <span>{{ level }}</span>
+          <button :class="class_opt">{{ level }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
   </div>
 
-  <div class="flex gap-4">
+  <div class="flex gap-4 justify-center">
 
     <!-- px: padding horizontal -->
 
@@ -61,7 +61,7 @@
       <ListboxButton>horizontal: {{ px }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <span>{{ level }}</span>
+          <button :class="class_opt">{{ level }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -72,7 +72,7 @@
       <ListboxButton>vertical: {{ py }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <span>{{ level }}</span>
+          <button :class="class_opt">{{ level }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -104,7 +104,10 @@ const props = defineProps({
 const emits = defineEmits(['select-padding'])
 
 const class_opts = [
-  'absolute', 'max-h-32', 'rounded', 'px-4', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
+  'absolute', 'text-center', 'max-h-48', 'rounded', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
+]
+const class_opt = [
+  'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
 const breakpoint = ref(null)

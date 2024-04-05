@@ -7,5 +7,5 @@ export const useEditorStore = defineStore('editor', () => {
     const setEditor = (key, editor) => editors.value.set(key, editor)
     const getEditor = (key) => editors.value.get(key)
 
-    return { setEditor, getEditor }
+    return { setEditor, getEditor, editors }
 })
