@@ -62,7 +62,7 @@ export const Margin = Extension.create({
                     mx: {
                         default: null,
                         parseHTML: (elem) => _parse('mx', elem, this.options.levels),
-                        renderHTML: (attrs) =>  _render(attrs, 'mx')
+                        renderHTML: (attrs) => _render(attrs, 'mx')
                     },
                     my: {
                         default: null,
@@ -97,34 +97,41 @@ export const Margin = Extension.create({
     addCommands() {
         return {
             setMargin: (side, level, breakpoint) => (p) => {
+                level = parseFloat(level)
+                console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
+                // Get attributes for the side 
                 const oldAttrs = getAttributes(p.state, type)[side]
-                const newAttrs = {
-                    breakpoint: breakpoint,
-                    level: level
+                console.debug('===>>> setMargin, oldAttrs: ', oldAttrs)
+
+                // We set a new value for that side at some breakpoint, so
+                // remove old value
+                const mark = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (level > 0) {
+                    // New value
+                    mark.push({
+                        breakpoint: breakpoint,
+                        level: level
+                    })
                 }
 
-                let mark
-
-                if (Array.isArray(oldAttrs)) {
-                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    mark.push(newAttrs)
-                } else {
-                    mark = [newAttrs]
-                }
+                // New value
+                console.debug('===>>> setMargin, mark: ', mark)
 
                 if (p.state.selection.node) {
-                    return this.options.types.every(
-                        type => p.commands.updateAttributes(
-                            type, Object.fromEntries([[`${side}`, mark]])
-                        )
+                    return p.commands.updateAttributes(
+                        type, Object.fromEntries([[`${side}`, mark]])
                     )
                 } else {
                     return p.chain().setMark(
                         'textClass', Object.fromEntries([[`${side}`, mark]])
                     ).run()
                 }
+
             }
         }
     }

@@ -62,7 +62,7 @@ export const Padding = Extension.create({
                     px: {
                         default: null,
                         parseHTML: (elem) => _parse('px', elem, this.options.levels),
-                        renderHTML: (attrs) =>  _render(attrs, 'px')
+                        renderHTML: (attrs) => _render(attrs, 'px')
                     },
                     py: {
                         default: null,
@@ -101,28 +101,30 @@ export const Padding = Extension.create({
                 console.debug('===>>> setPadding, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
+                // Get attributes for the side 
                 const oldAttrs = getAttributes(p.state, type)[side]
                 console.debug('===>>> setPadding, oldAttrs: ', oldAttrs)
 
-                const newAttrs = level > 0 ? {
-                    breakpoint: breakpoint,
-                    level: level
-                } : false
-
+                // We set a new value for that side at some breakpoint, so
+                // remove old value
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                mark.push(newAttrs)
+                if (level > 0) {
+                    // New value
+                    mark.push({
+                        breakpoint: breakpoint,
+                        level: level
+                    })
+                }
 
+                // New value
                 console.debug('===>>> setPadding, mark: ', mark)
 
                 if (p.state.selection.node) {
-                    console.log('===>>> setPadding updateAttributes')
-                    return this.options.types.every(
-                        type => p.commands.updateAttributes(
-                            type, Object.fromEntries([[`${side}`, mark]])
-                        )
+                    return p.commands.updateAttributes(
+                        type, Object.fromEntries([[`${side}`, mark]])
                     )
                 } else {
                     return p.chain().setMark(
@@ -130,10 +132,6 @@ export const Padding = Extension.create({
                     ).run()
                 }
             },
-
-            removePadding: (side, breakpoint) => (p) => {
-                // TODO
-            }
         }
     }
 })
