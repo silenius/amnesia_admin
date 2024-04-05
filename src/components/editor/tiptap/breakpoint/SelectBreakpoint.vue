@@ -1,7 +1,7 @@
 <template>
-  <div class="flex w-full rounded-full border gap-1 justify-center">
+  <div class="flex w-full rounded-full border-slate-500 p-1 border gap-1 justify-center">
     <button @click="change_breakpoint(bp)" class="p-2" :class="[bp == selected
-      ? 'bg-white text-black rounded-full' : '']" v-for="bp in breakpoints">{{ bp }}</button>
+      ? 'bg-slate-100 text-slate-700 rounded-full' : '']" v-for="bp in breakpoints">{{ bp }}</button>
   </div>
 </template>
 
