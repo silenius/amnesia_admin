@@ -95,6 +95,10 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import {
+  parse_level
+}  from './utils'
+
 const props = defineProps({
   extension: Object,
   transaction: Object,
@@ -129,15 +133,15 @@ const attrs = computed(() => {
 const get_side = (side) => {
   if (Array.isArray(attrs.value[side])) {
     const v = attrs.value[side].find((x) => x.breakpoint == breakpoint.value)
-    return v !== undefined ? v.level : 0
+    return v !== undefined ? v.level : ''
   }
 
-  return 0
+  return ''
 }
 
 const set_side = (side, value) => emits('select-padding', {
   side: side, 
-  level: parseFloat(value), 
+  level: parse_level(value), 
   breakpoint: breakpoint.value
 })
 

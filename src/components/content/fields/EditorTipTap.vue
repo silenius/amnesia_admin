@@ -299,7 +299,7 @@ import FontSize from '@/components/editor/tiptap/fontsize'
 import TextClass from '@/components/editor/tiptap/text-class'
 import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 //import Flex from '@/components/editor/tiptap/flex-container/flex'
-import { Float } from '@/components/editor/tiptap/float-extension.js'
+import { Float } from '@/components/editor/tiptap/float-extension'
 import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import TextColor from '@/components/editor/tiptap/text-color'
 import BackgroundColor from '@/components/editor/tiptap/background-color'
@@ -541,7 +541,7 @@ const editor = useEditor({
       inline: true,
     }),
     Float.configure({
-      types: ['image', 'paragraph'],
+      types: ['image', 'textClass'],
     }),
     //    Flex,
     //    CustomText,

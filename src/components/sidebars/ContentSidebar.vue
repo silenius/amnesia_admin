@@ -45,6 +45,30 @@
       </Disclosure>
     </section>
 
+    <!-- FLOAT -->
+
+    <section name="float" :class="cls_section" v-if="ext_float">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Float</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for controlling the wrapping of content around an element.</div>
+          <SelectFloat
+            v-if="ext_float" 
+            :extension="ext_float" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-float="({value, breakpoint}) => select_editor.chain().setFloat(value, breakpoint).run()"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
+
+
   </div>
 </template>
 
@@ -60,11 +84,13 @@ import {
 
 import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
 import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
+import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
 
 const { getEditor, editors } = useEditorStore()
 
 const ext_padding = ref()
 const ext_margin = ref()
+const ext_float = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -89,6 +115,10 @@ watch(editors, () => {
 
     ext_margin.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'margin'
+    )
+
+    ext_float.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'float'
     )
 
     /*

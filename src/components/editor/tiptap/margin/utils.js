@@ -4,5 +4,9 @@ export const render_margin_attrs = (attrs, side) => {
             class: `${attrs[side].map((x) => [!x.breakpoint ? side : `${x.breakpoint}:${side}`, x.level].filter(Boolean).join('-')).join(' ')}`
         }
     }
+}
 
+export const parse_level = (value) => {
+    const level = parseFloat(value)
+    return isNaN(level) ? value : level
 }

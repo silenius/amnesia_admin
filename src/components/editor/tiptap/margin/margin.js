@@ -8,13 +8,9 @@ import {
 } from '../utils'
 
 import {
-    render_margin_attrs
+    render_margin_attrs,
+    parse_level
 } from './utils'
-
-const _parse_level = (value) => {
-    const level = parseFloat(value)
-    return isNaN(level) ? value : level
-}
 
 const _parse = (side, elem, levels) => {
     const is_margin = generate_responsive_cls(side)
@@ -22,22 +18,21 @@ const _parse = (side, elem, levels) => {
 
     for (const name of elem.classList) {
         const result = name.split('-')
-        const side = result[0]
-        const level = _parse_level(result[1])
 
-        if (
-            result.length == 2 
-                && is_margin.has(side)
-                && levels.has(level)
-        ) {
-            // text or md:text, lg:text ?
-            const [part1, part2] = side.split(':')
-            const breakpoint = part2 !== undefined ? part1 : null
+        if (result.length == 2) {
+            const side = result[0]
+            const level = parse_level(result[1])
 
-            matches.push({
-                breakpoint: breakpoint,
-                level: level
-            })
+            if (is_margin.has(side) && levels.has(level)) {
+                // text or md:text, lg:text ?
+                const [part1, part2] = side.split(':')
+                const breakpoint = part2 !== undefined ? part1 : null
+
+                matches.push({
+                    breakpoint: breakpoint,
+                    level: level
+                })
+            }
         }
     }
 
@@ -104,7 +99,7 @@ export const Margin = Extension.create({
     addCommands() {
         return {
             setMargin: (side, level, breakpoint) => (p) => {
-                level = _parse_level(level)
+                level = parse_level(level)
                 console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
