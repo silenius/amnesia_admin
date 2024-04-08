@@ -11,25 +11,32 @@ import {
     render_margin_attrs
 } from './utils'
 
+const _parse_level = (value) => {
+    const level = parseFloat(value)
+    return isNaN(level) ? value : level
+}
+
 const _parse = (side, elem, levels) => {
     const is_margin = generate_responsive_cls(side)
     const matches = []
 
     for (const name of elem.classList) {
         const result = name.split('-')
+        const side = result[0]
+        const level = _parse_level(result[1])
 
         if (
             result.length == 2 
-                && is_margin.has(result[0])
-                && levels.has(parseFloat(result[1]))
+                && is_margin.has(side)
+                && levels.has(level)
         ) {
             // text or md:text, lg:text ?
-            const [part1, part2] = result[0].split(':')
+            const [part1, part2] = side.split(':')
             const breakpoint = part2 !== undefined ? part1 : null
 
             matches.push({
                 breakpoint: breakpoint,
-                level: result[1]
+                level: level
             })
         }
     }
@@ -48,7 +55,7 @@ export const Margin = Extension.create({
         return {
             types: [],
             levels: new Set([
-                0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
+                'auto', 'undefined', 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
                 14, 16, 20, 24, 28, 32
             ])
         }
@@ -97,7 +104,7 @@ export const Margin = Extension.create({
     addCommands() {
         return {
             setMargin: (side, level, breakpoint) => (p) => {
-                level = parseFloat(level)
+                level = _parse_level(level)
                 console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
@@ -111,7 +118,7 @@ export const Margin = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (level > 0) {
+                if (level !== 'undefined') {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
