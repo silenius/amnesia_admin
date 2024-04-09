@@ -98,7 +98,7 @@ export const Padding = Extension.create({
 
     addCommands() {
         return {
-            setPadding: (side, level, breakpoint) => (p) => {
+            setPadding: (side, level, breakpoint = null) => (p) => {
                 level = parse_level(level)
                 console.debug('===>>> setPadding, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'

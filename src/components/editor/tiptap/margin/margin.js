@@ -98,7 +98,7 @@ export const Margin = Extension.create({
 
     addCommands() {
         return {
-            setMargin: (side, level, breakpoint) => (p) => {
+            setMargin: (side, level, breakpoint = null) => (p) => {
                 level = parse_level(level)
                 console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
