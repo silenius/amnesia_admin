@@ -4,6 +4,10 @@ import {
 } from '@tiptap/core'
 
 import {
+    render_float_attrs 
+} from './utils'
+
+import {
     generate_responsive_cls
 } from '../utils'
 
@@ -52,11 +56,7 @@ export const Float = Extension.create({
                         },
                         
                         renderHTML: attrs => {
-                            if (Array.isArray(attrs.float)) {
-                                return {
-                                    class: `${attrs.float.map((x) => [!x.breakpoint ? `float-${x.direction}` : `${x.breakpoint}:float-${x.direction}`, x.level].filter(Boolean).join('-')).join(' ')}`
-                                }
-                            }
+                            return render_float_attrs(attrs)
                         },
                     },
                 },
@@ -66,7 +66,7 @@ export const Float = Extension.create({
 
     addCommands() {
         return {
-            setFloat: (direction, breakpoint) => (p) => {
+            setFloat: (direction, breakpoint = null) => (p) => {
                 console.debug('===>>> setFloat, direction: ', direction, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
@@ -90,11 +90,11 @@ export const Float = Extension.create({
 
                 if (p.state.selection.node) {
                     return p.commands.updateAttributes(
-                        type, Object.fromEntries([[`${direction}`, mark]])
+                        type, { float: mark }
                     )
                 } else {
                     return p.chain().setMark(
-                        'textClass', Object.fromEntries([[`${direction}`, mark]])
+                        'textClass', { float: mark }
                     ).run()
                 }
             },
