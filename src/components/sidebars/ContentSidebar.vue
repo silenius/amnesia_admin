@@ -1,5 +1,5 @@
 <template>
-  <div v-if="select_editor" class="p-2 bg-gray-700 fixed right-0 w-64 max-w-64 min-h-screen text-gray-200 flex flex-col">
+  <div v-if="select_editor" class="p-2 bg-gray-700 w-64 max-w-64 min-h-screen text-gray-200 flex flex-col">
 
     <!-- PADDING -->
 
@@ -61,13 +61,33 @@
             :extension="ext_float" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-float="({value, breakpoint}) => select_editor.chain().setFloat(value, breakpoint).run()"
+            @select-float="({direction, breakpoint}) => select_editor.chain().setFloat(direction, breakpoint).run()"
           />
         </DisclosurePanel>
       </Disclosure>
     </section>
 
+    <!-- ALIGN -->
 
+    <section name="align" :class="cls_section" v-if="ext_align">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Align</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for controlling the alignment.</div>
+          <SelectAlign
+            v-if="ext_align" 
+            :extension="ext_align" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint).run()"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
 
   </div>
 </template>
@@ -85,12 +105,14 @@ import {
 import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
 import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
 import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
+import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.vue'
 
 const { getEditor, editors } = useEditorStore()
 
 const ext_padding = ref()
 const ext_margin = ref()
 const ext_float = ref()
+const ext_align = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -119,6 +141,10 @@ watch(editors, () => {
 
     ext_float.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'float'
+    )
+
+    ext_align.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'align'
     )
 
     /*
