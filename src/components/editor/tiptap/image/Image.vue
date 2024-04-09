@@ -1,33 +1,7 @@
 <template>
-  <node-view-wrapper as="div" class="flex relative not-prose" :class="wrapper_cls">
+  <node-view-wrapper as="div" class="flex relative not-prose"
+    :class="[wrapper_cls, float_cls()]">
     <div class="w-fit flex relative">
-
-      <div v-if="selected && editable" class="absolute flex flex-wrap gap-2 outline outline-slate-200 outline-1 white m-2 p-1 opacity-90 bg-white">
-        <font-awesome-icon icon="fa-solid fa-align-left" :class="icon_cls"
-          @click="editor.chain().focus().setTextAlign('left').run()"
-        />
-
-        <font-awesome-icon icon="fa-solid fa-align-center"
-          @click="editor.chain().focus().setTextAlign('center').run()"
-          :class="icon_cls"
-        />
-
-        <font-awesome-icon icon="fa-solid fa-align-right"
-          @click="editor.chain().focus().setTextAlign('right').run()"
-          :class="icon_cls"
-        />
-
-        <font-awesome-icon icon="fa-solid fa-images" class="fa-flip-horizontal"
-          @click="editor.chain().focus().setFloat('left').run()"
-          :class="[icon_cls, float_cls('left')]"
-        />
-
-        <font-awesome-icon icon="fa-solid fa-images"
-          @click="editor.chain().focus().setFloat('right').run()"
-          :class="[icon_cls, float_cls('right')]"
-        />
-
-      </div>
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
         class="rounded-lg" :class="[img_cls, padding_cls, margin_cls]" />
@@ -50,6 +24,7 @@ import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { backend_url } from '@/composables/fetch.js';
 import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
+import { render_float_attrs } from '../float-extension/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -61,7 +36,7 @@ const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 const editable = computed(() => props.editor.view.editable)
 
-console.log('===>>> Image component props: ', props)
+console.debug('===>>> Image component props: ', props)
 
 const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
 
@@ -98,18 +73,22 @@ const margin_cls = computed(() => {
   return margins
 })
 
-const icon_cls = 'outline outline-1 p-1 bg-slate-200 outline-slate-300 rounded'
-const float_cls = (dir) => ({
-  'text-indigo-500': props.editor.isActive({float: dir})
-})
+const float_cls = () => { 
+  const cls = render_float_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+}
 
-const wrapper_cls = computed(() => ({
-  'justify-start': props.node.attrs.textAlign === 'left',
-  'justify-end': props.node.attrs.textAlign === 'right',
-  'justify-center': props.node.attrs.textAlign === 'center',
-  'float-left': props.node.attrs.float == 'left',
-  'float-right': props.node.attrs.float == 'right',
-}))
+const wrapper_cls = computed(() => {
+  if (Array.isArray(props.node.attrs.align)) {
+    const maps = {
+      left: 'justify-start',
+      right: 'justify-end',
+      center: 'justify-center'
+    }
+    return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
+    `${x.breakpoint}:${maps[x.direction]}`, x.level].filter(Boolean).join('-')).join(' ')
+  }
+})
 
 const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')
