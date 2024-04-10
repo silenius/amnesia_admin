@@ -1,5 +1,4 @@
 <template>
-  <SelectBreakpoint @select-breakpoint="change_breakpoint" />
   <div class="flex gap-4 mt-4 justify-evenly">
 
     <div class="flex flex-col items-center text-xs gap-1">
@@ -34,10 +33,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import SelectBreakpoint from '../breakpoint/SelectBreakpoint.vue'
+import { computed } from 'vue'
 
 const props = defineProps({
+  breakpoint: String,
   extension: Object,
   transaction: Object,
   editor: Object
@@ -53,18 +52,16 @@ const attrs = computed(() => {
   }
 })
 
-const breakpoint = ref(null)
-
 const align = computed({
 
   get() { 
-    const v = attrs.value.align?.find((x) => x.breakpoint == breakpoint.value)
+    const v = attrs.value.align?.find((x) => x.breakpoint == props.breakpoint)
     return v !== undefined ? v.direction : ''
   },
 
   set(value) { 
     return emits('select-align', {
-      direction: value, breakpoint: breakpoint.value
+      direction: value, breakpoint: props.breakpoint
     })
   }
 
@@ -72,8 +69,4 @@ const align = computed({
 
 const img_cls = (value) => ['w-8', 'h-8', 'rounded-md', 'p-1',
   'hover:bg-slate-800', value == align.value ? 'outline-offset-2 outline outline-2 outline-pink-700' : '']
-
-const change_breakpoint = (value) => {
-  breakpoint.value = value
-}
 </script>

@@ -1,6 +1,4 @@
 <template>
-  <SelectBreakpoint @select-breakpoint="change_breakpoint" />
-
   <div class="grid grid-rows-3 relative justify-items-center items-center">
 
     <!-- pt: padding top -->
@@ -83,10 +81,8 @@
 
 <script setup>
 
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import paddingSvg from "@/assets/padding.svg";
-
-import SelectBreakpoint from '../breakpoint/SelectBreakpoint.vue'
 
 import {
   Listbox,
@@ -100,6 +96,7 @@ import {
 }  from './utils'
 
 const props = defineProps({
+  breakpoint: String,
   extension: Object,
   transaction: Object,
   editor: Object
@@ -114,13 +111,7 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const breakpoint = ref(null)
-
 const levels = computed(() => props.extension.options.levels)
-
-const change_breakpoint = (value) => {
-  breakpoint.value = value
-}
 
 const attrs = computed(() => {
   if (props.editor.isActive('image')) {
@@ -132,7 +123,7 @@ const attrs = computed(() => {
 
 const get_side = (side) => {
   if (Array.isArray(attrs.value[side])) {
-    const v = attrs.value[side].find((x) => x.breakpoint == breakpoint.value)
+    const v = attrs.value[side].find((x) => x.breakpoint == props.breakpoint)
     return v !== undefined ? v.level : ''
   }
 
@@ -142,7 +133,7 @@ const get_side = (side) => {
 const set_side = (side, value) => emits('select-padding', {
   side: side, 
   level: parse_level(value), 
-  breakpoint: breakpoint.value
+  breakpoint: props.breakpoint
 })
 
 const px = computed({

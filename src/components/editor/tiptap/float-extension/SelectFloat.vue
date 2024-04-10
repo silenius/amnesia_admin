@@ -1,5 +1,4 @@
 <template>
-  <SelectBreakpoint @select-breakpoint="change_breakpoint" />
   <div class="flex gap-4 mt-4 justify-evenly">
     <div class="flex flex-col items-center text-xs gap-1">
       <button @click.prevent="float='none'"><img :src="floatNone"
@@ -18,13 +17,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import SelectBreakpoint from '../breakpoint/SelectBreakpoint.vue'
+import { computed } from 'vue'
 import floatLeft from "@/assets/float-left.svg";
 import floatRight from "@/assets/float-right.svg";
 import floatNone from "@/assets/denied.svg";
 
 const props = defineProps({
+  breakpoint: String,
   extension: Object,
   transaction: Object,
   editor: Object
@@ -40,18 +39,16 @@ const attrs = computed(() => {
   }
 })
 
-const breakpoint = ref(null)
-
 const float = computed({
 
   get() { 
-    const v = attrs.value.float?.find((x) => x.breakpoint == breakpoint.value)
+    const v = attrs.value.float?.find((x) => x.breakpoint == props.breakpoint)
     return v !== undefined ? v.direction : ''
   },
   
   set(value) { 
     return emits('select-float', {
-      direction: value, breakpoint: breakpoint.value
+      direction: value, breakpoint: props.breakpoint
     })
   }
 
@@ -59,8 +56,4 @@ const float = computed({
 
 const img_cls = (value) => ['w-8', 'rounded-md', 'bg-slate-100', 'p-1',
   'hover:bg-white', 'hover:p-0.5', value == float.value ? 'outline-offset-2 outline outline-2 outline-pink-700' : '']
-
-const change_breakpoint = (value) => {
-  breakpoint.value = value
-}
 </script>

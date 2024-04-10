@@ -1,13 +1,11 @@
 <template>
-  <node-view-wrapper as="div" class="flex relative not-prose"
-    :class="[wrapper_cls, float_cls()]">
+  <node-view-wrapper as="div" class="flex relative not-prose" :class="[align_cls, float_cls]">
     <div class="w-fit flex relative">
+
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
         class="rounded-lg" :class="[img_cls, padding_cls, margin_cls]" />
-      <!--
-      <img v-bind="node.attrs" ref="img" class="rounded-lg" draggable="true" :class="img_cls" />
-      -->
+      
       <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
         <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
         <span :class="resize_cls" data-resize="tr" class="cursor-nesw-resize -top-1 -right-1" />
@@ -73,12 +71,12 @@ const margin_cls = computed(() => {
   return margins
 })
 
-const float_cls = () => { 
+const float_cls = computed(() => { 
   const cls = render_float_attrs(props.node.attrs)
   return cls ? Object.values(cls) : []
-}
+})
 
-const wrapper_cls = computed(() => {
+const align_cls = computed(() => {
   if (Array.isArray(props.node.attrs.align)) {
     const maps = {
       left: 'justify-start',
