@@ -93,7 +93,7 @@ export const TextColor = Extension.create({
 
     addCommands() {
         return {
-            setTextColor: (color, shade, breakpoint) => (p) => {
+            setTextColor: (color, shade, breakpoint = null) => (p) => {
                 if ( 
                     p.tr.selection.node?.type.isText === false
                         || (

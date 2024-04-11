@@ -221,23 +221,6 @@
         @click="editor.chain().focus().toggleItalic().run()" :class="{
           'text-slate-900': editor.isActive('italic') }" />
 
-      <font-awesome-icon icon="fa-solid fa-align-left"
-        @click="editor.chain().focus().setTextAlign('left').run()" :class="{
-          'is-active': editor.isActive({ textAlign: 'left' }) }" />
-
-      <font-awesome-icon icon="fa-solid fa-align-center"
-        @click="editor.chain().focus().setTextAlign('center').run()"
-        :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }" />
-
-      <font-awesome-icon icon="fa-solid fa-align-right"
-        @click="editor.chain().focus().setTextAlign('right').run()"
-        :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }" />
-
-      <font-awesome-icon icon="fa-solid fa-align-justify"
-        @click="editor.chain().focus().setTextAlign('justify').run()"
-        :class="{ 'is-active': editor.isActive({ textAlign: 'justify' })
-        }" />
-
       <font-awesome-icon icon="fa-regular fa-image"
         @click="add_image"
         v-if="!editor.isActive('image')" />

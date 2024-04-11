@@ -13,11 +13,7 @@ module.exports = {
     /*
   safelist: [
     {
-      pattern: /(h|w|px|py|pt|pb|pl|pr)-\d+/,
-      variants: ['hover', 'sm', 'md', 'lg', 'xl', '2xl']
-    },
-    {
-      pattern: /(text|bg|outline)-/,
+      pattern: /(h|w|px|py|pt|pb|pl|pr|mx|my|mt|mb|ml|mr|text|bg|outline)-/,
       variants: ['hover', 'sm', 'md', 'lg', 'xl', '2xl']
     }
   ]

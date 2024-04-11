@@ -96,9 +96,9 @@
       </Disclosure>
     </section>
 
-    <!-- iTYPOGRAPHY -->
+    <!-- TYPOGRAPHY -->
 
-    <section name="colors" :class="cls_section">
+    <section name="typography" :class="cls_section">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Typography</span>
@@ -106,14 +106,14 @@
           <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">Utilities for controlling the text color of an element.</div>
+          <div class="italic my-2">Utilities for controlling the style and appareance of text.</div>
           <SelectTextColor
             v-if="ext_text_color" 
             :breakpoint="breakpoint"
             :extension="ext_text_color" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint).run()"
+            @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
           />
         </DisclosurePanel>
       </Disclosure>
