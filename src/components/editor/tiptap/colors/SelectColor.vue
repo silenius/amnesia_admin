@@ -38,10 +38,25 @@ import {
   PopoverPanel 
 } from '@headlessui/vue'
 
+import { 
+  shaded_colors, 
+  unshaded_colors, 
+  shades 
+} from '@/components/editor/tiptap/colors'
+
 const props = defineProps({
-  unshaded_colors: Set,
-  shaded_colors: Set,
-  shades: Set,
+  unshaded_colors: {
+    type: Set,
+    default: unshaded_colors
+  },
+  shaded_colors: {
+    type: Set,
+    default: shaded_colors
+  },
+  shades: {
+    type: Set,
+    default: shades
+  },
   icon: {
     type: String,
     default: 'fa-solid fa-paintbrush'

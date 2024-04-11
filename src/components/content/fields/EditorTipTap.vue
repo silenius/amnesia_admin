@@ -257,18 +257,12 @@
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
         v-if="!editor.state.selection.empty"
-        :shaded_colors="shaded_colors"
-        :unshaded_colors="unshaded_colors"
-        :shades="shades"
         icon="fa-solid fa-palette"
       />
 
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setBackgroundColor(color, variant).run()"
         v-if="!editor.state.selection.empty"
-        :shaded_colors="shaded_colors"
-        :unshaded_colors="unshaded_colors"
-        :shades="shades"
         icon="fa-solid fa-paint-roller"
       />
 
@@ -306,7 +300,6 @@ import TextColor from '@/components/editor/tiptap/text-color'
 import BackgroundColor from '@/components/editor/tiptap/background-color'
 import Padding from '@/components/editor/tiptap/padding'
 import Margin from '@/components/editor/tiptap/margin'
-import { shaded_colors, unshaded_colors, shades } from '@/components/editor/tiptap/colors'
 import { useEditorStore } from '@/stores/editor'
 
 import {
