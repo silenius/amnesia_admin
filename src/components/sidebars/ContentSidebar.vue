@@ -96,6 +96,45 @@
       </Disclosure>
     </section>
 
+    <!-- COLORS -->
+
+    <section name="colors" :class="cls_section">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Colors</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for controlling the colors.</div>
+          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
+            <span>Text</span>
+
+            <span>Background</span>
+            
+            <SelectTextColor
+              v-if="ext_text_color" 
+              :breakpoint="breakpoint"
+              :extension="ext_text_color" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
+            />
+            
+            <SelectBackgroundColor
+              v-if="ext_background_color" 
+              :breakpoint="breakpoint"
+              :extension="ext_text_color" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-background-color="({color, variant, breakpoint}) => select_editor.chain().focus().setBackgroundColor(color, variant, breakpoint).run()"
+            />
+
+          </div>
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
     <!-- TYPOGRAPHY -->
 
     <section name="typography" :class="cls_section">
@@ -106,18 +145,13 @@
           <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">Utilities for controlling the style and appareance of text.</div>
-          <SelectTextColor
-            v-if="ext_text_color" 
-            :breakpoint="breakpoint"
-            :extension="ext_text_color" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
-          />
-        </DisclosurePanel>
+          <div class="italic my-2">Utilities for controlling various text
+            elements.</div>
+       </DisclosurePanel>
       </Disclosure>
     </section>
+
+
 
   </div>
 </template>
@@ -138,6 +172,7 @@ import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
 import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
 import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.vue'
 import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextColor.vue'
+import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -149,6 +184,8 @@ const ext_margin = ref()
 const ext_float = ref()
 const ext_align = ref()
 const ext_text_color = ref()
+const ext_background_color = ref()
+const ext_font_size = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -185,6 +222,14 @@ watch(editors, () => {
 
     ext_text_color.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'textColor'
+    )
+
+    ext_background_color.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'backgroundColor'
+    )
+
+    ext_font_size.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'fontSize'
     )
 
     /*
