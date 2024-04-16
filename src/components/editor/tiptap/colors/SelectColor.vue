@@ -1,7 +1,7 @@
 <template>
 
   <TransitionRoot appear :show="open" as="template">
-    <Dialog as="div"  class="relative z-50">
+    <Dialog as="div"  class="relative z-150">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -48,7 +48,7 @@
                   <button 
                     v-for="color in unshaded_colors"
                     :key="color"
-                    @click.prevent="close(); onSelectColor(color)"
+                    @click.prevent="onSelectColor(color)"
                     :class="[`bg-${color}`, `hover:outline-${color}`]"
                     class="hover:outline w-10 hover:outline-2 border
                     hover:outline-offset-2 p-1 text-xs truncate">

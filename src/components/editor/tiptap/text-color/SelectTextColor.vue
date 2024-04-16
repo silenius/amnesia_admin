@@ -1,7 +1,7 @@
 <template>
-  <div class="relative">
+  <div class="relative w-full">
     <button @click.prevent="open=!open" :class="[`bg-${textColor}`,
-      'font-bold rounded-full p-2']">
+      'font-bold border rounded-full p-2 w-full']">
       {{ textColor }}
     </button> 
     <SelectColor 
@@ -33,7 +33,8 @@ const textColor = computed({
     const v = props.editor.getAttributes('textClass')?.textColor?.find(
       (x) => x.breakpoint == props.breakpoint
     )
-    return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` : ''
+    return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
+      'none'
   },
 
   set({color, variant}) {
