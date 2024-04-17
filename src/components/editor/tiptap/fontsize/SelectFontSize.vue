@@ -1,9 +1,9 @@
 <template>
-  <Listbox as="div" v-model="weight">
-    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ weight }}</ListboxButton>
+  <Listbox as="div" v-model="size">
+    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ size }}</ListboxButton>
     <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="w in weights" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+      <ListboxOption v-for="s in sizes" :key="s" :value="s">
+        <button :class="class_opt">{{ s }}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
-  'select-font-weight'
+  'select-font-size'
 ])
 
 const class_opts = [
@@ -37,25 +37,23 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const weights = computed(() => props.extension.options.weights)
+const sizes = computed(() => props.extension.options.sizes)
 
 const attrs = computed(() => props.editor.getAttributes('textClass'))
 
-const weight = computed({
+const size = computed({
 
   get() { 
-    const v = attrs.value.fontWeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.weight : 'none'
+    const v = attrs.value.fontSize?.find((x) => x.breakpoint == props.breakpoint)
+    return v !== undefined ? v.size : 'none'
   },
 
   set(value) { 
-    return emits('select-font-weight', {
-      weight: value, breakpoint: props.breakpoint
+    return emits('select-font-size', {
+      size: value, breakpoint: props.breakpoint
     })
   }
 
 })
-
-
 
 </script>

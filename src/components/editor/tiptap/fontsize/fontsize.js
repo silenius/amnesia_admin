@@ -1,8 +1,26 @@
 import { 
     Extension,
+    getAttributes
 } from '@tiptap/core'
 
-import { sizes }  from './constants'
+import {
+    render_font_size_attrs 
+} from './utils'
+
+import {
+    generate_responsive_cls
+} from '../utils'
+
+
+const sizes = [
+    'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl', 
+    '8xl', '9xl'
+]
+
+const is_font_size = new Set([
+    ...sizes.map((x) => generate_responsive_cls(`text-${x}`))
+].flat())
+
 
 export const FontSize = Extension.create({
     name: 'fontSize',
@@ -22,29 +40,29 @@ export const FontSize = Extension.create({
                     fontSize: {
                         default: null,
 
-                        parseHTML: (elem) => { 
-                            if (elem.style.fontSize) {
-                                return elem.style.fontSize
-                            } else {
-                                for (const [size, props] of Object.entries(this.options.sizes)) {
-                                    if (elem.classList.contains(props.class)) {
-                                        return size
-                                    }
+                        parseHTML: elem => {
+                            const matches = []
+
+                            for (const name of elem.classList) {
+                                if (is_font_size.has(name)) {
+                                    const size = name.split('-').pop()
+                                    const [part1, part2] = name.split(':')
+                                    const breakpoint = part2 !== undefined ? part1 : null
+
+                                    matches.push({
+                                        size: direction,
+                                        breakpoint: breakpoint
+                                    })
                                 }
                             }
+
+                            return matches.length ? matches : null
+
                         },
 
-                        renderHTML: (attrs) => {
-                            if (attrs.fontSize) {
-                                const v = this.options.sizes[attrs.fontSize]
-
-                                if (v) {
-                                    return { class: v.class }
-                                }
-
-                                return { style: `font-size: ${attrs.fontSize}` }
-                            }
-                        }
+                        renderHTML: attrs => {
+                            return render_font_size_attrs(attrs)
+                        },
                     }
                 }
             }
@@ -53,23 +71,33 @@ export const FontSize = Extension.create({
 
     addCommands() {
         return {
-            setFontSize: (size) => ({ chain, editor, view, state, commands, tr }) => {
-                if (!this.options.sizes[size]) {
-                    return false
+            setFontSize: (size, breakpoint = null) => (p) => {
+                if (
+                    p.tr.selection.node?.type.isText === false
+                        || this.options.sizes.indexOf(size) === -1
+                ) {
+                    return null
                 }
 
-                if (tr.selection.node?.type.isText === false) {
-                    return false
+                const oldAttrs = getAttributes(p.state, 'textClass').fontSize
+                const mark = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (size !== 'undefined') {
+                    // New value
+                    mark.push({
+                        breakpoint: breakpoint,
+                        size: size
+                    })
                 }
 
-                /*
-                if (tr.selection.empty) {
-                    return this.options.types.every(
-                        type => commands.updateAttributes(type, { fontSize: size })
-                    )
-                }*/
+                return p.chain().setMark(
+                    'textClass', {
+                        fontSize: mark
+                    }
+                ).run()
 
-                return chain().setMark('textClass', { fontSize: size }).run()
             },
         }
     },

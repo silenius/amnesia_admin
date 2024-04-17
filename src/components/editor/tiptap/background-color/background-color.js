@@ -10,6 +10,10 @@ import {
 } from '../colors'
 
 import {
+    render_bg_color_attrs
+} from './utils'
+
+import {
     generate_responsive_cls
 } from '../utils'
 
@@ -75,15 +79,7 @@ export const BackgroundColor = Extension.create({
 
                         },
 
-                        renderHTML: (attrs) => {
-                            if (Array.isArray(attrs.backgroundColor)) {
-                                return {
-                                    class: `${attrs.backgroundColor.map((x) => [!x.breakpoint ? 'bg' : `${x.breakpoint}:bg`, x.color, x.shade].filter(Boolean).join('-')).join(' ')}`
-                                }
-                            } else if (attrs.backgroundColor) {
-                                return { style: `background-color: ${attrs.backgroundColor}` }
-                            }
-                        }
+                        renderHTML: (attrs) => render_bg_color_attrs(attrs)
                     }
                 }
             }
@@ -93,43 +89,42 @@ export const BackgroundColor = Extension.create({
     addCommands() {
         return {
             setBackgroundColor: (color, shade, breakpoint) => (p) => {
-                if ( 
-                    p.tr.selection.node?.type.isText === false
-                        || (
-                            shade !== undefined
-                                && (!this.options.shaded_colors.has(color)
-                                    || !this.options.shades.has(parseInt(shade)))
-                        )
-                        || (
-                            shade === undefined
-                                && !this.options.unshaded_colors.has(color)
-                        )
+                if ((
+                    shade !== undefined
+                        && (!this.options.shaded_colors.has(color)
+                            || !this.options.shades.has(parseInt(shade)))
+                )
+                    || (
+                        shade === undefined
+                            && !this.options.unshaded_colors.has(color)
+                    )
                 ) {
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').backgroundColor
-                const newAttrs = {
+                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
+
+                const oldAttrs = getAttributes(p.state, type).backgroundColor
+
+                const mark = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                mark.push({
                     breakpoint: breakpoint,
                     color: color, 
                     shade: shade 
-                }
+                })
 
-                let mark
-
-                if (Array.isArray(oldAttrs)) {
-                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    mark.push(newAttrs)
+                if (p.state.selection.node) {
+                    return p.commands.updateAttributes(
+                        type, { backgroundColor: mark }
+                    )
                 } else {
-                    mark = [newAttrs]
+                    return p.chain().setMark(
+                        'textClass', { backgroundColor: mark }
+                    ).run()
                 }
-
-                return p.chain().setMark(
-                    'textClass', {
-                        backgroundColor: mark
-                    }
-                ).run()
-
             },
 
         }

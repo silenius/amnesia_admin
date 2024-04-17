@@ -147,7 +147,13 @@
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling various text
             elements.</div>
+
+          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
+            <span>Weight</span>
+            <span>Size</span>
+
           <SelectFontWeight 
+            class="w-full"
             v-if="ext_font_weight"
             :breakpoint="breakpoint"
             :extension="ext_font_weight"
@@ -155,6 +161,18 @@
             :editor="select_editor"
             @select-font-weight="({weight}) => select_editor.chain().focus().setFontWeight(weight, breakpoint).run()"
           />
+            
+          <SelectFontSize 
+            class="w-full"
+            v-if="ext_font_size"
+            :breakpoint="breakpoint"
+            :extension="ext_font_size"
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
+          />
+
+          </div>
        </DisclosurePanel>
       </Disclosure>
     </section>
@@ -180,6 +198,7 @@ import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.
 import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextColor.vue'
 import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
 import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
+import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -244,6 +263,7 @@ watch(editors, () => {
     ext_font_weight.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'fontWeight'
     )
+
     /*
   select_editor.value.on(
     'selectionUpdate', ({ editor, transaction }) => {

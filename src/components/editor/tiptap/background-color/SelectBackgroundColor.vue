@@ -1,11 +1,11 @@
 <template>
-  <div class="relative w-full">
+  <div class="w-full">
     <button @click.prevent="open=!open" :class="[`bg-${backgroundColor}`,
       'font-bold border rounded-full p-2 w-full']">
       {{ backgroundColor }}
     </button> 
     <SelectColor 
-      @select-color="doSelectTextColor" 
+      @select-color="doSelectColor" 
       @close="open=false"
       :open="open"
       class="z-20 relative"
@@ -30,7 +30,8 @@ const open = ref(false)
 
 const backgroundColor = computed({
   get() {
-    const v = props.editor.getAttributes('textClass')?.backgroundColor?.find(
+    const type = props.editor.isActive('image') ? 'image' : 'textClass'
+    const v = props.editor.getAttributes(type)?.backgroundColor?.find(
       (x) => x.breakpoint == props.breakpoint
     )
     return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
@@ -47,7 +48,7 @@ const backgroundColor = computed({
   }
 })
 
-const doSelectTextColor = (color, variant) => backgroundColor.value = {
+const doSelectColor = (color, variant) => backgroundColor.value = {
   color: color, 
   variant: variant, 
 }

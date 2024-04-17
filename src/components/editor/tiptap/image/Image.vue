@@ -4,7 +4,7 @@
 
       <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
         :width="node.attrs.width" :height="node.attrs.height" ref="img"
-        class="rounded-lg" :class="[img_cls, padding_cls, margin_cls]" />
+        class="rounded-lg" :class="[img_cls, padding_cls, margin_cls, bg_color_cls]" />
       
       <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
         <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
@@ -23,6 +23,7 @@ import { backend_url } from '@/composables/fetch.js';
 import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
+import { render_bg_color_attrs } from '../background-color/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -86,6 +87,11 @@ const align_cls = computed(() => {
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
     `${x.breakpoint}:${maps[x.direction]}`, x.level].filter(Boolean).join('-')).join(' ')
   }
+})
+
+const bg_color_cls = computed(() => {
+  const cls = render_bg_color_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
 })
 
 const startResize = (e) => {

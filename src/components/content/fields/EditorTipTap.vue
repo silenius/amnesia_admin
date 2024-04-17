@@ -233,10 +233,6 @@
         @click="remove_link"
         v-if="!editor.state.selection.empty" />
 
-      <DropDownSize 
-        @select-size="(size, ) => editor.chain().focus().setFontSize(size).run()"
-      />
-
       <SelectColor 
         @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
         v-if="!editor.state.selection.empty"
@@ -274,7 +270,6 @@ import Link from '@tiptap/extension-link'
 import Image from '@/components/editor/tiptap/image/image'
 import FontSize from '@/components/editor/tiptap/fontsize'
 import TextClass from '@/components/editor/tiptap/text-class'
-import DropDownSize from '@/components/editor/tiptap/fontsize/DropDownSize.vue'
 //import Flex from '@/components/editor/tiptap/flex-container/flex'
 import { Float } from '@/components/editor/tiptap/float-extension'
 import { Align } from '@/components/editor/tiptap/align-extension'
@@ -535,7 +530,7 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     BackgroundColor.configure({
-      types: ['textClass', 'textStyle']
+      types: ['textClass', 'image']
     }),
     Margin.configure({
       types: ['image', 'textClass', 'textStyle']

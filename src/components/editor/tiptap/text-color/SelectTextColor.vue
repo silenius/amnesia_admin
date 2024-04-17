@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full">
+  <div class="w-full">
     <button @click.prevent="open=!open" :class="[`bg-${textColor}`,
       'font-bold border rounded-full p-2 w-full']">
       {{ textColor }}
