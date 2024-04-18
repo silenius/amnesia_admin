@@ -4,27 +4,26 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_align_attrs 
+    render_font_italic_attrs 
 } from './utils'
 
 import {
     generate_responsive_cls
 } from '../utils'
 
-const aligns = ['left', 'center', 'right', 'justify']
+const italics = ['italic', 'not-italic']
 
-const is_text = new Set([
-    ...aligns.map((x) => generate_responsive_cls(`text-${x}`))
+const is_font_italic = new Set([
+    ...italics.map((x) => generate_responsive_cls(x))
 ].flat())
 
-export const Align = Extension.create({
-    name: 'align',
+export const FontItalic = Extension.create({
+    name: 'fontItalic',
 
     addOptions() {
         return {
             types: [],
-            directions: aligns,
-            default_direction: null,
+            italics: italics
         }
     },
 
@@ -33,20 +32,22 @@ export const Align = Extension.create({
             {
                 types: this.options.types,
                 attributes: {
-                    align: {
+                    fontItalic: {
                         default: null,
 
                         parseHTML: elem => {
                             const matches = []
 
                             for (const name of elem.classList) {
-                                if (is_text.has(name)) {
-                                    const direction = name.split('-').pop()
+                                if (is_font_italic.has(name)) {
+                                    // md:not-italic, not-italic, italic,
+                                    // lg:italic, etc
                                     const [part1, part2] = name.split(':')
                                     const breakpoint = part2 !== undefined ? part1 : null
+                                    const italic = breakpoint === null ? part1 : part2
 
                                     matches.push({
-                                        direction: direction,
+                                        italic: italic,
                                         breakpoint: breakpoint
                                     })
                                 }
@@ -57,7 +58,7 @@ export const Align = Extension.create({
                         },
 
                         renderHTML: attrs => {
-                            return render_align_attrs(attrs)
+                            return render_font_italic_attrs(attrs)
                         },
                     },
                 },
@@ -67,32 +68,32 @@ export const Align = Extension.create({
 
     addCommands() {
         return {
-            setAlign: (direction, breakpoint = null) => (p) => {
-                console.debug('===>>> setAlign, direction: ', direction, ', bp: ', breakpoint)
-                const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+            setFontItalic: (italic = null, breakpoint = null) => (p) => {
+                if (p.tr.selection.node?.type.isText === false) {
+                    return null
+                }
 
-                const oldAttrs = getAttributes(p.state, type)['align']
-                console.debug('===>>> setAlign, oldAttrs: ', oldAttrs)
+                const oldAttrs = getAttributes(p.state, 'textClass').fontItalic
 
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (direction !== 'undefined') {
+                if (this.options.italics.indexOf(italic) !== -1) {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        direction: direction
+                        italic: italic,
                     })
                 }
 
-                // New value
-                console.debug('===>>> setAlign, mark: ', mark)
-
-                return p.commands.updateAttributes(
-                    type, { align: mark }
-                )
+                return p.chain().setMark(
+                    'textClass', {
+                        fontItalic: mark
+                    }
+                ).run()
             },
         }
     },
+
 })

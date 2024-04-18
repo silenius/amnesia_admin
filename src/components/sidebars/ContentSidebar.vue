@@ -148,9 +148,20 @@
           <div class="italic my-2">Utilities for controlling various text
             elements.</div>
 
+          <SelectFontItalic 
+            v-if="ext_font_italic"
+            :breakpoint="breakpoint"
+            :extension="ext_font_italic"
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
+          />
+
+
           <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
             <span>Weight</span>
             <span>Size</span>
+
 
           <SelectFontWeight 
             class="w-full"
@@ -199,6 +210,7 @@ import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextCol
 import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
 import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
 import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
+import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -213,6 +225,7 @@ const ext_text_color = ref()
 const ext_background_color = ref()
 const ext_font_size = ref()
 const ext_font_weight = ref()
+const ext_font_italic = ref()
 
 
 const cls_disclosure_button = [
@@ -262,6 +275,10 @@ watch(editors, () => {
 
     ext_font_weight.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'fontWeight'
+    )
+
+    ext_font_italic.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'fontItalic'
     )
 
     /*

@@ -11,10 +11,11 @@ import {
     generate_responsive_cls
 } from '../utils'
 
-const is_float_right = generate_responsive_cls('float-right')
-const is_float_left = generate_responsive_cls('float-left')
-const is_float_none = generate_responsive_cls('float-none')
-const is_float = new Set([...is_float_right, ...is_float_left, ...is_float_none])
+const floats = ['float-right', 'float-left', 'float-none']
+
+const is_float = new Set([
+    ...floats.map((x) => generate_responsive_cls(x))
+].flat())
 
 export const Float = Extension.create({
     name: 'float',

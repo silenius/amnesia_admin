@@ -279,6 +279,7 @@ import BackgroundColor from '@/components/editor/tiptap/background-color'
 import Padding from '@/components/editor/tiptap/padding'
 import Margin from '@/components/editor/tiptap/margin'
 import FontWeight from '@/components/editor/tiptap/font-weight-extension'
+import FontItalic from '@/components/editor/tiptap/font-italic-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -501,7 +502,8 @@ const editor = useEditor({
   */
   extensions: [
     StarterKit.configure({
-      bold: false
+      bold: false,
+      italic: false
     }),
     Typography,
     /*
@@ -539,6 +541,9 @@ const editor = useEditor({
       types: ['image', 'textClass', 'textStyle']
     }),
     FontWeight.configure({
+      types: ['textClass']
+    }),
+    FontItalic.configure({
       types: ['textClass']
     }),
     Table,

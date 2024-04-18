@@ -7,7 +7,7 @@ import router from './router'
 // import './index.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { 
     faUpDownLeftRight,
     faUserAstronaut,
@@ -64,6 +64,7 @@ import {
     faTextHeight,
     faPaintBrush,
     faPaintRoller,
+    faBan
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -132,11 +133,13 @@ library.add(faLinkSlash)
 library.add(faTextHeight)
 library.add(faPaintBrush)
 library.add(faPaintRoller)
+library.add(faBan)
 
 const app = createApp(App)
 const pinia = createPinia()
 //const head = createHead()
 app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('font-awesome-layers', FontAwesomeLayers)
 app.use(pinia)
 app.use(router)
 //app.use(head)
