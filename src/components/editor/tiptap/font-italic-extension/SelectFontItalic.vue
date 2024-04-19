@@ -1,16 +1,9 @@
 <template>
-
   <div>
     <button @click.prevent="doSelectItalic">
-      <div class="flex flex-col items-center text-xs gap-1">
-        <button @click.prevent="doSelectItalic">
-          <img :src="italicImg" :class="img_cls" />
-        </button>
-        <span>italic</span>
-      </div>
+      <img :src="italicImg" :class="img_cls" />
     </button>
   </div>
-
 </template>
 
 <script setup>

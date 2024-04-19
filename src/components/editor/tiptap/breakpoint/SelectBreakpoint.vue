@@ -1,6 +1,11 @@
 <template>
   <div class="flex flex-col items-center">
     <span>Breakpoint</span>
+    <p class="text-xs text-justify mb-2">A <strong>mobile-first</strong> breakpoint system is
+      used. Unprefixed breakpoints take effect on <strong>all screen
+        sizes</strong>, while prefixed breakpoints only take effect at the <strong>specified
+        breakpoint and <em>above</em></strong>.
+    </p>
     <div class="flex w-full rounded-full outline p-1 outline-1 outline-slate-500
       text-sm gap-1 justify-center">
       <button @click="change_breakpoint(bp)" class="p-1" :class="[bp == selected
@@ -23,6 +28,7 @@ const props = defineProps({
 const emits = defineEmits(['select-breakpoint'])
 
 const selected = ref(props.breakpoints[0])
+
 const txt_selected = computed(() => {
   switch(selected.value) {
     case 'sm': return 'small: 640px'

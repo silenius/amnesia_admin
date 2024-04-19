@@ -224,19 +224,6 @@
       <font-awesome-icon icon="fa-solid fa-link-slash" 
         @click="remove_link"
         v-if="!editor.state.selection.empty" />
-
-      <SelectColor 
-        @select-color="(color, variant) => editor.chain().focus().setTextColor(color, variant).run()"
-        v-if="!editor.state.selection.empty"
-        icon="fa-solid fa-palette"
-      />
-
-      <SelectColor 
-        @select-color="(color, variant) => editor.chain().focus().setBackgroundColor(color, variant).run()"
-        v-if="!editor.state.selection.empty"
-        icon="fa-solid fa-paint-roller"
-      />
-
     </div>
     <EditorContent :editor="editor" />
   </div>

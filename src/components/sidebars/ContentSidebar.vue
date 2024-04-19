@@ -1,5 +1,12 @@
 <template>
   <div v-if="select_editor" class="p-2 bg-gray-700 w-64 max-w-64 min-h-screen text-gray-200 flex flex-col">
+
+    <!-- BREAKPOINT -->
+
+    <section name="node">
+      <p class="font-caveat">Node</p>
+    </section>
+
     <section name="breakpoint" class="m-4" :class="cls_section">
       <SelectBreakpoint @select-breakpoint="change_breakpoint" />
     </section>
@@ -111,7 +118,7 @@
             <span>Text</span>
 
             <span>Background</span>
-            
+
             <SelectTextColor
               v-if="ext_text_color" 
               :breakpoint="breakpoint"
@@ -120,7 +127,7 @@
               :editor="select_editor"
               @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
             />
-            
+
             <SelectBackgroundColor
               v-if="ext_background_color" 
               :breakpoint="breakpoint"
@@ -147,55 +154,55 @@
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling various text
             elements.</div>
-          <div class="flex mt-4 gap-4 flex-col">
+          <div class="flex justify-center align-center mt-4 gap-2">
 
-          <SelectFontItalic 
-            v-if="ext_font_italic"
-            :breakpoint="breakpoint"
-            :extension="ext_font_italic"
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
-          />
+            <SelectFontItalic 
+              class="flex"
+              v-if="ext_font_italic"
+              :breakpoint="breakpoint"
+              :extension="ext_font_italic"
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
+            />
 
-          <SelectTextDecoration 
-            class="flex gap-4"
-            v-if="ext_text_decoration"
-            :breakpoint="breakpoint"
-            :extension="ext_text_decoration"
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
-          />
+            <SelectFontWeight 
+              class="flex"
+              v-if="ext_font_weight"
+              :breakpoint="breakpoint"
+              :extension="ext_font_weight"
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-font-weight="({weight}) => select_editor.chain().focus().setFontWeight(weight, breakpoint).run()"
+            />
+
+            <SelectTextDecoration 
+              class="flex gap-2"
+              v-if="ext_text_decoration"
+              :breakpoint="breakpoint"
+              :extension="ext_text_decoration"
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
+            />
 
           </div>
-          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
-            <span>Weight</span>
+
+          <div>
             <span>Size</span>
 
 
-          <SelectFontWeight 
-            class="w-full"
-            v-if="ext_font_weight"
-            :breakpoint="breakpoint"
-            :extension="ext_font_weight"
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-font-weight="({weight}) => select_editor.chain().focus().setFontWeight(weight, breakpoint).run()"
-          />
-            
-          <SelectFontSize 
-            class="w-full"
-            v-if="ext_font_size"
-            :breakpoint="breakpoint"
-            :extension="ext_font_size"
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
-          />
+            <SelectFontSize 
+              v-if="ext_font_size"
+              :breakpoint="breakpoint"
+              :extension="ext_font_size"
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
+            />
 
           </div>
-       </DisclosurePanel>
+        </DisclosurePanel>
       </Disclosure>
     </section>
 
@@ -240,7 +247,6 @@ const ext_font_weight = ref()
 const ext_font_italic = ref()
 const ext_text_decoration = ref()
 
-
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
   'text-left', 'text-sm', 'font-medium', 'text-slate-100', 'pr-1'
@@ -253,59 +259,28 @@ const select_transaction = ref()
 const select_editor = ref()
 
 watch(editors, () => {
-
-  select_editor.value = unref(editors.get('current'))
-
-  if (select_editor.value) {
-
-    ext_padding.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'padding'
-    )
-
-    ext_margin.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'margin'
-    )
-
-    ext_float.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'float'
-    )
-
-    ext_align.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'align'
-    )
-
-    ext_text_color.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'textColor'
-    )
-
-    ext_background_color.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'backgroundColor'
-    )
-
-    ext_font_size.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'fontSize'
-    )
-
-    ext_font_weight.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'fontWeight'
-    )
-
-    ext_font_italic.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'fontItalic'
-    )
-
-    ext_text_decoration.value = select_editor.value.extensionManager.extensions.find(
-      ext => ext.name == 'textDecoration'
-    )
-
-    /*
-  select_editor.value.on(
-    'selectionUpdate', ({ editor, transaction }) => {
-      select_transaction.value = transaction
-      select_editor.value = editor
-    })
-  */
+  if (!select_editor.value) {
+    select_editor.value = unref(editors.get('current'))
   }
 }, { deep: true })
+
+watch(select_editor, () => {
+  if (select_editor.value) {
+
+    const exts = select_editor.value.extensionManager.extensions
+
+    ext_padding.value = exts.find(ext => ext.name == 'padding')
+    ext_margin.value = exts.find(ext => ext.name == 'margin')
+    ext_float.value = exts.find(ext => ext.name == 'float')
+    ext_align.value = exts.find(ext => ext.name == 'align')
+    ext_text_color.value = exts.find(ext => ext.name == 'textColor')
+    ext_background_color.value = exts.find(ext => ext.name == 'backgroundColor')
+    ext_font_size.value = exts.find(ext => ext.name == 'fontSize')
+    ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
+    ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
+    ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
+
+  }
+})
 
 </script>

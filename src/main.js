@@ -1,10 +1,13 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+import "@fontsource/open-sans"
+import '@fontsource-variable/caveat'
+
 import App from './App.vue'
 import router from './router'
 
-// import './index.css'
+import './index.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'

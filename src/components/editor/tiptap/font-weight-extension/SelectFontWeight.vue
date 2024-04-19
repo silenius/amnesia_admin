@@ -1,6 +1,8 @@
 <template>
   <Listbox as="div" v-model="weight">
-    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ weight }}</ListboxButton>
+    <ListboxButton>
+        <img :src="boldImg" :class="img_cls" />
+    </ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in weights" :key="w" :value="w">
         <button :class="class_opt">{{ w }}</button>
@@ -11,6 +13,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import boldImg from "@/assets/bold.svg";
 
 import {
   Listbox,
@@ -45,7 +48,7 @@ const weight = computed({
 
   get() { 
     const v = attrs.value.fontWeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.weight : 'none'
+    return v !== undefined ? v.weight : null
   },
 
   set(value) { 
@@ -56,6 +59,7 @@ const weight = computed({
 
 })
 
+const img_cls = computed(() => ['w-8', 'h-8', 'rounded-md', 'bg-slate-100', 'p-1', 'hover:bg-white', 'hover:p-0.5', weight.value ? 'outline-offset-2 outline outline-2 outline-pink-700' : ''])
 
 
 </script>
