@@ -272,6 +272,7 @@ import Padding from '@/components/editor/tiptap/padding'
 import Margin from '@/components/editor/tiptap/margin'
 import FontWeight from '@/components/editor/tiptap/font-weight-extension'
 import FontItalic from '@/components/editor/tiptap/font-italic-extension'
+import TextDecoration from '@/components/editor/tiptap/text-decoration-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -536,6 +537,9 @@ const editor = useEditor({
       types: ['textClass']
     }),
     FontItalic.configure({
+      types: ['textClass']
+    }),
+    TextDecoration.configure({
       types: ['textClass']
     }),
     Table,

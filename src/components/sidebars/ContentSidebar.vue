@@ -157,6 +157,14 @@
             @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
           />
 
+          <SelectTextDecoration 
+            v-if="ext_text_decoration"
+            :breakpoint="breakpoint"
+            :extension="ext_text_decoration"
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
+          />
 
           <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
             <span>Weight</span>
@@ -211,6 +219,7 @@ import SelectBackgroundColor from '@/components/editor/tiptap/background-color/S
 import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
 import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
 import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
+import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -226,6 +235,7 @@ const ext_background_color = ref()
 const ext_font_size = ref()
 const ext_font_weight = ref()
 const ext_font_italic = ref()
+const ext_text_decoration = ref()
 
 
 const cls_disclosure_button = [
@@ -279,6 +289,10 @@ watch(editors, () => {
 
     ext_font_italic.value = select_editor.value.extensionManager.extensions.find(
       ext => ext.name == 'fontItalic'
+    )
+
+    ext_text_decoration.value = select_editor.value.extensionManager.extensions.find(
+      ext => ext.name == 'textDecoration'
     )
 
     /*
