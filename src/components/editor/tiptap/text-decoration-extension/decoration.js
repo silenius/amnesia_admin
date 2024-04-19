@@ -13,9 +13,9 @@ import {
 
 const decorations = ['underline', 'overline', 'line-through', 'no-underline']
 
-const is_decoration = new Set([
-    ...decorations.map((x) => generate_responsive_cls(x))
-].flat())
+const is_decoration = new Set(
+    decorations.map((x) => Array.from(generate_responsive_cls(x))).flat()
+)
 
 export const TextDecoration = Extension.create({
     name: 'textDecoration',

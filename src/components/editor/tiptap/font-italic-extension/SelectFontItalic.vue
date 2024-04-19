@@ -1,17 +1,21 @@
 <template>
 
-  <button @click.prevent="doSelectItalic">
-    <span v-if="italic == 'not-italic'" class="relative">
-      <font-awesome-icon icon="fa-solid fa-ban" :class="img_cls" class="absolute" />
-      <font-awesome-icon icon="fa-solid fa-italic" :class="img_cls" />
-    </span>
-    <font-awesome-icon v-else icon="fa-solid fa-italic" :class="img_cls" />
-  </button>
+  <div>
+    <button @click.prevent="doSelectItalic">
+      <div class="flex flex-col items-center text-xs gap-1">
+        <button @click.prevent="doSelectItalic">
+          <img :src="italicImg" :class="img_cls" />
+        </button>
+        <span>italic</span>
+      </div>
+    </button>
+  </div>
 
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import italicImg from "@/assets/italic.svg";
 
 const props = defineProps({
   breakpoint: String,
@@ -56,9 +60,5 @@ const italic = computed({
 
 })
 
-const img_cls = computed(() => [
-  'w-8', 'h-8', 'rounded-md', 'p-1', 'hover:bg-slate-800',
-  italic.value == 'italic' ? 'outline-offset-2 outline outline-2 outline-pink-700': ''
-])
-
+const img_cls = computed(() => ['w-8 h-8 rounded-md bg-slate-100 p-1 hover:bg-white hover:p-0.5', italic.value == 'italic' ? 'outline-offset-2 outline outline-2 outline-pink-700' : italic.value == 'not-italic' ? 'outline-offset-2 outline outline-4 outline-red-700' : ''])
 </script>

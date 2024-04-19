@@ -13,9 +13,9 @@ import {
 
 const aligns = ['left', 'center', 'right', 'justify']
 
-const is_text = new Set([
-    ...aligns.map((x) => generate_responsive_cls(`text-${x}`))
-].flat())
+const is_text = new Set(
+    aligns.map((x) => Array.from(generate_responsive_cls(`text-${x}`))).flat()
+)
 
 export const Align = Extension.create({
     name: 'align',

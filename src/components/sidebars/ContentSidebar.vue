@@ -147,6 +147,7 @@
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling various text
             elements.</div>
+          <div class="flex mt-4 gap-4 flex-col">
 
           <SelectFontItalic 
             v-if="ext_font_italic"
@@ -158,6 +159,7 @@
           />
 
           <SelectTextDecoration 
+            class="flex gap-4"
             v-if="ext_text_decoration"
             :breakpoint="breakpoint"
             :extension="ext_text_decoration"
@@ -166,6 +168,7 @@
             @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
           />
 
+          </div>
           <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
             <span>Weight</span>
             <span>Size</span>

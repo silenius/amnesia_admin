@@ -13,9 +13,9 @@ import {
 
 const floats = ['float-right', 'float-left', 'float-none']
 
-const is_float = new Set([
-    ...floats.map((x) => generate_responsive_cls(x))
-].flat())
+const is_float = new Set(
+    floats.map((x) => Array.from(generate_responsive_cls(x))).flat()
+)
 
 export const Float = Extension.create({
     name: 'float',

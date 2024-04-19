@@ -16,9 +16,9 @@ const weights = [
     'semibold', 'bold', 'extrabold', 'black'
 ]
 
-const is_font_weight = new Set([
-    ...weights.map((x) => generate_responsive_cls(`font-${x}`))
-].flat())
+const is_font_weight = new Set(
+    weights.map((x) => Array.from(generate_responsive_cls(`font-${x}`))).flat()
+)
 
 export const FontWeight = Extension.create({
     name: 'fontWeight',

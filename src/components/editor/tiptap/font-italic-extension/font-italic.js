@@ -13,9 +13,9 @@ import {
 
 const italics = ['italic', 'not-italic']
 
-const is_font_italic = new Set([
-    ...italics.map((x) => generate_responsive_cls(x))
-].flat())
+const is_font_italic = new Set(
+    italics.map((x) => Array.from(generate_responsive_cls(x))).flat()
+)
 
 export const FontItalic = Extension.create({
     name: 'fontItalic',

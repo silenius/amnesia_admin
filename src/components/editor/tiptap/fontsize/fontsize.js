@@ -17,9 +17,9 @@ const sizes = [
     '8xl', '9xl'
 ]
 
-const is_font_size = new Set([
-    ...sizes.map((x) => generate_responsive_cls(`text-${x}`))
-].flat())
+const is_font_size = new Set(
+    sizes.map((x) => Array.from(generate_responsive_cls(`text-${x}`))).flat()
+)
 
 
 export const FontSize = Extension.create({

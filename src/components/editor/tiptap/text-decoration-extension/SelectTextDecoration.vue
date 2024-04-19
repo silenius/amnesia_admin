@@ -1,32 +1,24 @@
 <template>
-  <div class="flex gap-4 mt-4 justify-evenly">
-
-    <div class="flex flex-col items-center text-xs gap-1">
+  <div>
+    <div class="flex flex-col text-xs gap-1">
       <button @click.prevent="decoration='underline'">
         <img :src="underlineImg" :class="img_cls('underline')" />
       </button>
       <span>under</span>
     </div>
 
-    <div class="flex flex-col items-center text-xs gap-1">
+    <div class="flex flex-col text-xs gap-1">
       <button @click.prevent="decoration='overline'">
         <img :src="overlineImg" :class="img_cls('overline')" />
       </button>
       <span>over</span>
     </div>
 
-    <div class="flex flex-col items-center text-xs gap-1">
+    <div class="flex flex-col text-xs gap-1">
       <button @click.prevent="decoration='line-through'">
         <img :src="linethroughImg" :class="img_cls('line-through')" />
       </button>
       <span>through</span>
-    </div>
-
-    <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="decoration='no-underline'">
-        <font-awesome-icon icon="fa-solid fa-align-justify" :class="img_cls('justify')" />
-      </button>
-      <span>no underline</span>
     </div>
 
   </div>
