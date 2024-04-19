@@ -213,14 +213,6 @@
 
   <div v-if="editor">
     <div v-if="editable" class="items-center flex gap-4 p-4 bg-white border">
-      <font-awesome-icon icon="fa-solid fa-bold"
-        @click="editor.chain().focus().toggleBold().run()" :class="{
-          'text-slate-900': editor.isActive('bold') }" />
-
-      <font-awesome-icon icon="fa-solid fa-italic"
-        @click="editor.chain().focus().toggleItalic().run()" :class="{
-          'text-slate-900': editor.isActive('italic') }" />
-
       <font-awesome-icon icon="fa-regular fa-image"
         @click="add_image"
         v-if="!editor.isActive('image')" />
