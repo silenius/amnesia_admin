@@ -4,6 +4,10 @@ import {
 } from '@tiptap/core'
 
 import {
+    render_font_family_attrs 
+} from './utils'
+
+import {
     generate_responsive_cls
 } from '../utils'
 
