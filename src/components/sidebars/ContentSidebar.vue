@@ -4,7 +4,7 @@
     <!-- BREAKPOINT -->
 
     <section name="node">
-      <p class="font-caveat">Node</p>
+      <p class="font-kalam text-3xl">Node</p>
     </section>
 
     <section name="breakpoint" class="m-4" :class="cls_section">
@@ -201,6 +201,16 @@
               @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
             />
 
+            <SelectFontFamily 
+              v-if="ext_font_family"
+              :breakpoint="breakpoint"
+              :extension="ext_font_family"
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
+            />
+
+
           </div>
         </DisclosurePanel>
       </Disclosure>
@@ -228,6 +238,7 @@ import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextCol
 import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
 import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
 import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
+import SelectFontFamily from '@/components/editor/tiptap/font-family-extension/SelectFontFamily.vue'
 import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
 import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
 
@@ -243,6 +254,7 @@ const ext_align = ref()
 const ext_text_color = ref()
 const ext_background_color = ref()
 const ext_font_size = ref()
+const ext_font_family = ref()
 const ext_font_weight = ref()
 const ext_font_italic = ref()
 const ext_text_decoration = ref()
@@ -276,6 +288,7 @@ watch(select_editor, () => {
     ext_text_color.value = exts.find(ext => ext.name == 'textColor')
     ext_background_color.value = exts.find(ext => ext.name == 'backgroundColor')
     ext_font_size.value = exts.find(ext => ext.name == 'fontSize')
+    ext_font_family.value = exts.find(ext => ext.name == 'fontFamily')
     ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
     ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
     ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')

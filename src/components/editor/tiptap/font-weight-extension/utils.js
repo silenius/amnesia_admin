@@ -4,5 +4,4 @@ export const render_font_weight_attrs = (attrs) => {
             class: `${attrs.fontWeight.map((x) => [!x.breakpoint ? `font-${x.weight}` : `${x.breakpoint}:font-${x.weight}`].filter(Boolean).join('-')).join(' ')}`
         }
     }
-
 }

@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     fontFamily: {
         'opensans': ['"Open Sans"'],
+        'kalam': ['Kalam'],
         'caveat': ['Caveat']
     },
     extend: {},
