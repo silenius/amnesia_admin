@@ -514,7 +514,7 @@ const editor = useEditor({
     TextStyle,
     TextClass,
     FontSize.configure({
-      types: ['textClass', 'paragraph']
+      types: ['textClass']
     }),
     TextColor.configure({
       types: ['textClass', 'textStyle']

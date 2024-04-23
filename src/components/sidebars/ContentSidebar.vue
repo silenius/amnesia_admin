@@ -3,13 +3,20 @@
 
     <!-- BREAKPOINT -->
 
-    <section name="node">
-      <p class="font-kalam text-3xl">Node</p>
-      <p class="font-roboto text-3xl">Node</p>
-    </section>
-
     <section name="breakpoint" class="m-4" :class="cls_section">
       <SelectBreakpoint @select-breakpoint="change_breakpoint" />
+    </section>
+
+    <!-- NODE -->
+
+    <section name="node" :class="cls_section">
+      <span class="text-2xl">Active Node</span>
+      {{ selection }}
+      <div v-if="select_editor.isActive('image')">
+        <img :src="selection.attrs.src" class="w-1/2 mx-auto"/>
+        IMAGE
+      </div>
+
     </section>
 
     <!-- PADDING -->
@@ -271,9 +278,22 @@ const cls_panel = ['text-sm', 'mb-4']
 const select_transaction = ref()
 const select_editor = ref()
 
+const selection = ref({
+  
+
+})
+
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
+    select_editor.value.on('selectionUpdate', ({editor}) => {
+      if (select_editor.value.isActive('image')) {
+        selection.value.type = 'image'
+        selection.value.attrs = select_editor.value.getAttributes('image')
+      } 
+    })
+
+
   }
 }, { deep: true })
 

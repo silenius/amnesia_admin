@@ -3,7 +3,7 @@
     <h1 class="drop-shadow-lg">{{ content.title }}</h1>
     <p v-if="content.description">{{ content.description }}</p>
     <EditorTipTap :content="content.body" :editable="false" :injectCSS="false" />
-  </article>
+ </article>
 </template>
 
 <script setup>
