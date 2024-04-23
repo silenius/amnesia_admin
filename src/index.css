@@ -1,3 +1,9 @@
+@import '@fontsource-variable/open-sans';
+@import '@fontsource-variable/caveat';
+@import '@fontsource/kalam';
+@import '@fontsource/roboto';
+@import '@fontsource/pacifico';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

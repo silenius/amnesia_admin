@@ -11,7 +11,6 @@ import {
     generate_responsive_cls
 } from '../utils'
 
-
 const sizes = [
     'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl', 
     '8xl', '9xl'
@@ -20,7 +19,6 @@ const sizes = [
 const is_font_size = new Set(
     sizes.map((x) => Array.from(generate_responsive_cls(`text-${x}`))).flat()
 )
-
 
 export const FontSize = Extension.create({
     name: 'fontSize',
@@ -50,7 +48,7 @@ export const FontSize = Extension.create({
                                     const breakpoint = part2 !== undefined ? part1 : null
 
                                     matches.push({
-                                        size: direction,
+                                        size: size,
                                         breakpoint: breakpoint
                                     })
                                 }

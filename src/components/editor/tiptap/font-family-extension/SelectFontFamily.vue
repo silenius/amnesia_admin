@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ family }}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="s in families" :key="s" :value="s">
-        <button :class="class_opt">{{ s }}</button>
+        <button class="text-xl" :class="[class_opt, `font-${s}`]">{{ s }}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>

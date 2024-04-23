@@ -45,7 +45,9 @@ export const FontFamily = Extension.create({
                                 if (is_font_family.has(name)) {
                                     const [part1, part2] = name.split(':')
                                     const breakpoint = part2 !== undefined ? part1 : null
-                                    const family = breakpoint === null ? part1 : part2
+                                    let family = breakpoint === null ? part1 : part2
+                                    family = family.replace(/^font-/, '')
+
 
                                     matches.push({
                                         family: family,

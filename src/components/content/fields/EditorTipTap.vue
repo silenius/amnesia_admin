@@ -230,12 +230,16 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { 
+  ref, watchEffect, onMounted, onBeforeUnmount 
+} from 'vue'
+
 import { 
   useEditor, 
   EditorContent,
   BubbleMenu
 } from '@tiptap/vue-3'
+
 import StarterKit from "@tiptap/starter-kit"
 import Typography from '@tiptap/extension-typography'
 import TextAlign from '@tiptap/extension-text-align'
@@ -272,6 +276,7 @@ import {
   DialogDescription
 } from '@headlessui/vue'
 
+import { fontFamily } from '../../../fonts'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import { useContent } from '@/composables/contents.js'
 import { useFolder } from '@/composables/folders.js'
@@ -461,6 +466,8 @@ const onFileChange = async (event) => {
 
 const doBrowse = id => folder_id.value = id
 
+const fonts = Object.keys(fontFamily).concat(['sans', 'serif', 'mono'])
+
 const editor = useEditor({
   content: props.content,
   editable: props.editable,
@@ -525,7 +532,8 @@ const editor = useEditor({
       types: ['textClass']
     }),
     FontFamily.configure({
-      types: ['textClass']
+      types: ['textClass'],
+      families: fonts
     }),
     FontItalic.configure({
       types: ['textClass']

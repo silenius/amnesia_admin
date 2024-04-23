@@ -5,6 +5,7 @@
 
     <section name="node">
       <p class="font-kalam text-3xl">Node</p>
+      <p class="font-roboto text-3xl">Node</p>
     </section>
 
     <section name="breakpoint" class="m-4" :class="cls_section">

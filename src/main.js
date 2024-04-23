@@ -1,10 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import "@fontsource/open-sans"
-import '@fontsource-variable/caveat'
-import '@fontsource/kalam';
-
 import App from './App.vue'
 import router from './router'
 
