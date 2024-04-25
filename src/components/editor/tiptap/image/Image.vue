@@ -1,17 +1,18 @@
 <template>
-  <node-view-wrapper as="div" class="flex relative not-prose" :class="[align_cls, float_cls]">
-    <div class="w-fit flex relative">
-
-      <img draggable data-drag-handle :src="node.attrs.src" :data-objectid="node.attrs['data-objectid']"
-        :width="node.attrs.width" :height="node.attrs.height" ref="img"
-        class="rounded-lg" :class="[img_cls, padding_cls, margin_cls, bg_color_cls]" />
-      
-      <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
-        <span :class="resize_cls" data-resize="tl" class="cursor-nwse-resize -top-1 -left-1" />
-        <span :class="resize_cls" data-resize="tr" class="cursor-nesw-resize -top-1 -right-1" />
-        <span :class="resize_cls" data-resize="bl" class="cursor-nesw-resize -bottom-1 -left-1" />
-        <span :class="resize_cls" data-resize="br" class="cursor-nwse-resize -bottom-1 -right-1" />
-      </div>
+  <node-view-wrapper>
+    <img draggable data-drag-handle 
+      ref="img" class="rounded-lg" 
+      :src="node.attrs.src" 
+      :data-objectid="node.attrs['data-objectid']"
+      :width="node.attrs.width"
+      :height="node.attrs.height"
+      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls, align_cls]" 
+    />
+    <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
+      <span :class="[resize_cls, resize_tl]" data-resize="tl" />
+      <span :class="[resize_cls, resize_tr]" data-resize="tr" />
+      <span :class="[resize_cls, resize_bl]" data-resize="bl" />
+      <span :class="[resize_cls, resize_br]" data-resize="br" />
     </div>
   </node-view-wrapper>
 </template>
@@ -24,6 +25,7 @@ import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
+import { render_width_attrs } from '../width-extension/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -35,9 +37,76 @@ const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 const editable = computed(() => props.editor.view.editable)
 
+const resize_xy = ref({})
+
+const handleScroll = (e) => {
+  const diffY = window.scrollY - resize_xy.value.scrollY
+  const diffX = window.scrollX - resize_xy.value.scrollX
+
+  resize_xy.value.top -= diffY
+  resize_xy.value.bottom -= diffY
+  resize_xy.value.left -= diffX
+  resize_xy.value.right -= diffX
+
+  resize_xy.value.scrollY = window.scrollY
+  resize_xy.value.scrollX = window.scrollX
+}
+
+watch(() => props.selected, () => {
+  const coords = img.value.getBoundingClientRect()
+
+  resize_xy.value = {
+    scrollY: window.scrollY,
+    scrollX: window.scrollX,
+    top: coords.top,
+    bottom: coords.bottom,
+    left: coords.left,
+    right: coords.right,
+  }
+
+  if (props.selected) {
+    window.addEventListener('scroll', handleScroll)
+  } else {
+    window.removeEventListener('scroll', handleScroll)
+  }
+})
+
 console.debug('===>>> Image component props: ', props)
 
-const resize_cls = 'rounded absolute z-50 h-2 w-2 bg-indigo-500'
+const resize_cls = 'rounded fixed z-50 h-2 w-2 bg-indigo-500'
+
+const resize_tl = computed(() => {
+  return [
+    'cursor-nwse-resize', 
+    `top-[${resize_xy.value.top}px]`,
+    `left-[${resize_xy.value.left}px]`,
+  ]
+
+})
+
+const resize_tr = computed(() => {
+  return [
+    'cursor-nesw-resize',
+    `top-[${resize_xy.value.top}px]`,
+    `left-[${resize_xy.value.right}px]`
+  ]
+})
+
+const resize_bl = computed(() => {
+  return [
+    'cursor-nesw-resize',
+    `top-[${resize_xy.value.bottom}px]`,
+    `left-[${resize_xy.value.left}px]`
+  ]
+})
+
+const resize_br = computed(() => {
+  return [
+    'cursor-nwse-resize',
+    `top-[${resize_xy.value.bottom}px]`,
+    `left-[${resize_xy.value.right}px]`
+  ]
+})
 
 const img_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&
@@ -49,7 +118,7 @@ const padding_cls = computed(() => {
 
   for (const padding of ['px', 'py', 'pt', 'pr', 'pb', 'pl']) {
     const cls = render_padding_attrs(props.node.attrs, padding)?.class
-  
+
     if (cls) {
       paddings.push(cls)
     }
@@ -63,7 +132,7 @@ const margin_cls = computed(() => {
 
   for (const margin of ['mx', 'my', 'mt', 'mr', 'mb', 'ml']) {
     const cls = render_margin_attrs(props.node.attrs, margin)?.class
-  
+
     if (cls) {
       margins.push(cls)
     }
@@ -80,12 +149,12 @@ const float_cls = computed(() => {
 const align_cls = computed(() => {
   if (Array.isArray(props.node.attrs.align)) {
     const maps = {
-      left: 'justify-start',
-      right: 'justify-end',
-      center: 'justify-center'
+      left: 'block mr-auto',
+      right: 'block ml-auto',
+      center: 'block mx-auto'
     }
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
-    `${x.breakpoint}:${maps[x.direction]}`, x.level].filter(Boolean).join('-')).join(' ')
+      `${x.breakpoint}:${maps[x.direction]}`, x.level].filter(Boolean).join('-')).join(' ')
   }
 })
 
@@ -94,11 +163,16 @@ const bg_color_cls = computed(() => {
   return cls ? Object.values(cls) : []
 })
 
+const width_cls = computed(() => {
+  const cls = render_width_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
 const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
   cursorY.value = e.clientY
-  
+
   document.addEventListener('mousemove', startResizeMove)
   document.addEventListener('mouseup', stopResize)
 }
