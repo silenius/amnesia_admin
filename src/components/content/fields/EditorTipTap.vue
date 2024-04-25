@@ -265,6 +265,7 @@ import FontWeight from '@/components/editor/tiptap/font-weight-extension'
 import FontFamily from '@/components/editor/tiptap/font-family-extension'
 import FontItalic from '@/components/editor/tiptap/font-italic-extension'
 import TextDecoration from '@/components/editor/tiptap/text-decoration-extension'
+import Width from '@/components/editor/tiptap/width-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -540,6 +541,9 @@ const editor = useEditor({
     }),
     TextDecoration.configure({
       types: ['textClass']
+    }),
+    Width.configure({
+      types: ['paragraph', 'image']
     }),
     Table,
     TableHeader,

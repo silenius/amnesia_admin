@@ -12,10 +12,6 @@ import {
 } from '../utils'
 
 const widths = [
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
     'auto', 
     
     '1/2', 
@@ -32,17 +28,19 @@ const widths = [
     '10/12', '11/12', 
     
     'full', 'screen', 'svw', 'lvw', 'dvw', 'min', 'max', 'fit', 
-]
 
-const is_width = new Set(
-    widths.map((x) => Array.from(generate_responsive_cls(`w-${x}`))).flat()
-)
+    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
+    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
+    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
+    
+]
 
 export const Width = Extension.create({
     name: 'width',
 
     addOptions() {
         return {
+            widths: widths,
             types: [],
         }
     },
@@ -56,6 +54,12 @@ export const Width = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
+                            const is_width = new Set(
+                                this.options.widths.map(
+                                    (x) => Array.from(generate_responsive_cls(`w-${x}`))
+                                ).flat()
+                            )
+
                             const matches = []
 
                             for (const name of elem.classList) {

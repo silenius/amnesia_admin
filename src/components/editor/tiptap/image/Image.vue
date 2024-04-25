@@ -4,9 +4,8 @@
       ref="img" class="rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
-      :width="node.attrs.width"
-      :height="node.attrs.height"
-      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls, align_cls]" 
+      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls,
+        align_cls, width_cls]" 
     />
     <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
       <span :class="[resize_cls, resize_tl]" data-resize="tl" />
@@ -53,18 +52,18 @@ const handleScroll = (e) => {
 }
 
 watch(() => props.selected, () => {
-  const coords = img.value.getBoundingClientRect()
-
-  resize_xy.value = {
-    scrollY: window.scrollY,
-    scrollX: window.scrollX,
-    top: coords.top,
-    bottom: coords.bottom,
-    left: coords.left,
-    right: coords.right,
-  }
-
   if (props.selected) {
+    const coords = img.value.getBoundingClientRect()
+
+    resize_xy.value = {
+      scrollY: window.scrollY,
+      scrollX: window.scrollX,
+      top: coords.top,
+      bottom: coords.bottom,
+      left: coords.left,
+      right: coords.right,
+    }
+
     window.addEventListener('scroll', handleScroll)
   } else {
     window.removeEventListener('scroll', handleScroll)

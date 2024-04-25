@@ -11,12 +11,6 @@
 
     <section name="node" :class="cls_section">
       <span class="text-2xl">Active Node</span>
-      {{ selection }}
-      <div v-if="select_editor.isActive('image')">
-        <img :src="selection.attrs.src" class="w-1/2 mx-auto"/>
-        IMAGE
-      </div>
-
     </section>
 
     <!-- PADDING -->
@@ -111,6 +105,30 @@
       </Disclosure>
     </section>
 
+    <!-- SIZING -->
+
+    <section name="sizing" :class="cls_section">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Sizing</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for sizings of an element.</div>
+          <SelectWidth
+            v-if="ext_width" 
+            :breakpoint="breakpoint"
+            :extension="ext_width" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint).run()"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
+ 
     <!-- COLORS -->
 
     <section name="colors" :class="cls_section">
@@ -249,6 +267,7 @@ import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.v
 import SelectFontFamily from '@/components/editor/tiptap/font-family-extension/SelectFontFamily.vue'
 import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
 import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
+import SelectWidth from '@/components/editor/tiptap/width-extension/SelectWidth.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -266,6 +285,7 @@ const ext_font_family = ref()
 const ext_font_weight = ref()
 const ext_font_italic = ref()
 const ext_text_decoration = ref()
+const ext_width = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -286,12 +306,14 @@ const selection = ref({
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
+    /*
     select_editor.value.on('selectionUpdate', ({editor}) => {
       if (select_editor.value.isActive('image')) {
         selection.value.type = 'image'
         selection.value.attrs = select_editor.value.getAttributes('image')
       } 
     })
+    */
 
 
   }
@@ -313,6 +335,7 @@ watch(select_editor, () => {
     ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
     ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
     ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
+    ext_width.value = exts.find(ext => ext.name == 'width')
 
   }
 })
