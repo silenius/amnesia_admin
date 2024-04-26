@@ -1,5 +1,5 @@
-import { MinWidth } from './min-width'
+import { MinHeight } from './min-height'
 
-export * from './min-width'
+export * from './min-height'
 
-export default MinWidth
+export default MinHeight
