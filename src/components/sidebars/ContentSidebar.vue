@@ -115,20 +115,81 @@
           <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">Utilities for sizings of an element.</div>
-          <SelectWidth
-            v-if="ext_width" 
-            :breakpoint="breakpoint"
-            :extension="ext_width" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint).run()"
-          />
+          <div class="italic mt-2">Utilities for sizings of an element.</div>
+          <div class="grid grid-rows-6 grid-cols-2 gap-x-2 justify-items-stretch items-end text-center">
+
+            <span>Width</span>
+            <span>Height</span>
+
+            <SelectWidth
+              v-if="ext_width" 
+              :breakpoint="breakpoint"
+              :extension="ext_width" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint).run()"
+            />
+
+            <SelectHeight
+              v-if="ext_height" 
+              :breakpoint="breakpoint"
+              :extension="ext_height" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-height="({height, breakpoint}) => select_editor.chain().setHeight(height, breakpoint).run()"
+            />
+
+            <span>Min. Width</span>
+            
+            <span>Min. Height</span>
+            
+            <SelectMinWidth
+              v-if="ext_min_width" 
+              :breakpoint="breakpoint"
+              :extension="ext_min_width" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-minWidth="({minWidth, breakpoint}) => select_editor.chain().setMinWidth(minWidth, breakpoint).run()"
+            />
+
+            <SelectMinHeight
+              v-if="ext_min_height" 
+              :breakpoint="breakpoint"
+              :extension="ext_min_height" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-minHeight="({minHeight, breakpoint}) => select_editor.chain().setMinHeight(minHeight, breakpoint).run()"
+            />
+
+
+            <span>Max. Width</span>
+            <span>Max. Height</span>
+            <SelectMaxWidth
+              v-if="ext_max_width" 
+              :breakpoint="breakpoint"
+              :extension="ext_max_width" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint).run()"
+            />
+
+            <SelectMaxHeight
+              v-if="ext_max_height" 
+              :breakpoint="breakpoint"
+              :extension="ext_max_height" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint).run()"
+            />
+          </div>
+
+
+
         </DisclosurePanel>
       </Disclosure>
     </section>
 
- 
+
     <!-- COLORS -->
 
     <section name="colors" :class="cls_section">
@@ -268,6 +329,11 @@ import SelectFontFamily from '@/components/editor/tiptap/font-family-extension/S
 import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
 import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
 import SelectWidth from '@/components/editor/tiptap/width-extension/SelectWidth.vue'
+import SelectMinWidth from '@/components/editor/tiptap/min-width-extension/SelectMinWidth.vue'
+import SelectMaxWidth from '@/components/editor/tiptap/max-width-extension/SelectMaxWidth.vue'
+import SelectHeight from '@/components/editor/tiptap/height-extension/SelectHeight.vue'
+import SelectMinHeight from '@/components/editor/tiptap/min-height-extension/SelectMinHeight.vue'
+import SelectMaxHeight from '@/components/editor/tiptap/max-height-extension/SelectMaxHeight.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -286,6 +352,11 @@ const ext_font_weight = ref()
 const ext_font_italic = ref()
 const ext_text_decoration = ref()
 const ext_width = ref()
+const ext_min_width = ref()
+const ext_max_width = ref()
+const ext_height = ref()
+const ext_min_height = ref()
+const ext_max_height = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -299,7 +370,7 @@ const select_transaction = ref()
 const select_editor = ref()
 
 const selection = ref({
-  
+
 
 })
 
@@ -336,6 +407,11 @@ watch(select_editor, () => {
     ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
     ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
     ext_width.value = exts.find(ext => ext.name == 'width')
+    ext_min_width.value = exts.find(ext => ext.name == 'minWidth')
+    ext_max_width.value = exts.find(ext => ext.name == 'maxWidth')
+    ext_height.value = exts.find(ext => ext.name == 'height')
+    ext_min_height.value = exts.find(ext => ext.name == 'minHeight')
+    ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
 
   }
 })

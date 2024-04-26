@@ -4,8 +4,7 @@
       ref="img" class="rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
-      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls,
-        align_cls, width_cls]" 
+      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls, align_cls, width_cls]" 
     />
     <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
       <span :class="[resize_cls, resize_tl]" data-resize="tl" />

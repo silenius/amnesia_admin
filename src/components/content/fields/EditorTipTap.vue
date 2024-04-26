@@ -266,6 +266,11 @@ import FontFamily from '@/components/editor/tiptap/font-family-extension'
 import FontItalic from '@/components/editor/tiptap/font-italic-extension'
 import TextDecoration from '@/components/editor/tiptap/text-decoration-extension'
 import Width from '@/components/editor/tiptap/width-extension'
+import MinWidth from '@/components/editor/tiptap/min-width-extension'
+import MaxWidth from '@/components/editor/tiptap/max-width-extension'
+import Height from '@/components/editor/tiptap/height-extension'
+import MinHeight from '@/components/editor/tiptap/min-height-extension'
+import MaxHeight from '@/components/editor/tiptap/max-height-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -543,6 +548,21 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
+      types: ['paragraph', 'image']
+    }),
+    MinWidth.configure({
+      types: ['paragraph', 'image']
+    }),
+    MinHeight.configure({
+      types: ['paragraph', 'image']
+    }),
+    MaxWidth.configure({
+      types: ['paragraph', 'image']
+    }),
+    MaxHeight.configure({
+      types: ['paragraph', 'image']
+    }),
+    Height.configure({
       types: ['paragraph', 'image']
     }),
     Table,

@@ -48,7 +48,6 @@ export const FontFamily = Extension.create({
                                     let family = breakpoint === null ? part1 : part2
                                     family = family.replace(/^font-/, '')
 
-
                                     matches.push({
                                         family: family,
                                         breakpoint: breakpoint
