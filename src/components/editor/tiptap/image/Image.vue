@@ -4,6 +4,8 @@
       ref="img" class="rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
+      :width="node.attrs['width']"
+      :height="node.attrs['height']"
       :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls, align_cls, width_cls]" 
     />
     <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
@@ -152,7 +154,7 @@ const align_cls = computed(() => {
       center: 'block mx-auto'
     }
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
-      `${x.breakpoint}:${maps[x.direction]}`, x.level].filter(Boolean).join('-')).join(' ')
+      `${x.breakpoint}:${maps[x.direction]}`].filter(Boolean).join('-')).join(' ')
   }
 })
 
