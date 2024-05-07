@@ -54,6 +54,13 @@ export const Height = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
+                            if (
+                                elem instanceof HTMLImageElement
+                                && elem.hasAttribute('height')
+                            ) {
+                                return parseInt(elem.getAttribute('height'))
+                            }
+
                             const is_height = new Set(
                                 this.options.heights.map(
                                     (x) => Array.from(generate_responsive_cls(`h-${x}`))
@@ -92,6 +99,11 @@ export const Height = Extension.create({
         return {
             setHeight: (height, breakpoint = null) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+
+                if (height > 0 && type == 'image' && breakpoint === null) {
+                    return p.commands.updateAttributes(type, { height: height })
+                }
+
                 const oldAttrs = getAttributes(p.state, type)['height']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

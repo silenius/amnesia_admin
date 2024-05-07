@@ -50,8 +50,11 @@ const attrs = computed(() => {
 const height = computed({
 
   get() { 
-    const v = attrs.value.height?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.height : 'none'
+    const v = Array.isArray(attrs.value.height) 
+      ? attrs.value.height?.find((x) => x.breakpoint == props.breakpoint)?.height
+      : attrs.value.height
+
+      return v !== undefined ? v : 'none'
   },
 
   set(value) { 

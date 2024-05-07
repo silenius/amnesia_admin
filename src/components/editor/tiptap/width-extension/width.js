@@ -54,6 +54,13 @@ export const Width = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
+                            if (
+                                elem instanceof HTMLImageElement
+                                && elem.hasAttribute('width')
+                            ) {
+                                return parseInt(elem.getAttribute('width'))
+                            }
+
                             const is_width = new Set(
                                 this.options.widths.map(
                                     (x) => Array.from(generate_responsive_cls(`w-${x}`))
@@ -92,6 +99,11 @@ export const Width = Extension.create({
         return {
             setWidth: (width, breakpoint = null) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+                
+                if (width > 0 && type == 'image' && breakpoint === null) {
+                    return p.commands.updateAttributes(type, { width: width })
+                }
+
                 const oldAttrs = getAttributes(p.state, type)['width']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

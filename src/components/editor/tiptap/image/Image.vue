@@ -4,9 +4,10 @@
       ref="img" class="rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
-      :width="node.attrs['width']"
-      :height="node.attrs['height']"
-      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls, align_cls, width_cls]" 
+      :width="width_attr"
+      :height="height_attr"
+      :class="[img_cls, padding_cls, margin_cls, bg_color_cls, float_cls,
+        align_cls, width_cls, height_cls]" 
     />
     <div v-if="selected && editable" @mousedown="startResize" @mouseup="stopResize">
       <span :class="[resize_cls, resize_tl]" data-resize="tl" />
@@ -26,6 +27,7 @@ import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
 import { render_width_attrs } from '../width-extension/utils'
+import { render_height_attrs } from '../height-extension/utils'
 
 const props = defineProps(nodeViewProps)
 const img = ref(null)
@@ -168,6 +170,21 @@ const width_cls = computed(() => {
   return cls ? Object.values(cls) : []
 })
 
+const width_attr = computed(() => {
+  const v = parseFloat(props.node.attrs.width)
+  return isNaN(v) ? null : v
+})
+
+const height_cls = computed(() => {
+  const cls = render_height_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
+const height_attr = computed(() => {
+  const v = parseFloat(props.node.attrs.height)
+  return isNaN(v) ? null : v
+})
+
 const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')
   cursorX.value = e.clientX
@@ -227,6 +244,8 @@ const startResizeMove = (e) => {
     new_size.width = container_width.value
     new_size.height = new_size.width / img_ratio.value
   }
+
+  //props.editor.chain().setWidth(new_size.width).setHeight(new_size.height).run()
 
   props.updateAttributes(new_size)
 }

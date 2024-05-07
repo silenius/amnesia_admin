@@ -49,9 +49,14 @@ const attrs = computed(() => {
 
 const width = computed({
 
-  get() { 
-    const v = attrs.value.width?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.width : 'none'
+  get() {
+    const v = Array.isArray(attrs.value.width) 
+      ? attrs.value.width?.find((x) => x.breakpoint == props.breakpoint)?.width
+      : attrs.value.width
+
+      console.log('WIDTH:', v)
+
+      return v !== undefined ? v : 'none'
   },
 
   set(value) { 

@@ -90,12 +90,14 @@ export default Node.create({
             title: {
                 default: null,
             },
+            /*
             width: {
                 default: null,
             },
             height: {
                 default: null
             }
+            */
         }
     },
 
