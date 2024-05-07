@@ -54,14 +54,12 @@ const width = computed({
       ? attrs.value.width?.find((x) => x.breakpoint == props.breakpoint)?.width
       : attrs.value.width
 
-      console.log('WIDTH:', v)
-
       return v !== undefined ? v : 'none'
   },
 
   set(value) { 
     return emits('select-width', {
-      width: value, breakpoint: props.breakpoint
+      width: value, breakpoint: props.breakpoint, force_tw: true
     })
   }
 

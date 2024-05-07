@@ -54,11 +54,13 @@ export const Width = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
-                            if (
-                                elem instanceof HTMLImageElement
-                                && elem.hasAttribute('width')
-                            ) {
-                                return parseInt(elem.getAttribute('width'))
+
+                            if (elem instanceof HTMLImageElement) {
+                                if (elem.hasAttribute('data-width')) {
+                                    return JSON.parse(elem.getAttribute('data-width'))
+                                } else if (elem.hasAttribute('width')) {
+                                    return parseFloat(elem.getAttribute('width'))
+                                }
                             }
 
                             const is_width = new Set(
@@ -97,13 +99,8 @@ export const Width = Extension.create({
 
     addCommands() {
         return {
-            setWidth: (width, breakpoint = null) => (p) => {
+            setWidth: (width, breakpoint = null, raw = false) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-                
-                if (width > 0 && type == 'image' && breakpoint === null) {
-                    return p.commands.updateAttributes(type, { width: width })
-                }
-
                 const oldAttrs = getAttributes(p.state, type)['width']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
@@ -113,7 +110,8 @@ export const Width = Extension.create({
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        width: width
+                        width: width,
+                        raw: raw
                     })
                 }
 

@@ -63,34 +63,28 @@ export default Node.create({
             'data-objectid': {
                 default: null,
             },
-            'data-responsive': {
+            /*
+            'data-attrs': {
                 default: null,
                 parseHTML: elem => {
-                    if (elem.hasAttribute('data-responsive')) {
-                        try {
-                            return JSON.parse(elem.getAttribute('data-responsive'))
-                        } catch (e) {
-                            return null
-                        }
+                    if (elem.hasAttribute('data-attrs')) {
+                        return JSON.parse(elem.getAttribute('data-attrs'))
                     }
                 },
                 renderHTML: attrs => {
-                    if (attrs['data-responsive']) {
-                        try {
-                            return JSON.stringify(attrs['data-responsive'])
-                        } catch {
-                            return null
-                        }
+                    if (attrs) {
+                        return {'data-attrs': JSON.stringify(attrs)}
                     }
                 }
             },
+            */
             alt: {
                 default: null,
             },
             title: {
                 default: null,
             },
-            /*
+           /*
             width: {
                 default: null,
             },
@@ -108,11 +102,19 @@ export default Node.create({
                     ? 'img[src]'
                     : 'img[src]:not([src^="data:"])',
             },
+            {
+                tag: 'amnesia-img'
+            }
         ]
     },
 
-    renderHTML({ HTMLAttributes }) {
-        return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+    renderHTML({node, HTMLAttributes}) {
+        return [
+            'amnesia-img', 
+            mergeAttributes(
+                HTMLAttributes
+            )
+        ]
     },
 
     addCommands() {

@@ -59,7 +59,7 @@ const height = computed({
 
   set(value) { 
     return emits('select-height', {
-      height: value, breakpoint: props.breakpoint
+      height: value, breakpoint: props.breakpoint, force_tw: true
     })
   }
 
