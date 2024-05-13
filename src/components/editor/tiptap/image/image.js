@@ -111,9 +111,7 @@ export default Node.create({
     renderHTML({node, HTMLAttributes}) {
         return [
             'amnesia-img', 
-            mergeAttributes(
-                HTMLAttributes
-            )
+            mergeAttributes(HTMLAttributes)
         ]
     },
 

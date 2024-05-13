@@ -89,6 +89,7 @@ export const Width = Extension.create({
                         },
                         
                         renderHTML: attrs => {
+                            console.log(attrs)
                             return render_width_attrs(attrs)
                         },
                     },

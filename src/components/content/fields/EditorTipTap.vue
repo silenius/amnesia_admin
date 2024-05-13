@@ -191,6 +191,7 @@
                     :actions="actions"
                     :selectActions=null
                     :view="'gallery'"
+                    :forceClick="true"
                     v-if="folder && contents"
                   />
                 </p>
@@ -203,6 +204,7 @@
                   @click="closeModal('file_browser')">
                   Close
                 </button>
+
               </div>
             </DialogPanel>
           </TransitionChild>
