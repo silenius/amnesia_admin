@@ -3,5 +3,6 @@ export const fontFamily = {
     'kalam': ['Kalam', 'cursive'],
     'caveat': ['"Caveat Variable"', 'cursive'],
     'roboto': ['Roboto', 'sans-serif'],
-    'pacifico': ['Pacifico', 'cursive']
+    'pacifico': ['Pacifico', 'cursive'],
+    'lobster-two': ['"Lobster Two"', 'system-ui'],
 }

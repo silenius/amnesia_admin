@@ -3,6 +3,7 @@
 @import '@fontsource/kalam';
 @import '@fontsource/roboto';
 @import '@fontsource/pacifico';
+@import '@fontsource/lobster-two';
 
 @tailwind base;
 @tailwind components;
