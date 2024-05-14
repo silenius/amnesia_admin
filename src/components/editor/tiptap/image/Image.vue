@@ -20,7 +20,6 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
-import { backend_url } from '@/composables/fetch.js';
 import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
@@ -40,23 +39,10 @@ const editable = computed(() => props.editor.view.editable)
 
 const resize_xy = ref({})
 
-const handleScroll = (e) => {
-  const diffY = window.scrollY - resize_xy.value.scrollY
-  const diffX = window.scrollX - resize_xy.value.scrollX
+const compute_resize_xy = () => {
+  const coords = img.value?.getBoundingClientRect()
 
-  resize_xy.value.top -= diffY
-  resize_xy.value.bottom -= diffY
-  resize_xy.value.left -= diffX
-  resize_xy.value.right -= diffX
-
-  resize_xy.value.scrollY = window.scrollY
-  resize_xy.value.scrollX = window.scrollX
-}
-
-watch(() => props.selected, () => {
-  if (props.selected) {
-    const coords = img.value.getBoundingClientRect()
-
+  if (coords) {
     resize_xy.value = {
       scrollY: window.scrollY,
       scrollX: window.scrollX,
@@ -66,13 +52,28 @@ watch(() => props.selected, () => {
       right: coords.right,
     }
 
-    window.addEventListener('scroll', handleScroll)
+    const diffY = window.scrollY - resize_xy.value.scrollY
+    const diffX = window.scrollX - resize_xy.value.scrollX
+
+    resize_xy.value.top -= diffY
+    resize_xy.value.bottom -= diffY
+    resize_xy.value.left -= diffX
+    resize_xy.value.right -= diffX
+
+    resize_xy.value.scrollY = window.scrollY
+    resize_xy.value.scrollX = window.scrollX
+  }
+}
+
+watch(img, () => compute_resize_xy())
+watch(() => props.selected, () => {
+  if (props.selected) {
+    compute_resize_xy()
+    window.addEventListener('scroll', compute_resize_xy) 
   } else {
-    window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('scroll', compute_resize_xy)
   }
 })
-
-console.debug('===>>> Image component props: ', props)
 
 const resize_cls = 'rounded fixed z-50 h-2 w-2 bg-indigo-500'
 
@@ -82,7 +83,6 @@ const resize_tl = computed(() => {
     `top-[${resize_xy.value.top}px]`,
     `left-[${resize_xy.value.left}px]`,
   ]
-
 })
 
 const resize_tr = computed(() => {

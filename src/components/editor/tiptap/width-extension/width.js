@@ -54,8 +54,7 @@ export const Width = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
-
-                            if (elem instanceof HTMLImageElement) {
+                            if (elem.tagName.toLowerCase() === 'amnesia-img') {
                                 if (elem.hasAttribute('data-width')) {
                                     return JSON.parse(elem.getAttribute('data-width'))
                                 } else if (elem.hasAttribute('width')) {
@@ -89,7 +88,6 @@ export const Width = Extension.create({
                         },
                         
                         renderHTML: attrs => {
-                            console.log(attrs)
                             return render_width_attrs(attrs)
                         },
                     },

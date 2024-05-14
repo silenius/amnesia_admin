@@ -9,9 +9,11 @@
 
     <!-- NODE -->
 
+    <!--
     <section name="node" :class="cls_section">
       <span class="text-2xl">Active Node</span>
     </section>
+    -->
 
     <!-- PADDING -->
 
@@ -183,12 +185,9 @@
             />
           </div>
 
-
-
         </DisclosurePanel>
       </Disclosure>
     </section>
-
 
     <!-- COLORS -->
 
@@ -207,6 +206,7 @@
             <span>Background</span>
 
             <SelectTextColor
+              class="w-full"
               v-if="ext_text_color" 
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
@@ -216,6 +216,7 @@
             />
 
             <SelectBackgroundColor
+              class="w-full"
               v-if="ext_background_color" 
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
@@ -275,11 +276,12 @@
 
           </div>
 
-          <div>
+          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
             <span>Size</span>
-
+            <span>Family</span>
 
             <SelectFontSize 
+              class="w-full"
               v-if="ext_font_size"
               :breakpoint="breakpoint"
               :extension="ext_font_size"
@@ -289,6 +291,7 @@
             />
 
             <SelectFontFamily 
+              class="w-full"
               v-if="ext_font_family"
               :breakpoint="breakpoint"
               :extension="ext_font_family"
@@ -296,7 +299,6 @@
               :editor="select_editor"
               @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
             />
-
 
           </div>
         </DisclosurePanel>
@@ -370,8 +372,6 @@ const select_transaction = ref()
 const select_editor = ref()
 
 const selection = ref({
-
-
 })
 
 watch(editors, () => {

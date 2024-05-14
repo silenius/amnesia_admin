@@ -63,35 +63,12 @@ export default Node.create({
             'data-objectid': {
                 default: null,
             },
-            /*
-            'data-attrs': {
-                default: null,
-                parseHTML: elem => {
-                    if (elem.hasAttribute('data-attrs')) {
-                        return JSON.parse(elem.getAttribute('data-attrs'))
-                    }
-                },
-                renderHTML: attrs => {
-                    if (attrs) {
-                        return {'data-attrs': JSON.stringify(attrs)}
-                    }
-                }
-            },
-            */
             alt: {
                 default: null,
             },
             title: {
                 default: null,
             },
-           /*
-            width: {
-                default: null,
-            },
-            height: {
-                default: null
-            }
-            */
         }
     },
 

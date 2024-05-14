@@ -44,7 +44,7 @@ const attrs = computed(() => props.editor.getAttributes('textClass'))
 const family = computed({
 
   get() { 
-    const v = attrs.value.fontSize?.find((x) => x.breakpoint == props.breakpoint)
+    const v = attrs.value.fontFamily?.find((x) => x.breakpoint == props.breakpoint)
     return v !== undefined ? v.family : 'none'
   },
 

@@ -22,8 +22,8 @@ export const TextClass = Mark.create({
         ]
     },
 
-    renderHTML({ HTMLAttributes }) {
-        return ['span', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
+    renderHTML(p) {
+        return ['span', mergeAttributes(this.options.HTMLAttributes, p.HTMLAttributes), 0]
     },
 
     addCommands() {

@@ -102,7 +102,6 @@ export const Margin = Extension.create({
                 level = parse_level(level)
                 console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
-
                 // Get attributes for the side 
                 const oldAttrs = getAttributes(p.state, type)[side]
                 console.debug('===>>> setMargin, oldAttrs: ', oldAttrs)
@@ -124,6 +123,9 @@ export const Margin = Extension.create({
                 // New value
                 console.debug('===>>> setMargin, mark: ', mark)
 
+                    return p.commands.updateAttributes(
+                        'bulletList', Object.fromEntries([[`${side}`, mark]])
+                    )
                 if (p.state.selection.node) {
                     return p.commands.updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])

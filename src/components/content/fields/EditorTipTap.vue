@@ -487,9 +487,11 @@ const editor = useEditor({
   onSelectionUpdate: ({editor: e, transaction: tr}) => {
     emit('update:selection', e)
     setEditor('current', e)
+    /*
     console.debug(
       '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
     )
+    */
   },
   /*
   onTransaction: (p) => {
@@ -499,7 +501,11 @@ const editor = useEditor({
   extensions: [
     StarterKit.configure({
       bold: false,
-      italic: false
+      italic: false,
+      bulletList: {
+        HTMLAttributes: { 'class': 'list-disc ml-5' },
+        types: ['textClass']
+      }
     }),
     Typography,
     /*
@@ -531,7 +537,7 @@ const editor = useEditor({
       types: ['textClass', 'image']
     }),
     Margin.configure({
-      types: ['image', 'textClass', 'textStyle']
+      types: ['image', 'textClass', 'textStyle', 'bulletList']
     }),
     Padding.configure({
       types: ['image', 'textClass', 'textStyle']

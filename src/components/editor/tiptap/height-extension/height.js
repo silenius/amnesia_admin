@@ -52,13 +52,14 @@ export const Height = Extension.create({
                 attributes: {
                     height: {
                         default: null,
-                        
+
                         parseHTML: elem => {
-                            if (
-                                elem instanceof HTMLImageElement
-                                && elem.hasAttribute('height')
-                            ) {
-                                return parseInt(elem.getAttribute('height'))
+                            if (elem.tagName.toLowerCase() === 'amnesia-img') {
+                                if (elem.hasAttribute('data-height')) {
+                                    return JSON.parse(elem.getAttribute('data-height'))
+                                } else if (elem.hasAttribute('height')) {
+                                    return parseFloat(elem.getAttribute('height'))
+                                }
                             }
 
                             const is_height = new Set(
