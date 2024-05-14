@@ -69,7 +69,13 @@ export const Float = Extension.create({
         return {
             setFloat: (direction, breakpoint = null) => (p) => {
                 console.debug('===>>> setFloat, direction: ', direction, ', bp: ', breakpoint)
-                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
+                let type
+
+                if (p.editor.isActive('image')) {
+                    type = 'image'
+                } else if (p.editor.isActive('paragraph')) {
+                    type = p.state.selection.empty ? 'paragraph' : 'textClass'
+                }
 
                 const oldAttrs = getAttributes(p.state, type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
@@ -89,7 +95,7 @@ export const Float = Extension.create({
                 // New value
                 console.debug('===>>> setFloat, mark: ', mark)
 
-                if (p.state.selection.node) {
+                if (type != 'textClass') {
                     return p.commands.updateAttributes(
                         type, { float: mark }
                     )

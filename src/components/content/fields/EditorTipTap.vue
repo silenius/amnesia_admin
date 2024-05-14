@@ -512,7 +512,7 @@ const editor = useEditor({
       inline: true,
     }),
     Float.configure({
-      types: ['image', 'textClass'],
+      types: ['image', 'paragraph', 'textClass'],
     }),
     Align.configure({
       types: ['image', 'paragraph'],
