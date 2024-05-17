@@ -114,20 +114,22 @@ const class_opt = [
 const levels = computed(() => props.extension.options.levels)
 
 const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('textClass')
+  const type = props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  )
+  if (type) {
+    return props.editor.getAttributes(type)
   }
 })
 
 const get_side = (side) => {
-  if (Array.isArray(attrs.value[side])) {
+  try {
     const v = attrs.value[side].find((x) => x.breakpoint == props.breakpoint)
     return v !== undefined ? v.level : ''
+  } catch (e) {
+    return ''
   }
 
-  return ''
 }
 
 const set_side = (side, value) => emits('select-padding', {

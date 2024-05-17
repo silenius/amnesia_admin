@@ -45,18 +45,24 @@ const props = defineProps({
 const emits = defineEmits(['select-align'])
 
 const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
+  const type = props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  )
+  if (type) {
+    return props.editor.getAttributes(type)
   }
 })
 
 const align = computed({
 
   get() { 
-    const v = attrs.value.align?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.direction : ''
+    try {
+      return attrs.value.align.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).direction
+    } catch (e) {
+      return ''
+    }
   },
 
   set(value) { 

@@ -101,7 +101,12 @@ export const Margin = Extension.create({
             setMargin: (side, level, breakpoint = null) => (p) => {
                 level = parse_level(level)
                 console.debug('===>>> setMargin, side: ', side, ', level: ', level, ', bp: ', breakpoint)
-                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
+                const type = this.options.types.find((e) => p.editor.isActive(e))
+
+                if (!type) {
+                    return false
+                }
+
                 // Get attributes for the side 
                 const oldAttrs = getAttributes(p.state, type)[side]
                 console.debug('===>>> setMargin, oldAttrs: ', oldAttrs)
@@ -123,16 +128,15 @@ export const Margin = Extension.create({
                 // New value
                 console.debug('===>>> setMargin, mark: ', mark)
 
-                if (p.state.selection.node) {
+                if (p.state.selection.empty || p.state.selection.node) {
                     return p.commands.updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])
                     )
                 } else {
                     return p.chain().setMark(
                         'textClass', Object.fromEntries([[`${side}`, mark]])
-                    ).run()
+                    )
                 }
-
             }
         }
     }

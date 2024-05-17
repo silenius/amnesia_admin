@@ -101,7 +101,7 @@
                 Insert an image
               </DialogTitle>
               <DialogDescription as="h4" class="mt-2">
-                Browse the site, upload an image, or type an URL
+                Browse the site, upload an image, or enter an URL
               </DialogDescription>
               <div class="flex text-sm gap-4 mt-2 py-8">
 
@@ -125,7 +125,6 @@
                   <input @change="onFileChange" accept="image/*" type="file" ref="input_upload_file" class="hidden" />
                   Upload
                 </div>
-
               </div>
 
               <div class="mt-4">
@@ -504,7 +503,7 @@ const editor = useEditor({
       bold: false,
       italic: false,
       bulletList: {
-        HTMLAttributes: { 'class': 'list-disc ml-5' },
+        HTMLAttributes: { 'class': 'list-disc' },
         types: ['textClass']
       }
     }),
@@ -542,7 +541,7 @@ const editor = useEditor({
       types: ['image', 'bulletList', 'textClass', 'textStyle']
     }),
     Padding.configure({
-      types: ['image', 'textClass', 'textStyle']
+      types: ['image', 'bulletList', 'textClass', 'textStyle']
     }),
     FontWeight.configure({
       types: ['textClass']

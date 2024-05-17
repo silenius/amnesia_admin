@@ -69,7 +69,11 @@ export const Align = Extension.create({
         return {
             setAlign: (direction, breakpoint = null) => (p) => {
                 console.debug('===>>> setAlign, direction: ', direction, ', bp: ', breakpoint)
-                const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+                const type = this.options.types.find((e) => p.editor.isActive(e))
+
+                if (!type) {
+                    return false
+                }
 
                 const oldAttrs = getAttributes(p.state, type)['align']
                 console.debug('===>>> setAlign, oldAttrs: ', oldAttrs)
