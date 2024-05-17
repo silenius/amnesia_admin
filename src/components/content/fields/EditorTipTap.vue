@@ -273,6 +273,7 @@ import MaxWidth from '@/components/editor/tiptap/max-width-extension'
 import Height from '@/components/editor/tiptap/height-extension'
 import MinHeight from '@/components/editor/tiptap/min-height-extension'
 import MaxHeight from '@/components/editor/tiptap/max-height-extension'
+import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -507,6 +508,7 @@ const editor = useEditor({
         types: ['textClass']
       }
     }),
+    TipTapCommands,
     Typography,
     /*
     TextAlign.configure({
@@ -537,7 +539,7 @@ const editor = useEditor({
       types: ['textClass', 'image']
     }),
     Margin.configure({
-      types: ['image', 'textClass', 'textStyle', 'bulletList']
+      types: ['image', 'bulletList', 'textClass', 'textStyle']
     }),
     Padding.configure({
       types: ['image', 'textClass', 'textStyle']

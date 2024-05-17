@@ -123,9 +123,6 @@ export const Margin = Extension.create({
                 // New value
                 console.debug('===>>> setMargin, mark: ', mark)
 
-                    return p.commands.updateAttributes(
-                        'bulletList', Object.fromEntries([[`${side}`, mark]])
-                    )
                 if (p.state.selection.node) {
                     return p.commands.updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])
