@@ -1,6 +1,5 @@
 import { 
     Extension,
-    getAttributes
 } from '@tiptap/core'
 
 import {
@@ -99,7 +98,7 @@ export const Width = Extension.create({
     addCommands() {
         return {
             setWidth: (width, breakpoint = null, raw = false) => (p) => {
-                const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+                const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['width']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

@@ -1,6 +1,5 @@
 import { 
     Extension,
-    getAttributes
 } from '@tiptap/core'
 
 import {
@@ -98,13 +97,8 @@ export const Height = Extension.create({
 
     addCommands() {
         return {
-            setHeight: (height, breakpoint = null) => (p) => {
-                const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-
-                if (height > 0 && type == 'image' && breakpoint === null) {
-                    return p.commands.updateAttributes(type, { height: height })
-                }
-
+            setHeight: (height, breakpoint=null, raw=false) => (p) => {
+                const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['height']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
@@ -114,7 +108,8 @@ export const Height = Extension.create({
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        height: height
+                        height: height,
+                        raw: raw
                     })
                 }
 

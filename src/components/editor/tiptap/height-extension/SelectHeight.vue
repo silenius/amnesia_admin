@@ -40,26 +40,32 @@ const class_opt = [
 const heights = computed(() => props.extension.options.heights)
 
 const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
+  const type = props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  )
+
+  if (type) {
+    return props.editor.getAttributes(type)
   }
 })
 
 const height = computed({
 
-  get() { 
-    const v = Array.isArray(attrs.value.height) 
-      ? attrs.value.height?.find((x) => x.breakpoint == props.breakpoint)?.height
-      : attrs.value.height
-
-      return v !== undefined ? v : 'none'
+  get() {
+    try {
+      return attrs.value.height.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).height
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-height', {
-      height: value, breakpoint: props.breakpoint, force_tw: true
+      height: value, 
+      breakpoint: props.breakpoint, 
+      raw: false
     })
   }
 

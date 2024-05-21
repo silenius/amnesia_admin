@@ -40,26 +40,32 @@ const class_opt = [
 const widths = computed(() => props.extension.options.widths)
 
 const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
+  const type = props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  )
+
+  if (type) {
+    return props.editor.getAttributes(type)
   }
 })
 
 const width = computed({
 
   get() {
-    const v = Array.isArray(attrs.value.width) 
-      ? attrs.value.width?.find((x) => x.breakpoint == props.breakpoint)?.width
-      : attrs.value.width
-
-      return v !== undefined ? v : 'none'
+    try {
+      return attrs.value.width.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).width
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-width', {
-      width: value, breakpoint: props.breakpoint, force_tw: true
+      width: value, 
+      breakpoint: props.breakpoint, 
+      raw: false
     })
   }
 

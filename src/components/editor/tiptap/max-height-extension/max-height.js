@@ -78,7 +78,7 @@ export const MaxHeight = Extension.create({
     addCommands() {
         return {
             setMaxHeight: (maxHeight, breakpoint = null) => (p) => {
-                const type = p.editor.isActive('image') ? 'image' : 'paragraph'
+                const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['maxHeight']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
