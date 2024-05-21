@@ -22,6 +22,7 @@ import {
     faFolder,
     faFileLines,
     faArrowUpFromBracket,
+    faArrowRight,
     faTrashCan,
     faPenToSquare,
     faCalendar,
@@ -91,6 +92,7 @@ library.add(faShieldHalved)
 library.add(faFolderTree)
 library.add(faFolder)
 library.add(faFileLines)
+library.add(faArrowRight)
 library.add(faArrowUpFromBracket)
 library.add(faTrashCan)
 library.add(faPenToSquare)

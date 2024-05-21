@@ -103,27 +103,34 @@
               <DialogDescription as="h4" class="mt-2">
                 Browse the site, upload an image, or enter an URL
               </DialogDescription>
-              <div class="flex text-sm gap-4 mt-2 py-8">
 
-                <!-- BROWSE SITE -->
+              <div class="mt-2">
+                <div class="border shadow-md flex justify-start p-2 items-center rounded-full">
 
-                <div class="flex flex-col gap-2">
-                  <button @click="modals.file_browser=true" class="p-2 hover:outline-none text-white bg-rose-500
-                    hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
-                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="h-8 w-8" />
+                  <!-- BROWSE WEBSITE -->
+
+                  <button @click="modals.file_browser=true" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
+                    <font-awesome-icon icon="fa-solid fa-folder-tree" class="h-4 w-4" />
                   </button>
-                  Browse
-                </div>
 
-                <!-- UPLOAD IMAGE -->
+                  <!-- UPLOAD IMAGE -->
 
-                <div class="flex flex-col gap-2">
-                  <button @click="upload_image" class="p-2 hover:outline-none text-white bg-rose-500
-                    hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
-                    <font-awesome-icon icon="fa-solid fa-upload" class="h-8 w-8" />
+                  <button @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
+                    <font-awesome-icon icon="fa-solid fa-upload" class="h-4 w-4" />
                   </button>
                   <input @change="onFileChange" accept="image/*" type="file" ref="input_upload_file" class="hidden" />
-                  Upload
+
+                  <!-- ENTER URL -->
+
+                  <input @keyup.enter="insertImageURL" v-model="input_image_url" type="url" placeholder="Browse the site, upload an image, or enter an URL" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
+
+                  <button v-if="input_image_url" @click="input_image_url=''">
+                    <font-awesome-icon icon="fa-solid fa-xmark" class="mr-2" />
+                  </button>
+
+                  <button v-if="input_image_url" @click="insertImageURL">
+                    <font-awesome-icon icon="fa-solid fa-arrow-right" class="mr-2" /> 
+                  </button>
                 </div>
               </div>
 
@@ -232,7 +239,7 @@
 
 <script setup>
 import { 
-  ref, watchEffect, onMounted, onBeforeUnmount 
+  ref, watch, watchEffect, onMounted, onBeforeUnmount 
 } from 'vue'
 
 import { 
@@ -374,12 +381,21 @@ const doSelect = (content) => {
 }
 
 const input_upload_file = ref()
+const input_image_url = ref()
 
 const insertImage = (value) => {
   editor.value.commands.setImage({
     'data-objectid': value,
     'src': backend_url(value)
   })
+}
+
+const insertImageURL = () => {
+  editor.value.commands.setImage(
+    { 'src': input_image_url.value }
+  )
+  modals.value.choose_image = false
+  input_image_url.value = ''
 }
 
 const insertLink = (value) => {
@@ -557,22 +573,22 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     MinWidth.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     MinHeight.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     MaxWidth.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     MaxHeight.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     Height.configure({
-      types: ['paragraph', 'image']
+      types: ['image', 'paragraph']
     }),
     Table,
     TableHeader,

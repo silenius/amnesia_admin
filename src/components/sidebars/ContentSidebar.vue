@@ -138,7 +138,7 @@
               :extension="ext_height" 
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-height="({height, breakpoint, force_tw}) => select_editor.chain().setHeight(height, breakpoint, force_tw).run()"
+              @select-height="({height, breakpoint, raw}) => select_editor.chain().setHeight(height, breakpoint, raw).run()"
             />
 
             <span>Min. Width</span>
