@@ -100,7 +100,7 @@ export const Width = Extension.create({
         return {
             setWidth: (width, breakpoint = null, raw = false) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-                const oldAttrs = getAttributes(p.state, type)['width']
+                const oldAttrs = p.editor.getAttributes(type)['width']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []

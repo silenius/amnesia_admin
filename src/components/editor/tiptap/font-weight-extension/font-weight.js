@@ -77,7 +77,7 @@ export const FontWeight = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').fontWeight
+                const oldAttrs = p.editor.getAttributes('textClass').fontWeight
                 const newAttrs = {
                     breakpoint: breakpoint,
                     weight: weight, 

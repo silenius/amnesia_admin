@@ -105,7 +105,7 @@ export const Height = Extension.create({
                     return p.commands.updateAttributes(type, { height: height })
                 }
 
-                const oldAttrs = getAttributes(p.state, type)['height']
+                const oldAttrs = p.editor.getAttributes(type)['height']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []

@@ -71,7 +71,7 @@ export const TextDecoration = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').textDecoration
+                const oldAttrs = p.editor.getAttributes('textClass').textDecoration
 
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

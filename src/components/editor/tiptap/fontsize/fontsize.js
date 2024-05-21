@@ -77,7 +77,7 @@ export const FontSize = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').fontSize
+                const oldAttrs = p.editor.getAttributes('textClass').fontSize
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []

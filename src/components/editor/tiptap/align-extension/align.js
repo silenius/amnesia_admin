@@ -75,7 +75,7 @@ export const Align = Extension.create({
                     return false
                 }
 
-                const oldAttrs = getAttributes(p.state, type)['align']
+                const oldAttrs = p.editor.getAttributes(type)['align']
                 console.debug('===>>> setAlign, oldAttrs: ', oldAttrs)
 
                 const mark = Array.isArray(oldAttrs)

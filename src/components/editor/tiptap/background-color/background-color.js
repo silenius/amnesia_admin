@@ -104,7 +104,7 @@ export const BackgroundColor = Extension.create({
 
                 const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
-                const oldAttrs = getAttributes(p.state, type).backgroundColor
+                const oldAttrs = p.editor.getAttributes(type).backgroundColor
 
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

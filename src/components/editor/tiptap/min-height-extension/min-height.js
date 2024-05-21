@@ -77,7 +77,7 @@ export const MinHeight = Extension.create({
         return {
             setMinHeight: (minHeight, breakpoint = null) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-                const oldAttrs = getAttributes(p.state, type)['minHeight']
+                const oldAttrs = p.editor.getAttributes(type)['minHeight']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []

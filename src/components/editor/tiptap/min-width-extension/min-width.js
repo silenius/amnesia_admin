@@ -77,7 +77,7 @@ export const MinWidth = Extension.create({
         return {
             setMinWidth: (minWidth, breakpoint = null) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-                const oldAttrs = getAttributes(p.state, type)['minWidth']
+                const oldAttrs = p.editor.getAttributes(type)['minWidth']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []

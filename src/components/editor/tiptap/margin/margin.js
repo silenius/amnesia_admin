@@ -1,6 +1,5 @@
 import {
     Extension,
-    getAttributes
 } from '@tiptap/core'
 
 import {
@@ -108,7 +107,7 @@ export const Margin = Extension.create({
                 }
 
                 // Get attributes for the side 
-                const oldAttrs = getAttributes(p.state, type)[side]
+                const oldAttrs = p.editor.getAttributes(type)[side]
                 console.debug('===>>> setMargin, oldAttrs: ', oldAttrs)
 
                 // We set a new value for that side at some breakpoint, so

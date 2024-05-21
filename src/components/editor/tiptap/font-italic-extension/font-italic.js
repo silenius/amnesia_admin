@@ -73,7 +73,7 @@ export const FontItalic = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').fontItalic
+                const oldAttrs = p.editor.getAttributes('textClass').fontItalic
 
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

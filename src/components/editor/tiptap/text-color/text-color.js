@@ -109,7 +109,7 @@ export const TextColor = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').textColor
+                const oldAttrs = p.editor.getAttributes('textClass').textColor
                 const newAttrs = {
                     breakpoint: breakpoint,
                     color: color, 

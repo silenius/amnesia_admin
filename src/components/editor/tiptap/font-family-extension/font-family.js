@@ -78,7 +78,7 @@ export const FontFamily = Extension.create({
                     return null
                 }
 
-                const oldAttrs = getAttributes(p.state, 'textClass').fontFamily
+                const oldAttrs = p.editor.getAttributes('textClass').fontFamily
                 const newAttrs = {
                     breakpoint: breakpoint,
                     family: family, 

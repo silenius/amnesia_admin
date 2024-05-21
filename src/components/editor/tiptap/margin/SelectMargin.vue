@@ -129,7 +129,6 @@ const get_side = (side) => {
   } catch (e) {
     return ''
   }
-
 }
 
 const set_side = (side, value) => emits('select-margin', {

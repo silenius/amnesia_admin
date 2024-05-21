@@ -77,7 +77,7 @@ export const Float = Extension.create({
                     type = p.state.selection.empty ? 'paragraph' : 'textClass'
                 }
 
-                const oldAttrs = getAttributes(p.state, type)['float']
+                const oldAttrs = p.editor.getAttributes(type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
 
                 const mark = Array.isArray(oldAttrs)

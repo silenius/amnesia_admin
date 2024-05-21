@@ -84,7 +84,7 @@ export const MaxWidth = Extension.create({
         return {
             setMaxWidth: (maxWidth, breakpoint = null) => (p) => {
                 const type = p.editor.isActive('image') ? 'image' : 'paragraph'
-                const oldAttrs = getAttributes(p.state, type)['maxWidth']
+                const oldAttrs = p.editor.getAttributes(type)['maxWidth']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
