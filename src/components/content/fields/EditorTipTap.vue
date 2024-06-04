@@ -149,6 +149,100 @@
     </Dialog>
   </TransitionRoot>
 
+
+
+  <!-- MODAL CHOOSE YOUTUBE -->
+
+  <TransitionRoot appear :show="modals.youtube" as="template">
+    <Dialog as="div" class="relative z-[1500]">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="transform overflow-hidden rounded-2xl bg-white p-6
+              text-left w-fit align-middle shadow-xl transition-all"
+            >
+              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
+                Youtube
+              </DialogTitle>
+              <DialogDescription as="h4" class="mt-2">
+                Insert a Youtube video
+              </DialogDescription>
+
+              <div class="mt-2">
+                <div class="border shadow-md flex justify-start p-2 items-center rounded-full">
+
+                  <!-- ENTER URL -->
+
+                  <input @keyup.enter="insertYoutubeVideo"
+                    v-model="input_youtube_url" type="url" placeholder="Enter Youtube video URL" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal('youtube')">
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <!-- MODAL FILE BROWSER -->
 
   <TransitionRoot appear :show="modals.file_browser" as="template">
@@ -225,6 +319,9 @@
         @click="add_image"
         v-if="!editor.isActive('image')" />
 
+      <font-awesome-icon icon="fa-brands fa-youtube"
+        @click="add_youtube_video" />
+
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
         v-if="!editor.state.selection.empty" />
@@ -257,6 +354,7 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
+import Youtube from '@tiptap/extension-youtube'
 import Image from '@/components/editor/tiptap/image/image'
 import FontSize from '@/components/editor/tiptap/fontsize'
 import TextClass from '@/components/editor/tiptap/text-class'
@@ -321,7 +419,8 @@ class NotAnImage extends Error {
 const modals = ref({
   choose_image: false,
   choose_link: false,
-  file_browser: false
+  file_browser: false,
+  youtube: false
 })
 
 const { browse, getDefaultMediaFolder } = useFolder()
@@ -379,6 +478,7 @@ const doSelect = (content) => {
 
 const input_upload_file = ref()
 const input_image_url = ref()
+const input_youtube_url = ref()
 
 const insertImage = (value) => {
   editor.value.commands.setImage({
@@ -394,6 +494,16 @@ const insertImageURL = () => {
   modals.value.choose_image = false
   input_image_url.value = ''
 }
+
+const insertYoutubeVideo = () => {
+  editor.value.commands.setYoutubeVideo(
+    { 'src': input_youtube_url.value }
+  )
+  modals.value.youtube = false
+  input_youtube_url.value = ''
+}
+
+
 
 const insertLink = (value) => {
   editor.value.commands.setLink({
@@ -443,6 +553,10 @@ const closeModal = (...modal) => {
   for (const m of src) {
     modals.value[m] = false
   }
+}
+
+const add_youtube_video = () => {
+  modals.value.youtube = true
 }
 
 const add_image = () => {
@@ -522,6 +636,7 @@ const editor = useEditor({
     }),
     TipTapCommands,
     Typography,
+    Youtube,
     /*
     TextAlign.configure({
       types: ['image', 'paragraph'],

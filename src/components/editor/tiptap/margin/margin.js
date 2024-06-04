@@ -128,9 +128,11 @@ export const Margin = Extension.create({
                 console.debug('===>>> setMargin, mark: ', mark)
 
                 if (p.state.selection.empty || p.state.selection.node) {
-                    return p.commands.updateAttributes(
+                    return p.chain().updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])
-                    )
+                    ).setNodeSelection(
+                        p.state.selection.anchor
+                    ).run()
                 } else {
                     return p.chain().setMark(
                         'textClass', Object.fromEntries([[`${side}`, mark]])

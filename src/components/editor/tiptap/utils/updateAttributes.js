@@ -29,10 +29,10 @@ export const TipTapCommands = Extension.create({
                 }
 
                 if (dispatch) {
-                    let lastPos = null
-                    let lastNode = null
-                    let trimmedFrom = null
-                    let trimmedTo = null
+                    let lastPos
+                    let lastNode
+                    let trimmedFrom
+                    let trimmedTo
 
                     tr.selection.ranges.forEach(range => {
                         const from = range.$from.pos
@@ -48,26 +48,29 @@ export const TipTapCommands = Extension.create({
                         })
                     })
 
-                    if (lastPos !== null && lastNode !== null) {
-                        tr.setNodeMarkup(lastPos, undefined, {
-                            ...lastNode.attrs,
-                            ...attributes,
-                        })
-                    }
+                    if (lastNode) {
 
-                    if (markType && lastNode?.marks.length) {
-                        lastNode.marks.forEach(mark => {
-                            if (markType === mark.type) {
-                                tr.addMark(
-                                    trimmedFrom,
-                                    trimmedTo,
-                                    markType.create({
-                                        ...mark.attrs,
-                                        ...attributes,
-                                    }),
-                                )
-                            }
-                        })
+                        if (lastPos !== undefined) {
+                            tr.setNodeMarkup(lastPos, undefined, {
+                                ...lastNode.attrs,
+                                ...attributes,
+                            })
+                        }
+
+                        if (markType && lastNode.marks.length) {
+                            lastNode.marks.forEach(mark => {
+                                if (markType === mark.type) {
+                                    tr.addMark(
+                                        trimmedFrom,
+                                        trimmedTo,
+                                        markType.create({
+                                            ...mark.attrs,
+                                            ...attributes,
+                                        }),
+                                    )
+                                }
+                            })
+                        }
                     }
                 }
 

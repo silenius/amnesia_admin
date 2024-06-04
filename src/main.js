@@ -65,8 +65,12 @@ import {
     faTextHeight,
     faPaintBrush,
     faPaintRoller,
-    faBan
+    faBan,
 } from '@fortawesome/free-solid-svg-icons'
+
+import {
+    faYoutube
+} from '@fortawesome/free-brands-svg-icons'
 
 import {
     faSquarePlus,
@@ -136,6 +140,7 @@ library.add(faTextHeight)
 library.add(faPaintBrush)
 library.add(faPaintRoller)
 library.add(faBan)
+library.add(faYoutube)
 
 const app = createApp(App)
 const pinia = createPinia()
