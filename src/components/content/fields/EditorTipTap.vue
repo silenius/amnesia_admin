@@ -618,10 +618,10 @@ const editor = useEditor({
     }),
     Video,
     Float.configure({
-      types: ['image', 'paragraph', 'textClass'],
+      types: ['video', 'image', 'paragraph', 'textClass'],
     }),
     Align.configure({
-      types: ['image', 'paragraph'],
+      types: ['video', 'image', 'paragraph'],
     }),
     //    Flex,
     //    CustomText,
@@ -637,10 +637,10 @@ const editor = useEditor({
       types: ['textClass', 'image']
     }),
     Margin.configure({
-      types: ['image', 'bulletList', 'textClass', 'textStyle']
+      types: ['video', 'image', 'bulletList', 'textClass', 'textStyle']
     }),
     Padding.configure({
-      types: ['image', 'bulletList', 'textClass', 'textStyle']
+      types: ['video', 'image', 'bulletList', 'textClass', 'textStyle']
     }),
     FontWeight.configure({
       types: ['textClass']
@@ -656,7 +656,7 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
-      types: ['image', 'paragraph']
+      types: ['video', 'image', 'paragraph']
     }),
     MinWidth.configure({
       types: ['image', 'paragraph']
@@ -671,7 +671,7 @@ const editor = useEditor({
       types: ['image', 'paragraph']
     }),
     Height.configure({
-      types: ['image', 'paragraph']
+      types: ['video', 'image', 'paragraph']
     }),
     Table,
     TableHeader,

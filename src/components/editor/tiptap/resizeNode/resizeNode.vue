@@ -96,7 +96,7 @@ const startResizeMove = (e) => {
     new_size.width = new_size.width + Math.abs(diffs.x)
   }
 
-  new_size.height = new_size.width / img_ratio.value
+  new_size.height = new_size.width / node_ratio.value
 
   if (dirs.y == 'up') {
     new_size.height = new_size.height - Math.abs(diffs.y)
@@ -104,11 +104,11 @@ const startResizeMove = (e) => {
     new_size.height = new_size.height + Math.abs(diffs.y)
   }
 
-  new_size.width = new_size.height * img_ratio.value
+  new_size.width = new_size.height * node_ratio.value
 
   if (new_size.width > container_width.value) {
     new_size.width = container_width.value
-    new_size.height = new_size.width / img_ratio.value
+    new_size.height = new_size.width / node_ratio.value
   }
 
   emits('resize', new_size)
@@ -132,7 +132,11 @@ const stopResize = () => {
   document.removeEventListener('mouseup', stopResize)
 }
 
-const img_ratio = computed(() => props.node.naturalWidth / props.node.naturalHeight)
+const node_ratio = computed(() => {
+  //return props.node.naturalWidth / props.node.naturalHeight
+  const rect = props.node.getBoundingClientRect()
+  return rect.width / rect.height
+})
 
 const resize_cls = 'rounded fixed z-50 h-2 w-2 bg-indigo-500'
 

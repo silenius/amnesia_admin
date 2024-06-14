@@ -65,12 +65,20 @@ const patterns = [
 
 export default Node.create({
     name: 'video',
+    inline: false,
+    group: 'block',
+    draggable: true,
 
     addOptions() {
         return {
-            autoplay: false
+            autoplay: false,
+            selectable: true,
         }
 
+    },
+
+    selectable() {
+        return this.options.selectable
     },
 
     addAttributes() {
@@ -112,14 +120,12 @@ export default Node.create({
                         url = url.replace(`$${i}`, () => matches[i] ? matches[i] : '')
                     }
 
-                    console.log('URL: ', url)
-
                     return commands.insertContent({
                         type: this.name,
                         attrs: {
                             src: url,
                             width: 560,
-                            height: 314
+                            height: 650
                         },
                     })
 

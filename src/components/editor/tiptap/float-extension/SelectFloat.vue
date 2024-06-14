@@ -32,15 +32,13 @@ const props = defineProps({
 const emits = defineEmits(['select-float'])
 
 const attrs = computed(() => {
-  let type
+  const type = props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  )
 
-  if (props.editor.isActive('image')) {
-      type = 'image'
-  } else if (props.editor.isActive('paragraph')) {
-      type = props.editor.view.state.selection.empty ? 'paragraph' : 'textClass'
+  if (type) {
+    return props.editor.getAttributes(type)
   }
-
-  return props.editor.getAttributes(type)
 })
 
 const float = computed({

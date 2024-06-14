@@ -69,14 +69,7 @@ export const Float = Extension.create({
         return {
             setFloat: (direction, breakpoint = null) => (p) => {
                 console.debug('===>>> setFloat, direction: ', direction, ', bp: ', breakpoint)
-                let type
-
-                if (p.editor.isActive('image')) {
-                    type = 'image'
-                } else if (p.editor.isActive('paragraph')) {
-                    type = p.state.selection.empty ? 'paragraph' : 'textClass'
-                }
-
+                const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
 
