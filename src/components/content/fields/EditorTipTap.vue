@@ -150,10 +150,9 @@
   </TransitionRoot>
 
 
+  <!-- MODAL CHOOSE VIDEO -->
 
-  <!-- MODAL CHOOSE YOUTUBE -->
-
-  <TransitionRoot appear :show="modals.youtube" as="template">
+  <TransitionRoot appear :show="modals.video" as="template">
     <Dialog as="div" class="relative z-[1500]">
       <TransitionChild
         as="template"
@@ -183,10 +182,11 @@
               text-left w-fit align-middle shadow-xl transition-all"
             >
               <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
-                Youtube
+                Video
               </DialogTitle>
               <DialogDescription as="h4" class="mt-2">
-                Insert a Youtube video
+                Insert a video. Supported sources are: Youtube, Dailymotion and
+                Vimeo
               </DialogDescription>
 
               <div class="mt-2">
@@ -194,8 +194,8 @@
 
                   <!-- ENTER URL -->
 
-                  <input @keyup.enter="insertYoutubeVideo"
-                    v-model="input_youtube_url" type="url" placeholder="Enter Youtube video URL" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
+                  <input @keyup.enter="insertVideo"
+                    v-model="input_video_url" type="url" placeholder="Enter a video URL" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
                 </div>
               </div>
 
@@ -203,7 +203,7 @@
                 <button
                   type="button"
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="closeModal('youtube')">
+                  @click="closeModal('video')">
                   Close
                 </button>
               </div>
@@ -213,35 +213,6 @@
       </div>
     </Dialog>
   </TransitionRoot>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- MODAL FILE BROWSER -->
 
@@ -319,8 +290,8 @@
         @click="add_image"
         v-if="!editor.isActive('image')" />
 
-      <font-awesome-icon icon="fa-brands fa-youtube"
-        @click="add_youtube_video" />
+      <font-awesome-icon icon="fa-solid fa-film"
+        @click="add_video" />
 
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
@@ -354,8 +325,9 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
-import Youtube from '@tiptap/extension-youtube'
+//import Youtube from '@tiptap/extension-youtube'
 import Image from '@/components/editor/tiptap/image/image'
+import Video from '@/components/editor/tiptap/video-extension/video'
 import FontSize from '@/components/editor/tiptap/fontsize'
 import TextClass from '@/components/editor/tiptap/text-class'
 import { Float } from '@/components/editor/tiptap/float-extension'
@@ -420,7 +392,7 @@ const modals = ref({
   choose_image: false,
   choose_link: false,
   file_browser: false,
-  youtube: false
+  video: false
 })
 
 const { browse, getDefaultMediaFolder } = useFolder()
@@ -478,7 +450,7 @@ const doSelect = (content) => {
 
 const input_upload_file = ref()
 const input_image_url = ref()
-const input_youtube_url = ref()
+const input_video_url = ref()
 
 const insertImage = (value) => {
   editor.value.commands.setImage({
@@ -495,15 +467,13 @@ const insertImageURL = () => {
   input_image_url.value = ''
 }
 
-const insertYoutubeVideo = () => {
-  editor.value.commands.setYoutubeVideo(
-    { 'src': input_youtube_url.value }
+const insertVideo = () => {
+  editor.value.commands.setVideo(
+    { 'src': input_video_url.value }
   )
-  modals.value.youtube = false
-  input_youtube_url.value = ''
+  modals.value.video = false
+  input_video_url.value = ''
 }
-
-
 
 const insertLink = (value) => {
   editor.value.commands.setLink({
@@ -555,8 +525,8 @@ const closeModal = (...modal) => {
   }
 }
 
-const add_youtube_video = () => {
-  modals.value.youtube = true
+const add_video = () => {
+  modals.value.video = true
 }
 
 const add_image = () => {
@@ -636,8 +606,8 @@ const editor = useEditor({
     }),
     TipTapCommands,
     Typography,
-    Youtube,
     /*
+    Youtube,
     TextAlign.configure({
       types: ['image', 'paragraph'],
     })
@@ -646,6 +616,7 @@ const editor = useEditor({
     Image.configure({
       inline: true,
     }),
+    Video,
     Float.configure({
       types: ['image', 'paragraph', 'textClass'],
     }),

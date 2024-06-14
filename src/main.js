@@ -66,6 +66,8 @@ import {
     faPaintBrush,
     faPaintRoller,
     faBan,
+    faVideo,
+    faFilm,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -141,6 +143,8 @@ library.add(faPaintBrush)
 library.add(faPaintRoller)
 library.add(faBan)
 library.add(faYoutube)
+library.add(faVideo)
+library.add(faFilm)
 
 const app = createApp(App)
 const pinia = createPinia()
