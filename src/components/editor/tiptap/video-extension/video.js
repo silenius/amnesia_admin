@@ -8,57 +8,39 @@ import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import Video from './Video.vue'
 
 /*
- * Youtube: 560 x 314
+ * Youtube: 560 x 315
  * Vimeo: 425 x 350
  * Dialymotion: 480 x 270
  *
  */
 
+
+
+
 const patterns = [
     {
-        regex: /youtu\.be\/([\w\-_\?&=.]+)/i,
+        regex: /youtu\.be\/(?<VIDEOID>[\w\-]+)/i,
         type: 'youtube',
-        url: 'www.youtube.com/embed/$1',
     },
     {
-        regex: /youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?/i,
+        regex: /youtube\.com(?:.+)v=(?<VIDEOID>[^&]+)/i,
         type: 'youtube',
-        url: 'www.youtube.com/embed/$2?$4',
     },
     {
-        regex: /youtube.com\/embed\/([a-z0-9\?&=\-_]+)/i,
+        regex: /youtube.com\/embed\/(?<VIDEOID>[\w\-]+)/i,
         type: 'youtube',
-        url: 'www.youtube.com/embed/$1',
     },
     {
-        regex: /vimeo\.com\/([0-9]+)\?h=(\w+)/,
+        regex: /vimeo\.com\/(?<VIDEOID>\d+)/,
         type: 'vimeo',
-        url: 'player.vimeo.com/video/$1?h=$2&title=0&byline=0&portrait=0&color=8dc7dc',
     },
     {
-        regex: /vimeo\.com\/(.*)\/([0-9]+)\?h=(\w+)/,
-        type: 'vimeo',
-        url: 'player.vimeo.com/video/$2?h=$3&title=0&amp;byline=0',
-    },
-    {
-        regex: /vimeo\.com\/([0-9]+)/,
-        type: 'vimeo',
-        url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc',
-    },
-    {
-        regex: /vimeo\.com\/(.*)\/([0-9]+)/,
-        type: 'vimeo',
-        url: 'player.vimeo.com/video/$2?title=0&amp;byline=0',
-    },
-    {
-        regex: /dailymotion\.com\/video\/([^_]+)/,
+        regex: /dailymotion\.com\/video\/(?<VIDEOID>[^_]+)/,
         type: 'dailymotion',
-        url: 'www.dailymotion.com/embed/video/$1',
     },
     {
-        regex: /dai\.ly\/([^_]+)/,
+        regex: /dai\.ly\/(?<VIDEOID>[^_]+)/,
         type: 'dailymotion',
-        url: 'www.dailymotion.com/embed/video/$1',
     }
 ];
 
@@ -125,7 +107,7 @@ export default Node.create({
                         attrs: {
                             src: url,
                             width: 560,
-                            height: 650
+                            height: 315
                         },
                     })
 

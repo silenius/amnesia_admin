@@ -87,12 +87,9 @@ const align_cls = computed(() => {
   }
 })
 
-
 const height_attr = computed(() => {
   const v = parseFloat(props.node.attrs.height)
   return isNaN(v) ? null : v
 })
-
-
 
 </script>
