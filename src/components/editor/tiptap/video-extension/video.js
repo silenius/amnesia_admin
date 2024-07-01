@@ -6,6 +6,7 @@ import {
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 
 import Video from './Video.vue'
+import { patterns, guess_video } from './utils'
 
 /*
  * Youtube: 560 x 315
@@ -13,37 +14,6 @@ import Video from './Video.vue'
  * Dialymotion: 480 x 270
  *
  */
-
-
-
-
-const patterns = [
-    {
-        regex: /youtu\.be\/(?<VIDEOID>[\w\-]+)/i,
-        type: 'youtube',
-    },
-    {
-        regex: /youtube\.com(?:.+)v=(?<VIDEOID>[^&]+)/i,
-        type: 'youtube',
-    },
-    {
-        regex: /youtube.com\/embed\/(?<VIDEOID>[\w\-]+)/i,
-        type: 'youtube',
-    },
-    {
-        regex: /vimeo\.com\/(?<VIDEOID>\d+)/,
-        type: 'vimeo',
-    },
-    {
-        regex: /dailymotion\.com\/video\/(?<VIDEOID>[^_]+)/,
-        type: 'dailymotion',
-    },
-    {
-        regex: /dai\.ly\/(?<VIDEOID>[^_]+)/,
-        type: 'dailymotion',
-    }
-];
-
 
 export default Node.create({
     name: 'video',
@@ -73,6 +43,9 @@ export default Node.create({
             },
             'data-videoid': {
                 default: null
+            },
+            'data-showcontrols': {
+                default: true
             }
         }
     },
@@ -95,23 +68,21 @@ export default Node.create({
     addCommands() {
         return {
             setVideo: options => ({ commands }) => {
-                const pattern = patterns.find((pattern) => pattern.regex.exec(options.src))
+                const { type, attrs } = match_video(options.src) 
 
-                if (pattern) {
-                    const match = pattern.regex.exec(options.src)
-                    const url = `https://www.youtube.com/embed/${match.groups.VIDEOID}`
-                    console.log(match)
+                if (type == 'youtube') {
+
+                    const url = `https://www.youtube.com/embed/${attrs.VIDEOID}`
 
                     return commands.insertContent({
                         type: this.name,
                         attrs: {
                             src: url,
-                            'data-videoid': match.groups.VIDEOID, 
+                            'data-videoid': attrs.VIDEOID, 
                             width: 560,
                             height: 315
                         },
                     })
-
                 }
             },
         }

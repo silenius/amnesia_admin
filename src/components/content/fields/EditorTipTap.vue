@@ -637,10 +637,10 @@ const editor = useEditor({
       types: ['textClass', 'image']
     }),
     Margin.configure({
-      types: ['video', 'image', 'bulletList', 'textClass', 'textStyle']
+      types: ['video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
     }),
     Padding.configure({
-      types: ['video', 'image', 'bulletList', 'textClass', 'textStyle']
+      types: ['video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
     }),
     FontWeight.configure({
       types: ['textClass']

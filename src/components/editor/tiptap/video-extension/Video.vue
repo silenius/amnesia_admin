@@ -1,10 +1,7 @@
 <template>
   <node-view-wrapper 
     :class="[width_cls, height_cls, float_cls, margin_cls]"
-    :width="width_attr" 
-    :height="height_attr" 
   >
-    {{ props.node.attrs }}
     <iframe draggable data-drag-handle 
       ref="video" 
       :src="node.attrs.src"
