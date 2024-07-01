@@ -53,7 +53,7 @@ export const Height = Extension.create({
                         default: null,
 
                         parseHTML: elem => {
-                            if (elem.tagName.toLowerCase() === 'amnesia-img') {
+                            if (elem.tagName.toLowerCase().startsWith('amnesia-')) {
                                 if (elem.hasAttribute('data-height')) {
                                     return JSON.parse(elem.getAttribute('data-height'))
                                 } else if (elem.hasAttribute('height')) {

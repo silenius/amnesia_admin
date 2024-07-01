@@ -71,6 +71,9 @@ export default Node.create({
             title: {
                 default: null,
             },
+            'data-videoid': {
+                default: null
+            }
         }
     },
 
@@ -92,20 +95,18 @@ export default Node.create({
     addCommands() {
         return {
             setVideo: options => ({ commands }) => {
-                const match = patterns.find((pattern) => pattern.regex.test(options.src))
+                const pattern = patterns.find((pattern) => pattern.regex.exec(options.src))
 
-                if (match !== undefined) {
-                    const matches = match.regex.exec(options.src)
-                    let url = `https://${match.url}`
-
-                    for (const [i, value] of matches.entries()) {
-                        url = url.replace(`$${i}`, () => matches[i] ? matches[i] : '')
-                    }
+                if (pattern) {
+                    const match = pattern.regex.exec(options.src)
+                    const url = `https://www.youtube.com/embed/${match.groups.VIDEOID}`
+                    console.log(match)
 
                     return commands.insertContent({
                         type: this.name,
                         attrs: {
                             src: url,
+                            'data-videoid': match.groups.VIDEOID, 
                             width: 560,
                             height: 315
                         },

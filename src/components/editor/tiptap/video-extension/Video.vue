@@ -4,6 +4,7 @@
     :width="width_attr" 
     :height="height_attr" 
   >
+    {{ props.node.attrs }}
     <iframe draggable data-drag-handle 
       ref="video" 
       :src="node.attrs.src"
