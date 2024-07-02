@@ -25,6 +25,13 @@ export const patterns = [
     }
 ];
 
+// Ratio = 1.77777777777777
+export const sizes = {
+    youtube: [560, 315],
+    vimeo: [640, 360],
+    dailymotion: ['100%', '100%']
+}
+
 export const guess_video = (url) => {
     const pattern = patterns.find((p) => p.regex.exec(url))
     
@@ -34,4 +41,6 @@ export const guess_video = (url) => {
             attrs: pattern.regex.exec(url).groups
         }
     }
+
+    return { type: null, attrs: {}}
 }

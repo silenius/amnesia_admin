@@ -6,7 +6,7 @@ import {
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 
 import Video from './Video.vue'
-import { patterns, guess_video } from './utils'
+import { patterns, guess_video, sizes } from './utils'
 
 /*
  * Youtube: 560 x 315
@@ -44,8 +44,14 @@ export default Node.create({
             'data-videoid': {
                 default: null
             },
-            'data-showcontrols': {
+            'data-controls': {
                 default: true
+            },
+            'data-autoplay': {
+                default: false
+            },
+            'data-type': {
+                default: null
             }
         }
     },
@@ -68,19 +74,28 @@ export default Node.create({
     addCommands() {
         return {
             setVideo: options => ({ commands }) => {
-                const { type, attrs } = match_video(options.src) 
+                const { type, attrs } = guess_video(options.src) 
 
-                if (type == 'youtube') {
+                if (type) {
+                    const [width, height] = sizes[type]
 
-                    const url = `https://www.youtube.com/embed/${attrs.VIDEOID}`
+                    if (options.width) {
+                        width = options.width
+                    }
+
+                    if (options.height) {
+                        height = options.height
+                    }
 
                     return commands.insertContent({
                         type: this.name,
                         attrs: {
-                            src: url,
                             'data-videoid': attrs.VIDEOID, 
-                            width: 560,
-                            height: 315
+                            'data-autoplay': options.autoplay,
+                            'data-controls': options.controls,
+                            'data-type': type,
+                            width: width,
+                            height: height
                         },
                     })
                 }

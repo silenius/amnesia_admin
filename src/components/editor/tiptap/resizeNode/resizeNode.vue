@@ -10,7 +10,7 @@
 <script setup>
 
 import { 
-  computed, h, unref, ref, watch, defineComponent
+  computed, ref, watch
 } from 'vue'
 
 const props = defineProps({

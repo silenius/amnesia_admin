@@ -1,26 +1,33 @@
 <template>
   <node-view-wrapper 
+    v-if="src"
     :class="[width_cls, height_cls, float_cls, margin_cls]"
   >
-    <iframe draggable data-drag-handle 
-      ref="video" 
-      :src="node.attrs.src"
-      :class="[iframe_cls, align_cls]" 
-      :width="width_attr" 
-      :height="height_attr" 
-      title="Video player" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin" 
-      allowfullscreen></iframe>
-    <resizeNode :editor="editor" :selected="selected" :node="video" @resize="(size) => updateAttributes(size)" v-show="selected && video" /> 
+    <span draggable data-drag-handle class="relative p-2 top-10 z-50 bg-white">
 
+      <font-awesome-icon icon="fa-solid fa-up-down-left-right" /> 
+
+    </span>
+      <iframe
+        ref="video" 
+        :src="src"
+        :class="[iframe_cls, align_cls]" 
+        :width="width_attr" 
+        :height="height_attr" 
+        title="Video player" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+    </iframe>
+    <resizeNode :editor="editor" :selected="selected" :node="video"
+      @resize="(size) => updateAttributes(size)" v-if="node && editable" v-show="selected && video" /> 
   </node-view-wrapper>
 
 </template>
 
 <script setup>
-import { watch, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { render_width_attrs } from '../width-extension/utils'
 import { render_height_attrs } from '../height-extension/utils'
@@ -32,6 +39,36 @@ const props = defineProps(nodeViewProps)
 const video = ref()
 
 const editable = computed(() => props.editor.view.editable)
+const src = computed(() => {
+  const opts = new URLSearchParams()
+
+  let url
+
+  switch(props.node.attrs['data-type']) {
+    case 'youtube':
+      url = `https://www.youtube.com/embed/${props.node.attrs['data-videoid']}`
+      opts.append('autoplay', props.node.attrs['data-autoplay'] ? 1 : 0)
+      opts.append('controls', props.node.attrs['data-showcontrols'] ? 1 : 0)
+      break
+    case 'vimeo':
+      url = `https://player.vimeo.com/video/${props.node.attrs['data-videoid']}`
+      opts.append('autoplay', props.node.attrs['data-autoplay'] ? 1 : 0)
+      break
+    case 'dailymotion':
+      break
+  }
+
+  if (url) {
+    return opts.size > 0 ? `${url}?${opts.toString()}` : url
+  }
+
+})
+
+/*
+const above_iframe_cls = computed(
+  () => `w-[${width_attr.value}px] h-[${height_attr.value}px]`
+)
+*/
 
 const iframe_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&

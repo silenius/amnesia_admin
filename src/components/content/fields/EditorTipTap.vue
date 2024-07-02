@@ -195,7 +195,13 @@
                   <!-- ENTER URL -->
 
                   <input @keyup.enter="insertVideo"
-                    v-model="input_video_url" type="url" placeholder="Enter a video URL" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
+                    v-model="input_video_url" type="url" placeholder="Enter a video URL, e.g. https://www.youtube.com/watch?v=YKFFXgqBA64" class="border-0 text-gray-300 focus:text-rose-900 focus:ring-0 rounded-full text-sm w-full" />
+                </div>
+                <div class="mt-2">
+                  <input type="checkbox" v-model="input_video_autoplay" />
+                  autoplay
+                  <input type="checkbox" checked v-model="input_video_controls" />
+                  show controls
                 </div>
               </div>
 
@@ -451,6 +457,8 @@ const doSelect = (content) => {
 const input_upload_file = ref()
 const input_image_url = ref()
 const input_video_url = ref()
+const input_video_autoplay = ref()
+const input_video_controls = ref()
 
 const insertImage = (value) => {
   editor.value.commands.setImage({
@@ -468,11 +476,14 @@ const insertImageURL = () => {
 }
 
 const insertVideo = () => {
-  editor.value.commands.setVideo(
-    { 'src': input_video_url.value }
-  )
+  editor.value.commands.setVideo({ 
+    src: input_video_url.value,
+    autoplay: input_video_autoplay.value,
+    controls: input_video_controls.value
+  })
   modals.value.video = false
   input_video_url.value = ''
+  input_video_autoplay.value = false
 }
 
 const insertLink = (value) => {
