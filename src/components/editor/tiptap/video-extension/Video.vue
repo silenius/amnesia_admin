@@ -1,14 +1,13 @@
 <template>
   <node-view-wrapper 
-    v-if="src"
     :class="[width_cls, height_cls, float_cls, margin_cls]"
   >
-    <span draggable data-drag-handle class="relative p-2 top-10 z-50 bg-white">
 
+    <span v-if="src" draggable data-drag-handle class="p-2 border z-50 bg-white">
       <font-awesome-icon icon="fa-solid fa-up-down-left-right" /> 
-
     </span>
       <iframe
+        v-if="src"
         ref="video" 
         :src="src"
         :class="[iframe_cls, align_cls]" 

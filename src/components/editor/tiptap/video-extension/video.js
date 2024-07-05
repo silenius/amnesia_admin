@@ -77,7 +77,7 @@ export default Node.create({
                 const { type, attrs } = guess_video(options.src) 
 
                 if (type) {
-                    const [width, height] = sizes[type]
+                    let [width, height] = sizes[type]
 
                     if (options.width) {
                         width = options.width
