@@ -35,6 +35,7 @@ import {
     faCaretRight,
     faAngleRight,
     faHandPointRight,
+    faHand,
     faList,
     faArrowUpRightFromSquare,
     faSliders,
@@ -113,6 +114,7 @@ library.add(faCaretDown)
 library.add(faCaretRight)
 library.add(faAngleRight)
 library.add(faHandPointRight)
+library.add(faHand)
 library.add(faList)
 library.add(faArrowUpRightFromSquare)
 library.add(faSliders)

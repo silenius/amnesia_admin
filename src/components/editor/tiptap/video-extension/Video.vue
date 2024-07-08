@@ -1,16 +1,18 @@
 <template>
   <node-view-wrapper 
+    class="after:content-[''] after:clear-both after:h-0 after:w-full after:block"
     :class="[width_cls, height_cls, float_cls, margin_cls]"
   >
+    <div v-if="src" :class="[align_cls]">
+      <span v-if="editable" draggable data-drag-handle class="self-start absolute rounded-br-xl
+        hover:cursor-pointer hover:text-red-600 p-1 border z-50 bg-white">
+        <font-awesome-icon icon="fa-solid fa-hand" /> 
+      </span>
 
-    <span v-if="src" draggable data-drag-handle class="p-2 border z-50 bg-white">
-      <font-awesome-icon icon="fa-solid fa-up-down-left-right" /> 
-    </span>
       <iframe
-        v-if="src"
         ref="video" 
         :src="src"
-        :class="[iframe_cls, align_cls]" 
+        :class="[iframe_cls]" 
         :width="width_attr" 
         :height="height_attr" 
         title="Video player" 
@@ -18,9 +20,11 @@
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin" 
         allowfullscreen>
-    </iframe>
-    <resizeNode :editor="editor" :selected="selected" :node="video"
-      @resize="(size) => updateAttributes(size)" v-if="node && editable" v-show="selected && video" /> 
+      </iframe>
+
+      <resizeNode :editor="editor" :selected="selected" :node="video"
+        @resize="(size) => updateAttributes(size)" v-if="node && editable" v-show="selected && video" /> 
+    </div>
   </node-view-wrapper>
 
 </template>
@@ -112,9 +116,9 @@ const height_cls = computed(() => {
 const align_cls = computed(() => {
   if (Array.isArray(props.node.attrs.align)) {
     const maps = {
-      left: 'block mr-auto',
-      right: 'block ml-auto',
-      center: 'block mx-auto'
+      left: 'flex justify-start',
+      right: 'flex justify-end',
+      center: 'flex justify-center'
     }
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
       `${x.breakpoint}:${maps[x.direction]}`].filter(Boolean).join('-')).join(' ')
