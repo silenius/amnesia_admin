@@ -3,9 +3,10 @@
     class="after:content-[''] after:clear-both after:h-0 after:w-full after:block"
     :class="[width_cls, height_cls, float_cls, margin_cls]"
   >
-    <div v-if="src" :class="[align_cls]">
-      <span v-if="editable" draggable data-drag-handle class="self-start absolute rounded-br-xl
-        hover:cursor-pointer hover:text-red-600 p-1 border z-50 bg-white">
+    <div v-if="src" :class="[align_cls]" class="block w-min" draggable>
+      <span v-if="editable" data-drag-handle class="rounded
+        m-1 p-1 absolute hover:cursor-pointer text-white hover:text-red-500 p-1 z-50
+        bg-zinc-800">
         <font-awesome-icon icon="fa-solid fa-hand" /> 
       </span>
 
@@ -116,9 +117,9 @@ const height_cls = computed(() => {
 const align_cls = computed(() => {
   if (Array.isArray(props.node.attrs.align)) {
     const maps = {
-      left: 'flex justify-start',
-      right: 'flex justify-end',
-      center: 'flex justify-center'
+      left: 'mr-auto',
+      right: 'ml-auto',
+      center: 'mx-auto'
     }
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
       `${x.breakpoint}:${maps[x.direction]}`].filter(Boolean).join('-')).join(' ')

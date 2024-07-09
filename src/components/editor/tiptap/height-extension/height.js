@@ -23,9 +23,6 @@ const heights = [
     
     '1/6', '2/6', '3/6', '4/6', '5/6', 
     
-    '1/12', '2/12', '3/12', '4/12', '5/12', '6/12', '7/12', '8/12', '9/12', 
-    '10/12', '11/12', 
-    
     'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit', 
 
     '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
@@ -53,12 +50,10 @@ export const Height = Extension.create({
                         default: null,
 
                         parseHTML: elem => {
-                            if (elem.tagName.toLowerCase().startsWith('amnesia-')) {
-                                if (elem.hasAttribute('data-height')) {
-                                    return JSON.parse(elem.getAttribute('data-height'))
-                                } else if (elem.hasAttribute('height')) {
-                                    return parseFloat(elem.getAttribute('height'))
-                                }
+                            if (elem.hasAttribute('data-height')) {
+                                return JSON.parse(elem.getAttribute('data-height'))
+                            } else if (elem.hasAttribute('height')) {
+                                return parseFloat(elem.getAttribute('height'))
                             }
 
                             const is_height = new Set(
@@ -83,7 +78,6 @@ export const Height = Extension.create({
                             }
 
                             return matches.length ? matches : null
-
                         },
                         
                         renderHTML: attrs => {
@@ -97,7 +91,7 @@ export const Height = Extension.create({
 
     addCommands() {
         return {
-            setHeight: (height, breakpoint=null, raw=false) => (p) => {
+            setHeight: (height, breakpoint = null, raw = false) => (p) => {
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['height']
                 const mark = Array.isArray(oldAttrs)

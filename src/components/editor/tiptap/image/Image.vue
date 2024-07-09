@@ -1,25 +1,33 @@
 <template>
-  <node-view-wrapper :class="[float_cls, margin_cls]">
+  <node-view-wrapper 
+    class="after:content-[''] after:clear-both after:h-0 after:w-full after:block"
+    :class="[float_cls, margin_cls]">
     <img draggable data-drag-handle 
-      ref="img" class="rounded-lg" 
+      ref="img" 
+      class="block rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
       :width="width_attr"
       :height="height_attr"
-      :class="[img_cls, padding_cls, bg_color_cls, align_cls, width_cls, height_cls]" 
+      :class="[img_cls, padding_cls, bg_color_cls, align_cls, min_width_cls,
+        width_cls, max_width_cls, min_height_cls, height_cls, max_height_cls]" 
     />
-    <resizeNode :editor="editor" :selected="selected" :node="img" @resize="(size) => updateAttributes(size)" v-show="selected && img" /> 
+    <resizeNode v-if="editable" :editor="editor" :selected="selected" :node="img" @resize="(size) => updateAttributes(size)" v-show="selected && img" /> 
   </node-view-wrapper>
 </template>
 
 <script setup>
-import { watch, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
 import { render_width_attrs } from '../width-extension/utils'
+import { render_maxWidth_attrs } from '../max-width-extension/utils'
+import { render_minWidth_attrs } from '../min-width-extension/utils'
+import { render_maxHeight_attrs } from '../max-height-extension/utils'
+import { render_minHeight_attrs } from '../min-height-extension/utils'
 import { render_height_attrs } from '../height-extension/utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
@@ -70,9 +78,9 @@ const float_cls = computed(() => {
 const align_cls = computed(() => {
   if (Array.isArray(props.node.attrs.align)) {
     const maps = {
-      left: 'block mr-auto',
-      right: 'block ml-auto',
-      center: 'block mx-auto'
+      left: 'mr-auto',
+      right: 'ml-auto',
+      center: 'mx-auto'
     }
     return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
       `${x.breakpoint}:${maps[x.direction]}`].filter(Boolean).join('-')).join(' ')
@@ -89,6 +97,16 @@ const width_cls = computed(() => {
   return cls ? Object.values(cls) : []
 })
 
+const max_width_cls = computed(() => {
+  const cls = render_maxWidth_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
+const min_width_cls = computed(() => {
+  const cls = render_minWidth_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
 const width_attr = computed(() => {
   const v = parseFloat(props.node.attrs.width)
   return isNaN(v) ? null : v
@@ -99,10 +117,19 @@ const height_cls = computed(() => {
   return cls ? Object.values(cls) : []
 })
 
+const max_height_cls = computed(() => {
+  const cls = render_maxHeight_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
+const min_height_cls = computed(() => {
+  const cls = render_minHeight_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
 const height_attr = computed(() => {
   const v = parseFloat(props.node.attrs.height)
   return isNaN(v) ? null : v
 })
-
 
 </script>
