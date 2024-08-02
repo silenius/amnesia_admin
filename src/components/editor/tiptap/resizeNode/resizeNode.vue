@@ -77,34 +77,13 @@ const startResizeMove = (e) => {
     y: cursorY.value - clientY
   }
 
-  const dirs = {
-    x: diffs.x > 0 ? 'left' : 'right',
-    y: diffs.y > 0 ? 'up' : 'down'
-  }
-
   cursorX.value = clientX
   cursorY.value = clientY
 
   const new_size = {
-    width: props.node.clientWidth,
-    height: props.node.clientHeight
+    width: props.node.clientWidth - diffs.x,
+    height: props.node.clientHeight - diffs.y
   }
-
-  if (dirs.x == 'left') {
-    new_size.width = new_size.width - Math.abs(diffs.x)
-  } else {
-    new_size.width = new_size.width + Math.abs(diffs.x)
-  }
-
-  new_size.height = new_size.width / node_ratio.value
-
-  if (dirs.y == 'up') {
-    new_size.height = new_size.height - Math.abs(diffs.y)
-  } else {
-    new_size.height = new_size.height + Math.abs(diffs.y)
-  }
-
-  new_size.width = new_size.height * node_ratio.value
 
   if (new_size.width > container_width.value) {
     new_size.width = container_width.value

@@ -631,7 +631,7 @@ const editor = useEditor({
     Image.configure({
       inline: true,
       onSrc: (src) => {
-        const match = src.match(/^(?<id>\d+)\/download$/)
+        const match = src.match(/^(?<id>\d+)\/download(\/inline)?$/)
         return match ? backend_url(match.groups.id) : src
       }
     }),
