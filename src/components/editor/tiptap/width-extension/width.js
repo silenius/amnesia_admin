@@ -53,12 +53,10 @@ export const Width = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
-                            if (elem.tagName.toLowerCase().startsWith('amnesia-')) {
-                                if (elem.hasAttribute('data-width')) {
-                                    return JSON.parse(elem.getAttribute('data-width'))
-                                } else if (elem.hasAttribute('width')) {
-                                    return parseFloat(elem.getAttribute('width'))
-                                }
+                            if (elem.hasAttribute('data-width')) {
+                                return JSON.parse(elem.getAttribute('data-width'))
+                            } else if (elem.hasAttribute('width')) {
+                                return parseFloat(elem.getAttribute('width'))
                             }
 
                             const is_width = new Set(

@@ -6,7 +6,11 @@ import {
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 
 import Video from './Video.vue'
-import { patterns, guess_video, sizes } from './utils'
+import { 
+    patterns, 
+    guess_video, 
+    sizes 
+} from './utils'
 
 /*
  * Youtube: 560 x 315

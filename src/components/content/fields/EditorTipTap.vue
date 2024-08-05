@@ -115,7 +115,7 @@
 
                   <!-- UPLOAD IMAGE -->
 
-                  <button @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
+                  <button v-if="default_media_folder" @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-4 w-4" />
                   </button>
                   <input @change="onFileChange" accept="image/*" type="file" ref="input_upload_file" class="hidden" />
@@ -313,7 +313,11 @@
 
 <script setup>
 import { 
-  ref, watch, watchEffect, onMounted, onBeforeUnmount 
+  ref, 
+  unref,
+  watchEffect, 
+  onMounted, 
+  onBeforeUnmount 
 } from 'vue'
 
 import { 
@@ -626,6 +630,10 @@ const editor = useEditor({
     //ResizableMedia
     Image.configure({
       inline: true,
+      onSrc: (src) => {
+        const match = src.match(/^(?<id>\d+)\/download(\/inline)?$/)
+        return match ? backend_url(match.groups.id) : src
+      }
     }),
     Video,
     Float.configure({

@@ -27,6 +27,7 @@ export default Node.create({
             allowBase64: false,
             selectable: true,
             HTMLAttributes: {},
+            onSrc: (src) => src
         }
     },
 
@@ -54,7 +55,7 @@ export default Node.create({
                     if (elem.hasAttribute('data-objectid')) {
                         return backend_url(elem.getAttribute('data-objectid'))
                     } else if (elem.hasAttribute('src')) {
-                        return elem.getAttribute('src')
+                        return this.options.onSrc(elem.getAttribute('src'))
                     } else {
                         return null
                     }
