@@ -82,13 +82,15 @@ const startResizeMove = (e) => {
 
   const new_size = {
     width: props.node.clientWidth - diffs.x,
-    height: props.node.clientHeight - diffs.y
+    //height: props.node.clientHeight - diffs.y
   }
 
   if (new_size.width > container_width.value) {
     new_size.width = container_width.value
-    new_size.height = new_size.width / node_ratio.value
   }
+
+  // Preserve ratio
+  new_size.height = new_size.width / node_ratio.value
 
   emits('resize', new_size)
 }
