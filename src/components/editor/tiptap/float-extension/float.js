@@ -11,11 +11,7 @@ import {
     generate_responsive_cls
 } from '../utils'
 
-const floats = ['float-right', 'float-left', 'float-none']
-
-const is_float = new Set(
-    floats.map((x) => Array.from(generate_responsive_cls(x))).flat()
-)
+const floats = ['right', 'left', 'none']
 
 export const Float = Extension.create({
     name: 'float',
@@ -23,7 +19,7 @@ export const Float = Extension.create({
     addOptions() {
         return {
             types: [],
-            floats: ['none', 'left', 'right'],
+            floats: floats,
             default_float: null,
         }
     },
@@ -37,6 +33,12 @@ export const Float = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
+                            const is_float = new Set(
+                                this.options.floats.map(
+                                    (x) => Array.from(generate_responsive_cls(`float-${x}`))
+                                ).flat()
+                            )
+
                             const matches = []
 
                             for (const name of elem.classList) {
@@ -53,7 +55,6 @@ export const Float = Extension.create({
                             }
 
                             return matches.length ? matches : null
-
                         },
                         
                         renderHTML: attrs => {

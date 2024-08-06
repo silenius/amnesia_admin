@@ -11,11 +11,7 @@ import {
     generate_responsive_cls
 } from '../utils'
 
-const clears = ['clear-right', 'clear-left', 'clear-none']
-
-const is_clear = new Set(
-    clears.map((x) => Array.from(generate_responsive_cls(x))).flat()
-)
+const clears = ['right', 'left', 'both', 'none']
 
 export const Clear = Extension.create({
     name: 'clear',
@@ -23,7 +19,7 @@ export const Clear = Extension.create({
     addOptions() {
         return {
             types: [],
-            clears: ['none', 'left', 'right'],
+            clears: clears,
             default_clear: null,
         }
     },
@@ -37,6 +33,12 @@ export const Clear = Extension.create({
                         default: null,
                         
                         parseHTML: elem => {
+                            const is_clear = new Set(
+                                this.options.clears.map(
+                                    (x) => Array.from(generate_responsive_cls(`clear-${x}`))
+                                ).flat()
+                            )
+
                             const matches = []
 
                             for (const name of elem.classList) {
