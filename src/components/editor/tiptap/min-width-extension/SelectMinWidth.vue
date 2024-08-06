@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ minWidth }}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in minWidths" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+        <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -37,7 +37,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const minWidths = computed(() => props.extension.options.minWidths)
+const minWidths = computed(
+  () => props.extension.options.minWidths.toSpliced(0, 0, undefined)
+)
 
 const attrs = computed(() => {
   if (props.editor.isActive('image')) {
@@ -50,13 +52,19 @@ const attrs = computed(() => {
 const minWidth = computed({
 
   get() { 
-    const v = attrs.value.minWidth?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.minWidth : 'none'
+    try {
+      return attrs.value.minWidth.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).minWidth
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-minWidth', {
-      minWidth: value, breakpoint: props.breakpoint
+      minWidth: value, 
+      breakpoint: props.breakpoint
     })
   }
 

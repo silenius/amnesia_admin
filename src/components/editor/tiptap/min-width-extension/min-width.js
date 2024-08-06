@@ -78,21 +78,25 @@ export const MinWidth = Extension.create({
             setMinWidth: (minWidth, breakpoint = null) => (p) => {
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['minWidth']
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (minWidth !== 'undefined') {
+                if (this.options.minWidths.indexOf(minWidth) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         minWidth: minWidth
                     })
-                }
 
-                return p.commands.updateAttributes(
-                    type, { minWidth: mark }
-                )
+                    return p.commands.updateAttributes(
+                        type, { minWidth: attr }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
+                }
             },
         }
     },

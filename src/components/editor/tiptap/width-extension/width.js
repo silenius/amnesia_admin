@@ -98,22 +98,26 @@ export const Width = Extension.create({
             setWidth: (width, breakpoint = null, raw = false) => (p) => {
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['width']
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (width !== 'undefined') {
+                if (this.options.widths.indexOf(width) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         width: width,
                         raw: raw
                     })
-                }
 
-                return p.commands.updateAttributes(
-                    type, { width: mark }
-                )
+                    return p.commands.updateAttributes(
+                        type, { width: attr }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
+                }
             },
         }
     },

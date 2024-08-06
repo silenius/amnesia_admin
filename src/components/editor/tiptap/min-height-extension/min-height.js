@@ -78,21 +78,25 @@ export const MinHeight = Extension.create({
             setMinHeight: (minHeight, breakpoint = null) => (p) => {
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['minHeight']
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (minHeight !== 'undefined') {
+                if (this.options.minHeights.indexOf(minHeight) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         minHeight: minHeight
                     })
-                }
 
-                return p.commands.updateAttributes(
-                    type, { minHeight: mark }
-                )
+                    return p.commands.updateAttributes(
+                        type, { minHeight: attr }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
+                }
             },
         }
     },

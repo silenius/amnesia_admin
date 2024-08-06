@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ height }}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in heights" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+        <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -37,7 +37,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const heights = computed(() => props.extension.options.heights)
+const heights = computed(
+  () => props.extension.options.heights.toSpliced(0, 0, undefined)
+)
 
 const attrs = computed(() => {
   const type = props.extension.options.types.find(

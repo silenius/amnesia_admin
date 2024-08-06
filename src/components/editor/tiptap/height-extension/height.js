@@ -94,22 +94,26 @@ export const Height = Extension.create({
             setHeight: (height, breakpoint = null, raw = false) => (p) => {
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['height']
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (height !== 'undefined') {
+                if (this.options.heights.indexOf(height) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         height: height,
                         raw: raw
                     })
-                }
 
-                return p.commands.updateAttributes(
-                    type, { height: mark }
-                )
+                    return p.commands.updateAttributes(
+                        type, { height: attr }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
+                }
             },
         }
     },

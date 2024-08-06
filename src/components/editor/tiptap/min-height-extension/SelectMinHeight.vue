@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ minHeight }}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="h in minHeights" :key="h" :value="h">
-        <button :class="class_opt">{{ h }}</button>
+        <button :class="class_opt">{{ h !== undefined ? h : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -37,7 +37,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const minHeights = computed(() => props.extension.options.minHeights)
+const minHeights = computed(
+  () => props.extension.options.minHeights.toSpliced(0, 0, undefined)
+)
 
 const attrs = computed(() => {
   if (props.editor.isActive('image')) {
@@ -50,13 +52,19 @@ const attrs = computed(() => {
 const minHeight = computed({
 
   get() { 
-    const v = attrs.value.minHeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.minHeight : 'none'
+    try {
+      return attrs.value.minHeight.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).minHeight
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-minHeight', {
-      minHeight: value, breakpoint: props.breakpoint
+      minHeight: value, 
+      breakpoint: props.breakpoint
     })
   }
 
