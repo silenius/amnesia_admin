@@ -44,13 +44,19 @@ const attrs = computed(() => {
 const float = computed({
 
   get() { 
-    const v = attrs.value.float?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.direction : ''
+    try {
+      return attrs.value.float.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).float
+    } catch (e) {
+      return null
+    }
   },
   
   set(value) { 
     return emits('select-float', {
-      direction: value, breakpoint: props.breakpoint
+      float: value, 
+      breakpoint: props.breakpoint
     })
   }
 

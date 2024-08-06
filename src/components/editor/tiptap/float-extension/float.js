@@ -23,8 +23,8 @@ export const Float = Extension.create({
     addOptions() {
         return {
             types: [],
-            directions: ['none', 'left', 'right'],
-            default_direction: null,
+            floats: ['none', 'left', 'right'],
+            default_float: null,
         }
     },
 
@@ -41,12 +41,12 @@ export const Float = Extension.create({
 
                             for (const name of elem.classList) {
                                 if (is_float.has(name)) {
-                                    const direction = name.split('-').pop()
+                                    const float = name.split('-').pop()
                                     const [part1, part2] = name.split(':')
                                     const breakpoint = part2 !== undefined ? part1 : null
 
                                     matches.push({
-                                        direction: direction,
+                                        float: float,
                                         breakpoint: breakpoint
                                     })
                                 }
@@ -67,8 +67,8 @@ export const Float = Extension.create({
 
     addCommands() {
         return {
-            setFloat: (direction, breakpoint = null) => (p) => {
-                console.debug('===>>> setFloat, direction: ', direction, ', bp: ', breakpoint)
+            setFloat: (float, breakpoint = null) => (p) => {
+                console.debug('===>>> setFloat, float: ', float, ', bp: ', breakpoint)
                 const type = this.options.types.find((e) => p.editor.isActive(e))
                 const oldAttrs = p.editor.getAttributes(type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
@@ -77,11 +77,11 @@ export const Float = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (direction !== 'undefined') {
+                if (float !== 'undefined') {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        direction: direction
+                        float: float
                     })
                 }
 

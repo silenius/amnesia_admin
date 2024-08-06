@@ -356,6 +356,8 @@ import MaxWidth from '@/components/editor/tiptap/max-width-extension'
 import Height from '@/components/editor/tiptap/height-extension'
 import MinHeight from '@/components/editor/tiptap/min-height-extension'
 import MaxHeight from '@/components/editor/tiptap/max-height-extension'
+import Container from '@/components/editor/tiptap/container-extension'
+import Clear from '@/components/editor/tiptap/clear-extension'
 import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
 import { useEditorStore } from '@/stores/editor'
 
@@ -630,6 +632,7 @@ const editor = useEditor({
     //ResizableMedia
     Image.configure({
       inline: true,
+      allowBase64: true,
       onSrc: (src) => {
         const match = src.match(/^(?<id>\d+)\/download(\/inline)?$/)
         return match ? backend_url(match.groups.id) : src
@@ -639,6 +642,9 @@ const editor = useEditor({
     Float.configure({
       types: ['video', 'image', 'paragraph', 'textClass'],
     }),
+    Clear.configure({
+      types: ['video', 'image', 'paragraph', 'textClass'],
+    }),
     Align.configure({
       types: ['video', 'image', 'paragraph'],
     }),
@@ -646,6 +652,9 @@ const editor = useEditor({
     //    CustomText,
     TextStyle,
     TextClass,
+    Container.configure({
+      types: ['textClass', 'paragraph']
+    }),
     FontSize.configure({
       types: ['textClass']
     }),
@@ -675,22 +684,22 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
-      types: ['video', 'image', 'paragraph']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     MinWidth.configure({
-      types: ['image', 'paragraph']
+      types: ['image', 'paragraph', 'heading']
     }),
     MinHeight.configure({
-      types: ['image', 'paragraph']
+      types: ['image', 'paragraph', 'heading']
     }),
     MaxWidth.configure({
-      types: ['image', 'paragraph']
+      types: ['image', 'paragraph', 'heading']
     }),
     MaxHeight.configure({
-      types: ['image', 'paragraph']
+      types: ['image', 'paragraph', 'heading']
     }),
     Height.configure({
-      types: ['video', 'image', 'paragraph']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     Table,
     TableHeader,

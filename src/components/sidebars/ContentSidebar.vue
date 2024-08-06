@@ -15,6 +15,30 @@
     </section>
     -->
 
+    <!-- CONTAINER -->
+
+    <section name="container" :class="cls_section" v-if="ext_container">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Container</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">
+            Fix width to the current breakpoint.
+          </div>
+          <SelectContainer
+            :breakpoint="breakpoint"
+            :extension="ext_container" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-container="({container, breakpoint}) => select_editor.chain().setContainer(container, breakpoint).run()"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
     <!-- PADDING -->
 
     <section name="padding" :class="cls_section" v-if="ext_padding">
@@ -78,7 +102,29 @@
             :extension="ext_float" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-float="({direction, breakpoint}) => select_editor.chain().setFloat(direction, breakpoint).run()"
+            @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint).run()"
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
+    <!-- CLEAR -->
+
+    <section name="clear" :class="cls_section" v-if="ext_clear">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Clear</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for controlling the wrapping of content around an element.</div>
+          <SelectClear
+            :breakpoint="breakpoint"
+            :extension="ext_float" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-clear="({clear, breakpoint}) => select_editor.chain().setClear(clear, breakpoint).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -322,6 +368,7 @@ import SelectBreakpoint from '@/components/editor/tiptap/breakpoint/SelectBreakp
 import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
 import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
 import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
+import SelectClear from '@/components/editor/tiptap/clear-extension/SelectClear.vue'
 import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.vue'
 import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextColor.vue'
 import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
@@ -336,6 +383,7 @@ import SelectMaxWidth from '@/components/editor/tiptap/max-width-extension/Selec
 import SelectHeight from '@/components/editor/tiptap/height-extension/SelectHeight.vue'
 import SelectMinHeight from '@/components/editor/tiptap/min-height-extension/SelectMinHeight.vue'
 import SelectMaxHeight from '@/components/editor/tiptap/max-height-extension/SelectMaxHeight.vue'
+import SelectContainer from '@/components/editor/tiptap/container-extension/SelectContainer.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -359,6 +407,8 @@ const ext_max_width = ref()
 const ext_height = ref()
 const ext_min_height = ref()
 const ext_max_height = ref()
+const ext_container = ref()
+const ext_clear = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -392,7 +442,6 @@ watch(editors, () => {
 
 watch(select_editor, () => {
   if (select_editor.value) {
-
     const exts = select_editor.value.extensionManager.extensions
 
     ext_padding.value = exts.find(ext => ext.name == 'padding')
@@ -412,7 +461,8 @@ watch(select_editor, () => {
     ext_height.value = exts.find(ext => ext.name == 'height')
     ext_min_height.value = exts.find(ext => ext.name == 'minHeight')
     ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
-
+    ext_container.value = exts.find(ext => ext.name == 'container')
+    ext_clear.value = exts.find(ext => ext.name == 'clear')
   }
 })
 

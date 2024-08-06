@@ -31,8 +31,13 @@ const attrs = computed(() => {
 const container = computed({
 
   get() { 
-    const v = attrs.value.container?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.container : ''
+    try {
+      return attrs.value.container.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).container
+    } catch (e) {
+      return null
+    }
   },
   
   set(value) { 

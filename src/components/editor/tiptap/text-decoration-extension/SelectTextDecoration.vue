@@ -37,7 +37,7 @@ const decoration = computed({
 
   get() { 
     const v = attrs.value.textDecoration?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.decoration : ''
+    return v !== undefined ? v.decoration : null
   },
 
   set(value) { 
@@ -46,7 +46,8 @@ const decoration = computed({
     }
 
     return emits('select-text-decoration', {
-      decoration: value, breakpoint: props.breakpoint
+      decoration: value, 
+      breakpoint: props.breakpoint
     })
   }
 
