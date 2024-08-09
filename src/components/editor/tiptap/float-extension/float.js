@@ -78,6 +78,8 @@ export const Float = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
+                console.log(this)
+
                 if (float !== 'undefined') {
                     // New value
                     mark.push({
@@ -89,6 +91,7 @@ export const Float = Extension.create({
                 // New value
                 console.debug('===>>> setFloat, mark: ', mark)
 
+                // replace with if this.editor.extensionManager.extensions. ...
                 if (type != 'textClass') {
                     return p.commands.updateAttributes(
                         type, { float: mark }

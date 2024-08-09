@@ -61,13 +61,14 @@ const align = computed({
         (x) => x.breakpoint == props.breakpoint
       ).direction
     } catch (e) {
-      return ''
+      return undefined
     }
   },
 
   set(value) { 
     return emits('select-align', {
-      direction: value, breakpoint: props.breakpoint
+      direction: value === align.value ? undefined : value, 
+      breakpoint: props.breakpoint
     })
   }
 

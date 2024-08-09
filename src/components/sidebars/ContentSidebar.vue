@@ -118,7 +118,7 @@
           <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">Utilities for controlling the wrapping of content around an element.</div>
+          <div class="italic my-2">It sets wether an element must be moved below (cleared) floating elements that precede it.</div>
           <SelectClear
             :breakpoint="breakpoint"
             :extension="ext_float" 

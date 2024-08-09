@@ -78,24 +78,27 @@ export const Align = Extension.create({
                 const oldAttrs = p.editor.getAttributes(type)['align']
                 console.debug('===>>> setAlign, oldAttrs: ', oldAttrs)
 
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (direction !== 'undefined') {
-                    // New value
-                    mark.push({
+                if (this.options.directions.indexOf(direction) !== -1) {
+                    attr.push({
                         breakpoint: breakpoint,
                         direction: direction
                     })
+
+                    // New value
+                    console.debug('===>>> setAlign, attr: ', attr)
+
+                    return p.commands.updateAttributes(
+                        type, { align: attr }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
                 }
-
-                // New value
-                console.debug('===>>> setAlign, mark: ', mark)
-
-                return p.commands.updateAttributes(
-                    type, { align: mark }
-                )
             },
         }
     },
