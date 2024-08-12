@@ -15,7 +15,7 @@ const maxWidths = [
     'none', 
 
     'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl',
-    
+
     'full', 'min', 'max', 'fit', 'prose',
 
     'screen-sm', 'screen-md', 'screen-lg', 'screen-xl', 'screen-2xl',
@@ -23,7 +23,7 @@ const maxWidths = [
     '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
     '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
     '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
+
 ]
 
 export const MaxWidth = Extension.create({
@@ -43,7 +43,7 @@ export const MaxWidth = Extension.create({
                 attributes: {
                     maxWidth: {
                         default: null,
-                        
+
                         parseHTML: elem => {
                             const is_maxWidth = new Set(
                                 this.options.maxWidths.map(
@@ -70,7 +70,7 @@ export const MaxWidth = Extension.create({
                             return matches.length ? matches : null
 
                         },
-                        
+
                         renderHTML: attrs => {
                             return render_maxWidth_attrs(attrs)
                         },
@@ -89,17 +89,22 @@ export const MaxWidth = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (maxWidth !== 'undefined') {
+                if (this.options.maxWidths.indexOf(width) !== -1) {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
                         maxWidth: maxWidth
                     })
-                }
 
-                return p.commands.updateAttributes(
-                    type, { maxWidth: mark }
-                )
+                    return p.commands.updateAttributes(
+                        type, { maxWidth: mark }
+                    )
+                } else {
+                    return p.commands.resetAttributes(
+                        type, this.name
+                    )
+                }
+ 
             },
         }
     },

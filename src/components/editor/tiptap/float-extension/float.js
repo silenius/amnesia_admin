@@ -74,31 +74,35 @@ export const Float = Extension.create({
                 const oldAttrs = p.editor.getAttributes(type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
 
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                console.log(this)
-
                 if (float !== 'undefined') {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         float: float
                     })
                 }
 
                 // New value
-                console.debug('===>>> setFloat, mark: ', mark)
-
+                /*
+                console.debug('===>>> setFloat, attr: ', attr)
+                const { view, state } = p.editor
+                const { from, to } = view.state.selection
+                const text = state.doc.textBetween(from, to, '')
+                console.log(text)
+                console.log(p)
+                */
                 // replace with if this.editor.extensionManager.extensions. ...
                 if (type != 'textClass') {
                     return p.commands.updateAttributes(
-                        type, { float: mark }
+                        type, { float: attr }
                     )
                 } else {
                     return p.chain().setMark(
-                        'textClass', { float: mark }
+                        'textClass', { float: attr }
                     ).run()
                 }
             },

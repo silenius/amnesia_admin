@@ -687,16 +687,16 @@ const editor = useEditor({
       types: ['video', 'image', 'paragraph', 'heading']
     }),
     MinWidth.configure({
-      types: ['image', 'paragraph', 'heading']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     MinHeight.configure({
-      types: ['image', 'paragraph', 'heading']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     MaxWidth.configure({
-      types: ['image', 'paragraph', 'heading']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     MaxHeight.configure({
-      types: ['image', 'paragraph', 'heading']
+      types: ['video', 'image', 'paragraph', 'heading']
     }),
     Height.configure({
       types: ['video', 'image', 'paragraph', 'heading']
