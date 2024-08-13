@@ -1,7 +1,5 @@
 <template>
-  <node-view-wrapper 
-    class="after:content-[''] after:clear-both after:h-0 after:w-full after:block"
-    :class="[float_cls, margin_cls]">
+  <node-view-wrapper :class="[float_cls, margin_cls, clear_cls]">
     <img draggable data-drag-handle 
       ref="img" 
       class="block rounded-lg" 
@@ -29,6 +27,7 @@ import { render_minWidth_attrs } from '../min-width-extension/utils'
 import { render_maxHeight_attrs } from '../max-height-extension/utils'
 import { render_minHeight_attrs } from '../min-height-extension/utils'
 import { render_height_attrs } from '../height-extension/utils'
+import { render_clear_attrs } from '../clear-extension/utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
 const props = defineProps(nodeViewProps)
@@ -72,6 +71,11 @@ const margin_cls = computed(() => {
 
 const float_cls = computed(() => { 
   const cls = render_float_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
+const clear_cls = computed(() => { 
+  const cls = render_clear_attrs(props.node.attrs)
   return cls ? Object.values(cls) : []
 })
 

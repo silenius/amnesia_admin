@@ -54,6 +54,10 @@ const float = computed({
   },
   
   set(value) { 
+    if (value == float.value) {
+      value = undefined
+    }
+
     return emits('select-float', {
       float: value, 
       breakpoint: props.breakpoint

@@ -72,32 +72,28 @@ export const Clear = Extension.create({
             setClear: (clear, breakpoint = null) => (p) => {
                 console.debug('===>>> setClear, clear: ', clear, ', bp: ', breakpoint)
                 const type = this.options.types.find((e) => p.editor.isActive(e))
+                const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
                 const oldAttrs = p.editor.getAttributes(type)['clear']
                 console.debug('===>>> setClear, oldAttrs: ', oldAttrs)
 
-                const mark = Array.isArray(oldAttrs)
+                const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (clear !== 'undefined') {
+                if (this.options.clears.indexOf(clear) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         clear: clear
                     })
                 }
 
-                // New value
-                console.debug('===>>> setClear, mark: ', mark)
-
-                if (type != 'textClass') {
-                    return p.commands.updateAttributes(
-                        type, { clear: mark }
-                    )
-                } else {
-                    return p.chain().setMark(
-                        'textClass', { clear: mark }
-                    ).run()
+                switch (ext.type) {
+                    case 'node':
+                        return p.commands.updateAttributes(
+                            type, { clear: attr }
+                        )
+                        break
                 }
             },
         }

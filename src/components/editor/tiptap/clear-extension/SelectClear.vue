@@ -54,6 +54,10 @@ const clear = computed({
   },
   
   set(value) { 
+    if (value == clear.value) {
+      value = undefined
+    }
+
     return emits('select-clear', {
       clear: value, 
       breakpoint: props.breakpoint

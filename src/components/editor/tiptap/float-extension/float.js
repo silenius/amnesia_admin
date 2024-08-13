@@ -71,6 +71,7 @@ export const Float = Extension.create({
             setFloat: (float, breakpoint = null) => (p) => {
                 console.debug('===>>> setFloat, float: ', float, ', bp: ', breakpoint)
                 const type = this.options.types.find((e) => p.editor.isActive(e))
+                const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
                 const oldAttrs = p.editor.getAttributes(type)['float']
                 console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
 
@@ -78,12 +79,21 @@ export const Float = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (float !== 'undefined') {
+                if (this.options.floats.indexOf(float) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
                         float: float
                     })
+                }
+
+                // TODO: support mark types (with selection?)
+                switch (ext.type) {
+                    case 'node':
+                        return p.commands.updateAttributes(
+                            type, { float: attr }
+                        )
+                        break
                 }
 
                 // New value
@@ -96,15 +106,6 @@ export const Float = Extension.create({
                 console.log(p)
                 */
                 // replace with if this.editor.extensionManager.extensions. ...
-                if (type != 'textClass') {
-                    return p.commands.updateAttributes(
-                        type, { float: attr }
-                    )
-                } else {
-                    return p.chain().setMark(
-                        'textClass', { float: attr }
-                    ).run()
-                }
             },
         }
     },
