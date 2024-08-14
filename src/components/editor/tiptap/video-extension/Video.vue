@@ -1,9 +1,8 @@
 <template>
   <node-view-wrapper 
-    class="after:content-[''] after:clear-both after:h-0 after:w-full after:block"
     :class="[width_cls, height_cls, float_cls, margin_cls]"
   >
-    <div v-if="src" :class="[align_cls]" class="block w-min" draggable>
+    <div v-if="src" :class="[align_cls, bg_color_cls, padding_cls]" class="block w-min" draggable>
       <span v-if="editable" data-drag-handle class="rounded
         m-1 p-1 absolute hover:cursor-pointer text-white hover:text-red-500 p-1 z-50
         bg-zinc-800">
@@ -36,6 +35,8 @@ import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { render_width_attrs } from '../width-extension/utils'
 import { render_height_attrs } from '../height-extension/utils'
 import { render_float_attrs } from '../float-extension/utils'
+import { render_bg_color_attrs } from '../background-color/utils'
+import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
@@ -73,6 +74,26 @@ const above_iframe_cls = computed(
   () => `w-[${width_attr.value}px] h-[${height_attr.value}px]`
 )
 */
+
+const bg_color_cls = computed(() => {
+  const cls = render_bg_color_attrs(props.node.attrs)
+  return cls ? Object.values(cls) : []
+})
+
+const padding_cls = computed(() => {
+  const paddings = []
+
+  for (const padding of ['px', 'py', 'pt', 'pr', 'pb', 'pl']) {
+    const cls = render_padding_attrs(props.node.attrs, padding)?.class
+
+    if (cls) {
+      paddings.push(cls)
+    }
+  }
+
+  return paddings
+})
+
 
 const iframe_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&

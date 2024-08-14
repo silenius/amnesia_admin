@@ -679,7 +679,7 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     BackgroundColor.configure({
-      types: ['textClass', 'image']
+      types: ['textClass', 'image', 'video']
     }),
     Margin.configure({
       types: ['video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
