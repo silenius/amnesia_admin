@@ -205,13 +205,22 @@
                 </div>
               </div>
 
-              <div class="mt-4">
+              <div class="mt-4 flex gap-2">
                 <button
                   type="button"
                   class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('video')">
                   Close
                 </button>
+                <button
+                  :disabled="!guess_video(input_video_url).type"
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  :class="insert_video_button"
+                  @click="insertVideo">
+                  Insert
+               </button>
+
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -317,7 +326,8 @@ import {
   unref,
   watchEffect, 
   onMounted, 
-  onBeforeUnmount 
+  onBeforeUnmount,
+  computed
 } from 'vue'
 
 import { 
@@ -338,6 +348,7 @@ import Link from '@tiptap/extension-link'
 //import Youtube from '@tiptap/extension-youtube'
 import Image from '@/components/editor/tiptap/image/image'
 import Video from '@/components/editor/tiptap/video-extension/video'
+import { guess_video } from '@/components/editor/tiptap/video-extension/utils'
 import FontSize from '@/components/editor/tiptap/fontsize'
 import TextClass from '@/components/editor/tiptap/text-class'
 import { Float } from '@/components/editor/tiptap/float-extension'
@@ -491,6 +502,12 @@ const insertVideo = () => {
   input_video_url.value = ''
   input_video_autoplay.value = false
 }
+
+const insert_video_button = computed(
+  () => guess_video(input_video_url.value).type 
+    ? 'hover:bg-green-200 bg-green-100 text-green-900 focus-visible:ring-green-500'
+    : 'bg-slate-100 text-slate-300'
+)
 
 const insertLink = (value) => {
   editor.value.commands.setLink({
