@@ -680,7 +680,7 @@ const editor = useEditor({
     TextStyle,
     TextClass,
     Container.configure({
-      types: ['textClass', 'paragraph']
+      types: ['paragraph']
     }),
     FontSize.configure({
       types: ['textClass']

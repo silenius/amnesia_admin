@@ -49,8 +49,7 @@ export const Padding = Extension.create({
         return {
             types: [],
             levels: new Set([
-                'auto', 'undefined', 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
-                14, 16, 20, 24, 28, 32
+                'auto', 'undefined', 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32
             ])
         }
     },

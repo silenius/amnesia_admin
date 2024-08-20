@@ -80,15 +80,11 @@ export const Container = Extension.create({
                         breakpoint: breakpoint,
                         container: container,
                     })
-
-                    return p.commands.updateAttributes(
-                        type, { container: attr }
-                    )
-                } else {
-                    return p.commands.resetAttributes(
-                        type, this.name
-                    )
                 }
+
+                return p.commands.updateAttributes(
+                    type, { container: attr }
+                )
             },
         }
     },

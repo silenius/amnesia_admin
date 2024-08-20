@@ -1,8 +1,8 @@
 <template>
-  <node-view-wrapper :class="[float_cls, margin_cls, clear_cls]">
+  <node-view-wrapper :as="as" :class="[float_cls, margin_cls, clear_cls]">
     <img draggable data-drag-handle 
       ref="img" 
-      class="block rounded-lg" 
+      class="rounded-lg" 
       :src="node.attrs.src" 
       :data-objectid="node.attrs['data-objectid']"
       :width="width_attr"
@@ -34,11 +34,15 @@ const props = defineProps(nodeViewProps)
 
 const img = ref()
 
+const as = computed(() => props.node.type.spec.inline ? 'span' : 'div')
+
 const editable = computed(() => props.editor.view.editable)
 
 const img_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&
     editable.value,
+  'inline': props.node.type.spec.inline,
+  'block': !props.node.type.spec.inline
 }))
 
 const padding_cls = computed(() => {
