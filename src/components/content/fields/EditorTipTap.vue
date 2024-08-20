@@ -308,6 +308,10 @@
       <font-awesome-icon icon="fa-solid fa-film"
         @click="add_video" />
 
+      <font-awesome-icon icon="fa-solid fa-house"
+        @click="add_foo"
+      />
+
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
         v-if="!editor.state.selection.empty" />
@@ -476,6 +480,12 @@ const input_image_url = ref()
 const input_video_url = ref()
 const input_video_autoplay = ref()
 const input_video_controls = ref()
+
+const add_foo = () => {
+  editor.value.commands.insertContent(
+    '<p><span class="border-2 text-red-500 border-red-500">COUCOU</span></p>'
+  )
+}
 
 const insertImage = (value) => {
   editor.value.commands.setImage({
