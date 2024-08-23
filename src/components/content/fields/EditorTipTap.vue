@@ -374,6 +374,7 @@ import MaxHeight from '@/components/editor/tiptap/max-height-extension'
 import Container from '@/components/editor/tiptap/container-extension'
 import Clear from '@/components/editor/tiptap/clear-extension'
 import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
+import FlexContainer from '@/components/editor/tiptap/flex-container-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -482,9 +483,12 @@ const input_video_autoplay = ref()
 const input_video_controls = ref()
 
 const add_foo = () => {
-  editor.value.commands.insertContent(
-    '<p><span class="border-2 text-red-500 border-red-500">COUCOU</span></p>'
-  )
+  editor.value.commands.insertContent({
+    type: 'flexContainer',
+    attrs: {
+      direction: 'row' 
+    }
+  })
 }
 
 const insertImage = (value) => {
@@ -658,7 +662,7 @@ const editor = useEditor({
     ,*/
     //ResizableMedia
     Image.configure({
-      inline: true,
+      inline: false,
       allowBase64: true,
       onSrc: (src) => {
         const match = src.match(/^(?<id>\d+)\/download(\/inline)?$/)
@@ -666,6 +670,7 @@ const editor = useEditor({
       }
     }),
     Video,
+    FlexContainer,
     Float.configure({
       types: ['video', 'image', 'paragraph', 'textClass'],
     }),
@@ -675,8 +680,6 @@ const editor = useEditor({
     Align.configure({
       types: ['video', 'image', 'paragraph'],
     }),
-    //    Flex,
-    //    CustomText,
     TextStyle,
     TextClass,
     Container.configure({
@@ -698,7 +701,7 @@ const editor = useEditor({
       types: ['video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
     }),
     FontWeight.configure({
-      types: ['textClass']
+      types: ['textClass', 'flexContainer']
     }),
     FontFamily.configure({
       types: ['textClass'],

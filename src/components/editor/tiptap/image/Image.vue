@@ -34,7 +34,7 @@ const props = defineProps(nodeViewProps)
 
 const img = ref()
 
-const as = computed(() => props.node.type.spec.inline ? 'span' : 'div')
+const as = computed(() => props.node.type.spec.inline ? 'span' : 'p')
 
 const editable = computed(() => props.editor.view.editable)
 

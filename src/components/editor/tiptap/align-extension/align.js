@@ -53,7 +53,6 @@ export const Align = Extension.create({
                             }
 
                             return matches.length ? matches : null
-
                         },
 
                         renderHTML: attrs => {
