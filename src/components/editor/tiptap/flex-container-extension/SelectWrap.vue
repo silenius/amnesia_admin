@@ -41,15 +41,7 @@ const wraps = computed(
   () => props.extension.options.wraps.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
+const attrs = computed(() => props.editor.getAttributes('flexContainer'))
 
 const wrap = computed({
 

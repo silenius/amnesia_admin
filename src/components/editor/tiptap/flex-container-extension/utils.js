@@ -21,3 +21,12 @@ export const render_justify_attrs = (attrs) => {
         }
     }
 }
+
+export const render_align_items_attrs = (attrs) => {
+    if (Array.isArray(attrs.align_items)) {
+        return {
+            class: `${attrs.align_items.map((x) => [!x.breakpoint ? `items-${x.align_items}` : `${x.breakpoint}:items-${x.align_items}`].filter(Boolean).join('-')).join(' ')}`
+        }
+    }
+}
+

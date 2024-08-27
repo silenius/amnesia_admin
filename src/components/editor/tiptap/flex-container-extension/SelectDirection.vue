@@ -41,15 +41,7 @@ const directions = computed(
   () => props.extension.options.directions.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
+const attrs = computed(() => props.editor.getAttributes('flexContainer'))
 
 const direction = computed({
 

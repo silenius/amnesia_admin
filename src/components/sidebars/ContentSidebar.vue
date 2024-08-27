@@ -28,13 +28,15 @@
           <div class="italic my-2">
             Configure block-level flex container.
           </div>
+
           <SelectDirection
             :breakpoint="breakpoint"
             :extension="ext_flex" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-direction="({ direction, breakpoint }) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
+            @select-direction="({direction, breakpoint}) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
           />
+          
           <SelectWrap
             :breakpoint="breakpoint"
             :extension="ext_flex" 
@@ -42,12 +44,21 @@
             :editor="select_editor"
             @select-wrap="({wrap, breakpoint}) => select_editor.chain().setFlexWrap(wrap, breakpoint).run()"
           />
-           <SelectJustifyContent
+          
+          <SelectJustifyContent
             :breakpoint="breakpoint"
             :extension="ext_flex" 
             :transaction="select_transaction"
             :editor="select_editor"
             @select-justify-content="({justify, breakpoint}) => select_editor.chain().setFlexJustifyContent(justify, breakpoint).run()"
+          />
+
+           <SelectAlignItems
+            :breakpoint="breakpoint"
+            :extension="ext_flex" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-align-items="({align, breakpoint}) => select_editor.chain().setAlignItems(align, breakpoint).run()"
           />
  
         </DisclosurePanel>
@@ -426,6 +437,7 @@ import SelectContainer from '@/components/editor/tiptap/container-extension/Sele
 import SelectDirection from '@/components/editor/tiptap/flex-container-extension/SelectDirection.vue'
 import SelectWrap from '@/components/editor/tiptap/flex-container-extension/SelectWrap.vue'
 import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
+import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
 
 const { getEditor, editors } = useEditorStore()
 

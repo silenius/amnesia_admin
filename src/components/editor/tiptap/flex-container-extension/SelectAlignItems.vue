@@ -1,8 +1,8 @@
 <template>
-  <Listbox as="div" v-model="justify_content">
-    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ justify_content }}</ListboxButton>
+  <Listbox as="div" v-model="align_item">
+    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ align_item }}</ListboxButton>
     <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="w in justify_contents" :key="w" :value="w">
+      <ListboxOption v-for="w in align_items" :key="w" :value="w">
         <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
@@ -37,27 +37,27 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const justify_contents = computed(
-  () => props.extension.options.justify_contents.toSpliced(0, 0, undefined)
+const align_items = computed(
+  () => props.extension.options.align_items.toSpliced(0, 0, undefined)
 )
 
 const attrs = computed(() => props.editor.getAttributes('flexContainer'))
 
-const justify_content = computed({
+const align_item = computed({
 
   get() {
     try {
-      return attrs.value.justify_content.find(
+      return attrs.value.align_items.find(
         (x) => x.breakpoint == props.breakpoint
-      ).justify_content
+      ).align_items
     } catch (e) {
       return 'none'
     }
   },
 
   set(value) { 
-    return emits('select-justify-content', {
-      justify: value, 
+    return emits('select-align-items', {
+      align: value, 
       breakpoint: props.breakpoint, 
     })
   }
