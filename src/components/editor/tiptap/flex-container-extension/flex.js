@@ -74,6 +74,8 @@ export const FlexContainer = Node.create({
                     return matches.length ? matches : null
 
                 },
+                renderHTML: attrs => {
+                }
             },
 
             wrap: {

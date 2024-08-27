@@ -714,7 +714,7 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['video', 'image', 'flexContainer', 'paragraph', 'heading']
     }),
     MinWidth.configure({
       types: ['video', 'image', 'paragraph', 'heading']
