@@ -15,6 +15,45 @@
     </section>
     -->
 
+    <!-- FLEX CONTAINER -->
+
+    <section v-if="select_editor.isActive('flexContainer')">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Flex container</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">
+            Configure block-level flex container.
+          </div>
+          <SelectDirection
+            :breakpoint="breakpoint"
+            :extension="ext_flex" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-direction="({ direction, breakpoint }) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
+          />
+          <SelectWrap
+            :breakpoint="breakpoint"
+            :extension="ext_flex" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-wrap="({wrap, breakpoint}) => select_editor.chain().setFlexWrap(wrap, breakpoint).run()"
+          />
+           <SelectJustifyContent
+            :breakpoint="breakpoint"
+            :extension="ext_flex" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-justify-content="({justify, breakpoint}) => select_editor.chain().setFlexJustifyContent(justify, breakpoint).run()"
+          />
+ 
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
     <!-- CONTAINER -->
 
     <section name="container" :class="cls_section" v-if="ext_container">
@@ -384,6 +423,9 @@ import SelectHeight from '@/components/editor/tiptap/height-extension/SelectHeig
 import SelectMinHeight from '@/components/editor/tiptap/min-height-extension/SelectMinHeight.vue'
 import SelectMaxHeight from '@/components/editor/tiptap/max-height-extension/SelectMaxHeight.vue'
 import SelectContainer from '@/components/editor/tiptap/container-extension/SelectContainer.vue'
+import SelectDirection from '@/components/editor/tiptap/flex-container-extension/SelectDirection.vue'
+import SelectWrap from '@/components/editor/tiptap/flex-container-extension/SelectWrap.vue'
+import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -409,6 +451,7 @@ const ext_min_height = ref()
 const ext_max_height = ref()
 const ext_container = ref()
 const ext_clear = ref()
+const ext_flex = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -442,6 +485,7 @@ watch(editors, () => {
 
 watch(select_editor, () => {
   if (select_editor.value) {
+    console.log(select_editor.value)
     const exts = select_editor.value.extensionManager.extensions
 
     ext_padding.value = exts.find(ext => ext.name == 'padding')
@@ -463,6 +507,7 @@ watch(select_editor, () => {
     ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
     ext_container.value = exts.find(ext => ext.name == 'container')
     ext_clear.value = exts.find(ext => ext.name == 'clear')
+    ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
   }
 })
 

@@ -4,12 +4,18 @@ import {
 } from '@tiptap/core'
 
 import {
+    render_direction_attrs,
+    render_wrap_attrs,
+    render_justify_attrs
+} from './utils'
+
+import {
     generate_responsive_cls
 } from '../utils'
 
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 
-import Flex from './Flex.vue';
+import Flex from './Flex.vue'
 
 const tag = 'amnesia-flex-container'
 
@@ -74,7 +80,9 @@ export const FlexContainer = Node.create({
                     return matches.length ? matches : null
 
                 },
+
                 renderHTML: attrs => {
+                    return render_direction_attrs(attrs)
                 }
             },
 
@@ -106,6 +114,10 @@ export const FlexContainer = Node.create({
                     return matches.length ? matches : null
 
                 },
+
+                renderHTML: attrs => {
+                    return render_wrap_attrs(attrs)
+                }
             },
 
             justify_content: {
@@ -136,42 +148,110 @@ export const FlexContainer = Node.create({
                     return matches.length ? matches : null
                 },
 
-            }
+                renderHTML: attrs => {
+                    return render_justify_attrs(attrs)
+                }
+            },
         }
     },
 
     parseHTML() {
         return [
             {
-                tag: tag
+                tag: 'div',
+                getAttrs: element => element.classList.contains('flex') && null
             },
+            /*
             {
                 style: 'display',
                 getAttrs: value => (value == 'flex' || value == 'inline-flex') && null
             }
+            */
         ]
+
     },
 
-    renderHTML({ HTMLAttributes }) {
+    renderHTML({ node, HTMLAttributes }) {
         return [
-            tag, 
-            mergeAttributes(HTMLAttributes)
+            'div', 
+            mergeAttributes(
+                HTMLAttributes, {
+                    'class': 'flex',
+                }
+            ),
+            0
         ]
     },
 
     addCommands() {
         return {
-            setFlex: options => ({ commands }) => {
-                return commands.insertContent({
-                    type: this.name,
-                    attrs: options,
-                })
+            setFlexDirection: (direction, breakpoint = null) => (p) => {
+                const type = 'flexContainer'
+                const oldAttrs = p.editor.getAttributes(type)['direction']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.directions.indexOf(direction) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        direction: direction,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { direction: attr }
+                )
             },
+
+            setFlexWrap: (wrap, breakpoint = null) => (p) => {
+                const type = 'flexContainer'
+                const oldAttrs = p.editor.getAttributes(type)['wrap']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.wraps.indexOf(wrap) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        wrap: wrap,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { wrap: attr }
+                )
+            },
+
+            setFlexJustifyContent: (justify, breakpoint = null) => (p) => {
+                const type = 'flexContainer'
+                const oldAttrs = p.editor.getAttributes(type)['justify_content']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.justify_contents.indexOf(justify) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        justify_content: justify,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { justify_content: attr }
+                )
+            }
+
         }
     },
 
+    /*
     addNodeView() {
         return VueNodeViewRenderer(Flex);
     }
+    */
 
 })

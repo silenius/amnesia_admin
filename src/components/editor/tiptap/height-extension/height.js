@@ -105,15 +105,11 @@ export const Height = Extension.create({
                         height: height,
                         raw: raw
                     })
-
-                    return p.commands.updateAttributes(
-                        type, { height: attr }
-                    )
-                } else {
-                    return p.commands.resetAttributes(
-                        type, this.name
-                    )
                 }
+
+                return p.commands.updateAttributes(
+                    type, { height: attr }
+                )
             },
         }
     },

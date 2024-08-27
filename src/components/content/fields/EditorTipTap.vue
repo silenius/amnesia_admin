@@ -340,8 +340,11 @@ import {
   BubbleMenu
 } from '@tiptap/vue-3'
 
-import StarterKit from "@tiptap/starter-kit"
+//import StarterKit from "@tiptap/starter-kit"
 import Typography from '@tiptap/extension-typography'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
 import TextAlign from '@tiptap/extension-text-align'
 import Table from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
@@ -483,12 +486,24 @@ const input_video_autoplay = ref()
 const input_video_controls = ref()
 
 const add_foo = () => {
-  editor.value.commands.insertContent({
+  console.log(editor.value)
+  //editor.value.commands.insertContent('<div class="flex"><p>LOL 12344</p><p>coucou</p></div>')
+  editor.value.commands.insertContent([
+  {
     type: 'flexContainer',
-    attrs: {
-      direction: 'row' 
-    }
-  })
+    content: [
+      {
+        type: 'paragraph',
+        content: [
+            {
+          type: 'text',
+          text: 'coucou petite perruche'
+            }
+        ]
+      }
+    ]
+  }
+  ])
 }
 
 const insertImage = (value) => {
@@ -644,14 +659,9 @@ const editor = useEditor({
   },
   */
   extensions: [
-    StarterKit.configure({
-      bold: false,
-      italic: false,
-      bulletList: {
-        HTMLAttributes: { 'class': 'list-disc' },
-        types: ['textClass']
-      }
-    }),
+    Document,
+    Paragraph,
+    Text,
     TipTapCommands,
     Typography,
     /*
@@ -670,7 +680,6 @@ const editor = useEditor({
       }
     }),
     Video,
-    FlexContainer,
     Float.configure({
       types: ['video', 'image', 'paragraph', 'textClass'],
     }),
@@ -695,13 +704,13 @@ const editor = useEditor({
       types: ['textClass', 'image', 'video']
     }),
     Margin.configure({
-      types: ['video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
+      types: ['flexContainer', 'video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
     }),
     Padding.configure({
       types: ['video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
     }),
     FontWeight.configure({
-      types: ['textClass', 'flexContainer']
+      types: ['textClass'] 
     }),
     FontFamily.configure({
       types: ['textClass'],
@@ -714,7 +723,7 @@ const editor = useEditor({
       types: ['textClass']
     }),
     Width.configure({
-      types: ['video', 'image', 'flexContainer', 'paragraph', 'heading']
+      types: ['flexContainer', 'video', 'image', 'paragraph', 'heading']
     }),
     MinWidth.configure({
       types: ['video', 'image', 'paragraph', 'heading']
@@ -738,6 +747,7 @@ const editor = useEditor({
     Link.configure({
       spanning: false
     }),
+    FlexContainer,
   ]
 })
 

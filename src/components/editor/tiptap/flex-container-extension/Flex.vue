@@ -1,7 +1,7 @@
 <template>
-  <node-view-wrapper class="flex">
-    {{ node.attrs }}
-    <p @click="foo" contenteditable="true">lol</p>
+    <node-view-content />
+  <node-view-wrapper class="flex border border-green-600">
+    TESTFDP
   </node-view-wrapper>
 </template>
 
@@ -13,9 +13,8 @@ console.log(props)
 
 const foo = () => {
   console.log('lol')
-  console.log(props.getPos())
-  props.editor.setParagraph()
-  props.updateAttributes({'direction': 'col'})
+  props.editor.commands.setNode('paragraph', {'data-lol': 'TEST 1234'})
+  console.log('lol2')
 }
 
 </script>
