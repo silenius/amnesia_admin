@@ -27,7 +27,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
-  'select-justify-content'
+  'select-align-items'
 ])
 
 const class_opts = [
