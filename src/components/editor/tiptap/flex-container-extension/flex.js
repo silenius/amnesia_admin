@@ -8,6 +8,7 @@ import {
     render_wrap_attrs,
     render_justify_attrs,
     render_align_items_attrs,
+    render_align_content_attrs,
 } from './utils'
 
 import {
@@ -37,6 +38,11 @@ const align_items = [
     'start', 'end', 'center', 'baseline', 'stretch'
 ]
 
+const align_contents = [
+    'normal', 'start', 'end', 'center', 'between', 
+    'around', 'evenly', 'baseline', 'stretch'
+]
+
 export const FlexContainer = Node.create({
     name: 'flexContainer',
     content: 'block*',
@@ -52,6 +58,7 @@ export const FlexContainer = Node.create({
             wraps: wraps,
             justify_contents: justify_contents,
             align_items: align_items,
+            align_contents: align_contents,
             HTMLAttributes: {}
         }
     },
@@ -192,6 +199,41 @@ export const FlexContainer = Node.create({
                 }
             },
 
+            align_content: {
+                default: null,
+                parseHTML: elem => {
+                    const is_align = new Set(
+                        this.options.align_contents.map(
+                            (x) => Array.from(generate_responsive_cls(`content-${x}`))
+                        ).flat()
+                    )
+
+                    const matches = []
+
+                    for (const name of elem.classList) {
+                        if (is_align.has(name)) {
+                            const result = name.split('-')
+                            const [part1, part2] = result[0].split(':')
+                            const breakpoint = part2 !== undefined ? part1 : null
+                            const align = result.slice(1).join('-')
+
+                            matches.push({
+                                align_content: align,
+                                breakpoint: breakpoint
+                            })
+                        }
+                    }
+
+                    return matches.length ? matches : null
+                },
+
+                renderHTML: attrs => {
+                    return render_align_content_attrs(attrs)
+                }
+            },
+
+
+
         }
     },
 
@@ -285,7 +327,7 @@ export const FlexContainer = Node.create({
                 )
             },
 
-            setAlignItems: (align, breakpoint = null) => (p) => {
+            setFlexAlignItems: (align, breakpoint = null) => (p) => {
                 const type = 'flexContainer'
                 const oldAttrs = p.editor.getAttributes(type)['align_items']
                 const attr = Array.isArray(oldAttrs)
@@ -303,7 +345,29 @@ export const FlexContainer = Node.create({
                 return p.commands.updateAttributes(
                     type, { align_items: attr }
                 )
-            }
+            },
+
+            setFlexAlignContent: (align, breakpoint = null) => (p) => {
+                const type = 'flexContainer'
+                const oldAttrs = p.editor.getAttributes(type)['align_content']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.align_contents.indexOf(align) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        align_content: align,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { align_content: attr }
+                )
+            },
+
+
         }
     },
 

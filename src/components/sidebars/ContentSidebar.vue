@@ -29,6 +29,9 @@
             Configure block-level flex container.
           </div>
 
+          <div class="grid grid-rows-6 grid-cols-2 gap-x-2 justify-items-stretch items-end text-center">
+            <span>Direction</span>
+            <span>Wrap</span>
           <SelectDirection
             :breakpoint="breakpoint"
             :extension="ext_flex" 
@@ -58,8 +61,17 @@
             :extension="ext_flex" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-align-items="({align, breakpoint}) => select_editor.chain().setAlignItems(align, breakpoint).run()"
+            @select-align-items="({align, breakpoint}) => select_editor.chain().setFlexAlignItems(align, breakpoint).run()"
           />
+
+          <SelectAlignContent
+            :breakpoint="breakpoint"
+            :extension="ext_flex" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
+          />
+          </div>
  
         </DisclosurePanel>
       </Disclosure>
@@ -438,6 +450,7 @@ import SelectDirection from '@/components/editor/tiptap/flex-container-extension
 import SelectWrap from '@/components/editor/tiptap/flex-container-extension/SelectWrap.vue'
 import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
 import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
+import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
 
 const { getEditor, editors } = useEditorStore()
 

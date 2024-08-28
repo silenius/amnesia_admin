@@ -30,3 +30,11 @@ export const render_align_items_attrs = (attrs) => {
     }
 }
 
+export const render_align_content_attrs = (attrs) => {
+    if (Array.isArray(attrs.align_content)) {
+        return {
+            class: `${attrs.align_content.map((x) => [!x.breakpoint ? `content-${x.align_content}` : `${x.breakpoint}:content-${x.align_content}`].filter(Boolean).join('-')).join(' ')}`
+        }
+    }
+}
+
