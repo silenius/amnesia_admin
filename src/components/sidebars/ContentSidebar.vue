@@ -71,6 +71,17 @@
             :editor="select_editor"
             @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
           />
+
+          <SelectGap
+            :breakpoint="breakpoint"
+            :extension="ext_gap" 
+            :transaction="select_transaction"
+            :editor="select_editor"
+            @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
+          />
+
+
+
           </div>
  
         </DisclosurePanel>
@@ -451,6 +462,7 @@ import SelectWrap from '@/components/editor/tiptap/flex-container-extension/Sele
 import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
 import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
 import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
+import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -477,6 +489,7 @@ const ext_max_height = ref()
 const ext_container = ref()
 const ext_clear = ref()
 const ext_flex = ref()
+const ext_gap = ref()
 
 const cls_disclosure_button = [
   'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
@@ -533,6 +546,7 @@ watch(select_editor, () => {
     ext_container.value = exts.find(ext => ext.name == 'container')
     ext_clear.value = exts.find(ext => ext.name == 'clear')
     ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
+    ext_gap.value = exts.find(ext => ext.name == 'gap')
   }
 })
 
