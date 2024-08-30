@@ -240,7 +240,7 @@ export const FlexContainer = Node.create({
     parseHTML() {
         return [
             {
-                tag: 'div',
+                tag: 'section',
                 getAttrs: element => element.classList.contains('flex') && null
             },
             /*
@@ -255,7 +255,7 @@ export const FlexContainer = Node.create({
 
     renderHTML({ node, HTMLAttributes }) {
         return [
-            'div', 
+            'section', 
             mergeAttributes(
                 HTMLAttributes, {
                     'class': 'flex',
@@ -370,6 +370,12 @@ export const FlexContainer = Node.create({
 
         }
     },
+
+  addKeyboardShortcuts() {
+    return {
+      Enter: () => true,
+    };
+  },
 
     /*
     addNodeView() {

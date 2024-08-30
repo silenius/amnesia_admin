@@ -492,16 +492,24 @@ const add_foo = () => {
   editor.value.commands.insertContent([
   {
     type: 'flexContainer',
+    attrs: {
+        gapX: [{'breakpoint': null, 'gap': '4'}],
+        gapY: [{'breakpoint': null, 'gap': '4'}],
+    },
     content: [
       {
         type: 'paragraph',
         content: [
-            {
-          type: 'text',
-          text: 'coucou petite perruche'
-            }
+            { type: 'text', text: 'column 1' },
+        ]
+      },
+      {
+        type: 'paragraph',
+        content: [
+            { type: 'text', text: 'column 2' },
         ]
       }
+
     ]
   }
   ])

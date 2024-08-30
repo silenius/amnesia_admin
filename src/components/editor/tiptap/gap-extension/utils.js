@@ -1,6 +1,5 @@
 export const render_gapX_attrs = (attrs) => {
     if (Array.isArray(attrs.gapX)) {
-        console.log('LOLLLL : ', attrs.gapX)
         return {
             class: `${attrs.gapX.map((x) => [!x.breakpoint ? `gap-x-${x.gap}` : `${x.breakpoint}:gap-x-${x.gap}`].filter(Boolean).join('-')).join(' ')}`
         }
