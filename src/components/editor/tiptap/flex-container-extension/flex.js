@@ -45,7 +45,7 @@ const align_contents = [
 
 export const FlexContainer = Node.create({
     name: 'flexContainer',
-    content: 'block*',
+    content: 'article*',
     group: 'block',
     inline: false,
     draggable: true,
@@ -254,7 +254,7 @@ export const FlexContainer = Node.create({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-        return ['section', mergeAttributes(HTMLAttributes), 0]
+        return ['section', mergeAttributes(HTMLAttributes, { class: 'flex' }), 0]
     },
 
     addCommands() {
@@ -366,16 +366,54 @@ export const FlexContainer = Node.create({
     addKeyboardShortcuts() {
         return {
             Enter: ({ editor }) => {
-                if (editor.isActive('flexContainer')) {
-                    return True
+                if (editor.isActive('flexContainer') && editor.isActive('article')) {
+                    console.log(editor.state.selection)
+                    editor.commands.createParagraphNear()
+                    /*
+
+                    let foo
+
+                    do {
+                        console.log('===> NODE: ', editor.state.selection)
+                        if (!editor.commands.selectParentNode()) break
+                    } while (true)
+
+                    const { from, to } = editor.state.selection
+                    console.log('FROM : ', from)
+                    console.log('TO : ', to)
+                    editor.commands.createParagraphNear()
+                    */
+                    /*
+
+                    editor.commands.insertContentAt(
+                        from,
+                        '<p>FROM</p>'
+                    )
+
+                    editor.commands.insertContentAt(
+                        to+1,
+                        '<p>TO</p>'
+                    )
+                    */
+
+
+                    /*
+
+                    console.log('EDITOR : ', editor)
+                    const foo2 = editor.$pos(editor.state.selection.from).closest('flexContainer').to
+                    editor.commands.insertContentAt(foo2, '<p>TEST</p>', {
+                        updateSelection: true
+                    })
+                    */
                 }
-                console.log('E : ', editor)
             },
         };
     },
+    /*
 
     addNodeView() {
         return VueNodeViewRenderer(Flex);
     }
+    */
 
 })

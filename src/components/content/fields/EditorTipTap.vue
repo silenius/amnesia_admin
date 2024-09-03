@@ -352,6 +352,7 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
+import History from '@tiptap/extension-history'
 //import Youtube from '@tiptap/extension-youtube'
 import Image from '@/components/editor/tiptap/image/image'
 import Video from '@/components/editor/tiptap/video-extension/video'
@@ -379,6 +380,9 @@ import Clear from '@/components/editor/tiptap/clear-extension'
 import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
 import FlexContainer from '@/components/editor/tiptap/flex-container-extension'
 import Gap from '@/components/editor/tiptap/gap-extension'
+import Article from '@/components/editor/tiptap/article-extension'
+import Div from '@/components/editor/tiptap/div-extension'
+import Section from '@/components/editor/tiptap/section-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -487,7 +491,6 @@ const input_video_autoplay = ref()
 const input_video_controls = ref()
 
 const add_foo = () => {
-  console.log(editor.value)
   //editor.value.commands.insertContent('<div class="flex"><p>LOL 12344</p><p>coucou</p></div>')
   editor.value.commands.insertContent([
   {
@@ -498,18 +501,47 @@ const add_foo = () => {
     },
     content: [
       {
-        type: 'paragraph',
+        type: 'article',
         content: [
-            { type: 'text', text: 'column 1' },
+            { 
+              type: 'paragraph', 
+              content: [
+                {
+                  type: 'text',
+                  text: 'First paragraph'
+                }
+              ]
+            },
         ]
       },
       {
-        type: 'paragraph',
+        type: 'article',
         content: [
-            { type: 'text', text: 'column 2' },
+            { 
+              type: 'paragraph', 
+              content: [
+                {
+                  type: 'text',
+                  text: 'Second paragraph'
+                }
+              ]
+            },
         ]
-      }
-
+      },
+      {
+        type: 'article',
+        content: [
+            { 
+              type: 'paragraph', 
+              content: [
+                {
+                  type: 'text',
+                  text: 'Third paragraph'
+                }
+              ]
+            },
+        ]
+      },
     ]
   }
   ])
@@ -671,6 +703,7 @@ const editor = useEditor({
     Document,
     Paragraph,
     Text,
+    History,
     TipTapCommands,
     Typography,
     /*
@@ -757,7 +790,10 @@ const editor = useEditor({
       spanning: false
     }),
     FlexContainer,
-    Gap
+    Gap,
+    Article,
+    Div,
+    Section
   ]
 })
 

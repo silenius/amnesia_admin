@@ -22,6 +22,7 @@
     "@heroicons/vue": "^2.0.13",
     "@tailwindcss/language-server": "^0.0.10",
     "@tiptap/extension-color": "^2.1.16",
+    "@tiptap/extension-history": "^2.6.6",
     "@tiptap/extension-image": "^2.1.13",
     "@tiptap/extension-link": "^2.2.3",
     "@tiptap/extension-table": "^2.2.3",
