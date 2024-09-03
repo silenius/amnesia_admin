@@ -254,15 +254,7 @@ export const FlexContainer = Node.create({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-        return [
-            'section', 
-            mergeAttributes(
-                HTMLAttributes, {
-                    'class': 'flex',
-                }
-            ),
-            0
-        ]
+        return ['section', mergeAttributes(HTMLAttributes), 0]
     },
 
     addCommands() {
@@ -371,16 +363,19 @@ export const FlexContainer = Node.create({
         }
     },
 
-  addKeyboardShortcuts() {
-    return {
-      Enter: () => true,
-    };
-  },
+    addKeyboardShortcuts() {
+        return {
+            Enter: ({ editor }) => {
+                if (editor.isActive('flexContainer')) {
+                    return True
+                }
+                console.log('E : ', editor)
+            },
+        };
+    },
 
-    /*
     addNodeView() {
         return VueNodeViewRenderer(Flex);
     }
-    */
 
 })

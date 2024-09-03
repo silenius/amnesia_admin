@@ -1,7 +1,6 @@
 <template>
-    <node-view-content />
-  <node-view-wrapper class="flex border border-green-600">
-    TESTFDP
+  <node-view-wrapper :gapX="node.attrs.gapX">
+    <node-view-content class="flex" />
   </node-view-wrapper>
 </template>
 
@@ -9,7 +8,7 @@
 <script setup>
 import { NodeViewWrapper, nodeViewProps, NodeViewContent } from '@tiptap/vue-3';
 const props = defineProps(nodeViewProps)
-console.log(props)
+console.log('PROPS: ', props)
 
 const foo = () => {
   console.log('lol')
