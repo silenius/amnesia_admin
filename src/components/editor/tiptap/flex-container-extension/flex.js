@@ -366,36 +366,27 @@ export const FlexContainer = Node.create({
     addKeyboardShortcuts() {
         return {
             Enter: ({ editor }) => {
-                if (editor.isActive('flexContainer') && editor.isActive('article')) {
-                    console.log(editor.state.selection)
-                    editor.commands.createParagraphNear()
-                    /*
+                const selection = editor.state.selection
+                console.log('EDI: ', editor)
+                console.log('SEL: ', selection)
 
-                    let foo
+                console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
 
-                    do {
-                        console.log('===> NODE: ', editor.state.selection)
-                        if (!editor.commands.selectParentNode()) break
-                    } while (true)
-
-                    const { from, to } = editor.state.selection
-                    console.log('FROM : ', from)
-                    console.log('TO : ', to)
-                    editor.commands.createParagraphNear()
-                    */
-                    /*
-
-                    editor.commands.insertContentAt(
-                        from,
-                        '<p>FROM</p>'
-                    )
-
-                    editor.commands.insertContentAt(
-                        to+1,
-                        '<p>TO</p>'
-                    )
-                    */
-
+                if (editor.isActive('flexContainer')) {
+                    if (selection.$cursor !== null && 
+                        selection.$cursor.parentOffset == 0
+                    ) {
+                        // Get the parent <article>
+                        const article = editor.$pos(selection.from).closest('article')
+                        if (article.parent.lastChild.pos == article.pos) {
+                            return true
+                            //editor.commands.createParagraphNear()
+                        } else {
+                            return true
+                        }
+                    } else {
+                        editor.commands.createParagraphNear()
+                    }
 
                     /*
 

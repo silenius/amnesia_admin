@@ -351,7 +351,7 @@
 
     <!-- TYPOGRAPHY -->
 
-    <section name="typography" :class="cls_section">
+    <section name="typography" v-if="select_editor.isActive('paragraph')" :class="cls_section">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Typography</span>
