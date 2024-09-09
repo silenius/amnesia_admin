@@ -9,11 +9,15 @@
 
     <!-- NODE -->
 
-    <!--
     <section name="node" :class="cls_section">
       <span class="text-2xl">Active Node</span>
+      <div class="flex gap-2 flex-wrap justify-stretch">
+        <button v-for="t in active_types" type="button" class="text-white bg-red-700 hover:bg-red-800
+          focus:outline-none focus:ring-4 focus:ring-red-300 font-medium
+          rounded-full text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">{{ t }}</button>
+      </div>
+      {{ selected_type }}
     </section>
-    -->
 
     <!-- FLEX CONTAINER -->
 
@@ -505,18 +509,28 @@ const select_editor = ref()
 const selection = ref({
 })
 
+const all_types = ref()
+const active_types = ref()
+const selected_type = ref()
+
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
-    /*
+    all_types.value = Object.values(
+      select_editor.value.schema.nodes
+    ).map((x) => x.name)
+
     select_editor.value.on('selectionUpdate', ({editor}) => {
+      console.log('EDITOR ===> :', editor)
+      active_types.value = all_types.value.filter(
+        (x) => select_editor.value.isActive(x)
+      )
       if (select_editor.value.isActive('image')) {
+        console.log('IMAGE')
         selection.value.type = 'image'
         selection.value.attrs = select_editor.value.getAttributes('image')
       } 
     })
-    */
-
 
   }
 }, { deep: true })

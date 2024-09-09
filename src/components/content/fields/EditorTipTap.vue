@@ -694,11 +694,9 @@ const editor = useEditor({
     )
     */
   },
-  /*
   onTransaction: (p) => {
-    console.debug('===>>> Editor transaction: ', p)
+    //console.debug('===>>> Editor transaction: ', p)
   },
-  */
   extensions: [
     Document,
     Paragraph,
