@@ -45,7 +45,7 @@ const align_contents = [
 
 export const FlexContainer = Node.create({
     name: 'flexContainer',
-    content: 'article*',
+    content: 'flexItem*',
     group: 'block',
     inline: false,
     draggable: true,
