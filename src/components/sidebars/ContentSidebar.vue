@@ -10,13 +10,14 @@
     <!-- NODE -->
 
     <section name="node" :class="cls_section">
-      <span class="text-2xl">Active Node</span>
+      <span>Selection</span>
       <div class="flex gap-2 flex-wrap justify-stretch">
-        <button v-for="t in active_types" type="button" class="text-white bg-red-700 hover:bg-red-800
-          focus:outline-none focus:ring-4 focus:ring-red-300 font-medium
-          rounded-full text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">{{ t }}</button>
+        <button @click="selected_type = t" v-for="t in active_types"
+          type="button" 
+          :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
+          class="text-white bg-red-700 hover:bg-red-800 font-medium
+          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700">{{ t }}</button>
       </div>
-      {{ selected_type }}
     </section>
 
     <!-- FLEX CONTAINER -->
@@ -33,61 +34,119 @@
             Configure block-level flex container.
           </div>
 
-          <div class="grid grid-rows-6 grid-cols-2 gap-x-2 justify-items-stretch items-end text-center">
-            <span>Direction</span>
-            <span>Wrap</span>
-          <SelectDirection
-            :breakpoint="breakpoint"
-            :extension="ext_flex" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-direction="({direction, breakpoint}) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
-          />
-          
-          <SelectWrap
-            :breakpoint="breakpoint"
-            :extension="ext_flex" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-wrap="({wrap, breakpoint}) => select_editor.chain().setFlexWrap(wrap, breakpoint).run()"
-          />
-          
-          <SelectJustifyContent
-            :breakpoint="breakpoint"
-            :extension="ext_flex" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-justify-content="({justify, breakpoint}) => select_editor.chain().setFlexJustifyContent(justify, breakpoint).run()"
-          />
+          <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
+            <div class="flex flex-col">
+              <span>Direction</span>
+              <SelectDirection
+                :breakpoint="breakpoint"
+                :extension="ext_flex" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-direction="({direction, breakpoint}) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
+              />
+            </div>
 
-           <SelectAlignItems
-            :breakpoint="breakpoint"
-            :extension="ext_flex" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-align-items="({align, breakpoint}) => select_editor.chain().setFlexAlignItems(align, breakpoint).run()"
-          />
+            <div class="flex flex-col">
+              <span>Wrap</span>
+              <SelectWrap
+                :breakpoint="breakpoint"
+                :extension="ext_flex" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-wrap="({wrap, breakpoint}) => select_editor.chain().setFlexWrap(wrap, breakpoint).run()"
+              />
+            </div>
 
-          <SelectAlignContent
-            :breakpoint="breakpoint"
-            :extension="ext_flex" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
-          />
+            <div class="flex flex-col">
+              <span>Justify content</span>
+              <SelectJustifyContent
+                :breakpoint="breakpoint"
+                :extension="ext_flex" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-justify-content="({justify, breakpoint}) => select_editor.chain().setFlexJustifyContent(justify, breakpoint).run()"
+              />
+            </div>
 
-          <SelectGap
-            :breakpoint="breakpoint"
-            :extension="ext_gap" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
-          />
+            <div class="flex flex-col">
+              <span>Align items</span>
 
+              <SelectAlignItems
+                :breakpoint="breakpoint"
+                :extension="ext_flex" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-align-items="({align, breakpoint}) => select_editor.chain().setFlexAlignItems(align, breakpoint).run()"
+              />
+            </div>
 
+            <div class="flex flex-col">
+              <span>Align content</span>
+
+              <SelectAlignContent
+                :breakpoint="breakpoint"
+                :extension="ext_flex" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <span>Gap</span>
+              <SelectGap
+                :breakpoint="breakpoint"
+                :extension="ext_gap" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
+              />
+            </div>
 
           </div>
- 
+
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
+    <!-- FLEX ITEM -->
+
+    <section :class="cls_section" v-if="ext_flex_item">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Flex item</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+
+          <div class="italic my-2">
+            Configure flex item.
+          </div>
+          <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
+            <div class="flex flex-col">
+              <span>Basis</span>
+              <SelectBasis
+                :breakpoint="breakpoint"
+                :extension="ext_flex_item" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-basis="({basis, breakpoint}) => select_editor.chain().setFlexBasis(basis, breakpoint).run()"
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <span>Flex</span>
+              <SelectFlexGrowShrink
+                :breakpoint="breakpoint"
+                :extension="ext_flex_item" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-flex-grow-shrink="({flex, breakpoint}) => select_editor.chain().setFlexGrowShrink(flex, breakpoint).run()"
+              />
+            </div>
+
+          </div>
         </DisclosurePanel>
       </Disclosure>
     </section>
@@ -265,9 +324,9 @@
             />
 
             <span>Min. Width</span>
-            
+
             <span>Min. Height</span>
-            
+
             <SelectMinWidth
               v-if="ext_min_width" 
               :breakpoint="breakpoint"
@@ -323,20 +382,8 @@
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling the colors.</div>
-          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
-            <span>Text</span>
-
+          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-1">
             <span>Background</span>
-
-            <SelectTextColor
-              class="w-full"
-              v-if="ext_text_color" 
-              :breakpoint="breakpoint"
-              :extension="ext_text_color" 
-              :transaction="select_transaction"
-              :editor="select_editor"
-              @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
-            />
 
             <SelectBackgroundColor
               class="w-full"
@@ -355,7 +402,7 @@
 
     <!-- TYPOGRAPHY -->
 
-    <section name="typography" v-if="select_editor.isActive('paragraph')" :class="cls_section">
+    <section name="typography" v-if="selection_has_text" :class="cls_section">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Typography</span>
@@ -399,29 +446,48 @@
 
           </div>
 
-          <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-2">
-            <span>Size</span>
-            <span>Family</span>
+          <div class="mt-2 gap-2 grid justify-items-center items-center grid-cols-2">
+            <div class="w-full items-center flex flex-col">
+              <span>Color</span>
 
-            <SelectFontSize 
-              class="w-full"
-              v-if="ext_font_size"
-              :breakpoint="breakpoint"
-              :extension="ext_font_size"
-              :transaction="select_transaction"
-              :editor="select_editor"
-              @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
-            />
+              <SelectTextColor
+                class="w-full"
+                v-if="ext_text_color" 
+                :breakpoint="breakpoint"
+                :extension="ext_text_color" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
+              />
+            </div>
 
-            <SelectFontFamily 
-              class="w-full"
-              v-if="ext_font_family"
-              :breakpoint="breakpoint"
-              :extension="ext_font_family"
-              :transaction="select_transaction"
-              :editor="select_editor"
-              @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
-            />
+            <div class="w-full items-center flex flex-col">
+              <span>Size</span>
+
+              <SelectFontSize 
+                class="w-full"
+                v-if="ext_font_size"
+                :breakpoint="breakpoint"
+                :extension="ext_font_size"
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
+              />
+            </div>
+
+            <div class="w-full items-center flex flex-col">
+              <span>Family</span>
+
+              <SelectFontFamily 
+                class="w-full"
+                v-if="ext_font_family"
+                :breakpoint="breakpoint"
+                :extension="ext_font_family"
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
+              />
+            </div>
 
           </div>
         </DisclosurePanel>
@@ -466,6 +532,8 @@ import SelectWrap from '@/components/editor/tiptap/flex-container-extension/Sele
 import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
 import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
 import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
+import SelectBasis from '@/components/editor/tiptap/flex-item-extension/SelectBasis.vue'
+import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension/SelectFlexGrowShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
 const { getEditor, editors } = useEditorStore()
@@ -493,6 +561,7 @@ const ext_max_height = ref()
 const ext_container = ref()
 const ext_clear = ref()
 const ext_flex = ref()
+const ext_flex_item = ref()
 const ext_gap = ref()
 
 const cls_disclosure_button = [
@@ -506,30 +575,44 @@ const cls_panel = ['text-sm', 'mb-4']
 const select_transaction = ref()
 const select_editor = ref()
 
-const selection = ref({
-})
-
-const all_types = ref()
 const active_types = ref()
 const selected_type = ref()
+const selection_has_text = ref(false)
 
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
-    all_types.value = Object.values(
-      select_editor.value.schema.nodes
-    ).map((x) => x.name)
+    console.log('EDITOR ---> ', select_editor.value)
 
-    select_editor.value.on('selectionUpdate', ({editor}) => {
-      console.log('EDITOR ===> :', editor)
-      active_types.value = all_types.value.filter(
-        (x) => select_editor.value.isActive(x)
+    select_editor.value.on('selectionUpdate', ({ editor }) => {
+      const selection = editor.state.selection
+
+      // Does the selection contains text?
+      if (editor.state.doc.textBetween(selection.from, selection.to)) {
+        selection_has_text.value = true
+      } else {
+        selection_has_text.value = false
+      }
+
+      const pos = selection.$cursor ? selection.$cursor : selection.$head
+      const path_types = pos.path.filter(
+        (x) => typeof(x) === 'object' && select_editor.value.isActive(x.type.name)
+      ).map(
+        (x) => x.type.name
       )
-      if (select_editor.value.isActive('image')) {
-        console.log('IMAGE')
-        selection.value.type = 'image'
-        selection.value.attrs = select_editor.value.getAttributes('image')
-      } 
+
+      if (selection.jsonID == 'node') {
+        path_types.push(selection.node.type.name)
+      }
+
+      active_types.value = path_types
+
+      if (!selected_type.value || (selected_type.value && path_types.indexOf(selected_type.value) === -1)) {
+        selected_type.value = path_types.slice(-1).pop()
+      }
+
+
+      console.log(path_types)
     })
 
   }
@@ -560,6 +643,7 @@ watch(select_editor, () => {
     ext_container.value = exts.find(ext => ext.name == 'container')
     ext_clear.value = exts.find(ext => ext.name == 'clear')
     ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
+    ext_flex_item.value = exts.find(ext => ext.name == 'flexItem')
     ext_gap.value = exts.find(ext => ext.name == 'gap')
   }
 })

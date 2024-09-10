@@ -6,3 +6,11 @@ export const render_basis_attrs = (attrs) => {
     }
 }
 
+export const render_flex_attrs = (attrs) => {
+    if (Array.isArray(attrs.flex)) {
+        return {
+            class: `${attrs.flex.map((x) => [!x.breakpoint ? `flex-${x.flex}` : `${x.breakpoint}:flex-${x.flex}`].filter(Boolean).join('-')).join(' ')}`
+        }
+    }
+}
+

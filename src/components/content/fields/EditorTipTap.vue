@@ -502,7 +502,7 @@ const add_foo = () => {
     },
     content: [
       {
-        type: 'article',
+        type: 'flexItem',
         content: [
             { 
               type: 'paragraph', 
@@ -516,7 +516,7 @@ const add_foo = () => {
         ]
       },
       {
-        type: 'article',
+        type: 'flexItem',
         content: [
             { 
               type: 'paragraph', 
@@ -530,7 +530,7 @@ const add_foo = () => {
         ]
       },
       {
-        type: 'article',
+        type: 'flexItem',
         content: [
             { 
               type: 'paragraph', 

@@ -4,7 +4,8 @@ import {
 } from '@tiptap/core'
 
 import {
-    generate_basis_cls
+    render_basis_attrs,
+    render_flex_attrs,
 } from './utils'
 
 import {
@@ -39,6 +40,10 @@ const basis = [
     'full'
 ]
 
+const flexs = [
+    '1', 'auto', 'initial', 'none'
+]
+
 export const FlexItem = Node.create({
     name: 'flexItem',
     content: 'block*',
@@ -51,6 +56,7 @@ export const FlexItem = Node.create({
         return {
             types: [],
             basis: basis,
+            flexs: flexs,
             HTMLAttributes: {}
         }
     },
@@ -88,6 +94,39 @@ export const FlexItem = Node.create({
 
                 renderHTML: attrs => {
                     return render_basis_attrs(attrs)
+                }
+            },
+
+            flex: {
+                default: null,
+                parseHTML: elem => {
+                    const is_flex = new Set(
+                        this.options.flexs.map(
+                            (x) => Array.from(generate_responsive_cls(`flex-${x}`))
+                        ).flat()
+                    )
+
+                    const matches = []
+
+                    for (const name of elem.classList) {
+                        if (is_flex.has(name)) {
+                            const result = name.split('-')
+                            const [part1, part2] = result[0].split(':')
+                            const breakpoint = part2 !== undefined ? part1 : null
+                            const flex = result.slice(1).join('-')
+
+                            matches.push({
+                                flex: flex,
+                                breakpoint: breakpoint
+                            })
+                        }
+                    }
+
+                    return matches.length ? matches : null
+                },
+
+                renderHTML: attrs => {
+                    return render_flex_attrs(attrs)
                 }
             },
 
@@ -138,6 +177,26 @@ export const FlexItem = Node.create({
 
                 return p.commands.updateAttributes(
                     type, { basis: attr }
+                )
+            },
+
+            setFlexGrowShrink: (flex, breakpoint = null) => (p) => {
+                const type = 'flexItem'
+                const oldAttrs = p.editor.getAttributes(type)['flex']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.flexs.indexOf(flex) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        flex: flex,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { flex: attr }
                 )
             },
 
