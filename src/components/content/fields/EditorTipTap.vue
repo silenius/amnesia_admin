@@ -379,6 +379,7 @@ import Container from '@/components/editor/tiptap/container-extension'
 import Clear from '@/components/editor/tiptap/clear-extension'
 import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
 import FlexContainer from '@/components/editor/tiptap/flex-container-extension'
+import FlexItem from '@/components/editor/tiptap/flex-item-extension'
 import Gap from '@/components/editor/tiptap/gap-extension'
 import Article from '@/components/editor/tiptap/article-extension'
 import Div from '@/components/editor/tiptap/div-extension'
@@ -788,6 +789,7 @@ const editor = useEditor({
       spanning: false
     }),
     FlexContainer,
+    FlexItem,
     Gap,
     Article,
     Div,
