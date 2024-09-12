@@ -111,7 +111,7 @@
 
     <!-- FLEX ITEM -->
 
-    <section :class="cls_section" v-if="ext_flex_item">
+    <section :class="cls_section" v-if="ext_flex_item && select_editor.isActive('flexItem')">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex item</span>
@@ -152,7 +152,7 @@
     </section>
 
     <!-- CONTAINER -->
-
+<!--
     <section name="container" :class="cls_section" v-if="ext_container">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
@@ -174,7 +174,7 @@
         </DisclosurePanel>
       </Disclosure>
     </section>
-
+-->
     <!-- PADDING -->
 
     <section name="padding" :class="cls_section" v-if="ext_padding">
@@ -583,6 +583,10 @@ watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
     console.log('EDITOR ---> ', select_editor.value)
+
+    if (!select_editor.value) {
+      return false
+    }
 
     select_editor.value.on('selectionUpdate', ({ editor }) => {
       const selection = editor.state.selection

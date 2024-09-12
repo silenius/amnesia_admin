@@ -1,4 +1,22 @@
 <template>
+
+ <Popover class="relative">
+    <PopoverButton class="font-bold border rounded-full p-2 w-full">{{ flex }}</PopoverButton>
+
+    <PopoverPanel class="mt-1 absolute w-max right-0 z-10 p-2 rounded-xl
+      bg-slate-500 outline outline-slate-600/75">
+      <div class="flex flex-col gap-2 items-start">
+        <button :class="[button_cls]">allow to shrink but not grow, taking into account its initial size</button>
+        <button :class="[button_cls]">allow to grow and shrink as needed, ignoring its initial size</button>
+        <button :class="[button_cls]">allow to grow and shrink, taking into account its initial size</button>
+        <button :class="[button_cls]">prevent from growing or shrinking</button>
+      </div>
+
+      <img src="/solutions.jpg" alt="" />
+    </PopoverPanel>
+  </Popover>
+  
+  <!--
   <Listbox as="div" v-model="flex">
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ flex }}</ListboxButton>
     <ListboxOptions :class="class_opts">
@@ -7,6 +25,7 @@
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
+-->
 </template>
 
 <script setup>
@@ -17,6 +36,7 @@ import {
   ListboxButton,
   ListboxOptions,
   ListboxOption,
+  Popover, PopoverButton, PopoverPanel
 } from '@headlessui/vue'
 
 const props = defineProps({
@@ -29,6 +49,8 @@ const props = defineProps({
 const emits = defineEmits([
   'select-flex-grow-shrink'
 ])
+
+const button_cls = 'border p-2 hover:cursor-hand w-full bg-slate-800 hover:bg-slate-900'
 
 const class_opts = [
   'absolute', 'text-center', 'max-h-48', 'rounded', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
