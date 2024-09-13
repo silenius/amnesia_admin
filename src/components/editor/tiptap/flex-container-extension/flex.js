@@ -259,9 +259,25 @@ export const FlexContainer = Node.create({
 
     addCommands() {
         return {
+            /*
+            setFlexContainer: (value, breakpoint=null, attr, attrs) => (p) => {
+                const v = (p.editor.getAttributes(this.name)[attr] || []).filter(
+                    (x) => x.breakpoint !== breakpoint
+                )
+
+                if (attrs.indexOf(value) !== -1) {
+                    v.push(Object.fromEntries([['breakpoint', breakpoint], 
+                                               [attr, value]]))
+                }
+
+                return p.commands.updateAttributes(
+                    this.name, Oject.fromEntries([[attr, v]])
+                )
+            },
+            */
+
             setFlexDirection: (direction, breakpoint = null) => (p) => {
-                const type = 'flexContainer'
-                const oldAttrs = p.editor.getAttributes(type)['direction']
+                const oldAttrs = p.editor.getAttributes(this.name)['direction']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
@@ -275,13 +291,12 @@ export const FlexContainer = Node.create({
                 }
 
                 return p.commands.updateAttributes(
-                    type, { direction: attr }
+                    this.name, { direction: attr }
                 )
             },
 
             setFlexWrap: (wrap, breakpoint = null) => (p) => {
-                const type = 'flexContainer'
-                const oldAttrs = p.editor.getAttributes(type)['wrap']
+                const oldAttrs = p.editor.getAttributes(this.name)['wrap']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
@@ -295,13 +310,12 @@ export const FlexContainer = Node.create({
                 }
 
                 return p.commands.updateAttributes(
-                    type, { wrap: attr }
+                    this.name, { wrap: attr }
                 )
             },
 
             setFlexJustifyContent: (justify, breakpoint = null) => (p) => {
-                const type = 'flexContainer'
-                const oldAttrs = p.editor.getAttributes(type)['justify_content']
+                const oldAttrs = p.editor.getAttributes(this.name)['justify_content']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
@@ -315,13 +329,12 @@ export const FlexContainer = Node.create({
                 }
 
                 return p.commands.updateAttributes(
-                    type, { justify_content: attr }
+                    this.name, { justify_content: attr }
                 )
             },
 
             setFlexAlignItems: (align, breakpoint = null) => (p) => {
-                const type = 'flexContainer'
-                const oldAttrs = p.editor.getAttributes(type)['align_items']
+                const oldAttrs = p.editor.getAttributes(this.name)['align_items']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
@@ -335,13 +348,12 @@ export const FlexContainer = Node.create({
                 }
 
                 return p.commands.updateAttributes(
-                    type, { align_items: attr }
+                    this.name, { align_items: attr }
                 )
             },
 
             setFlexAlignContent: (align, breakpoint = null) => (p) => {
-                const type = 'flexContainer'
-                const oldAttrs = p.editor.getAttributes(type)['align_content']
+                const oldAttrs = p.editor.getAttributes(this.name)['align_content']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
@@ -355,7 +367,7 @@ export const FlexContainer = Node.create({
                 }
 
                 return p.commands.updateAttributes(
-                    type, { align_content: attr }
+                    this.name, { align_content: attr }
                 )
             },
 

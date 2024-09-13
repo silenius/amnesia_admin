@@ -7,22 +7,11 @@
       <SelectBreakpoint @select-breakpoint="change_breakpoint" />
     </section>
 
-    <!-- NODE -->
-
-    <section name="node" :class="cls_section">
-      <span>Selection</span>
-      <div class="flex gap-2 flex-wrap justify-stretch">
-        <button @click="selected_type = t" v-for="t in active_types"
-          type="button" 
-          :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
-          class="text-white bg-red-700 hover:bg-red-800 font-medium
-          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700">{{ t }}</button>
-      </div>
-    </section>
+    <p class="text-center my-4">Unique type-defined properties</p>
 
     <!-- FLEX CONTAINER -->
 
-    <section v-if="select_editor.isActive('flexContainer')">
+    <section :class="cls_section" v-if="ext_flex && select_editor.isActive('flexContainer')">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex container</span>
@@ -33,6 +22,13 @@
           <div class="italic my-2">
             Configure block-level flex container.
           </div>
+
+          <button @click="select_editor.commands.deleteNode('flexContainer')"
+            class="text-white bg-red-700 hover:bg-red-800 font-medium
+            rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
+            dark:hover:bg-red-700">
+            Delete
+          </button>
 
           <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
             <div class="flex flex-col">
@@ -123,6 +119,21 @@
           <div class="italic my-2">
             Configure flex item.
           </div>
+          <div>
+            <button @click="select_editor.commands.deleteNode('flexItem')"
+              class="text-white bg-red-700 hover:bg-red-800 font-medium
+              rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
+              dark:hover:bg-red-700">
+              Delete
+            </button>
+            <button @click=""
+              class="text-white bg-lime-700 hover:bg-lime-800 font-medium
+              rounded-full text-xs px-3 py-2 text-center dark:bg-lime-600
+              dark:hover:bg-lime-700">
+              Add
+            </button>
+
+          </div>
           <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
             <div class="flex flex-col">
               <span>Basis</span>
@@ -138,6 +149,7 @@
             <div class="flex flex-col">
               <span>Flex</span>
               <SelectFlexGrowShrink
+                class="w-full"
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :transaction="select_transaction"
@@ -151,29 +163,44 @@
       </Disclosure>
     </section>
 
-    <!-- CONTAINER -->
-<!--
-    <section name="container" :class="cls_section" v-if="ext_container">
-      <Disclosure v-slot="{ open }">
-        <DisclosureButton :class="cls_disclosure_button">
-          <span>Container</span>
-          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
-          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
-        </DisclosureButton>
-        <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">
-            Fix width to the current breakpoint.
-          </div>
-          <SelectContainer
-            :breakpoint="breakpoint"
-            :extension="ext_container" 
-            :transaction="select_transaction"
-            :editor="select_editor"
-            @select-container="({container, breakpoint}) => select_editor.chain().setContainer(container, breakpoint).run()"
-          />
-        </DisclosurePanel>
-      </Disclosure>
+    <!-- NODE -->
+
+    <p class="text-center my-4">Shared type-defined properties</p>
+
+    <section name="node" class="mb-4 " :class="cls_section">
+      <div class="flex gap-2 flex-wrap justify-stretch">
+        <button @click="selected_type = t" v-for="t in active_types"
+          type="button" 
+          :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
+          class="text-white bg-red-700 hover:bg-red-800 font-medium
+          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700">{{ t }}</button>
+      </div>
     </section>
+
+
+    <!-- CONTAINER -->
+    <!--
+<section name="container" :class="cls_section" v-if="ext_container">
+<Disclosure v-slot="{ open }">
+<DisclosureButton :class="cls_disclosure_button">
+<span>Container</span>
+<font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+<font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+</DisclosureButton>
+<DisclosurePanel :class="cls_panel">
+<div class="italic my-2">
+Fix width to the current breakpoint.
+</div>
+<SelectContainer
+:breakpoint="breakpoint"
+:extension="ext_container" 
+:transaction="select_transaction"
+:editor="select_editor"
+@select-container="({container, breakpoint}) => select_editor.chain().setContainer(container, breakpoint).run()"
+/>
+</DisclosurePanel>
+</Disclosure>
+</section>
 -->
     <!-- PADDING -->
 
@@ -590,6 +617,8 @@ watch(editors, () => {
 
     select_editor.value.on('selectionUpdate', ({ editor }) => {
       const selection = editor.state.selection
+
+      console.log('UPDATE : ', editor)
 
       // Does the selection contains text?
       if (editor.state.doc.textBetween(selection.from, selection.to)) {

@@ -70,6 +70,7 @@ import {
     faVideo,
     faFilm,
     faSquarePersonConfined,
+    faPlus
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -148,6 +149,7 @@ library.add(faBan)
 library.add(faYoutube)
 library.add(faVideo)
 library.add(faFilm)
+library.add(faPlus)
 library.add(faSquarePersonConfined)
 
 const app = createApp(App)

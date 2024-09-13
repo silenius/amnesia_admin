@@ -2,6 +2,7 @@ import {
     mergeAttributes,
     Node
 } from '@tiptap/core'
+import { VueNodeViewRenderer } from '@tiptap/vue-3';
 
 import {
     render_basis_attrs,
@@ -12,6 +13,7 @@ import {
     generate_responsive_cls
 } from '../utils'
 
+import FlexItemNodeView from './FlexItemNodeView.vue'
 
 const tag = 'amnesia-flex-item'
 
@@ -157,6 +159,12 @@ export const FlexItem = Node.create({
     renderHTML({ node, HTMLAttributes }) {
         return ['article', mergeAttributes(HTMLAttributes), 0]
     },
+
+    /*
+    addNodeView() {
+        return VueNodeViewRenderer(FlexItemNodeView);
+    },
+    */
 
     addCommands() {
         return {
