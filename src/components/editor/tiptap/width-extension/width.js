@@ -94,8 +94,11 @@ export const Width = Extension.create({
 
     addCommands() {
         return {
-            setWidth: (width, breakpoint = null, raw = false) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
+            setWidth: (width, breakpoint=null, raw=false, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 const oldAttrs = p.editor.getAttributes(type)['width']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

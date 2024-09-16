@@ -91,8 +91,11 @@ export const Height = Extension.create({
 
     addCommands() {
         return {
-            setHeight: (height, breakpoint = null, raw = false) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
+            setHeight: (height, breakpoint=null, raw=false, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 const oldAttrs = p.editor.getAttributes(type)['height']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

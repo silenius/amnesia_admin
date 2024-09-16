@@ -23,7 +23,8 @@ const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits([
@@ -42,10 +43,12 @@ const minHeights = computed(
 )
 
 const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
+  const type = !props.type ? props.extension.options.types.find(
+    (x) => props.editor.isActive(x)
+  ) : props.type
+
+  if (type) {
+    return props.editor.getAttributes(type)
   }
 })
 

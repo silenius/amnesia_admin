@@ -23,7 +23,8 @@ const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits([
@@ -42,9 +43,9 @@ const widths = computed(
 )
 
 const attrs = computed(() => {
-  const type = props.extension.options.types.find(
+  const type = !props.type ? props.extension.options.types.find(
     (x) => props.editor.isActive(x)
-  )
+  ) : props.type
 
   if (type) {
     return props.editor.getAttributes(type)

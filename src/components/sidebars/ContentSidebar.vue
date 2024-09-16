@@ -336,18 +336,20 @@ Fix width to the current breakpoint.
               v-if="ext_width" 
               :breakpoint="breakpoint"
               :extension="ext_width" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-width="({width, breakpoint, raw}) => select_editor.chain().setWidth(width, breakpoint, raw).run()"
+              @select-width="({width, breakpoint, raw}) => select_editor.chain().setWidth(width, breakpoint, raw, unref(selected_type)).run()"
             />
 
             <SelectHeight
               v-if="ext_height" 
               :breakpoint="breakpoint"
               :extension="ext_height" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-height="({height, breakpoint, raw}) => select_editor.chain().setHeight(height, breakpoint, raw).run()"
+              @select-height="({height, breakpoint, raw}) => select_editor.chain().setHeight(height, breakpoint, raw, unref(selected_type)).run()"
             />
 
             <span>Min. Width</span>
@@ -358,18 +360,20 @@ Fix width to the current breakpoint.
               v-if="ext_min_width" 
               :breakpoint="breakpoint"
               :extension="ext_min_width" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-minWidth="({minWidth, breakpoint}) => select_editor.chain().setMinWidth(minWidth, breakpoint).run()"
+              @select-minWidth="({minWidth, breakpoint}) => select_editor.chain().setMinWidth(minWidth, breakpoint, unref(selected_type)).run()"
             />
 
             <SelectMinHeight
               v-if="ext_min_height" 
               :breakpoint="breakpoint"
               :extension="ext_min_height" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-minHeight="({minHeight, breakpoint}) => select_editor.chain().setMinHeight(minHeight, breakpoint).run()"
+              @select-minHeight="({minHeight, breakpoint}) => select_editor.chain().setMinHeight(minHeight, breakpoint, unref(selected_type)).run()"
             />
 
 
@@ -381,7 +385,7 @@ Fix width to the current breakpoint.
               :extension="ext_max_width" 
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint).run()"
+              @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint, unref(selected_type)).run()"
             />
 
             <SelectMaxHeight
@@ -390,7 +394,7 @@ Fix width to the current breakpoint.
               :extension="ext_max_height" 
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint).run()"
+              @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint, unref(selected_type)).run()"
             />
           </div>
 
@@ -597,7 +601,7 @@ const cls_disclosure_button = [
 ]
 
 const cls_section = []
-const cls_panel = ['text-sm', 'mb-4']
+const cls_panel = ['text-sm', 'mb-4', 'p-2']
 
 const select_transaction = ref()
 const select_editor = ref()
