@@ -19,11 +19,14 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits([
@@ -37,26 +40,26 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const maxWidths = computed(() => props.extension.options.maxWidths)
-
-const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
-  }
-})
+const maxWidths = computed(
+  () => props.extension.options.maxWidths.toSpliced(0, 0, undefined)
+)
 
 const maxWidth = computed({
 
   get() { 
-    const v = attrs.value.maxWidth?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.maxWidth : 'none'
+    try {
+      return getTypeAttrs(props).maxWidth.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).maxWidth
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-maxWidth', {
-      maxWidth: value, breakpoint: props.breakpoint
+      maxWidth: value, 
+      breakpoint: props.breakpoint
     })
   }
 

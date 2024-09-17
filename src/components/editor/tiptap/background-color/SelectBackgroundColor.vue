@@ -17,12 +17,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits(['select-background-color'])
@@ -30,12 +32,16 @@ const open = ref(false)
 
 const backgroundColor = computed({
   get() {
-    const type = props.editor.isActive('image') ? 'image' : 'textClass'
-    const v = props.editor.getAttributes(type)?.backgroundColor?.find(
-      (x) => x.breakpoint == props.breakpoint
-    )
-    return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
-      'none'
+    try {
+      const v = getTypeAttrs(props).backgroundColor.find(
+        (x) => x.breakpoint == props.breakpoint
+      )
+      console.log(v)
+      return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
+        'none'
+    } catch(e) {
+      return 'none'
+    }
   },
 
   set({color, variant}) {

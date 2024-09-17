@@ -219,7 +219,8 @@ Fix width to the current breakpoint.
             :extension="ext_padding" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-padding="({side, level, breakpoint}) => select_editor.chain().setPadding(side, level, breakpoint).run()"
+            :type="selected_type"
+            @select-padding="({side, level, breakpoint}) => select_editor.chain().setPadding(side, level, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -242,7 +243,8 @@ Fix width to the current breakpoint.
             :extension="ext_margin" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(side, level, breakpoint).run()"
+            :type="selected_type"
+            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(side, level, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -423,7 +425,8 @@ Fix width to the current breakpoint.
               :extension="ext_text_color" 
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-background-color="({color, variant, breakpoint}) => select_editor.chain().focus().setBackgroundColor(color, variant, breakpoint).run()"
+              :type="selected_type"
+              @select-background-color="({color, variant, breakpoint}) => select_editor.chain().focus().setBackgroundColor(color, variant, breakpoint, unref(selected_type)).run()"
             />
 
           </div>

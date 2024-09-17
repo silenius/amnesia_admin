@@ -91,15 +91,14 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import {
-  parse_level
-}  from './utils'
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits(['select-padding'])
@@ -113,28 +112,20 @@ const class_opt = [
 
 const levels = computed(() => props.extension.options.levels)
 
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
-
 const get_side = (side) => {
   try {
-    const v = attrs.value[side].find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.level : ''
+    return getTypeAttrs(props)[side].find(
+      (x) => x.breakpoint == props.breakpoint
+    ).level
   } catch (e) {
-    return ''
+    return 'none'
   }
 
 }
 
 const set_side = (side, value) => emits('select-padding', {
   side: side, 
-  level: parse_level(value), 
+  level: value, 
   breakpoint: props.breakpoint
 })
 

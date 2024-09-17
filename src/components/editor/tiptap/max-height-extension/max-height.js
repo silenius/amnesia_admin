@@ -77,8 +77,11 @@ export const MaxHeight = Extension.create({
 
     addCommands() {
         return {
-            setMaxHeight: (maxHeight, breakpoint = null) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
+            setMaxHeight: (maxHeight, breakpoint=null, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 const oldAttrs = p.editor.getAttributes(type)['maxHeight']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

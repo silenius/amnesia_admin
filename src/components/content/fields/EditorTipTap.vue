@@ -742,13 +742,13 @@ const editor = useEditor({
       types: ['textClass', 'textStyle']
     }),
     BackgroundColor.configure({
-      types: ['textClass', 'image', 'video']
+      types: ['flexContainer', 'flexItem', 'paragraph', 'textClass', 'image', 'video']
     }),
     Margin.configure({
-      types: ['flexContainer', 'video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
     }),
     Padding.configure({
-      types: ['video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
     }),
     FontWeight.configure({
       types: ['textClass'] 
@@ -767,19 +767,19 @@ const editor = useEditor({
       types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     MinWidth.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     MinHeight.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     MaxWidth.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     MaxHeight.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     Height.configure({
-      types: ['video', 'image', 'paragraph', 'heading']
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     Table,
     TableHeader,

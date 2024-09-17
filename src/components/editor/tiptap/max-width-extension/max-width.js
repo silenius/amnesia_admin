@@ -82,8 +82,11 @@ export const MaxWidth = Extension.create({
 
     addCommands() {
         return {
-            setMaxWidth: (maxWidth, breakpoint = null) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
+            setMaxWidth: (maxWidth, breakpoint=null, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 const oldAttrs = p.editor.getAttributes(type)['maxWidth']
                 const mark = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)

@@ -17,3 +17,5 @@ export const get_modifiers = (cls) => {
 
     return modifiers
 }
+
+export * from './getTypeAttrs.js'

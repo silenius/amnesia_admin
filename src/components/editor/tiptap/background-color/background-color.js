@@ -88,21 +88,10 @@ export const BackgroundColor = Extension.create({
 
     addCommands() {
         return {
-            setBackgroundColor: (color, shade, breakpoint) => (p) => {
-                if ((
-                    shade !== undefined
-                        && (!this.options.shaded_colors.has(color)
-                            || !this.options.shades.has(parseInt(shade)))
-                )
-                    || (
-                        shade === undefined
-                            && !this.options.unshaded_colors.has(color)
-                    )
-                ) {
-                    return null
+            setBackgroundColor: (color, shade, breakpoint=null, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
                 }
-
-                const type = p.state.selection.node ? p.state.selection.node.type.name : 'textClass'
 
                 const oldAttrs = p.editor.getAttributes(type).backgroundColor
 
@@ -110,13 +99,24 @@ export const BackgroundColor = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                mark.push({
-                    breakpoint: breakpoint,
-                    color: color, 
-                    shade: shade 
-                })
+                if ((
+                    shade !== undefined
+                        && (this.options.shaded_colors.has(color)
+                            || this.options.shades.has(parseInt(shade)))
+                )
+                    || (
+                        shade === undefined
+                            && this.options.unshaded_colors.has(color)
+                    )
+                ) {
+                    mark.push({
+                        breakpoint: breakpoint,
+                        color: color, 
+                        shade: shade 
+                    })
+                }
 
-                if (p.state.selection.node) {
+                if (p.state.selection.empty || p.state.selection.node) {
                     return p.commands.updateAttributes(
                         type, { backgroundColor: mark }
                     )

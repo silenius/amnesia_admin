@@ -19,6 +19,8 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
@@ -42,21 +44,11 @@ const heights = computed(
   () => props.extension.options.heights.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => {
-  const type = !props.type ? props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  ) : props.type
-
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
-
 const height = computed({
 
   get() {
     try {
-      return attrs.value.height.find(
+      return getTypeAttrs(props).height.find(
         (x) => x.breakpoint == props.breakpoint
       ).height
     } catch (e) {

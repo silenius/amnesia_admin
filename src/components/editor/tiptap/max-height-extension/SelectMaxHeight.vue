@@ -19,11 +19,14 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits([
@@ -39,24 +42,22 @@ const class_opt = [
 
 const maxHeights = computed(() => props.extension.options.maxHeights)
 
-const attrs = computed(() => {
-  if (props.editor.isActive('image')) {
-    return props.editor.getAttributes('image')
-  } else {
-    return props.editor.getAttributes('paragraph')
-  }
-})
-
 const maxHeight = computed({
 
   get() { 
-    const v = attrs.value.maxHeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.maxHeight : 'none'
+    try {
+      return getTypeAttrs(props).maxHeight.find(
+        (x) => x.breakpoint == props.breakpoint
+      ).maxHeight
+    } catch (e) {
+      return 'none'
+    }
   },
 
   set(value) { 
     return emits('select-maxHeight', {
-      maxHeight: value, breakpoint: props.breakpoint
+      maxHeight: value, 
+      breakpoint: props.breakpoint
     })
   }
 

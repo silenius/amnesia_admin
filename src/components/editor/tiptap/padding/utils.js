@@ -5,8 +5,3 @@ export const render_padding_attrs = (attrs, side) => {
         }
     }
 }
-
-export const parse_level = (value) => {
-    const level = parseFloat(value)
-    return isNaN(level) ? value : level
-}

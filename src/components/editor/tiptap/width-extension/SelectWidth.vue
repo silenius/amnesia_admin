@@ -19,6 +19,8 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
@@ -42,21 +44,11 @@ const widths = computed(
   () => props.extension.options.widths.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => {
-  const type = !props.type ? props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  ) : props.type
-
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
-
 const width = computed({
 
   get() {
     try {
-      return attrs.value.width.find(
+      return getTypeAttrs(props).width.find(
         (x) => x.breakpoint == props.breakpoint
       ).width
     } catch (e) {

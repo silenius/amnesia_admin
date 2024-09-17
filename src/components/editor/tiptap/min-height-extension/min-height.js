@@ -75,8 +75,11 @@ export const MinHeight = Extension.create({
 
     addCommands() {
         return {
-            setMinHeight: (minHeight, breakpoint = null) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
+            setMinHeight: (minHeight, breakpoint=null, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 const oldAttrs = p.editor.getAttributes(type)['minHeight']
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
