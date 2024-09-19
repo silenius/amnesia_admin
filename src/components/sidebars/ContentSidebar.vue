@@ -7,8 +7,6 @@
       <SelectBreakpoint @select-breakpoint="change_breakpoint" />
     </section>
 
-    <p class="text-center my-4">Unique type-defined properties</p>
-
     <!-- FLEX CONTAINER -->
 
     <section :class="cls_section" v-if="ext_flex && select_editor.isActive('flexContainer')">
@@ -165,10 +163,8 @@
 
     <!-- NODE -->
 
-    <p class="text-center my-4">Shared type-defined properties</p>
-
-    <section name="node" class="mb-4 " :class="cls_section">
-      <div class="flex gap-2 flex-wrap justify-stretch">
+    <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.length > 1">
+      <div class="grid grid-cols-2 gap-2">
         <button @click="selected_type = t" v-for="t in active_types"
           type="button" 
           :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
@@ -312,7 +308,8 @@ Fix width to the current breakpoint.
             :extension="ext_align" 
             :transaction="select_transaction"
             :editor="select_editor"
-            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint).run()"
+            :type="selected_type"
+            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -599,7 +596,7 @@ const ext_flex_item = ref()
 const ext_gap = ref()
 
 const cls_disclosure_button = [
-  'flex', 'w-full', 'gap-4', 'items-center', 'justify-between', 
+  'flex', 'w-full', '', 'items-center', 'justify-between', 
   'text-left', 'text-sm', 'font-medium', 'text-slate-100', 'pr-1'
 ]
 

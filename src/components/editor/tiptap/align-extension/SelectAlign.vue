@@ -34,30 +34,23 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits(['select-align'])
-
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
 
 const align = computed({
 
   get() { 
     try {
-      return attrs.value.align.find(
+      return getTypeAttrs(props).align.find(
         (x) => x.breakpoint == props.breakpoint
       ).direction
     } catch (e) {
