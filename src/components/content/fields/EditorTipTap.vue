@@ -149,6 +149,67 @@
     </Dialog>
   </TransitionRoot>
 
+  <!-- MODAL CHOOSE FLEX -->
+
+  <TransitionRoot appear :show="modals.flex_container" as="template">
+    <Dialog as="div" class="relative z-[1500]">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+              class="transform overflow-hidden rounded-2xl bg-white p-6
+              text-left w-fit align-middle shadow-xl transition-all"
+            >
+              <DialogTitle as="h3" class="text-xl font-medium leading-6 text-gray-900" >
+                Flex container
+              </DialogTitle>
+              <DialogDescription as="h4" class="mt-2">
+                Insert a flex container. A flex container provides a more efficient way to lay out, align and distribute space among items in a container, even when their size is unknown and/or dynamic
+              </DialogDescription>
+
+              <div class="mt-2">
+                <div class="border shadow-md flex justify-evenly p-2 items-center rounded-full">
+                  <button @click.prevent="insert_flex(1)">1 column</button>
+                  <button @click.prevent="insert_flex(2)">2 columns</button>
+                  <button @click.prevent="insert_flex(3)">3 columns</button>
+                  <button @click.prevent="insert_flex(4)">4 columns</button>
+                </div>
+              </div>
+
+              <div class="mt-4 flex gap-2">
+                <button
+                  type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  @click="closeModal('flex_container')">
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
 
   <!-- MODAL CHOOSE VIDEO -->
 
@@ -308,8 +369,8 @@
       <font-awesome-icon icon="fa-solid fa-film"
         @click="add_video" />
 
-      <font-awesome-icon icon="fa-solid fa-house"
-        @click="add_foo"
+      <font-awesome-icon icon="fa-solid fa-bars" class="fa-rotate-90"
+        @click="add_flex_container"
       />
 
       <font-awesome-icon icon="fa-solid fa-link" 
@@ -429,7 +490,8 @@ const modals = ref({
   choose_image: false,
   choose_link: false,
   file_browser: false,
-  video: false
+  video: false,
+  flex_container: false
 })
 
 const { browse, getDefaultMediaFolder } = useFolder()
@@ -491,61 +553,38 @@ const input_video_url = ref()
 const input_video_autoplay = ref()
 const input_video_controls = ref()
 
-const add_foo = () => {
-  //editor.value.commands.insertContent('<div class="flex"><p>LOL 12344</p><p>coucou</p></div>')
+const insert_flex = (cpt) => {
+  const content = Array.from(
+    Array.from({ length: cpt }, (_, index) => index+1), 
+    (x) => {
+    return {
+        type: 'flexItem',
+        content: [
+            { 
+              type: 'paragraph', 
+              content: [
+                {
+                  type: 'text',
+                  text: `Flex child ${x}`
+                }
+              ]
+            },
+        ]
+      }
+  })
+
   editor.value.commands.insertContent([
   {
     type: 'flexContainer',
     attrs: {
-        gapX: [{'breakpoint': null, 'gap': '4'}],
-        gapY: [{'breakpoint': null, 'gap': '4'}],
+        gapX: [{'breakpoint': null, 'gap': '2'}],
+        gapY: [{'breakpoint': null, 'gap': '2'}],
     },
-    content: [
-      {
-        type: 'flexItem',
-        content: [
-            { 
-              type: 'paragraph', 
-              content: [
-                {
-                  type: 'text',
-                  text: 'First paragraph'
-                }
-              ]
-            },
-        ]
-      },
-      {
-        type: 'flexItem',
-        content: [
-            { 
-              type: 'paragraph', 
-              content: [
-                {
-                  type: 'text',
-                  text: 'Second paragraph'
-                }
-              ]
-            },
-        ]
-      },
-      {
-        type: 'flexItem',
-        content: [
-            { 
-              type: 'paragraph', 
-              content: [
-                {
-                  type: 'text',
-                  text: 'Third paragraph'
-                }
-              ]
-            },
-        ]
-      },
-    ]
+    content: content
   }
   ])
+
+  modals.value.flex_container = false
 }
 
 const insertImage = (value) => {
@@ -633,6 +672,8 @@ const closeModal = (...modal) => {
 const add_video = () => {
   modals.value.video = true
 }
+
+const add_flex_container = () => modals.value.flex_container = true
 
 const add_image = () => {
   _meta.value.filetype = 'image'
