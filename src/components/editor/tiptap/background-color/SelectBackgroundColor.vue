@@ -36,7 +36,6 @@ const backgroundColor = computed({
       const v = getTypeAttrs(props).backgroundColor.find(
         (x) => x.breakpoint == props.breakpoint
       )
-      console.log(v)
       return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
         'none'
     } catch(e) {

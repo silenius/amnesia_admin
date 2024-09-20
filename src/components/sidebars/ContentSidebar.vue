@@ -401,19 +401,19 @@ Fix width to the current breakpoint.
       </Disclosure>
     </section>
 
-    <!-- COLORS -->
+    <!-- BACKGROUNDS -->
 
     <section name="colors" :class="cls_section">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
-          <span>Colors</span>
+          <span>Background</span>
           <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
           <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
-          <div class="italic my-2">Utilities for controlling the colors.</div>
+          <div class="italic my-2">Utilities for controlling the background.</div>
           <div class="gap-x-2 grid justify-items-center items-center grid-rows-2 grid-cols-1">
-            <span>Background</span>
+            <span>Color</span>
 
             <SelectBackgroundColor
               class="w-full"

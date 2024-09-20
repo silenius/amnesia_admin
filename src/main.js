@@ -70,7 +70,8 @@ import {
     faVideo,
     faFilm,
     faSquarePersonConfined,
-    faPlus
+    faPlus,
+    faBars
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -151,6 +152,7 @@ library.add(faVideo)
 library.add(faFilm)
 library.add(faPlus)
 library.add(faSquarePersonConfined)
+library.add(faBars)
 
 const app = createApp(App)
 const pinia = createPinia()
