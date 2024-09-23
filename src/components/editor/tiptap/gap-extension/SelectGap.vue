@@ -1,10 +1,9 @@
 <template>
-  <div class="flex gap-4 justify-center">
 
     <!-- mx: margin horizontal -->
 
     <Listbox as="div" v-model="gapX">
-      <ListboxButton>horizontal: {{ gapX }}</ListboxButton>
+      <ListboxButton>{{ gapX }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="gap in gaps" :key="gap" :value="gap" >
           <button :class="class_opt">{{ gap }}</button>
@@ -15,7 +14,7 @@
     <!-- my: margin vertical -->
 
     <Listbox as="div" v-model="gapY">
-      <ListboxButton>vertical: {{ gapY }}</ListboxButton>
+      <ListboxButton>{{ gapY }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="gap in gaps" :key="gap" :value="gap" >
           <button :class="class_opt">{{ gap }}</button>
@@ -23,7 +22,6 @@
       </ListboxOptions>
     </Listbox>
 
-  </div>
 
 </template>
 

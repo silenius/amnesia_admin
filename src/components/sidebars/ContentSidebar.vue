@@ -1,5 +1,5 @@
 <template>
-  <div v-if="select_editor" class="p-2 bg-gray-700 w-64 max-w-64 min-h-screen text-gray-200 flex flex-col">
+  <div v-if="select_editor" class="px-2 bg-gray-700 max-w-64 min-h-screen text-gray-200 flex flex-col">
 
     <!-- BREAKPOINT -->
 
@@ -85,9 +85,10 @@
                 @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
               />
             </div>
-
-            <div class="flex flex-col">
-              <span>Gap</span>
+          </div>
+          <div class="grid grid-cols-2 justify-items-center">
+              <span>Horizontal Gap</span>
+              <span>Vertical Gap</span>
               <SelectGap
                 :breakpoint="breakpoint"
                 :extension="ext_gap" 
@@ -95,10 +96,7 @@
                 :editor="select_editor"
                 @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
               />
-            </div>
-
           </div>
-
         </DisclosurePanel>
       </Disclosure>
     </section>
