@@ -3,44 +3,9 @@ import {
 } from '@tiptap/core'
 
 import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
-
-import {
-    render_padding_attrs,
-} from './utils'
-
-const _parse = (side, elem, levels) => {
-    const is_padding = generate_responsive_cls(side)
-    const is_level = new Set(levels)
-    const matches = []
-
-    for (const name of elem.classList) {
-        const result = name.split('-')
-
-        if (result.length == 2) {
-            const side = result[0]
-            const level = result[1]
-
-            if (is_padding.has(side) && is_level.has(level)) {
-                // text or md:text, lg:text ?
-                const [part1, part2] = result[0].split(':')
-                const breakpoint = part2 !== undefined ? part1 : null
-
-                matches.push({
-                    breakpoint: breakpoint,
-                    level: level
-                })
-            }
-        }
-    }
-
-    return matches.length ? matches : null
-}
-
-const _render = (attrs, side) => {
-    return render_padding_attrs(attrs, side)
-}
 
 const levels = [
     'auto', '0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', 
@@ -65,33 +30,33 @@ export const Padding = Extension.create({
                 attributes: {
                     px: {
                         default: null,
-                        parseHTML: (elem) => _parse('px', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'px')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'px-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'px')
                     },
                     py: {
                         default: null,
-                        parseHTML: (elem) => _parse('py', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'py')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'py-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'py')
                     },
                     pt: {
                         default: null,
-                        parseHTML: (elem) => _parse('pt', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'pt')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'pt-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'pt')
                     },
                     pr: {
                         default: null,
-                        parseHTML: (elem) => _parse('pr', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'pr')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'pr-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'pr')
                     },
                     pb: {
                         default: null,
-                        parseHTML: (elem) => _parse('pb', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'pb')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'pb-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'pb')
                     },
                     pl: {
                         default: null,
-                        parseHTML: (elem) => _parse('pl', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'pl')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'pl-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'pl')
                     },
                 }
             }
@@ -117,7 +82,7 @@ export const Padding = Extension.create({
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        level: level
+                        tw: `${side}-${level}`
                     })
                 }
 

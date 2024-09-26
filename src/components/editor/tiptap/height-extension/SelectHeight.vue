@@ -50,7 +50,7 @@ const height = computed({
     try {
       return getTypeAttrs(props).height.find(
         (x) => x.breakpoint == props.breakpoint
-      ).height
+      ).tw
     } catch (e) {
       return 'none'
     }
@@ -60,7 +60,6 @@ const height = computed({
     return emits('select-height', {
       height: value, 
       breakpoint: props.breakpoint, 
-      raw: false
     })
   }
 

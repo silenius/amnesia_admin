@@ -4,14 +4,13 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_clear_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
-const clears = ['right', 'left', 'both', 'none']
+const clears = [
+    'clear-right', 'clear-left', 'clear-both', 'clear-none'
+]
 
 export const Clear = Extension.create({
     name: 'clear',
@@ -20,7 +19,6 @@ export const Clear = Extension.create({
         return {
             types: [],
             clears: clears,
-            default_clear: null,
         }
     },
 
@@ -31,36 +29,8 @@ export const Clear = Extension.create({
                 attributes: {
                     clear: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_clear = new Set(
-                                this.options.clears.map(
-                                    (x) => Array.from(generate_responsive_cls(`clear-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_clear.has(name)) {
-                                    const clear = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        clear: clear,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_clear_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.clears),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'clear')
                     },
                 },
             },
@@ -70,11 +40,10 @@ export const Clear = Extension.create({
     addCommands() {
         return {
             setClear: (clear, breakpoint = null) => (p) => {
-                console.debug('===>>> setClear, clear: ', clear, ', bp: ', breakpoint)
-                const type = this.options.types.find((e) => p.editor.isActive(e))
-                const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
                 const oldAttrs = p.editor.getAttributes(type)['clear']
-                console.debug('===>>> setClear, oldAttrs: ', oldAttrs)
 
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
@@ -84,17 +53,13 @@ export const Clear = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        clear: clear
+                        tw: clear
                     })
                 }
 
-                switch (ext.type) {
-                    case 'node':
-                        return p.commands.updateAttributes(
-                            type, { clear: attr }
-                        )
-                        break
-                }
+                return p.commands.updateAttributes(
+                    type, { clear: attr }
+                )
             },
         }
     },

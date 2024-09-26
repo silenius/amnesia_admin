@@ -4,20 +4,20 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_minHeight_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const minHeights = [
-    'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit',
+    'min-h-full', 'min-h-screen', 'min-h-svh', 'min-h-lvh', 'min-h-dvh', 
+    'min-h-min', 'min-h-max', 'min-h-fit',
 
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
+    'min-h-0', 'min-h-px', 'min-h-0.5', 'min-h-1', 'min-h-1.5', 'min-h-2', 
+    'min-h-2.5', 'min-h-3', 'min-h-3.5', 'min-h-4', 'min-h-5', 'min-h-6', 
+    'min-h-7', 'min-h-8', 'min-h-9', 'min-h-10', 'min-h-11', 'min-h-12', 
+    'min-h-14', 'min-h-16', 'min-h-20', 'min-h-24', 'min-h-28', 'min-h-32', 
+    'min-h-36', 'min-h-40', 'min-h-44', 'min-h-48', 'min-h-52', 'min-h-56', 
+    'min-h-60', 'min-h-64', 'min-h-72', 'min-h-80', 'min-h-96', 
 ]
 
 export const MinHeight = Extension.create({
@@ -37,36 +37,8 @@ export const MinHeight = Extension.create({
                 attributes: {
                     minHeight: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_minHeight = new Set(
-                                this.options.minHeights.map(
-                                    (x) => Array.from(generate_responsive_cls(`min-h-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_minHeight.has(name)) {
-                                    const minHeight = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        minHeight: minHeight,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_minHeight_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.minHeights),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'minHeight')
                     },
                 },
             },
@@ -89,17 +61,13 @@ export const MinHeight = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        minHeight: minHeight
+                        tw: minHeight
                     })
-
-                    return p.commands.updateAttributes(
-                        type, { minHeight: attr }
-                    )
-                } else {
-                    return p.commands.resetAttributes(
-                        type, this.name
-                    )
                 }
+
+                return p.commands.updateAttributes(
+                    type, { minHeight: attr }
+                )
             },
         }
     },

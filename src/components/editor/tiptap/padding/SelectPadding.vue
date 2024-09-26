@@ -116,7 +116,7 @@ const get_side = (side) => {
   try {
     return getTypeAttrs(props)[side].find(
       (x) => x.breakpoint == props.breakpoint
-    ).level
+    ).tw
   } catch (e) {
     return 'none'
   }

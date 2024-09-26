@@ -50,7 +50,7 @@ const maxWidth = computed({
     try {
       return getTypeAttrs(props).maxWidth.find(
         (x) => x.breakpoint == props.breakpoint
-      ).maxWidth
+      ).tw
     } catch (e) {
       return 'none'
     }

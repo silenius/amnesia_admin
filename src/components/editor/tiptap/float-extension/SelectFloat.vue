@@ -1,16 +1,21 @@
 <template>
   <div class="flex gap-4 mt-4 justify-evenly">
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="float='none'"><img :src="floatNone"
-        :class="img_cls('none')" /></button>
+      <button @click.prevent="float='float-none'">
+        <img :src="floatNone" :class="img_cls('float-none')" />
+      </button>
       <span>none</span>
     </div>
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="float='left'"><img :src="floatLeft" :class="img_cls('left')" /></button>
+      <button @click.prevent="float='float-left'">
+        <img :src="floatLeft" :class="img_cls('float-left')" />
+      </button>
       <span>left</span>
     </div>
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="float='right'"><img :src="floatRight" :class="img_cls('right')" /></button>
+      <button @click.prevent="float='float-right'">
+        <img :src="floatRight" :class="img_cls('float-right')" />
+      </button>
       <span>right</span>
     </div>
   </div>
@@ -18,6 +23,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
 import floatLeft from "@/assets/float-left.svg";
 import floatRight from "@/assets/float-right.svg";
 import floatNone from "@/assets/denied.svg";
@@ -26,30 +32,21 @@ const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  type: String
 })
 
 const emits = defineEmits(['select-float'])
-
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
 
 const float = computed({
 
   get() { 
     try {
-      return attrs.value.float.find(
+      return getTypeAttrs(props).float.find(
         (x) => x.breakpoint == props.breakpoint
-      ).float
+      ).tw
     } catch (e) {
-      return null
+      return undefined
     }
   },
   

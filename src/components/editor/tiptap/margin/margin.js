@@ -3,44 +3,9 @@ import {
 } from '@tiptap/core'
 
 import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
-
-import {
-    render_margin_attrs,
-} from './utils'
-
-const _parse = (side, elem, levels) => {
-    const is_margin = generate_responsive_cls(side)
-    const is_level = new Set(levels)
-    const matches = []
-
-    for (const name of elem.classList) {
-        const result = name.split('-')
-
-        if (result.length == 2) {
-            const side = result[0]
-            const level = result[1]
-
-            if (is_margin.has(side) && is_level.has(level)) {
-                // text or md:text, lg:text ?
-                const [part1, part2] = side.split(':')
-                const breakpoint = part2 !== undefined ? part1 : null
-
-                matches.push({
-                    breakpoint: breakpoint,
-                    level: level
-                })
-            }
-        }
-    }
-
-    return matches.length ? matches : null
-}
-
-const _render = (attrs, side) => {
-    return render_margin_attrs(attrs, side)
-}
 
 const levels = [
     'auto', '0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', 
@@ -65,33 +30,33 @@ export const Margin = Extension.create({
                 attributes: {
                     mx: {
                         default: null,
-                        parseHTML: (elem) => _parse('mx', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'mx')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'mx-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'mx')
                     },
                     my: {
                         default: null,
-                        parseHTML: (elem) => _parse('my', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'my')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'my-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'my')
                     },
                     mt: {
                         default: null,
-                        parseHTML: (elem) => _parse('mt', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'mt')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'mt-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'mt')
                     },
                     mr: {
                         default: null,
-                        parseHTML: (elem) => _parse('mr', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'mr')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'mr-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'mr')
                     },
                     mb: {
                         default: null,
-                        parseHTML: (elem) => _parse('mb', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'mb')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'mb-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'mb')
                     },
                     ml: {
                         default: null,
-                        parseHTML: (elem) => _parse('ml', elem, this.options.levels),
-                        renderHTML: (attrs) => _render(attrs, 'ml')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.levels, 'ml-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'ml')
                     },
                 }
             }
@@ -118,7 +83,7 @@ export const Margin = Extension.create({
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        level: level
+                        tw: `${side}-${level}`
                     })
                 }
 

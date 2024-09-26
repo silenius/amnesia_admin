@@ -4,18 +4,13 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_align_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
-const aligns = ['left', 'center', 'right', 'justify']
-
-const is_text = new Set(
-    aligns.map((x) => Array.from(generate_responsive_cls(`text-${x}`))).flat()
-)
+const aligns = [
+    'text-left', 'text-center', 'text-right', 'text-justify'
+]
 
 export const Align = Extension.create({
     name: 'align',
@@ -23,7 +18,7 @@ export const Align = Extension.create({
     addOptions() {
         return {
             types: [],
-            directions: aligns,
+            aligns: aligns,
             default_direction: null,
         }
     },
@@ -35,29 +30,8 @@ export const Align = Extension.create({
                 attributes: {
                     align: {
                         default: null,
-
-                        parseHTML: elem => {
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_text.has(name)) {
-                                    const direction = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        direction: direction,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-                        },
-
-                        renderHTML: attrs => {
-                            return render_align_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.aligns),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'align')
                     },
                 },
             },
@@ -79,7 +53,7 @@ export const Align = Extension.create({
                 if (this.options.directions.indexOf(direction) !== -1) {
                     attr.push({
                         breakpoint: breakpoint,
-                        direction: direction
+                        tw: direction
                     })
                 }
 

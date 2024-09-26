@@ -4,22 +4,22 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_maxHeight_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const maxHeights = [
-    'none', 
+    'max-h-none',
 
-    'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit',
+    'max-h-full', 'max-h-screen', 'max-h-svh', 'max-h-lvh', 'max-h-dvh',
+    'max-h-min', 'max-h-max', 'max-h-fit',
 
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
+    'max-h-0', 'max-h-px', 'max-h-0.5', 'max-h-1', 'max-h-1.5', 'max-h-2',
+    'max-h-2.5', 'max-h-3', 'max-h-3.5', 'max-h-4', 'max-h-5', 'max-h-6',
+    'max-h-7', 'max-h-8', 'max-h-9', 'max-h-10', 'max-h-11', 'max-h-12',
+    'max-h-14', 'max-h-16', 'max-h-20', 'max-h-24', 'max-h-28', 'max-h-32',
+    'max-h-36', 'max-h-40', 'max-h-44', 'max-h-48', 'max-h-52', 'max-h-56',
+    'max-h-60', 'max-h-64', 'max-h-72', 'max-h-80', 'max-h-96',
 ]
 
 export const MaxHeight = Extension.create({
@@ -39,36 +39,8 @@ export const MaxHeight = Extension.create({
                 attributes: {
                     maxHeight: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_maxHeight = new Set(
-                                this.options.maxHeights.map(
-                                    (x) => Array.from(generate_responsive_cls(`max-h-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_maxHeight.has(name)) {
-                                    const maxHeight = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        maxHeight: maxHeight,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_maxHeight_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.maxHeights),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'maxHeight')
                     },
                 },
             },
@@ -87,11 +59,11 @@ export const MaxHeight = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (maxHeight !== 'undefined') {
+                if (this.options.maxHeights.indexOf(maxHeight) !== -1) {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        maxHeight: maxHeight
+                        tw: maxHeight
                     })
                 }
 

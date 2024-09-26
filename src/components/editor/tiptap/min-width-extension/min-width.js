@@ -4,20 +4,19 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_minWidth_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const minWidths = [
-    'full', 'min', 'max', 'fit', 
+    'min-w-full', 'min-w-min', 'min-w-max', 'min-w-fit', 
 
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
+    'min-w-0', 'min-w-px', 'min-w-0.5', 'min-w-1', 'min-w-1.5', 'min-w-2', 
+    'min-w-2.5', 'min-w-3', 'min-w-3.5', 'min-w-4', 'min-w-5', 'min-w-6', 
+    'min-w-7', 'min-w-8', 'min-w-9', 'min-w-10', 'min-w-11', 'min-w-12', 
+    'min-w-14', 'min-w-16', 'min-w-20', 'min-w-24', 'min-w-28', 'min-w-32', 
+    'min-w-36', 'min-w-40', 'min-w-44', 'min-w-48', 'min-w-52', 'min-w-56', 
+    'min-w-60', 'min-w-64', 'min-w-72', 'min-w-80', 'min-w-96', 
 ]
 
 export const MinWidth = Extension.create({
@@ -37,36 +36,8 @@ export const MinWidth = Extension.create({
                 attributes: {
                     minWidth: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_minWidth = new Set(
-                                this.options.minWidths.map(
-                                    (x) => Array.from(generate_responsive_cls(`min-w-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_minWidth.has(name)) {
-                                    const minWidth = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        minWidth: minWidth,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_minWidth_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.minWidths),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'minWidth')
                     },
                 },
             },
@@ -89,7 +60,7 @@ export const MinWidth = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        minWidth: minWidth
+                        tw: minWidth
                     })
                 }
 

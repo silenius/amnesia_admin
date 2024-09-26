@@ -19,3 +19,4 @@ export const get_modifiers = (cls) => {
 }
 
 export * from './getTypeAttrs.js'
+export * from './attrs.js'

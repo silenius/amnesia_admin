@@ -4,14 +4,13 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_float_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
-const floats = ['right', 'left', 'none']
+const floats = [
+    'float-right', 'float-left', 'float-none'
+]
 
 export const Float = Extension.create({
     name: 'float',
@@ -20,7 +19,6 @@ export const Float = Extension.create({
         return {
             types: [],
             floats: floats,
-            default_float: null,
         }
     },
 
@@ -31,35 +29,8 @@ export const Float = Extension.create({
                 attributes: {
                     float: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_float = new Set(
-                                this.options.floats.map(
-                                    (x) => Array.from(generate_responsive_cls(`float-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_float.has(name)) {
-                                    const float = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        float: float,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_float_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.floats),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'float')
                     },
                 },
             },
@@ -68,12 +39,12 @@ export const Float = Extension.create({
 
     addCommands() {
         return {
-            setFloat: (float, breakpoint = null) => (p) => {
-                console.debug('===>>> setFloat, float: ', float, ', bp: ', breakpoint)
-                const type = this.options.types.find((e) => p.editor.isActive(e))
-                const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
+            setFloat: (float, breakpoint=null, type=undefined) => (p) => {
+                if (!type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+                //const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
                 const oldAttrs = p.editor.getAttributes(type)['float']
-                console.debug('===>>> setFloat, oldAttrs: ', oldAttrs)
 
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
@@ -83,11 +54,16 @@ export const Float = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        float: float
+                        tw: float
                     })
                 }
 
+                return p.commands.updateAttributes(
+                    type, { float: attr }
+                )
+ 
                 // TODO: support mark types (with selection?)
+                /*
                 switch (ext.type) {
                     case 'node':
                         return p.commands.updateAttributes(
@@ -95,6 +71,7 @@ export const Float = Extension.create({
                         )
                         break
                 }
+                */
 
                 // New value
                 /*

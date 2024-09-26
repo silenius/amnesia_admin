@@ -50,7 +50,7 @@ const width = computed({
     try {
       return getTypeAttrs(props).width.find(
         (x) => x.breakpoint == props.breakpoint
-      ).width
+      ).tw
     } catch (e) {
       return 'none'
     }
@@ -60,7 +60,6 @@ const width = computed({
     return emits('select-width', {
       width: value, 
       breakpoint: props.breakpoint, 
-      raw: false
     })
   }
 

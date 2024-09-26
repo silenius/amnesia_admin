@@ -7,30 +7,32 @@ import {
 } from './utils'
 
 import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const widths = [
-    'auto', 
-    
-    '1/2', 
-    
-    '1/3', '2/3', 
-    
-    '1/4', '2/4', '3/4', 
-    
-    '1/5', '2/5', '3/5', '4/5', 
-    
-    '1/6', '2/6', '3/6', '4/6', '5/6', 
-    
-    '1/12', '2/12', '3/12', '4/12', '5/12', '6/12', '7/12', '8/12', '9/12', 
-    '10/12', '11/12', 
-    
-    'full', 'screen', 'svw', 'lvw', 'dvw', 'min', 'max', 'fit', 
+    'w-auto',
 
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
+    'w-1/2',
+
+    'w-1/3', 'w-2/3',
+
+    'w-1/4', 'w-2/4', 'w-3/4',
+
+    'w-1/5', 'w-2/5', 'w-3/5', 'w-4/5',
+
+    'w-1/6', 'w-2/6', 'w-3/6', 'w-4/6', 'w-5/6',
+
+    'w-1/12', 'w-2/12', 'w-3/12', 'w-4/12', 'w-5/12', 'w-6/12', 'w-7/12',
+    'w-8/12', 'w-9/12', 'w-10/12', 'w-11/12',
+
+    'w-full', 'w-screen', 'w-svw', 'w-lvw', 'w-dvw', 'w-min', 'w-max', 'w-fit',
+
+    'w-0', 'w-px', 'w-0.5', 'w-1', 'w-1.5', 'w-2', 'w-2.5', 'w-3', 'w-3.5',
+    'w-4', 'w-5', 'w-6', 'w-7', 'w-8', 'w-9', 'w-10', 'w-11', 'w-12', 'w-14',
+    'w-16', 'w-20', 'w-24', 'w-28', 'w-32', 'w-36', 'w-40', 'w-44', 'w-48',
+    'w-52', 'w-56', 'w-60', 'w-64', 'w-72', 'w-80', 'w-96',
 ]
 
 export const Width = Extension.create({
@@ -50,7 +52,7 @@ export const Width = Extension.create({
                 attributes: {
                     width: {
                         default: null,
-                        
+
                         parseHTML: elem => {
                             if (elem.hasAttribute('data-width')) {
                                 return JSON.parse(elem.getAttribute('data-width'))
@@ -58,34 +60,10 @@ export const Width = Extension.create({
                                 return parseFloat(elem.getAttribute('width'))
                             }
 
-                            const is_width = new Set(
-                                this.options.widths.map(
-                                    (x) => Array.from(generate_responsive_cls(`w-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_width.has(name)) {
-                                    const width = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        width: width,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
+                            return extract_tw_attrs(elem, this.options.widths)
                         },
-                        
-                        renderHTML: attrs => {
-                            return render_width_attrs(attrs)
-                        },
+
+                        renderHTML: attrs => render_tw_attrs(attrs, 'width')
                     },
                 },
             },
@@ -94,7 +72,7 @@ export const Width = Extension.create({
 
     addCommands() {
         return {
-            setWidth: (width, breakpoint=null, raw=false, type=undefined) => (p) => {
+            setWidth: (width, breakpoint=null, type=undefined) => (p) => {
                 if (!type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
@@ -108,8 +86,7 @@ export const Width = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        width: width,
-                        raw: raw
+                        tw: width,
                     })
                 }
 

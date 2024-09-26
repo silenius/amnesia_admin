@@ -3,32 +3,29 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_height_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const heights = [
-    'auto', 
-    
-    '1/2', 
-    
-    '1/3', '2/3', 
-    
-    '1/4', '2/4', '3/4', 
-    
-    '1/5', '2/5', '3/5', '4/5', 
-    
-    '1/6', '2/6', '3/6', '4/6', '5/6', 
-    
-    'full', 'screen', 'svh', 'lvh', 'dvh', 'min', 'max', 'fit', 
+    'h-auto', 
 
-    '0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7',
-    '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', 
-    '40', '44', '48', '52', '56', '60', '64', '72', '80', '96', 
-    
+    'h-1/2', 
+
+    'h-1/3', 'h-2/3', 
+
+    'h-1/4', 'h-2/4', 'h-3/4', 
+
+    'h-1/5', 'h-2/5', 'h-3/5', 'h-4/5', 
+
+    'h-1/6', 'h-2/6', 'h-3/6', 'h-4/6', 'h-5/6', 
+
+    'h-full', 'h-screen', 'h-svh', 'h-lvh', 'h-dvh', 'h-min', 'h-max', 'h-fit', 
+
+    'h-0', 'h-px', 'h-0.5', 'h-1', 'h-1.5', 'h-2', 'h-2.5', 'h-3', 'h-3.5', 
+    'h-4', 'h-5', 'h-6', 'h-7', 'h-8', 'h-9', 'h-10', 'h-11', 'h-12', 'h-14',
+    'h-16', 'h-20', 'h-24', 'h-28', 'h-32', 'h-36', 'h-40', 'h-44', 'h-48', 
+    'h-52', 'h-56', 'h-60', 'h-64', 'h-72', 'h-80', 'h-96', 
 ]
 
 export const Height = Extension.create({
@@ -56,33 +53,10 @@ export const Height = Extension.create({
                                 return parseFloat(elem.getAttribute('height'))
                             }
 
-                            const is_height = new Set(
-                                this.options.heights.map(
-                                    (x) => Array.from(generate_responsive_cls(`h-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_height.has(name)) {
-                                    const height = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        height: height,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
+                            return extract_tw_attrs(elem, this.options.heights)
                         },
-                        
-                        renderHTML: attrs => {
-                            return render_height_attrs(attrs)
-                        },
+
+                        renderHTML: attrs => render_tw_attrs(attrs, 'height')
                     },
                 },
             },
@@ -91,7 +65,7 @@ export const Height = Extension.create({
 
     addCommands() {
         return {
-            setHeight: (height, breakpoint=null, raw=false, type=undefined) => (p) => {
+            setHeight: (height, breakpoint=null, type=undefined) => (p) => {
                 if (!type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
@@ -105,8 +79,7 @@ export const Height = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        height: height,
-                        raw: raw
+                        tw: height,
                     })
                 }
 

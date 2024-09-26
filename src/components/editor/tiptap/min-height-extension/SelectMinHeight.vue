@@ -50,7 +50,7 @@ const minHeight = computed({
     try {
       return getTypeAttrs(props).minHeight.find(
         (x) => x.breakpoint == props.breakpoint
-      ).minHeight
+      ).tw
     } catch (e) {
       return 'none'
     }

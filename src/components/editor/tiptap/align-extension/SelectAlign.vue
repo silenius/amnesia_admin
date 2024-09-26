@@ -2,29 +2,29 @@
   <div class="flex gap-4 mt-4 justify-evenly">
 
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="align='left'">
-        <font-awesome-icon icon="fa-solid fa-align-left" :class="img_cls('left')" />
+      <button @click.prevent="align='text-left'">
+        <font-awesome-icon icon="fa-solid fa-align-left" :class="img_cls('text-left')" />
       </button>
       <span>left</span>
     </div>
 
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="align='center'">
-        <font-awesome-icon icon="fa-solid fa-align-center" :class="img_cls('center')" />
+      <button @click.prevent="align='text-center'">
+        <font-awesome-icon icon="fa-solid fa-align-center" :class="img_cls('text-center')" />
       </button>
       <span>center</span>
     </div>
 
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="align='right'">
-        <font-awesome-icon icon="fa-solid fa-align-right" :class="img_cls('right')" />
+      <button @click.prevent="align='text-right'">
+        <font-awesome-icon icon="fa-solid fa-align-right" :class="img_cls('text-right')" />
       </button>
       <span>right</span>
     </div>
 
     <div class="flex flex-col items-center text-xs gap-1">
-      <button @click.prevent="align='justify'">
-        <font-awesome-icon icon="fa-solid fa-align-justify" :class="img_cls('justify')" />
+      <button @click.prevent="align='text-justify'">
+        <font-awesome-icon icon="fa-solid fa-align-justify" :class="img_cls('text-justify')" />
       </button>
       <span>justify</span>
     </div>
@@ -52,7 +52,7 @@ const align = computed({
     try {
       return getTypeAttrs(props).align.find(
         (x) => x.breakpoint == props.breakpoint
-      ).direction
+      ).tw
     } catch (e) {
       return undefined
     }

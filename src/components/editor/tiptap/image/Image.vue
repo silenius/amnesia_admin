@@ -21,13 +21,12 @@ import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
 import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
-import { render_width_attrs } from '../width-extension/utils'
 import { render_maxWidth_attrs } from '../max-width-extension/utils'
 import { render_minWidth_attrs } from '../min-width-extension/utils'
 import { render_maxHeight_attrs } from '../max-height-extension/utils'
 import { render_minHeight_attrs } from '../min-height-extension/utils'
-import { render_height_attrs } from '../height-extension/utils'
 import { render_clear_attrs } from '../clear-extension/utils'
+import { render_tw_attrs } from '../utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
 const props = defineProps(nodeViewProps)
@@ -101,7 +100,7 @@ const bg_color_cls = computed(() => {
 })
 
 const width_cls = computed(() => {
-  const cls = render_width_attrs(props.node.attrs)
+  const cls = render_tw_attrs(props.node.attrs, 'width')
   return cls ? Object.values(cls) : []
 })
 
@@ -121,7 +120,7 @@ const width_attr = computed(() => {
 })
 
 const height_cls = computed(() => {
-  const cls = render_height_attrs(props.node.attrs)
+  const cls = render_tw_attrs(props.node.attrs, 'height')
   return cls ? Object.values(cls) : []
 })
 

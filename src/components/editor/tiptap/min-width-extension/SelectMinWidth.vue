@@ -50,7 +50,7 @@ const minWidth = computed({
     try {
       return getTypeAttrs(props).minWidth.find(
         (x) => x.breakpoint == props.breakpoint
-      ).minWidth
+      ).tw
     } catch (e) {
       return 'none'
     }

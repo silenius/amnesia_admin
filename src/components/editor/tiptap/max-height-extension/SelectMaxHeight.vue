@@ -40,7 +40,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const maxHeights = computed(() => props.extension.options.maxHeights)
+const maxHeights = computed(
+  () => props.extension.options.maxHeights.toSpliced(0, 0, undefined)
+)
 
 const maxHeight = computed({
 
@@ -48,7 +50,7 @@ const maxHeight = computed({
     try {
       return getTypeAttrs(props).maxHeight.find(
         (x) => x.breakpoint == props.breakpoint
-      ).maxHeight
+      ).tw
     } catch (e) {
       return 'none'
     }
