@@ -4,21 +4,14 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_font_weight_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const weights = [
-    'thin', 'extralight', 'light', 'normal', 'medium', 
-    'semibold', 'bold', 'extrabold', 'black'
+    'font-thin', 'font-extralight', 'font-light', 'font-normal', 'font-medium',
+    'font-semibold', 'font-bold', 'font-extrabold', 'font-black'
 ]
-
-const is_font_weight = new Set(
-    weights.map((x) => Array.from(generate_responsive_cls(`font-${x}`))).flat()
-)
 
 export const FontWeight = Extension.create({
     name: 'fontWeight',
@@ -37,30 +30,8 @@ export const FontWeight = Extension.create({
                 attributes: {
                     fontWeight: {
                         default: null,
-
-                        parseHTML: elem => {
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_font_weight.has(name)) {
-                                    const direction = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        weight: direction,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-
-                        renderHTML: attrs => {
-                            return render_font_weight_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.weights),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'fontWeight')
                     },
                 },
             },
@@ -72,29 +43,27 @@ export const FontWeight = Extension.create({
             setFontWeight: (weight, breakpoint = null) => (p) => {
                 if (
                     p.tr.selection.node?.type.isText === false
-                        || this.options.weights.indexOf(weight) === -1
                 ) {
                     return null
                 }
 
-                const oldAttrs = p.editor.getAttributes('textClass').fontWeight
-                const newAttrs = {
-                    breakpoint: breakpoint,
-                    weight: weight, 
-                }
+                const oldAttrs = p.editor.getAttributes('textClass')['fontWeight']
 
-                let mark
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
 
-                if (Array.isArray(oldAttrs)) {
-                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    mark.push(newAttrs)
-                } else {
-                    mark = [newAttrs]
+                if (this.options.weights.indexOf(weight) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        tw: weight
+                    })
                 }
 
                 return p.chain().setMark(
                     'textClass', {
-                        fontWeight: mark
+                        fontWeight: attr
                     }
                 ).run()
             },

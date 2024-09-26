@@ -48,12 +48,13 @@ const weight = computed({
 
   get() { 
     const v = attrs.value.fontWeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.weight : null
+    return v !== undefined ? v.tw : null
   },
 
   set(value) { 
     return emits('select-font-weight', {
-      weight: value, breakpoint: props.breakpoint
+      weight: value, 
+      breakpoint: props.breakpoint
     })
   }
 
