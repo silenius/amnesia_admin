@@ -8,14 +8,13 @@ import {
 } from './utils'
 
 import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
-const italics = ['italic', 'not-italic']
-
-const is_font_italic = new Set(
-    italics.map((x) => Array.from(generate_responsive_cls(x))).flat()
-)
+const italics = [
+    'italic', 'not-italic'
+]
 
 export const FontItalic = Extension.create({
     name: 'fontItalic',
@@ -34,32 +33,8 @@ export const FontItalic = Extension.create({
                 attributes: {
                     fontItalic: {
                         default: null,
-
-                        parseHTML: elem => {
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_font_italic.has(name)) {
-                                    // md:not-italic, not-italic, italic,
-                                    // lg:italic, etc
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-                                    const italic = breakpoint === null ? part1 : part2
-
-                                    matches.push({
-                                        italic: italic,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-
-                        renderHTML: attrs => {
-                            return render_font_italic_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.italics),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'fontItalic')
                     },
                 },
             },
@@ -83,7 +58,7 @@ export const FontItalic = Extension.create({
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        italic: italic,
+                        tw: italic,
                     })
                 }
 

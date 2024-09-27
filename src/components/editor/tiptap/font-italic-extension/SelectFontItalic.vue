@@ -42,12 +42,13 @@ const italic = computed({
 
   get() { 
     const v = attrs.value.fontItalic?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.italic : null
+    return v !== undefined ? v.tw : null
   },
 
   set(value) { 
     return emits('select-font-italic', {
-      italic: value, breakpoint: props.breakpoint
+      italic: value, 
+      breakpoint: props.breakpoint
     })
   }
 
