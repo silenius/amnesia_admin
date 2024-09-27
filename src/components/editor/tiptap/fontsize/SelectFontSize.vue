@@ -1,9 +1,9 @@
 <template>
   <Listbox as="div" v-model="size">
-    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ size }}</ListboxButton>
+    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ size || 'none'}}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="s in sizes" :key="s" :value="s">
-        <button :class="class_opt">{{ s }}</button>
+        <button :class="class_opt">{{ s || 'none' }}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -37,7 +37,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const sizes = computed(() => props.extension.options.sizes)
+const sizes = computed(
+  () => props.extension.options.sizes.toSpliced(0, 0, undefined)
+)
 
 const attrs = computed(() => props.editor.getAttributes('textClass'))
 
@@ -45,12 +47,13 @@ const size = computed({
 
   get() { 
     const v = attrs.value.fontSize?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.size : 'none'
+    return v !== undefined ? v.tw : null
   },
 
   set(value) { 
     return emits('select-font-size', {
-      size: value, breakpoint: props.breakpoint
+      size: value, 
+      breakpoint: props.breakpoint
     })
   }
 

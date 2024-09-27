@@ -4,12 +4,13 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_font_family_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
+
+const families = [
+    'sans', 'serif', 'mono'
+]
 
 export const FontFamily = Extension.create({
     name: 'fontFamily',
@@ -17,9 +18,7 @@ export const FontFamily = Extension.create({
     addOptions() {
         return {
             types: [],
-            families: [
-                'sans', 'serif', 'mono'
-            ]
+            families: families
         }
 
     },
@@ -31,37 +30,9 @@ export const FontFamily = Extension.create({
                 attributes: {
                     fontFamily: {
                         default: null,
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.families, 'font-'),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'fontFamily')
 
-                        parseHTML: elem => {
-                            const is_font_family = new Set(
-                                this.options.families.map(
-                                    (x) => Array.from(generate_responsive_cls(`font-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_font_family.has(name)) {
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-                                    let family = breakpoint === null ? part1 : part2
-                                    family = family.replace(/^font-/, '')
-
-                                    matches.push({
-                                        family: family,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-
-                        renderHTML: attrs => {
-                            return render_font_family_attrs(attrs)
-                        },
                     },
                 },
             },
@@ -71,31 +42,26 @@ export const FontFamily = Extension.create({
     addCommands() {
         return {
             setFontFamily: (family, breakpoint = null) => (p) => {
-                if (
-                    p.tr.selection.node?.type.isText === false
-                        || this.options.families.indexOf(family) === -1
-                ) {
+                if (p.tr.selection.node?.type.isText === false) {
                     return null
                 }
 
                 const oldAttrs = p.editor.getAttributes('textClass').fontFamily
-                const newAttrs = {
-                    breakpoint: breakpoint,
-                    family: family, 
-                }
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
 
-                let mark
-
-                if (Array.isArray(oldAttrs)) {
-                    mark = oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    mark.push(newAttrs)
-                } else {
-                    mark = [newAttrs]
+                if (this.options.families.indexOf(family) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        tw: `font-${family}`
+                    })
                 }
 
                 return p.chain().setMark(
                     'textClass', {
-                        fontFamily: mark
+                        fontFamily: attr
                     }
                 ).run()
             },

@@ -309,7 +309,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint, unref(selected_type)).run()"
+            @select-align="({align, breakpoint}) => select_editor.chain().setAlign(align, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>

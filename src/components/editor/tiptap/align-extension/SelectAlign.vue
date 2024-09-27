@@ -60,7 +60,7 @@ const align = computed({
 
   set(value) { 
     return emits('select-align', {
-      direction: value === align.value ? undefined : value, 
+      align: value === align.value ? undefined : value, 
       breakpoint: props.breakpoint
     })
   }

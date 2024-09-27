@@ -19,7 +19,6 @@ export const Align = Extension.create({
         return {
             types: [],
             aligns: aligns,
-            default_direction: null,
         }
     },
 
@@ -40,7 +39,7 @@ export const Align = Extension.create({
 
     addCommands() {
         return {
-            setAlign: (direction, breakpoint=null, type=undefined) => (p) => {
+            setAlign: (align, breakpoint=null, type=undefined) => (p) => {
                 if (!type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
@@ -50,10 +49,10 @@ export const Align = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (this.options.directions.indexOf(direction) !== -1) {
+                if (this.options.aligns.indexOf(align) !== -1) {
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: direction
+                        tw: align
                     })
                 }
 
