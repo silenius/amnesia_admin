@@ -49,7 +49,7 @@ const basis = computed({
     try {
       return attrs.value.basis.find(
         (x) => x.breakpoint == props.breakpoint
-      ).basis
+      ).tw
     } catch (e) {
       return 'none'
     }

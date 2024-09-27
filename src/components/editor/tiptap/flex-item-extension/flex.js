@@ -5,12 +5,8 @@ import {
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 
 import {
-    render_basis_attrs,
-    render_flex_attrs,
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 import FlexItemNodeView from './FlexItemNodeView.vue'
@@ -18,32 +14,36 @@ import FlexItemNodeView from './FlexItemNodeView.vue'
 const tag = 'amnesia-flex-item'
 
 const basis = [
-    'auto',
+    'basis-auto',
 
-    'px',
+    'basis-px',
 
-    '0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7', '8', 
-    '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', '40', 
-    '44', '48', '52', '56', '60', '64', '72', '80', '96',
-    
-    '1/2', 
-    
-    '1/3', '2/3', 
-    
-    '1/4', '2/4', '3/4', 
-    
-    '1/5', '2/5', '3/5', '4/5', 
-    
-    '1/6', '2/6', '3/6', '4/6', '5/6', 
+    'basis-0', 'basis-0.5', 'basis-1', 'basis-1.5', 'basis-2', 'basis-2.5', 
+    'basis-3', 'basis-3.5', 'basis-4', 'basis-5', 'basis-6', 'basis-7', 
+    'basis-8', 'basis-9', 'basis-10', 'basis-11', 'basis-12', 'basis-14', 
+    'basis-16', 'basis-20', 'basis-24', 'basis-28', 'basis-32', 'basis-36', 
+    'basis-40', 'basis-44', 'basis-48', 'basis-52', 'basis-56', 'basis-60', 
+    'basis-64', 'basis-72', 'basis-80', 'basis-96',
 
-    '1/12', '2/12', '3/12', '4/12', '5/12', '6/12', '7/12', '8/12', '9/12', 
-    '10/12', '11/12',
+    'basis-1/2', 
 
-    'full'
+    'basis-1/3', 'basis-2/3', 
+
+    'basis-1/4', 'basis-2/4', 'basis-3/4', 
+
+    'basis-1/5', 'basis-2/5', 'basis-3/5', 'basis-4/5', 
+
+    'basis-1/6', 'basis-2/6', 'basis-3/6', 'basis-4/6', 'basis-5/6', 
+
+    'basis-1/12', 'basis-2/12', 'basis-3/12', 'basis-4/12', 'basis-5/12', 
+    'basis-6/12', 'basis-7/12', 'basis-8/12', 'basis-9/12', 'basis-10/12', 
+    'basis-11/12',
+
+    'basis-full'
 ]
 
 const flexs = [
-    '1', 'auto', 'initial', 'none'
+    'flex-1', 'flex-auto', 'flex-initial', 'flex-none'
 ]
 
 export const FlexItem = Node.create({
@@ -67,69 +67,14 @@ export const FlexItem = Node.create({
         return {
             basis: {
                 default: null,
-                parseHTML: elem => {
-                    const is_basis = new Set(
-                        this.options.basis.map(
-                            (x) => Array.from(generate_responsive_cls(`basis-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_basis.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const basis = result.slice(1).join('-')
-
-                            matches.push({
-                                basis: direction,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-
-                },
-
-                renderHTML: attrs => {
-                    return render_basis_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.basis),
+                renderHTML: attrs => render_tw_attrs(attrs, 'basis')
             },
 
             flex: {
                 default: null,
-                parseHTML: elem => {
-                    const is_flex = new Set(
-                        this.options.flexs.map(
-                            (x) => Array.from(generate_responsive_cls(`flex-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_flex.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const flex = result.slice(1).join('-')
-
-                            matches.push({
-                                flex: flex,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-                },
-
-                renderHTML: attrs => {
-                    return render_flex_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.flexs),
+                renderHTML: attrs => render_tw_attrs(attrs, 'flex')
             },
 
         }
@@ -179,7 +124,7 @@ export const FlexItem = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        basis: basis,
+                        tw: basis,
                     })
                 }
 
@@ -199,7 +144,7 @@ export const FlexItem = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        flex: flex,
+                        tw: flex,
                     })
                 }
 

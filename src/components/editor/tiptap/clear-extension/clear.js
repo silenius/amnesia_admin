@@ -39,7 +39,7 @@ export const Clear = Extension.create({
 
     addCommands() {
         return {
-            setClear: (clear, breakpoint = null) => (p) => {
+            setClear: (clear, breakpoint=null, type=undefined) => (p) => {
                 if (!type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
