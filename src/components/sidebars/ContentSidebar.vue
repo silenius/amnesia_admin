@@ -262,9 +262,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-float="({float, breakpoint}) =>
-              select_editor.chain().setFloat(float, breakpoint,
-              unref(selected_type)).run()"
+            @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
