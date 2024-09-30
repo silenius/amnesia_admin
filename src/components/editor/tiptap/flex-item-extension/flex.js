@@ -46,6 +46,14 @@ const flexs = [
     'flex-1', 'flex-auto', 'flex-initial', 'flex-none'
 ]
 
+const grows = [
+    'grow', 'grow-0'
+]
+
+const shrinks = [
+    'shrink', 'shrink-0'
+]
+
 export const FlexItem = Node.create({
     name: 'flexItem',
     content: 'block*',
@@ -59,6 +67,8 @@ export const FlexItem = Node.create({
             types: [],
             basis: basis,
             flexs: flexs,
+            grows: grows,
+            shrinks: shrinks,
             HTMLAttributes: {}
         }
     },
@@ -77,6 +87,17 @@ export const FlexItem = Node.create({
                 renderHTML: attrs => render_tw_attrs(attrs, 'flex')
             },
 
+            grow: {
+                default: null,
+                parseHTML: elem => extract_tw_attrs(elem, this.options.grows),
+                renderHTML: attrs => render_tw_attrs(attrs, 'grow')
+            },
+            
+            shrink: {
+                default: null,
+                parseHTML: elem => extract_tw_attrs(elem, this.options.shrinks),
+                renderHTML: attrs => render_tw_attrs(attrs, 'shrink')
+            },
         }
     },
 
@@ -150,6 +171,46 @@ export const FlexItem = Node.create({
 
                 return p.commands.updateAttributes(
                     type, { flex: attr }
+                )
+            },
+
+            setFlexGrow: (grow, breakpoint = null) => (p) => {
+                const type = 'flexItem'
+                const oldAttrs = p.editor.getAttributes(type)['grow']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.grows.indexOf(grow) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        tw: grow,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { grow: attr }
+                )
+            },
+
+            setFlexShrink: (shrink, breakpoint = null) => (p) => {
+                const type = 'flexItem'
+                const oldAttrs = p.editor.getAttributes(type)['shrink']
+                const attr = Array.isArray(oldAttrs)
+                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (this.options.shrinks.indexOf(shrink) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        tw: shrink,
+                    })
+                }
+
+                return p.commands.updateAttributes(
+                    type, { shrink: attr }
                 )
             },
 

@@ -143,6 +143,29 @@
             </div>
 
             <div class="flex flex-col">
+              <span>Grow</span>
+              <SelectGrow
+                :breakpoint="breakpoint"
+                :extension="ext_flex_item" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-grow="({grow, breakpoint}) => select_editor.chain().setFlexGrow(grow, breakpoint).run()"
+              />
+            </div>
+
+            <div class="flex flex-col">
+              <span>Shrink</span>
+              <SelectShrink
+                :breakpoint="breakpoint"
+                :extension="ext_flex_item" 
+                :transaction="select_transaction"
+                :editor="select_editor"
+                @select-shrink="({shrink, breakpoint}) => select_editor.chain().setFlexShrink(shrink, breakpoint).run()"
+              />
+            </div>
+
+
+            <div class="flex flex-col">
               <span>Flex</span>
               <SelectFlexGrowShrink
                 class="w-full"
@@ -567,6 +590,8 @@ import SelectAlignItems from '@/components/editor/tiptap/flex-container-extensio
 import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
 import SelectBasis from '@/components/editor/tiptap/flex-item-extension/SelectBasis.vue'
 import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension/SelectFlexGrowShrink.vue'
+import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGrow.vue'
+import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
 const { getEditor, editors } = useEditorStore()
