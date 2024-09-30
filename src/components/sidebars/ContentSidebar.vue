@@ -613,7 +613,6 @@ const selection_has_text = ref(false)
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
-    console.log('EDITOR ---> ', select_editor.value)
 
     if (!select_editor.value) {
       return false
@@ -621,8 +620,6 @@ watch(editors, () => {
 
     select_editor.value.on('selectionUpdate', ({ editor }) => {
       const selection = editor.state.selection
-
-      console.log('UPDATE : ', editor)
 
       // Does the selection contains text?
       if (editor.state.doc.textBetween(selection.from, selection.to)) {
@@ -648,8 +645,6 @@ watch(editors, () => {
         selected_type.value = path_types.slice(-1).pop()
       }
 
-
-      console.log(path_types)
     })
 
   }
