@@ -76,24 +76,29 @@ const emits = defineEmits([
 
 const opts = [
   {
+    name: 'none',
+    desc: 'Remove',
+    value: null
+  },
+  {
     name: 'flex-initial',
     desc: 'Use flex-initial to allow a flex item to shrink but not grow, taking into account its initial size',
-    value: 'initial'
+    value: 'flex-initial'
   },
   {
     name: 'flex-1',
     desc: 'Use flex-1 to allow a flex item to grow and shrink as needed, ignoring its initial size',
-    value: '1'
+    value: 'flex-1'
   },
   {
     name: 'flex-auto',
     desc: 'Use flex-auto to allow a flex item to grow and shrink, taking into account its initial size',
-    value: 'auto'
+    value: 'flex-auto'
   },
   {
     name: 'flex-none',
     desc: 'Use flex-none to prevent a flex item from growing or shrinking',
-    value: 'none'
+    value: 'flex-none'
   },
 ]
 
@@ -105,7 +110,7 @@ const flex = computed({
     try {
       return attrs.value.flex.find(
         (x) => x.breakpoint == props.breakpoint
-      ).flex
+      ).tw
     } catch (e) {
       return 'none'
     }

@@ -5,7 +5,7 @@
     </ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in weights" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+        <button :class="class_opt">{{ w || 'none' }}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -40,7 +40,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const weights = computed(() => props.extension.options.weights)
+const weights = computed(
+  () => props.extension.options.weights.toSpliced(0, 0, undefined)
+)
 
 const attrs = computed(() => props.editor.getAttributes('textClass'))
 
@@ -61,6 +63,5 @@ const weight = computed({
 })
 
 const img_cls = computed(() => ['w-8', 'h-8', 'rounded-md', 'bg-slate-100', 'p-1', 'hover:bg-white', 'hover:p-0.5', weight.value ? 'outline-offset-2 outline outline-2 outline-pink-700' : ''])
-
 
 </script>

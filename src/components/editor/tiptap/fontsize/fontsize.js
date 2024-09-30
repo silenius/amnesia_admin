@@ -4,21 +4,15 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_font_size_attrs 
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const sizes = [
-    'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl', 
-    '8xl', '9xl'
+    'text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 
+    'text-3xl', 'text-4xl', 'text-5xl', 'text-6xl', 'text-7xl', 'text-8xl',
+    'text-9xl'
 ]
-
-const is_font_size = new Set(
-    sizes.map((x) => Array.from(generate_responsive_cls(`text-${x}`))).flat()
-)
 
 export const FontSize = Extension.create({
     name: 'fontSize',
@@ -37,30 +31,8 @@ export const FontSize = Extension.create({
                 attributes: {
                     fontSize: {
                         default: null,
-
-                        parseHTML: elem => {
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_font_size.has(name)) {
-                                    const size = name.split('-').pop()
-                                    const [part1, part2] = name.split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-
-                                    matches.push({
-                                        size: size,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-
-                        },
-
-                        renderHTML: attrs => {
-                            return render_font_size_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.sizes),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'fontSize')
                     }
                 }
             }
@@ -70,10 +42,7 @@ export const FontSize = Extension.create({
     addCommands() {
         return {
             setFontSize: (size, breakpoint = null) => (p) => {
-                if (
-                    p.tr.selection.node?.type.isText === false
-                        || this.options.sizes.indexOf(size) === -1
-                ) {
+                if (p.tr.selection.node?.type.isText === false) {
                     return null
                 }
 
@@ -82,11 +51,11 @@ export const FontSize = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (size !== 'undefined') {
+                if (this.options.sizes.indexOf(size) !== -1) {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,
-                        size: size
+                        tw: size
                     })
                 }
 
@@ -95,8 +64,7 @@ export const FontSize = Extension.create({
                         fontSize: mark
                     }
                 ).run()
-
-            },
+            }
         }
     },
 })

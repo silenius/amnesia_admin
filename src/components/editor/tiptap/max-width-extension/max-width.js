@@ -64,7 +64,7 @@ export const MaxWidth = Extension.create({
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (this.options.maxWidths.indexOf(width) !== -1) {
+                if (this.options.maxWidths.indexOf(maxWidth) !== -1) {
                     // New value
                     mark.push({
                         breakpoint: breakpoint,

@@ -262,7 +262,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint).run()"
+            @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -285,7 +285,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-clear="({clear, breakpoint}) => select_editor.chain().setClear(clear, breakpoint).run()"
+            @select-clear="({clear, breakpoint}) => select_editor.chain().setClear(clear, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -309,7 +309,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-align="({direction, breakpoint}) => select_editor.chain().setAlign(direction, breakpoint, unref(selected_type)).run()"
+            @select-align="({align, breakpoint}) => select_editor.chain().setAlign(align, breakpoint, unref(selected_type)).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -338,7 +338,7 @@ Fix width to the current breakpoint.
               :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-width="({width, breakpoint, raw}) => select_editor.chain().setWidth(width, breakpoint, raw, unref(selected_type)).run()"
+              @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint, unref(selected_type)).run()"
             />
 
             <SelectHeight
@@ -348,7 +348,7 @@ Fix width to the current breakpoint.
               :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
-              @select-height="({height, breakpoint, raw}) => select_editor.chain().setHeight(height, breakpoint, raw, unref(selected_type)).run()"
+              @select-height="({height, breakpoint}) => select_editor.chain().setHeight(height, breakpoint, unref(selected_type)).run()"
             />
 
             <span>Min. Width</span>
@@ -382,6 +382,7 @@ Fix width to the current breakpoint.
               v-if="ext_max_width" 
               :breakpoint="breakpoint"
               :extension="ext_max_width" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
               @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint, unref(selected_type)).run()"
@@ -391,6 +392,7 @@ Fix width to the current breakpoint.
               v-if="ext_max_height" 
               :breakpoint="breakpoint"
               :extension="ext_max_height" 
+              :type="selected_type"
               :transaction="select_transaction"
               :editor="select_editor"
               @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint, unref(selected_type)).run()"

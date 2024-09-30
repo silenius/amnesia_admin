@@ -41,14 +41,11 @@ export const FontWeight = Extension.create({
     addCommands() {
         return {
             setFontWeight: (weight, breakpoint = null) => (p) => {
-                if (
-                    p.tr.selection.node?.type.isText === false
-                ) {
+                if (p.tr.selection.node?.type.isText === false) {
                     return null
                 }
 
                 const oldAttrs = p.editor.getAttributes('textClass')['fontWeight']
-
                 const attr = Array.isArray(oldAttrs)
                     ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
