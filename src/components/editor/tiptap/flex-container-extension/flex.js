@@ -12,7 +12,8 @@ import {
 } from './utils'
 
 import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
@@ -22,25 +23,27 @@ import Flex from './Flex.vue'
 const tag = 'amnesia-flex-container'
 
 const directions = [
-    'row', 'row-reverse', 'col', 'col-reverse'
+    'flex-row', 'flex-row-reverse', 'flex-col', 'flex-col-reverse'
 ]
 
 const wraps = [
-    'nowrap', 'wrap', 'wrap-reverse'
+    'flex-nowrap', 'flex-wrap', 'flex-wrap-reverse'
 ]
 
 const justify_contents = [
-    'normal', 'start', 'end', 'center', 'between', 
-    'around', 'evenly', 'stretch'
+    'justify-normal', 'justify-start', 'justify-end', 'justify-center', 
+    'justify-between', 'justify-around', 'justify-evenly', 'justify-stretch'
 ]
 
 const align_items = [
-    'start', 'end', 'center', 'baseline', 'stretch'
+    'items-start', 'items-end', 'items-center', 'items-baseline', 
+    'items-stretch'
 ]
 
 const align_contents = [
-    'normal', 'start', 'end', 'center', 'between', 
-    'around', 'evenly', 'baseline', 'stretch'
+    'content-normal', 'content-start', 'content-end', 'content-center', 
+    'content-between', 'content-around', 'content-evenly', 'content-baseline',
+    'content-stretch'
 ]
 
 export const FlexContainer = Node.create({
@@ -67,172 +70,33 @@ export const FlexContainer = Node.create({
         return {
             direction: {
                 default: null,
-                parseHTML: elem => {
-                    const is_direction = new Set(
-                        this.options.directions.map(
-                            (x) => Array.from(generate_responsive_cls(`flex-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_direction.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const direction = result.slice(1).join('-')
-
-                            matches.push({
-                                direction: direction,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-
-                },
-
-                renderHTML: attrs => {
-                    return render_direction_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.directions),
+                renderHTML: attrs => render_tw_attrs(attrs, 'direction')
             },
 
             wrap: {
                 default: null,
-                parseHTML: elem => {
-                    const is_wrap = new Set(
-                        this.options.wraps.map(
-                            (x) => Array.from(generate_responsive_cls(`flex-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_wrap.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const wrap = result.slice(1).join('-')
-
-                            matches.push({
-                                wrap: wrap,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-
-                },
-
-                renderHTML: attrs => {
-                    return render_wrap_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.wraps),
+                renderHTML: attrs => render_tw_attrs(attrs, 'wrap')
             },
 
             justify_content: {
                 default: null,
-                parseHTML: elem => {
-                    const is_justify = new Set(
-                        this.options.justify_contents.map(
-                            (x) => Array.from(generate_responsive_cls(`justify-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_justify.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const justify = result.slice(1).join('-')
-
-                            matches.push({
-                                justify_content: justify,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-                },
-
-                renderHTML: attrs => {
-                    return render_justify_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.justify_contents),
+                renderHTML: attrs => render_tw_attrs(attrs, 'justify_content')
             },
 
             align_items: {
                 default: null,
-                parseHTML: elem => {
-                    const is_align = new Set(
-                        this.options.align_items.map(
-                            (x) => Array.from(generate_responsive_cls(`items-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_align.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const align = result.slice(1).join('-')
-
-                            matches.push({
-                                align_items: align,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-                },
-
-                renderHTML: attrs => {
-                    return render_align_items_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.align_items),
+                renderHTML: attrs => render_tw_attrs(attrs, 'align_items')
             },
 
             align_content: {
                 default: null,
-                parseHTML: elem => {
-                    const is_align = new Set(
-                        this.options.align_contents.map(
-                            (x) => Array.from(generate_responsive_cls(`content-${x}`))
-                        ).flat()
-                    )
-
-                    const matches = []
-
-                    for (const name of elem.classList) {
-                        if (is_align.has(name)) {
-                            const result = name.split('-')
-                            const [part1, part2] = result[0].split(':')
-                            const breakpoint = part2 !== undefined ? part1 : null
-                            const align = result.slice(1).join('-')
-
-                            matches.push({
-                                align_content: align,
-                                breakpoint: breakpoint
-                            })
-                        }
-                    }
-
-                    return matches.length ? matches : null
-                },
-
-                renderHTML: attrs => {
-                    return render_align_content_attrs(attrs)
-                }
+                parseHTML: elem => extract_tw_attrs(elem, this.options.align_contents),
+                renderHTML: attrs => render_tw_attrs(attrs, 'align_content')
             },
-
-
 
         }
     },
@@ -286,7 +150,7 @@ export const FlexContainer = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        direction: direction,
+                        tw: direction,
                     })
                 }
 
@@ -305,7 +169,7 @@ export const FlexContainer = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        wrap: wrap,
+                        tw: wrap,
                     })
                 }
 
@@ -324,7 +188,7 @@ export const FlexContainer = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        justify_content: justify,
+                        tw: justify,
                     })
                 }
 
@@ -343,7 +207,7 @@ export const FlexContainer = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        align_items: align,
+                        tw: align,
                     })
                 }
 
@@ -362,7 +226,7 @@ export const FlexContainer = Node.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        align_content: align,
+                        tw: align,
                     })
                 }
 
