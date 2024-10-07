@@ -7,7 +7,7 @@ export const TipTapCommands = Extension.create({
     name: 'tiptapCommands',
     addCommands() {
         return {
-            _updateAttributes: (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
+            updateAttributesLast: (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
                 let nodeType = null
                 let markType = null
 
@@ -28,11 +28,53 @@ export const TipTapCommands = Extension.create({
                     markType = getMarkType(typeOrName, state.schema)
                 }
 
+                console.log("STATE: ", state)
+  if (dispatch) {
+    tr.selection.ranges.forEach(range => {
+      const from = range.$from.pos
+      const to = range.$to.pos
+
+   console.log(from, to) 
+
+      state.doc.nodesBetween(from, to, (node, pos) => {
+        console.log(node, pos)
+        if (nodeType && nodeType === node.type) {
+          tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            ...attributes,
+          })
+        }
+
+        if (markType && node.marks.length) {
+          node.marks.forEach(mark => {
+            if (markType === mark.type) {
+              const trimmedFrom = Math.max(pos, from)
+              const trimmedTo = Math.min(pos + node.nodeSize, to)
+
+              tr.addMark(
+                trimmedFrom,
+                trimmedTo,
+                markType.create({
+                  ...mark.attrs,
+                  ...attributes,
+                }),
+              )
+            }
+          })
+        }
+      })
+    })
+  }
+
+/*
+
                 if (dispatch) {
                     let lastPos
                     let lastNode
                     let trimmedFrom
                     let trimmedTo
+
+                    console.log(tr)
 
                     tr.selection.ranges.forEach(range => {
                         const from = range.$from.pos
@@ -73,7 +115,7 @@ export const TipTapCommands = Extension.create({
                         }
                     }
                 }
-
+*/
                 return true
             }
         }

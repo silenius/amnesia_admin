@@ -154,7 +154,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands.updateAttributesLast(
                     this.name, { direction: attr }
                 )
             },
@@ -173,7 +173,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands.updateAttributesLast(
                     this.name, { wrap: attr }
                 )
             },
@@ -192,7 +192,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands.updateAttributesLast(
                     this.name, { justify_content: attr }
                 )
             },
@@ -211,7 +211,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands.updateAttributesLast(
                     this.name, { align_items: attr }
                 )
             },
@@ -230,7 +230,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands.updateAttributesLast(
                     this.name, { align_content: attr }
                 )
             },

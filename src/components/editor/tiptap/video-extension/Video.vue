@@ -1,6 +1,6 @@
 <template>
   <node-view-wrapper 
-    :class="[width_cls, height_cls, float_cls, margin_cls]"
+    :class="wrapper_cls"
   >
     <div v-if="src" :class="[align_cls, bg_color_cls, padding_cls]" class="block w-min" draggable>
       <span v-if="editable" data-drag-handle class="rounded
@@ -38,6 +38,7 @@ import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
 import { render_padding_attrs } from '../padding/utils'
 import { render_margin_attrs } from '../margin/utils'
+import { render_tw_attrs } from '../utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
 const props = defineProps(nodeViewProps)
@@ -67,6 +68,25 @@ const src = computed(() => {
     return opts.size > 0 ? `${url}?${opts.toString()}` : url
   }
 
+})
+
+const wrapper_cls = computed(() => {
+  const classes = []
+  const attrs = [
+    'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'width', 'maxWidth', 'minWidth',
+    'height', 'maxHeight', 'minHeight', 'float', 'clear'
+  ]
+
+  for (const attr of attrs) {
+    const cls = render_tw_attrs(props.node.attrs, attr)?.class
+
+    if (cls) {
+      classes.push(cls)
+    }
+    
+  }
+
+  return classes
 })
 
 /*
@@ -100,29 +120,23 @@ const iframe_cls = computed(() => ({
     editable.value,
 }))
 
-const margin_cls = computed(() => {
-  const margins = []
+const align_cls = computed(() => {
+  const classes = []
 
-  for (const margin of ['mx', 'my', 'mt', 'mr', 'mb', 'ml']) {
-    const cls = render_margin_attrs(props.node.attrs, margin)?.class
-
-    if (cls) {
-      margins.push(cls)
-    }
+  const aligns = {
+      'text-left': 'mr-auto',
+      'text-right': 'ml-auto',
+      'text-center': 'mx-auto'
   }
 
-  return margins
-})
+  const cls = aligns[render_tw_attrs(props.node.attrs, 'align')?.class]
 
-const float_cls = computed(() => { 
-  const cls = render_float_attrs(props.node.attrs)
-  return cls ? Object.values(cls) : []
-})
+  if (cls) {
+    classes.push(cls)
+  }
 
+  return classes
 
-const width_cls = computed(() => {
-  const cls = render_width_attrs(props.node.attrs)
-  return cls ? Object.values(cls) : []
 })
 
 const width_attr = computed(() => {
@@ -130,26 +144,8 @@ const width_attr = computed(() => {
   return isNaN(v) ? null : v
 })
 
-const height_cls = computed(() => {
-  const cls = render_height_attrs(props.node.attrs)
-  return cls ? Object.values(cls) : []
-})
-
-const align_cls = computed(() => {
-  if (Array.isArray(props.node.attrs.align)) {
-    const maps = {
-      left: 'mr-auto',
-      right: 'ml-auto',
-      center: 'mx-auto'
-    }
-    return props.node.attrs.align.map((x) => [!x.breakpoint ? `${maps[x.direction]}` :
-      `${x.breakpoint}:${maps[x.direction]}`].filter(Boolean).join('-')).join(' ')
-  }
-})
-
 const height_attr = computed(() => {
   const v = parseFloat(props.node.attrs.height)
   return isNaN(v) ? null : v
 })
-
 </script>
