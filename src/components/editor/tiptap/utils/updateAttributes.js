@@ -28,45 +28,64 @@ export const TipTapCommands = Extension.create({
                     markType = getMarkType(typeOrName, state.schema)
                 }
 
+                console.log('nodeType: ', nodeType)
+                console.log('markType: ', markType)
+
                 console.log("STATE: ", state)
-  if (dispatch) {
-    tr.selection.ranges.forEach(range => {
-      const from = range.$from.pos
-      const to = range.$to.pos
+                if (dispatch) {
+                    console.log('SELECTION EMPTY ? ', tr.selection.empty)
 
-   console.log(from, to) 
+                    if (tr.selection.empty && nodeType) {
+                        const pos = this.editor.$pos(tr.selection.anchor) 
+                        const node = pos.closest(nodeType.name)
 
-      state.doc.nodesBetween(from, to, (node, pos) => {
-        console.log(node, pos)
-        if (nodeType && nodeType === node.type) {
-          tr.setNodeMarkup(pos, undefined, {
-            ...node.attrs,
-            ...attributes,
-          })
-        }
+                        console.log('POS: ', pos)
+                        console.log('NODE: ', node)
+                        console.log('ATTRIBUTES: ', attributes)
 
-        if (markType && node.marks.length) {
-          node.marks.forEach(mark => {
-            if (markType === mark.type) {
-              const trimmedFrom = Math.max(pos, from)
-              const trimmedTo = Math.min(pos + node.nodeSize, to)
+                        tr.setNodeMarkup(node.pos-1, null, {
+                            ...node.node.attrs,
+                            ...attributes,
+                        })
+                    } else {
+                        tr.selection.ranges.forEach(range => {
+                            const from = range.$from.pos
+                            const to = range.$to.pos
 
-              tr.addMark(
-                trimmedFrom,
-                trimmedTo,
-                markType.create({
-                  ...mark.attrs,
-                  ...attributes,
-                }),
-              )
-            }
-          })
-        }
-      })
-    })
-  }
+                            console.log('FROM: ', from, ' TO: ', to) 
 
-/*
+                            state.doc.nodesBetween(from, to, (node, pos) => {
+                                console.log('NODE ', node, ' POS: ', pos)
+                                if (nodeType && nodeType === node.type) {
+                                    tr.setNodeMarkup(pos, undefined, {
+                                        ...node.attrs,
+                                        ...attributes,
+                                    })
+                                }
+
+                                if (markType && node.marks.length) {
+                                    node.marks.forEach(mark => {
+                                        if (markType === mark.type) {
+                                            const trimmedFrom = Math.max(pos, from)
+                                            const trimmedTo = Math.min(pos + node.nodeSize, to)
+
+                                            tr.addMark(
+                                                trimmedFrom,
+                                                trimmedTo,
+                                                markType.create({
+                                                    ...mark.attrs,
+                                                    ...attributes,
+                                                }),
+                                            )
+                                        }
+                                    })
+                                }
+                            })
+                        })
+                    }
+                }
+
+                /*
 
                 if (dispatch) {
                     let lastPos

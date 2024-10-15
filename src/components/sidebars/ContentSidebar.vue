@@ -666,7 +666,7 @@ watch(editors, () => {
         path_types.push(selection.node.type.name)
       }
 
-      active_types.value = path_types
+      active_types.value = [...new Set(path_types)]
 
       if (!selected_type.value || (selected_type.value && path_types.indexOf(selected_type.value) === -1)) {
         selected_type.value = path_types.slice(-1).pop()
