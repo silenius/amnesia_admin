@@ -149,7 +149,7 @@ export const FlexItem = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { basis: attr }
                 )
             },
@@ -169,7 +169,7 @@ export const FlexItem = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { flex: attr }
                 )
             },
@@ -189,7 +189,7 @@ export const FlexItem = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { grow: attr }
                 )
             },
@@ -209,7 +209,7 @@ export const FlexItem = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { shrink: attr }
                 )
             },

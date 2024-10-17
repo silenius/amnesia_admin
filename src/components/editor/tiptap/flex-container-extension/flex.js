@@ -134,7 +134,7 @@ export const FlexContainer = Node.create({
                                                [attr, value]]))
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     this.name, Oject.fromEntries([[attr, v]])
                 )
             },
@@ -154,7 +154,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributesLast(
+                return p.commands._updateAttributes(
                     this.name, { direction: attr }
                 )
             },
@@ -173,7 +173,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributesLast(
+                return p.commands._updateAttributes(
                     this.name, { wrap: attr }
                 )
             },
@@ -192,7 +192,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributesLast(
+                return p.commands._updateAttributes(
                     this.name, { justify_content: attr }
                 )
             },
@@ -211,7 +211,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributesLast(
+                return p.commands._updateAttributes(
                     this.name, { align_items: attr }
                 )
             },
@@ -230,7 +230,7 @@ export const FlexContainer = Node.create({
                     })
                 }
 
-                return p.commands.updateAttributesLast(
+                return p.commands._updateAttributes(
                     this.name, { align_content: attr }
                 )
             },
@@ -243,10 +243,7 @@ export const FlexContainer = Node.create({
         return {
             Enter: ({ editor }) => {
                 const selection = editor.state.selection
-                console.log('EDI: ', editor)
-                console.log('SEL: ', selection)
-
-                console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
+                //console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
 
                 if (editor.isActive('flexContainer')) {
                     if (selection.$cursor !== null && 
