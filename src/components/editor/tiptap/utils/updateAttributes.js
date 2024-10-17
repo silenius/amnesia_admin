@@ -28,39 +28,31 @@ export const TipTapCommands = Extension.create({
                     markType = getMarkType(typeOrName, state.schema)
                 }
 
-                console.log('nodeType: ', nodeType)
-                console.log('markType: ', markType)
-
-                console.log("STATE: ", state)
+                console.log('SELECTION: ', tr.selection)
                 if (dispatch) {
-                    console.log('SELECTION EMPTY ? ', tr.selection.empty)
-
                     if (tr.selection.empty && nodeType) {
-                        const pos = this.editor.$pos(tr.selection.anchor) 
-                        const node = pos.closest(nodeType.name)
+                        const node = tr.selection.$anchor?.closest(nodeType.name) 
 
-                        console.log('POS: ', pos)
-                        console.log('NODE: ', node)
-                        console.log('ATTRIBUTES: ', attributes)
-
-                        tr.setNodeMarkup(node.pos-1, null, {
-                            ...node.node.attrs,
-                            ...attributes,
-                        })
+                        if (node) {
+                            tr.setNodeMarkup(node.pos-1, null, {
+                                ...node.node.attrs,
+                                ...attributes,
+                            })
+                        }
                     } else {
                         tr.selection.ranges.forEach(range => {
                             const from = range.$from.pos
                             const to = range.$to.pos
 
-                            console.log('FROM: ', from, ' TO: ', to) 
-
                             state.doc.nodesBetween(from, to, (node, pos) => {
-                                console.log('NODE ', node, ' POS: ', pos)
-                                if (nodeType && nodeType === node.type) {
+                                if (nodeType && nodeType === node.type && pos > from && pos < to) {
+                                    console.log('==> MATCH ', node, ' POS: ', pos)
                                     tr.setNodeMarkup(pos, undefined, {
                                         ...node.attrs,
                                         ...attributes,
                                     })
+                                } else {
+                                    console.log('NOT MATCH ', node, ' POS: ', pos)
                                 }
 
                                 if (markType && node.marks.length) {
