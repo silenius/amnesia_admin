@@ -117,7 +117,7 @@ export const BackgroundColor = Extension.create({
                 }
 
                 if (p.state.selection.empty || p.state.selection.node) {
-                    return p.commands.updateAttributes(
+                    return p.commands._updateAttributes(
                         type, { backgroundColor: mark }
                     )
                 } else {

@@ -72,7 +72,7 @@ export const MaxWidth = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { maxWidth: mark }
                 )
             },

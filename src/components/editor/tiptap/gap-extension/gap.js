@@ -127,7 +127,7 @@ export const Gap = Extension.create({
                 console.log(attr)
                 console.log(Object.fromEntries([[`${side}`, attr ]]))
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, Object.fromEntries([[`${side}`, attr ]])
                 )
             },

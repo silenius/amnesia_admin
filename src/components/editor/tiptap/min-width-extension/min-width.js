@@ -64,7 +64,7 @@ export const MinWidth = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { minWidth: attr }
                 )
             },

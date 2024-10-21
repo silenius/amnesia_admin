@@ -56,8 +56,7 @@ export const Align = Extension.create({
                     })
                 }
 
-
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { align: attr }
                 )
             },

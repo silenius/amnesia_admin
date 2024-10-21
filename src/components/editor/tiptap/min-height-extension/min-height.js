@@ -65,7 +65,7 @@ export const MinHeight = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { minHeight: attr }
                 )
             },

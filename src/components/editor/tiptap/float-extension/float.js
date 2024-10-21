@@ -58,7 +58,7 @@ export const Float = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { float: attr }
                 )
  
@@ -66,7 +66,7 @@ export const Float = Extension.create({
                 /*
                 switch (ext.type) {
                     case 'node':
-                        return p.commands.updateAttributes(
+                        return p.commands._updateAttributes(
                             type, { float: attr }
                         )
                         break

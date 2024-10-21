@@ -88,7 +88,7 @@ export const Margin = Extension.create({
                 }
 
                 if (p.state.selection.empty || p.state.selection.node) {
-                    return p.chain().updateAttributes(
+                    return p.chain()._updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])
                     ).setNodeSelection(
                         p.state.selection.anchor

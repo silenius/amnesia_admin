@@ -57,7 +57,7 @@ export const Clear = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { clear: attr }
                 )
             },

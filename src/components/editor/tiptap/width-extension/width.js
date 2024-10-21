@@ -90,7 +90,7 @@ export const Width = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { width: attr }
                 )
             },

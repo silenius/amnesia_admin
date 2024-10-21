@@ -50,14 +50,14 @@ export const TipTapCommands = Extension.create({
                             })
                         } else {
                             state.doc.nodesBetween(from, to, (node, pos) => {
-                                
+
                                 if (pos < from && nodeType && nodeType === node.type) {
                                     trimmedFrom = Math.max(pos, from)
                                     trimmedTo = Math.min(pos + node.nodeSize, to)
                                     lastPos = pos
                                     lastNode = node
                                 }
-                                
+
                                 if (pos >= from && pos <= to) {
 
                                     if (nodeType && nodeType === node.type) {
@@ -69,7 +69,7 @@ export const TipTapCommands = Extension.create({
 
                                     if (markType && node.marks.length) {
                                         node.marks.forEach(mark => {
-                                            
+
                                             if (markType === mark.type) {
                                                 const trimmedFrom2 = Math.max(pos, from)
                                                 const trimmedTo2 = Math.min(pos + node.nodeSize, to)

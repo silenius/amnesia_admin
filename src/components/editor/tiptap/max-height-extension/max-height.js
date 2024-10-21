@@ -67,7 +67,7 @@ export const MaxHeight = Extension.create({
                     })
                 }
 
-                return p.commands.updateAttributes(
+                return p.commands._updateAttributes(
                     type, { maxHeight: mark }
                 )
             },
