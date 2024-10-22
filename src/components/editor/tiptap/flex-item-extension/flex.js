@@ -112,12 +112,6 @@ export const FlexItem = Node.create({
             {
                 tag: 'section.flex > div',
             }
-            /*
-            {
-                style: 'display',
-                getAttrs: value => (value == 'flex' || value == 'inline-flex') && null
-            }
-            */
         ]
 
     },

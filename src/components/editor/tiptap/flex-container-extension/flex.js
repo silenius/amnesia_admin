@@ -4,14 +4,6 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_direction_attrs,
-    render_wrap_attrs,
-    render_justify_attrs,
-    render_align_items_attrs,
-    render_align_content_attrs,
-} from './utils'
-
-import {
     extract_tw_attrs,
     render_tw_attrs
 } from '../utils'

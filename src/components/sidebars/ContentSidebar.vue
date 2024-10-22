@@ -185,13 +185,14 @@
     <!-- NODE -->
 
     <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.length > 1">
-      <div class="grid grid-cols-2 gap-2">
+        <div class="flex gap-2 flex-wrap">
         <button @click="selected_type = t" v-for="t in active_types"
           type="button" 
           :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
-          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700">{{ t }}</button>
-      </div>
+          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
+          dark:hover:bg-red-700">{{ t[0] }} ({{ t[1] }})</button>
+        </div>
     </section>
 
 
@@ -645,8 +646,25 @@ watch(editors, () => {
       return false
     }
 
-    select_editor.value.on('selectionUpdate', ({ editor }) => {
+    select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
       const selection = editor.state.selection
+      const path_types = []
+
+      console.log(transaction)
+
+      transaction.selection.ranges.forEach(range => {
+        console.log(range)
+        const from = range.$from.pos
+        const to = range.$to.pos
+
+        editor.state.doc.nodesBetween(from, to, (node, pos) => {
+          console.log('NODE : ', node.type.name, 'POS : ', pos)
+          path_types.push([node.type.name, pos])
+        })
+
+      })
+
+      active_types.value = path_types
 
       // Does the selection contains text?
       if (editor.state.doc.textBetween(selection.from, selection.to)) {
@@ -655,6 +673,7 @@ watch(editors, () => {
         selection_has_text.value = false
       }
 
+      /*
       const pos = selection.$cursor ? selection.$cursor : selection.$head
       const path_types = pos.path.filter(
         (x) => typeof(x) === 'object' && select_editor.value.isActive(x.type.name)
@@ -667,6 +686,8 @@ watch(editors, () => {
       }
 
       active_types.value = [...new Set(path_types)]
+
+      */
 
       if (!selected_type.value || (selected_type.value && path_types.indexOf(selected_type.value) === -1)) {
         selected_type.value = path_types.slice(-1).pop()
