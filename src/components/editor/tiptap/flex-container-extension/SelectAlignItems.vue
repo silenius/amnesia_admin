@@ -49,7 +49,7 @@ const align_item = computed({
     try {
       return attrs.value.align_items.find(
         (x) => x.breakpoint == props.breakpoint
-      ).align_items
+      ).tw
     } catch (e) {
       return 'none'
     }
