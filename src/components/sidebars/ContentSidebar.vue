@@ -647,6 +647,9 @@ const selection_has_text = ref(false)
 const show_decoration = (node, pos) => {
   const { selectNode } = useTiptap()
   selectNode(node, pos)
+  //select_editor.value.commands.setNodeSelection(pos)
+  select_editor.value.commands.setMeta('pos', pos)
+  select_editor.value.commands.setMeta('node', node)
 }
 
 watch(editors, () => {
@@ -676,7 +679,7 @@ watch(editors, () => {
             console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
             for (const p of path_types) {
               if (p[1].node.eq(parent)) {
-                level = p[1].level + 2
+                level = p[1].level + 1
                 break
               }
             }

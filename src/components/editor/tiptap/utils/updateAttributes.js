@@ -16,6 +16,9 @@ const selectionPlugin = () => {
         props: {
             decorations: (state) => {
                 const { node, pos } = getSelectedNode()
+                console.log('THIS ::: ', this)
+                console.log('SSSTATE ::: ', state)
+                console.log(state.tr.getMeta('pos'))
 
                 if (node.value && pos.value) {
                     return DecorationSet.create(state.doc, [
