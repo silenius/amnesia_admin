@@ -87,15 +87,15 @@
             </div>
           </div>
           <div class="grid grid-cols-2 justify-items-center">
-              <span>Horizontal Gap</span>
-              <span>Vertical Gap</span>
-              <SelectGap
-                :breakpoint="breakpoint"
-                :extension="ext_gap" 
-                :transaction="select_transaction"
-                :editor="select_editor"
-                @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
-              />
+            <span>Horizontal Gap</span>
+            <span>Vertical Gap</span>
+            <SelectGap
+              :breakpoint="breakpoint"
+              :extension="ext_gap" 
+              :transaction="select_transaction"
+              :editor="select_editor"
+              @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
+            />
           </div>
         </DisclosurePanel>
       </Disclosure>
@@ -184,15 +184,17 @@
 
     <!-- NODE -->
 
-    <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.length > 1">
-        <div class="flex gap-2 flex-wrap">
-        <button @click="selected_type = t" v-for="t in active_types"
+    <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.size > 1">
+      <div class="flex flex-col gap-y-2 items-start">
+        <button @click="selected_type = t" v-for="t in active_types.entries()"
+          @mouseover="show_decoration(t[1].node, t[0])" 
+          :data-pos="t[0]"
           type="button" 
-          :class="{'outline-none ring-4 ring-red-300 dark:ring-red-900': t == selected_type}"
+          :class="[`ml-${t[1].level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t[0] == selected_type[0]}]"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
-          rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
-          dark:hover:bg-red-700">{{ t[0] }} ({{ t[1] }})</button>
-        </div>
+          rounded-full text-xs px-3 py-2 dark:bg-red-600
+          dark:hover:bg-red-700">{{ t[1].node.type.name }}</button>
+      </div>
     </section>
 
 
@@ -557,6 +559,8 @@ Fix width to the current breakpoint.
 <script setup>
 
 import { ref, computed, unref, watch } from 'vue'
+import { useTiptap } from '@/composables/tiptap'
+import { Decoration, DecorationSet } from 'prosemirror-view';
 import { useEditorStore } from '@/stores/editor'
 import {
   Disclosure,
@@ -594,6 +598,8 @@ import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension
 import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGrow.vue'
 import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
+
+import { NodeSelection } from '@tiptap/pm/state'
 
 const { getEditor, editors } = useEditorStore()
 
@@ -638,6 +644,11 @@ const active_types = ref()
 const selected_type = ref()
 const selection_has_text = ref(false)
 
+const show_decoration = (node, pos) => {
+  const { selectNode } = useTiptap()
+  selectNode(node, pos)
+}
+
 watch(editors, () => {
   if (!select_editor.value) {
     select_editor.value = unref(editors.get('current'))
@@ -648,7 +659,8 @@ watch(editors, () => {
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
       const selection = editor.state.selection
-      const path_types = []
+      const path_types = new Map()
+      let lastpos
 
       console.log(transaction)
 
@@ -656,10 +668,20 @@ watch(editors, () => {
         console.log(range)
         const from = range.$from.pos
         const to = range.$to.pos
+        let level = 0
+        let lastIndex
 
-        editor.state.doc.nodesBetween(from, to, (node, pos) => {
-          console.log('NODE : ', node.type.name, 'POS : ', pos)
-          path_types.push([node.type.name, pos])
+        editor.state.doc.nodesBetween(from, to, (node, pos, parent, index) => {
+          if (!node.isText) {
+            console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
+            for (const p of path_types) {
+              if (p[1].node.eq(parent)) {
+                level = p[1].level + 2
+                break
+              }
+            }
+            path_types.set(pos, {'node': node, 'level': level})
+          }
         })
 
       })
@@ -689,8 +711,8 @@ watch(editors, () => {
 
       */
 
-      if (!selected_type.value || (selected_type.value && path_types.indexOf(selected_type.value) === -1)) {
-        selected_type.value = path_types.slice(-1).pop()
+      if (!selected_type.value || (selected_type.value[0] && !path_types.has(selected_type.value[0]))) {
+        selected_type.value = [lastpos, path_types.get(lastpos)]
       }
 
     })

@@ -2,9 +2,45 @@ import { getMarkType } from '@tiptap/core'
 import { getNodeType } from '@tiptap/core'
 import { getSchemaTypeNameByName } from '@tiptap/core'
 import { Extension } from '@tiptap/core'
+import { useTiptap } from '@/composables/tiptap'
+
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { Decoration, DecorationSet } from 'prosemirror-view';
+
+const { getSelectedNode } = useTiptap()
+
+
+const selectionPlugin = () => { 
+    return new Plugin({
+        key: new PluginKey('selection'),
+        props: {
+            decorations: (state) => {
+                const { node, pos } = getSelectedNode()
+
+                if (node.value && pos.value) {
+                    return DecorationSet.create(state.doc, [
+                        Decoration.node(pos.value, pos.value + node.value.nodeSize, {
+                            class: "border border-red-500",
+                        }),
+                    ]);
+                }
+
+                return DecorationSet.empty
+            }
+        }
+    })
+}
+
 
 export const TipTapCommands = Extension.create({
     name: 'tiptapCommands',
+
+    addProseMirrorPlugins() {
+        return [
+            selectionPlugin()
+        ]
+    },
+
     addCommands() {
         return {
             _updateAttributes: (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
