@@ -15,19 +15,20 @@ const selectionPlugin = () => {
         key: new PluginKey('selection'),
         props: {
             decorations: (state) => {
-                const { node, pos } = getSelectedNode()
-                console.log('THIS ::: ', this)
-                console.log('SSSTATE ::: ', state)
+                console.log('=== BEGIN DECORATION ===')
                 console.log(state.tr.getMeta('pos'))
+                const { node, pos } = getSelectedNode()
 
                 if (node.value && pos.value) {
+                    console.log('=== END DECORATION ===')
                     return DecorationSet.create(state.doc, [
                         Decoration.node(pos.value, pos.value + node.value.nodeSize, {
-                            class: "border border-red-500",
+                            class: "outline outline-2 outline-dotted outline-red-500",
                         }),
                     ]);
                 }
 
+                console.log('=== END DECORATION ===')
                 return DecorationSet.empty
             }
         }
