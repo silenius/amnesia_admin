@@ -11,7 +11,7 @@
 
     <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.size > 1">
       <div class="flex flex-col gap-y-2 items-start">
-        <button @click="select_type(t)" v-for="t in active_types.entries()"
+        <button @click="select_type(t[1].node, t[0])" v-for="t in active_types.entries()"
           @mouseover="show_decoration(t[1].node, t[0])" 
           @mouseout="hide_decoration(t[1].node, t[0])"
           :data-pos="t[0]"
@@ -646,8 +646,10 @@ const selected_type = ref()
 const selection_has_text = ref(false)
 
 const select_type = (node, pos) => {
-  console.log('SELECT : ', t)
-  select_editor.value.commands.setNodeSelection(t[0])
+  console.log('SELECT : ', node, pos)
+  select_editor.value.commands.setNodeSelection(pos)
+  select_editor.value.commands.setMeta('pos', pos)
+  select_editor.value.commands.setMeta('node', node)
 }
 
 const hide_decoration = (node, pos) => {
@@ -658,10 +660,10 @@ const hide_decoration = (node, pos) => {
 }
 
 const show_decoration = (node, pos) => {
-  selectNode(node, pos)
+  //selectNode(node, pos)
   //select_editor.value.commands.setNodeSelection(pos)
-  select_editor.value.commands.setMeta('pos', pos)
-  select_editor.value.commands.setMeta('node', node)
+  let tr = select_editor.value.state.tr.setMeta('highlight', {pos: pos, node: node})
+  select_editor.value.view.dispatch(tr)
 }
 
 watch(editors, () => {
@@ -693,18 +695,11 @@ watch(editors, () => {
         const from = range.$from.pos
         const to = range.$to.pos
         let level = 0
-        let lastIndex
 
         editor.state.doc.nodesBetween(from, to, (node, pos, parent, index) => {
           if (!node.isText) {
-            //console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
-            for (const p of path_types) {
-              if (p[1].node.eq(parent)) {
-                level = p[1].level + 1
-                break
-              }
-            }
-            path_types.set(pos, {'node': node, 'level': level})
+            console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
+            path_types.set(pos, {'node': node, 'level': level+=1})
           }
         })
 

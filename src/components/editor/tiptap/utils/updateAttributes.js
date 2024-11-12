@@ -9,31 +9,57 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 const { getSelectedNode } = useTiptap()
 
+/*
+const selectionPlugin = new Plugin({
+    key: new PluginKey('selection'),
+    props: {
+        decorations: (state) => {
+            console.log('=== BEGIN DECORATION ===')
+            const { node, pos } = getSelectedNode()
 
-const selectionPlugin = () => { 
-    return new Plugin({
-        key: new PluginKey('selection'),
-        props: {
-            decorations: (state) => {
-                console.log('=== BEGIN DECORATION ===')
-                console.log(state.tr.getMeta('pos'))
-                const { node, pos } = getSelectedNode()
-
-                if (node.value && pos.value) {
-                    console.log('=== END DECORATION ===')
-                    return DecorationSet.create(state.doc, [
-                        Decoration.node(pos.value, pos.value + node.value.nodeSize, {
-                            class: "outline outline-2 outline-dotted outline-red-500",
-                        }),
-                    ]);
-                }
-
+            if (node.value && pos.value) {
                 console.log('=== END DECORATION ===')
-                return DecorationSet.empty
+                return DecorationSet.create(state.doc, [
+                    Decoration.node(pos.value, pos.value + node.value.nodeSize, {
+                        class: "outline outline-2 outline-dotted outline-red-500",
+                    }),
+                ]);
+            }
+
+            console.log('=== END DECORATION ===')
+            return DecorationSet.empty
+        }
+    }
+})
+*/
+
+const selectionPlugin = new Plugin({
+    key: new PluginKey('selection'),
+    state: {
+        init() {
+            return DecorationSet.empty
+        },
+        apply(tr, value) {
+            if (tr.getMeta('highlight')) {
+                const { pos, node } = tr.getMeta('highlight')
+                return DecorationSet.create(tr.doc, [
+                    Decoration.node(pos, pos + node.nodeSize, {
+                        class: "outline outline-2 outline-dotted outline-red-500",
+                    }),
+                ]);
+
+            } else {
+                return value.map(tr.mapping, tr.doc)
             }
         }
-    })
-}
+
+    },
+    props: {
+        decorations: (state) => {
+            return selectionPlugin.getState(state)
+        }
+    }
+})
 
 
 export const TipTapCommands = Extension.create({
@@ -41,7 +67,7 @@ export const TipTapCommands = Extension.create({
 
     addProseMirrorPlugins() {
         return [
-            selectionPlugin()
+            selectionPlugin
         ]
     },
 
