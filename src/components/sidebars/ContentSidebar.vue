@@ -9,11 +9,13 @@
 
     <!-- NODE -->
 
-    <section name="node" class="my-4 " :class="cls_section" v-if="active_types && active_types.size > 1">
+    <section name="node" class="my-4" :class="cls_section" v-if="active_types && active_types.size > 1">
       <div class="flex flex-col gap-y-2 items-start">
-        <button @click="select_type(t[1].node, t[0])" v-for="t in active_types.entries()"
-          @mouseover="show_decoration(t[1].node, t[0])" 
-          @mouseout="hide_decoration(t[1].node, t[0])"
+        <button 
+          v-for="t in active_types.entries()"
+          @click="select_node(t[1].node, t[0])"
+          @mouseover="highlight_node(t[1].node, t[0])" 
+          @mouseout="highlight_node(null, null)"
           :data-pos="t[0]"
           type="button" 
           :class="[`ml-${t[1].level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t[0] == selected_type[0]}]"
@@ -559,8 +561,6 @@ Fix width to the current breakpoint.
 <script setup>
 
 import { ref, computed, unref, watch } from 'vue'
-import { useTiptap } from '@/composables/tiptap'
-import { Decoration, DecorationSet } from 'prosemirror-view';
 import { useEditorStore } from '@/stores/editor'
 import {
   Disclosure,
@@ -599,10 +599,7 @@ import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGro
 import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
-import { NodeSelection } from '@tiptap/pm/state'
-
 const { getEditor, editors } = useEditorStore()
-const { selectNode } = useTiptap()
 
 const breakpoint = ref(null)
 const change_breakpoint = (value) => breakpoint.value = value
@@ -645,25 +642,19 @@ const active_types = ref()
 const selected_type = ref()
 const selection_has_text = ref(false)
 
-const select_type = (node, pos) => {
-  console.log('SELECT : ', node, pos)
-  select_editor.value.commands.setNodeSelection(pos)
-  select_editor.value.commands.setMeta('pos', pos)
-  select_editor.value.commands.setMeta('node', node)
-}
-
-const hide_decoration = (node, pos) => {
-  selectNode(null, null)
-  //select_editor.value.commands.setNodeSelection(pos)
-  select_editor.value.commands.setMeta('pos', null)
-  select_editor.value.commands.setMeta('node', null)
-}
-
-const show_decoration = (node, pos) => {
-  //selectNode(node, pos)
-  //select_editor.value.commands.setNodeSelection(pos)
-  let tr = select_editor.value.state.tr.setMeta('highlight', {pos: pos, node: node})
+const highlight_node = (node, pos) => {
+  let tr = select_editor.value.state.tr.setMeta(
+    'highlightNode', {node: node, pos: pos}
+  )
   select_editor.value.view.dispatch(tr)
+}
+
+const select_node = (node, pos) => {
+  let tr = select_editor.value.state.tr.setMeta(
+    'selectNode', {pos: pos, node: node}
+  )
+  select_editor.value.view.dispatch(tr)
+  select_editor.value.chain().focus().setTextSelection(pos+1).run()
 }
 
 watch(editors, () => {
@@ -675,16 +666,20 @@ watch(editors, () => {
     }
 
     select_editor.value.on('transaction', ({ editor, transaction }) => {
+      /*
       console.log('=== BEGIN TRANSACTION ===')
       console.log('editor: ', editor)
       console.log('transaction: ', transaction)
       console.log('=== END TRANSACTION ===')
+      */
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
+      /*
       console.log('=== BEGIN SELECTION UPDATE ===')
       console.log('editor: ', editor)
       console.log('transaction: ', transaction)
+      */
       const selection = editor.state.selection
       const path_types = new Map()
       let lastpos
