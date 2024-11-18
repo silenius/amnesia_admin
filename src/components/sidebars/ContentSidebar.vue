@@ -12,16 +12,16 @@
     <section name="node" class="my-4" :class="cls_section" v-if="active_types && active_types.size > 1">
       <div class="flex flex-col gap-y-2 items-start">
         <button 
-          v-for="t in active_types.entries()"
-          @click="select_node(t[1].node, t[0])"
-          @mouseover="highlight_node(t[1].node, t[0])" 
-          @mouseout="highlight_node(null, null)"
-          :data-pos="t[0]"
+          v-for="t in active_types.values()"
+          @click="select_node(t)"
+          @mouseover="highlight_node(t)" 
+          @mouseout="highlight_node()"
+          :data-pos="t.pos"
           type="button" 
-          :class="[`ml-${t[1].level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t[0] == selected_type[0]}]"
+          :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == selected?.pos}]"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
           rounded-full text-xs px-3 py-2 dark:bg-red-600
-          dark:hover:bg-red-700">{{ t[1].node.type.name }}</button>
+          dark:hover:bg-red-700">{{ t.node.type.name }} </button>
       </div>
     </section>
 
@@ -638,23 +638,34 @@ const cls_panel = ['text-sm', 'mb-4', 'p-2']
 const select_transaction = ref()
 const select_editor = ref()
 
-const active_types = ref()
-const selected_type = ref()
+const active_types = ref(new Map())
+const selected = ref()
+const selected_type = computed(() => selected.value.node?.type.name)
 const selection_has_text = ref(false)
 
-const highlight_node = (node, pos) => {
-  let tr = select_editor.value.state.tr.setMeta(
-    'highlightNode', {node: node, pos: pos}
-  )
+const highlight_node = (p) => {
+  let tr
+
+  if (p) {
+    tr = select_editor.value.state.tr.setMeta(
+      'highlightNode', {node: p.node, pos: p.pos}
+    )
+  } else {
+    tr = select_editor.value.state.tr.setMeta(
+      'highlightNode', {node: null, pos: null}
+    )
+  }
+
   select_editor.value.view.dispatch(tr)
 }
 
-const select_node = (node, pos) => {
+const select_node = (p) => {
   let tr = select_editor.value.state.tr.setMeta(
-    'selectNode', {pos: pos, node: node}
+    'selectNode', {pos: p.pos, node: p.node}
   )
+  selected.value = p
   select_editor.value.view.dispatch(tr)
-  select_editor.value.chain().focus().setTextSelection(pos+1).run()
+  select_editor.value.chain().focus().setTextSelection(p.pos+1).run()
 }
 
 watch(editors, () => {
@@ -681,10 +692,8 @@ watch(editors, () => {
       console.log('transaction: ', transaction)
       */
       const selection = editor.state.selection
-      const path_types = new Map()
-      let lastpos
-
-      console.log(transaction)
+      active_types.value.clear()
+      let last = {}
 
       transaction.selection.ranges.forEach(range => {
         const from = range.$from.pos
@@ -694,13 +703,23 @@ watch(editors, () => {
         editor.state.doc.nodesBetween(from, to, (node, pos, parent, index) => {
           if (!node.isText) {
             console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
-            path_types.set(pos, {'node': node, 'level': level+=1})
+
+            active_types.value.set(pos, {
+              node: node,
+              level: level+=1,
+              pos: pos
+            })
+
+            last = {
+              node: node,
+              level: level,
+              pos: pos
+            }
+
           }
         })
 
       })
-
-      active_types.value = path_types
 
       // Does the selection contains text?
       if (editor.state.doc.textBetween(selection.from, selection.to)) {
@@ -725,8 +744,8 @@ watch(editors, () => {
 
       */
 
-      if (!selected_type.value || (selected_type.value[0] && !path_types.has(selected_type.value[0]))) {
-        selected_type.value = [lastpos, path_types.get(lastpos)]
+      if (!selected.value || (selected.value && !active_types.value.has(selected.value.pos))) {
+        select_node(last)
       }
 
       console.log('=== END SELECTION UPDATE ===')

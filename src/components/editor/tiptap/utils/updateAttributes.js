@@ -9,51 +9,46 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 const { getSelectedNode } = useTiptap()
 
+const find_dec = (value, spec) => value.find(
+    undefined, undefined, (x) => x.node === spec
+)
+
 const outlineNodePlugin = new Plugin({
     key: new PluginKey('outlineNode'),
     state: {
         init() {
             return DecorationSet.empty
         },
+
         apply(tr, value) {
-            if (tr.getMeta('highlightNode') || tr.getMeta('selectNode')) {
-                if (tr.getMeta('highlightNode')) {
-                    const { pos, node } = tr.getMeta('highlightNode')
-                    const hl = value.find(
-                        undefined, undefined,
-                        (x) => x.node === 'highlight'
+            if (tr.getMeta('highlightNode')) {
+                const { pos, node } = tr.getMeta('highlightNode')
+                const hl = find_dec(value, 'highlight') 
+
+                value = value.remove(hl)
+
+                if (pos !== null && node !== null) {
+                    value = value.add(tr.doc, [Decoration.node(
+                        pos, pos + node.nodeSize, {
+                            class: "outline-1 outline-dotted outline-red-500",
+                        }, { node: 'highlight' })]
                     )
-
-                    value = value.remove(hl)
-
-                    if (pos !== null && node !== null) {
-                        value = value.add(tr.doc, [Decoration.node(
-                            pos, pos + node.nodeSize, {
-                                class: "outline-1 outline-dotted outline-red-500",
-                            }, { node: 'highlight' })]
-                        )
-                    }
-                } 
-
-                if (tr.getMeta('selectNode')) {
-                    const { pos, node } = tr.getMeta('selectNode')
-                    const sl = value.find(
-                        undefined, undefined,
-                        (x) => x.node === 'select'
-                    )
-
-                    value = value.remove(sl)
-
-                    if (pos !== null && node !== null) {
-                        value = value.add(tr.doc, [Decoration.node(
-                            pos, pos + node.nodeSize, {
-                                class: "outline outline-1 outline-red-500",
-                            }, { node: 'select' })]
-                        )
-                    }
                 }
+            } 
 
-                //return value
+            if (tr.getMeta('selectNode')) {
+                const { pos, node } = tr.getMeta('selectNode')
+                const sl = find_dec(value, 'select')
+
+                value = value.remove(sl)
+
+                if (pos !== null && node !== null) {
+                    value = value.add(tr.doc, [Decoration.node(
+                        pos, pos + node.nodeSize, {
+                            class: "outline outline-1 outline-red-700",
+                        }, { node: 'select' })]
+                    )
+                }
             }
 
             return value.map(tr.mapping, tr.doc)
