@@ -17,10 +17,13 @@ const outlineNodePlugin = new Plugin({
     key: new PluginKey('outlineNode'),
     state: {
         init() {
+            console.debug('===> BEGIN outlineNode init')
             return DecorationSet.empty
+            console.debug('===> END outlineNode init')
         },
 
         apply(tr, value) {
+            console.debug('===> BEGIN outlineNode apply: [tr] ', tr, ' [value] ', value)
             if (tr.getMeta('highlightNode')) {
                 const { pos, node } = tr.getMeta('highlightNode')
                 const hl = find_dec(value, 'highlight') 
@@ -50,6 +53,8 @@ const outlineNodePlugin = new Plugin({
                     )
                 }
             }
+
+            console.debug('===> END outlineNode apply')
 
             return value.map(tr.mapping, tr.doc)
         }

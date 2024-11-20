@@ -49,7 +49,7 @@ const wrap = computed({
     try {
       return attrs.value.wrap.find(
         (x) => x.breakpoint == props.breakpoint
-      ).wrap
+      ).tw
     } catch (e) {
       return 'none'
     }

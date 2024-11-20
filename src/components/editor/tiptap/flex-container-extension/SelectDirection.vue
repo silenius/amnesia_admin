@@ -49,7 +49,7 @@ const direction = computed({
     try {
       return attrs.value.direction.find(
         (x) => x.breakpoint == props.breakpoint
-      ).direction
+      ).tw
     } catch (e) {
       return 'none'
     }

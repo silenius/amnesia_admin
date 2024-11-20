@@ -45,10 +45,12 @@ const doEdit = async (content) => {
       v-if="content.id" 
     />
 
+    <aside class="basis-0 backdrop-blur-sm shadow-gray-900 shadow-md bg-gray-700">
     <RouterView 
       name="RightSideBar" 
       :content="content"
       v-if="content.id"
     />
+    </aside>
   </div>
 </template>

@@ -26,7 +26,9 @@ const routes = [
         children: [
             {   name: 'show-content',
                 path: '',
-                component: () => import('../views/contents/ContentShow.vue')
+                components : {
+                    default: () => import('../views/contents/ContentShow.vue')
+                }
             },
             {
                 name: 'browse-content',

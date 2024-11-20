@@ -66,6 +66,8 @@ export const Margin = Extension.create({
     addCommands() {
         return {
             setMargin: (side, level, breakpoint=null, type=undefined) => (p) => {
+                console.debug('===> BEGIN setMargin [side] ', side, ' [level] ', level, ' [breakpoint] ', breakpoint, ' [type] ', type, ' [p] ', p)
+
                 if (!type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
@@ -90,9 +92,9 @@ export const Margin = Extension.create({
                 if (p.state.selection.empty || p.state.selection.node) {
                     return p.chain()._updateAttributes(
                         type, Object.fromEntries([[`${side}`, mark]])
-                    ).setNodeSelection(
+                    ).setTextSelection(
                         p.state.selection.anchor
-                    ).run()
+                    )
                 } else {
                     return p.chain().setMark(
                         'textClass', Object.fromEntries([[`${side}`, mark]])

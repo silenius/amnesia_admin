@@ -9,7 +9,7 @@
 
     <!-- NODE -->
 
-    <section name="node" class="my-4" :class="cls_section" v-if="active_types && active_types.size > 1">
+    <section name="node" class="my-4" :class="cls_section" v-if="active_types && active_types.size > 0">
       <div class="flex flex-col gap-y-2 items-start">
         <button 
           v-for="t in active_types.values()"
@@ -27,7 +27,7 @@
 
     <!-- FLEX CONTAINER -->
 
-    <section :class="cls_section" v-if="ext_flex && select_editor.isActive('flexContainer')">
+    <section :class="cls_section" v-if="ext_flex && selected_type == 'flexContainer'">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex container</span>
@@ -121,7 +121,7 @@
 
     <!-- FLEX ITEM -->
 
-    <section :class="cls_section" v-if="ext_flex_item && select_editor.isActive('flexItem')">
+    <section :class="cls_section" v-if="ext_flex_item && selected_type == 'flexItem'"> 
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex item</span>
@@ -242,7 +242,8 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-padding="({side, level, breakpoint}) => select_editor.chain().setPadding(side, level, breakpoint, unref(selected_type)).run()"
+            @select-padding="({side, level, breakpoint}) =>
+              select_editor.chain().setPadding(side, level, breakpoint, unref(selected_type)).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -266,7 +267,7 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(side, level, breakpoint, unref(selected_type)).run()"
+            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(side, level, breakpoint, unref(selected_type)).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -640,7 +641,7 @@ const select_editor = ref()
 
 const active_types = ref(new Map())
 const selected = ref()
-const selected_type = computed(() => selected.value.node?.type.name)
+const selected_type = computed(() => selected.value?.node?.type.name)
 const selection_has_text = ref(false)
 
 const highlight_node = (p) => {
@@ -660,12 +661,14 @@ const highlight_node = (p) => {
 }
 
 const select_node = (p) => {
+  console.debug('===> BEGIN select_node: [p] ', p)
   let tr = select_editor.value.state.tr.setMeta(
     'selectNode', {pos: p.pos, node: p.node}
   )
   selected.value = p
   select_editor.value.view.dispatch(tr)
   select_editor.value.chain().focus().setTextSelection(p.pos+1).run()
+  console.debug('===> END select_node')
 }
 
 watch(editors, () => {
@@ -675,6 +678,10 @@ watch(editors, () => {
     if (!select_editor.value) {
       return false
     }
+
+    select_editor.value.on('focus', ({ editor, event }) => {
+      select_node(selected.value)
+    })
 
     select_editor.value.on('transaction', ({ editor, transaction }) => {
       /*
@@ -686,11 +693,7 @@ watch(editors, () => {
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
-      /*
-      console.log('=== BEGIN SELECTION UPDATE ===')
-      console.log('editor: ', editor)
-      console.log('transaction: ', transaction)
-      */
+      console.log('===> BEGIN SELECTION UPDATE')
       const selection = editor.state.selection
       active_types.value.clear()
       let last = {}
@@ -704,18 +707,14 @@ watch(editors, () => {
           if (!node.isText) {
             console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
 
-            active_types.value.set(pos, {
+            const data = {
               node: node,
               level: level+=1,
               pos: pos
-            })
-
-            last = {
-              node: node,
-              level: level,
-              pos: pos
             }
 
+            active_types.value.set(pos, data)
+            last = data
           }
         })
 
@@ -744,11 +743,16 @@ watch(editors, () => {
 
       */
 
+      select_node(last)
+      /*
       if (!selected.value || (selected.value && !active_types.value.has(selected.value.pos))) {
         select_node(last)
+      } else {
+        console.log('===> Selected Node ', selected.value)
       }
+      */
 
-      console.log('=== END SELECTION UPDATE ===')
+      console.log('===> END SELECTION UPDATE')
     })
 
   }

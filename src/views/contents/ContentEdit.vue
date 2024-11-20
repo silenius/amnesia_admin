@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, provide } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
 import DocumentEdit from '@/views/documents/DocumentEdit.vue'

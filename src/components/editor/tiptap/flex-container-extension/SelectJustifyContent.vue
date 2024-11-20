@@ -49,7 +49,7 @@ const justify_content = computed({
     try {
       return attrs.value.justify_content.find(
         (x) => x.breakpoint == props.breakpoint
-      ).justify_content
+      ).tw
     } catch (e) {
       return 'none'
     }
