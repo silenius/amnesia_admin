@@ -30,7 +30,7 @@ const outlineNodePlugin = new Plugin({
 
                 value = value.remove(hl)
 
-                if (pos !== null && node !== null) {
+                if (pos && node) {
                     value = value.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline-1 outline-dotted outline-red-500",
@@ -45,7 +45,7 @@ const outlineNodePlugin = new Plugin({
 
                 value = value.remove(sl)
 
-                if (pos !== null && node !== null) {
+                if (pos && node) {
                     value = value.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline outline-1 outline-red-700",

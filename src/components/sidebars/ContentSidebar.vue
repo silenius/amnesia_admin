@@ -21,7 +21,7 @@
           :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == selected?.pos}]"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
           rounded-full text-xs px-3 py-2 dark:bg-red-600
-          dark:hover:bg-red-700">{{ t.node.type.name }} </button>
+          dark:hover:bg-red-700">{{ t.node.type.name }} {{ t.pos }} </button>
       </div>
     </section>
 
@@ -662,12 +662,20 @@ const highlight_node = (p) => {
 
 const select_node = (p) => {
   console.debug('===> BEGIN select_node: [p] ', p)
+
+  select_editor.value.chain().focus().setTextSelection(p.pos+1).setMeta(
+    'selectNode', {pos: p.pos, node: p.node}
+  ).run()
+
+  //select_editor.value.chain().focus().setTextSelection(p.pos).run()
+  /*
   let tr = select_editor.value.state.tr.setMeta(
     'selectNode', {pos: p.pos, node: p.node}
   )
+  */
   selected.value = p
-  select_editor.value.view.dispatch(tr)
-  select_editor.value.chain().focus().setTextSelection(p.pos+1).run()
+  
+  //select_editor.value.view.dispatch(tr)
   console.debug('===> END select_node')
 }
 
@@ -680,7 +688,11 @@ watch(editors, () => {
     }
 
     select_editor.value.on('focus', ({ editor, event }) => {
-      select_node(selected.value)
+      /*
+      if (selected.value.node && selected.value.pos) {
+        select_node(selected.value)
+      }
+      */
     })
 
     select_editor.value.on('transaction', ({ editor, transaction }) => {
@@ -743,7 +755,7 @@ watch(editors, () => {
 
       */
 
-      select_node(last)
+      //select_node(last)
       /*
       if (!selected.value || (selected.value && !active_types.value.has(selected.value.pos))) {
         select_node(last)
