@@ -65,40 +65,53 @@ export const Margin = Extension.create({
 
     addCommands() {
         return {
-            setMargin: (side, level, breakpoint=null, type=undefined) => (p) => {
-                console.debug('===> BEGIN setMargin [side] ', side, ' [level] ', level, ' [breakpoint] ', breakpoint, ' [type] ', type, ' [p] ', p)
+            setMargin: ({side, level, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                console.debug('===> BEGIN setMargin [side] ', side, ' [level] ', level, ' [breakpoint] ', breakpoint, ' [type] ', type, ' [selected] ', selected, ' [p] ', p)
 
-                if (!type) {
+                /*
+                if (selected) {
+                    console.log(selected.node.attrs)
+                    return p.chain()._updateNodeAttributes(
+                        selected.pos, 
+                        selected.node, 
+                        Object.fromEntries(
+                            [[`${side}`, [{
+                                breakpoint: breakpoint,
+                                tw: `${side}-${level}`
+                            }]]]
+                        )
+                    )
+                }
+                */
+
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
 
-                // Get attributes for the side 
-                const oldAttrs = p.editor.getAttributes(type)[side]
+                let attrs = selected ? selected.node.attrs[side] : p.editor.getAttributes(type)[side]
 
-                // We set a new value for that side at some breakpoint, so
-                // remove old value
-                const mark = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.levels.indexOf(level) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         tw: `${side}-${level}`
                     })
                 }
 
-                if (p.state.selection.empty || p.state.selection.node) {
-                    return p.chain()._updateAttributes(
-                        type, Object.fromEntries([[`${side}`, mark]])
-                    ).setTextSelection(
-                        p.state.selection.anchor
+                attr = Object.fromEntries([[`${side}`, attr]])
+
+                console.log(attr)
+
+                if (selected) {
+                    return p.chain()._updateNodeAttributes(
+                        selected.pos, selected.node, attr
                     )
                 } else {
-                    return p.chain().setMark(
-                        'textClass', Object.fromEntries([[`${side}`, mark]])
-                    )
+                    return p.chain().setMark('textClass', attr)
                 }
             }
         }

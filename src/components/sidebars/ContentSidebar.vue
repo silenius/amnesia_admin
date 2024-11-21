@@ -267,7 +267,9 @@ Fix width to the current breakpoint.
             :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
-            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(side, level, breakpoint, unref(selected_type)).focus().run()"
+            @select-margin="({side, level, breakpoint}) =>
+              select_editor.chain().setMargin({side: side, level: level,
+                breakpoint: breakpoint, selected: unref(selected)}).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -600,6 +602,8 @@ import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGro
 import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
+import { NodeSelection } from '@tiptap/pm/state'
+
 const { getEditor, editors } = useEditorStore()
 
 const breakpoint = ref(null)
@@ -645,27 +649,50 @@ const selected_type = computed(() => selected.value?.node?.type.name)
 const selection_has_text = ref(false)
 
 const highlight_node = (p) => {
-  let tr
+  if (!p) {
+    p = {node: null, pos: null}
+  } 
 
-  if (p) {
-    tr = select_editor.value.state.tr.setMeta(
-      'highlightNode', {node: p.node, pos: p.pos}
-    )
-  } else {
-    tr = select_editor.value.state.tr.setMeta(
-      'highlightNode', {node: null, pos: null}
-    )
-  }
-
-  select_editor.value.view.dispatch(tr)
+  select_editor.value.chain().focus().setMeta(
+    'highlightNode', p
+  ).run()
 }
 
 const select_node = (p) => {
   console.debug('===> BEGIN select_node: [p] ', p)
 
-  select_editor.value.chain().focus().setTextSelection(p.pos+1).setMeta(
+
+  /*
+  const rp = select_editor.value.state.doc.resolve(p.pos)
+  const s = new NodeSelection(rp)
+
+  const tr = select_editor.value.state.tr.setMeta(
+    'selectNode', {pos: p.pos, node: p.node}
+  ).setNodeMarkup(
+    p.pos, undefined, { 
+      ...p.node.attrs,
+        'ml': [{
+          breakpoint: null,
+          tw: 'ml-8'
+        }]
+    }
+  )
+
+  console.log(tr.constructor.name)
+
+  select_editor.value.view.dispatch(tr)
+  */
+
+  
+  select_editor.value.chain().focus().setMeta(
     'selectNode', {pos: p.pos, node: p.node}
   ).run()
+
+  /*
+  select_editor.value.chain().focus().setMeta(
+    'selectNode', {pos: p.pos, node: p.node}
+  ).run()
+  */
 
   //select_editor.value.chain().focus().setTextSelection(p.pos).run()
   /*
@@ -673,9 +700,9 @@ const select_node = (p) => {
     'selectNode', {pos: p.pos, node: p.node}
   )
   */
+
   selected.value = p
-  
-  //select_editor.value.view.dispatch(tr)
+
   console.debug('===> END select_node')
 }
 
@@ -705,7 +732,12 @@ watch(editors, () => {
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
-      console.log('===> BEGIN SELECTION UPDATE')
+      console.debug('===> BEGIN SELECTION UPDATE')
+
+      if (transaction.getMeta('selectNode') || transaction.getMeta('highlightNode')) {
+        console.debug('--- SKIP UPDATE ---')
+        return
+      }
       const selection = editor.state.selection
       active_types.value.clear()
       let last = {}
@@ -717,8 +749,7 @@ watch(editors, () => {
 
         editor.state.doc.nodesBetween(from, to, (node, pos, parent, index) => {
           if (!node.isText) {
-            console.log('NODE NAME: ', node.type.name, 'POS : ', pos, 'PARENT: ', parent, ' NODE : ', node, ' INDEX: ', index, ' LEVEL: ', level)
-
+            console.debug('TYPE: ', node.type.name, 'POS: ', pos, 'PARENT: ', parent, ' NODE: ', node, ' INDEX: ', index, ' LEVEL: ', level)
             const data = {
               node: node,
               level: level+=1,
@@ -755,7 +786,7 @@ watch(editors, () => {
 
       */
 
-      //select_node(last)
+      select_node(last)
       /*
       if (!selected.value || (selected.value && !active_types.value.has(selected.value.pos))) {
         select_node(last)
@@ -764,7 +795,7 @@ watch(editors, () => {
       }
       */
 
-      console.log('===> END SELECTION UPDATE')
+      console.debug('===> END SELECTION UPDATE')
     })
 
   }
