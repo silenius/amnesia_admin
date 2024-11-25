@@ -12,6 +12,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+
 import {
   Listbox,
   ListboxButton,
@@ -41,15 +43,11 @@ const directions = computed(
   () => props.extension.options.directions.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('flexContainer'))
-
 const direction = computed({
 
   get() {
     try {
-      return attrs.value.direction.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'direction')
     } catch (e) {
       return 'none'
     }

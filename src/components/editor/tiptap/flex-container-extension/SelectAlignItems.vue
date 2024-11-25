@@ -11,6 +11,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 import {
   Listbox,
@@ -23,7 +24,8 @@ const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -41,15 +43,11 @@ const align_items = computed(
   () => props.extension.options.align_items.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('flexContainer'))
-
 const align_item = computed({
 
   get() {
     try {
-      return attrs.value.align_items.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'align_items')
     } catch (e) {
       return 'none'
     }

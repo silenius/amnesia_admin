@@ -91,14 +91,14 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits(['select-padding'])
@@ -114,9 +114,7 @@ const levels = computed(() => props.extension.options.levels)
 
 const get_side = (side) => {
   try {
-    return getTypeAttrs(props)[side].find(
-      (x) => x.breakpoint == props.breakpoint
-    ).tw
+    return getSelectedAttrs(props, side)
   } catch (e) {
     return 'none'
   }

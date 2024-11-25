@@ -12,6 +12,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+
 import {
   Listbox,
   ListboxButton,
@@ -22,8 +24,8 @@ import {
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -41,15 +43,11 @@ const wraps = computed(
   () => props.extension.options.wraps.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('flexContainer'))
-
 const wrap = computed({
 
   get() {
     try {
-      return attrs.value.wrap.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'wrap')
     } catch (e) {
       return 'none'
     }

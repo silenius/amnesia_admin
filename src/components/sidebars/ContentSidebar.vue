@@ -52,9 +52,11 @@
               <SelectDirection
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-direction="({direction, breakpoint}) => select_editor.chain().setFlexDirection(direction, breakpoint).run()"
+                :selected="selected"
+                @select-direction="({direction, breakpoint}) =>
+                  select_editor.chain().setFlexDirection({direction: direction,
+                    breakpoint: breakpoint, selected: unref(selected)}).run()"
               />
             </div>
 
@@ -63,9 +65,11 @@
               <SelectWrap
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-wrap="({wrap, breakpoint}) => select_editor.chain().setFlexWrap(wrap, breakpoint).run()"
+                :selected="selected"
+                @select-wrap="({wrap, breakpoint}) =>
+                  select_editor.chain().setFlexWrap({wrap: wrap, breakpoint:
+                    breakpoint, selected: unref(selected)}).run()"
               />
             </div>
 
@@ -74,9 +78,11 @@
               <SelectJustifyContent
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-justify-content="({justify, breakpoint}) => select_editor.chain().setFlexJustifyContent(justify, breakpoint).run()"
+                :selected="selected"
+                @select-justify-content="({justify, breakpoint}) =>
+                  select_editor.chain().setFlexJustifyContent({justify:
+                    justify, breakpoint: breakpoint, selected: unref(selected)}).run()"
               />
             </div>
 
@@ -86,9 +92,11 @@
               <SelectAlignItems
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-align-items="({align, breakpoint}) => select_editor.chain().setFlexAlignItems(align, breakpoint).run()"
+                :selected="selected"
+                @select-align-items="({align, breakpoint}) =>
+                  select_editor.chain().setFlexAlignItems({align: align,
+                    breakpoint: breakpoint, selected: unref(selected)}).run()"
               />
             </div>
 
@@ -98,9 +106,11 @@
               <SelectAlignContent
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-align-content="({align, breakpoint}) => select_editor.chain().setFlexAlignContent(align, breakpoint).run()"
+                :selected="selected"
+                @select-align-content="({align, breakpoint}) =>
+                  select_editor.chain().setFlexAlignContent({align: align,
+                    breakpoint: breakpoint, selected: unref(selected)}).run()"
               />
             </div>
           </div>
@@ -110,9 +120,9 @@
             <SelectGap
               :breakpoint="breakpoint"
               :extension="ext_gap" 
-              :transaction="select_transaction"
               :editor="select_editor"
-              @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap(side, gap, breakpoint).run()"
+              :selected="selected"
+              @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap({side: side, gap: gap, breakpoint: breakpoint, selected: unref(selected)}).run()"
             />
           </div>
         </DisclosurePanel>
@@ -154,9 +164,10 @@
               <SelectBasis
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-basis="({basis, breakpoint}) => select_editor.chain().setFlexBasis(basis, breakpoint).run()"
+                @select-basis="({basis, breakpoint}) => select_editor.chain().setFlexBasis({
+                  basis: basis, breakpoint: breakpoint, selected: unref(selected)
+                }).run()"
               />
             </div>
 
@@ -165,9 +176,10 @@
               <SelectGrow
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-grow="({grow, breakpoint}) => select_editor.chain().setFlexGrow(grow, breakpoint).run()"
+                @select-grow="({grow, breakpoint}) => select_editor.chain().setFlexGrow({
+                    grow: grow, breakpoint: breakpoint, selected: unref(selected)
+                  }).run()"
               />
             </div>
 
@@ -176,9 +188,10 @@
               <SelectShrink
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-shrink="({shrink, breakpoint}) => select_editor.chain().setFlexShrink(shrink, breakpoint).run()"
+                @select-shrink="({shrink, breakpoint}) => select_editor.chain().setFlexShrink({
+                    shrink: shrink, breakpoint: breakpoint, selected: unref(selected)
+                  }).run()"
               />
             </div>
 
@@ -189,9 +202,10 @@
                 class="w-full"
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :transaction="select_transaction"
                 :editor="select_editor"
-                @select-flex-grow-shrink="({flex, breakpoint}) => select_editor.chain().setFlexGrowShrink(flex, breakpoint).run()"
+                @select-flex-grow-shrink="({flex, breakpoint}) => select_editor.chain().setFlexGrowShrink({
+                    flex: flex, breakpoint: breakpoint, selected: unref(selected)
+                }).run()"
               />
             </div>
 
@@ -216,7 +230,6 @@ Fix width to the current breakpoint.
 <SelectContainer
 :breakpoint="breakpoint"
 :extension="ext_container" 
-:transaction="select_transaction"
 :editor="select_editor"
 @select-container="({container, breakpoint}) => select_editor.chain().setContainer(container, breakpoint).run()"
 />
@@ -239,11 +252,11 @@ Fix width to the current breakpoint.
             v-if="ext_padding" 
             :breakpoint="breakpoint"
             :extension="ext_padding" 
-            :transaction="select_transaction"
             :editor="select_editor"
-            :type="selected_type"
-            @select-padding="({side, level, breakpoint}) =>
-              select_editor.chain().setPadding(side, level, breakpoint, unref(selected_type)).focus().run()"
+            :selected="selected"
+            @select-padding="({side, level, breakpoint}) => select_editor.chain().setPadding(
+              {side: side, level: level, breakpoint: breakpoint, selected: unref(selected)}
+            ).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -264,12 +277,11 @@ Fix width to the current breakpoint.
             v-if="ext_margin" 
             :breakpoint="breakpoint"
             :extension="ext_margin" 
-            :transaction="select_transaction"
             :editor="select_editor"
-            :type="selected_type"
-            @select-margin="({side, level, breakpoint}) =>
-              select_editor.chain().setMargin({side: side, level: level,
-                breakpoint: breakpoint, selected: unref(selected)}).focus().run()"
+            :selected="selected"
+            @select-margin="({side, level, breakpoint}) => select_editor.chain().setMargin(
+              {side: side, level: level, breakpoint: breakpoint, selected: unref(selected)}
+            ).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -290,7 +302,6 @@ Fix width to the current breakpoint.
             v-if="ext_float" 
             :breakpoint="breakpoint"
             :extension="ext_float" 
-            :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
             @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint, unref(selected_type)).run()"
@@ -313,7 +324,6 @@ Fix width to the current breakpoint.
           <SelectClear
             :breakpoint="breakpoint"
             :extension="ext_float" 
-            :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
             @select-clear="({clear, breakpoint}) => select_editor.chain().setClear(clear, breakpoint, unref(selected_type)).run()"
@@ -337,7 +347,6 @@ Fix width to the current breakpoint.
             v-if="ext_align" 
             :breakpoint="breakpoint"
             :extension="ext_align" 
-            :transaction="select_transaction"
             :editor="select_editor"
             :type="selected_type"
             @select-align="({align, breakpoint}) => select_editor.chain().setAlign(align, breakpoint, unref(selected_type)).run()"
@@ -367,7 +376,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_width" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint, unref(selected_type)).run()"
             />
@@ -377,7 +385,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_height" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-height="({height, breakpoint}) => select_editor.chain().setHeight(height, breakpoint, unref(selected_type)).run()"
             />
@@ -391,7 +398,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_min_width" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-minWidth="({minWidth, breakpoint}) => select_editor.chain().setMinWidth(minWidth, breakpoint, unref(selected_type)).run()"
             />
@@ -401,7 +407,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_min_height" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-minHeight="({minHeight, breakpoint}) => select_editor.chain().setMinHeight(minHeight, breakpoint, unref(selected_type)).run()"
             />
@@ -414,7 +419,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_max_width" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint, unref(selected_type)).run()"
             />
@@ -424,7 +428,6 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_max_height" 
               :type="selected_type"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint, unref(selected_type)).run()"
             />
@@ -453,7 +456,6 @@ Fix width to the current breakpoint.
               v-if="ext_background_color" 
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
-              :transaction="select_transaction"
               :editor="select_editor"
               :type="selected_type"
               @select-background-color="({color, variant, breakpoint}) => select_editor.chain().focus().setBackgroundColor(color, variant, breakpoint, unref(selected_type)).run()"
@@ -483,7 +485,6 @@ Fix width to the current breakpoint.
               v-if="ext_font_italic"
               :breakpoint="breakpoint"
               :extension="ext_font_italic"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
             />
@@ -493,7 +494,6 @@ Fix width to the current breakpoint.
               v-if="ext_font_weight"
               :breakpoint="breakpoint"
               :extension="ext_font_weight"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-font-weight="({weight}) => select_editor.chain().focus().setFontWeight(weight, breakpoint).run()"
             />
@@ -503,7 +503,6 @@ Fix width to the current breakpoint.
               v-if="ext_text_decoration"
               :breakpoint="breakpoint"
               :extension="ext_text_decoration"
-              :transaction="select_transaction"
               :editor="select_editor"
               @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
             />
@@ -519,7 +518,6 @@ Fix width to the current breakpoint.
                 v-if="ext_text_color" 
                 :breakpoint="breakpoint"
                 :extension="ext_text_color" 
-                :transaction="select_transaction"
                 :editor="select_editor"
                 @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
               />
@@ -533,7 +531,6 @@ Fix width to the current breakpoint.
                 v-if="ext_font_size"
                 :breakpoint="breakpoint"
                 :extension="ext_font_size"
-                :transaction="select_transaction"
                 :editor="select_editor"
                 @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
               />
@@ -547,7 +544,6 @@ Fix width to the current breakpoint.
                 v-if="ext_font_family"
                 :breakpoint="breakpoint"
                 :extension="ext_font_family"
-                :transaction="select_transaction"
                 :editor="select_editor"
                 @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
               />
@@ -640,7 +636,6 @@ const cls_disclosure_button = [
 const cls_section = []
 const cls_panel = ['text-sm', 'mb-4', 'p-2']
 
-const select_transaction = ref()
 const select_editor = ref()
 
 const active_types = ref(new Map())

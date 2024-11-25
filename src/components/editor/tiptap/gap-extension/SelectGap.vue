@@ -1,7 +1,5 @@
 <template>
 
-    <!-- mx: margin horizontal -->
-
     <Listbox as="div" v-model="gapX">
       <ListboxButton>{{ gapX }}</ListboxButton>
       <ListboxOptions :class="class_opts">
@@ -10,8 +8,6 @@
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
-
-    <!-- my: margin vertical -->
 
     <Listbox as="div" v-model="gapY">
       <ListboxButton>{{ gapY }}</ListboxButton>
@@ -26,8 +22,8 @@
 </template>
 
 <script setup>
-
 import { computed } from 'vue'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 import {
   Listbox,
@@ -39,8 +35,8 @@ import {
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object
 })
 
 const emits = defineEmits(['select-gap'])
@@ -54,21 +50,11 @@ const class_opt = [
 
 const gaps = computed(() => props.extension.options.gaps)
 
-const attrs = computed(() => {
-  const type = props.extension.options.types.find(
-    (x) => props.editor.isActive(x)
-  )
-  if (type) {
-    return props.editor.getAttributes(type)
-  }
-})
-
 const get_side = (side) => {
   try {
-    const v = attrs.value[side].find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.gap : ''
+    return getSelectedAttrs(props, side)
   } catch (e) {
-    return ''
+    return 'none'
   }
 }
 

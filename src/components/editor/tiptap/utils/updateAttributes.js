@@ -84,7 +84,7 @@ export const TipTapCommands = Extension.create({
                     ...node.attrs,
                     ...attributes,
                 })
-        },
+            },
             _updateAttributes: (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
                 let nodeType = null
                 let markType = null

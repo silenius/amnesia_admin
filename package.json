@@ -54,6 +54,7 @@
     "@vue/language-server": "^2.0.19",
     "@vue/typescript-plugin": "^2.0.19",
     "autoprefixer": "^10.4.2",
+    "eslint": "^9.15.0",
     "postcss": "^8.4.28",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",

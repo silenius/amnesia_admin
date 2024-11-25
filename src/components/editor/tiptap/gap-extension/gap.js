@@ -4,12 +4,8 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_gapX_attrs,
-    render_gapY_attrs,
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
 
 const gaps = [
@@ -17,7 +13,6 @@ const gaps = [
     '8', '9', '10', '11', '12', '14', '16', '20', '24', '28', '32', '36', '40',
     '44', '48', '52', '56', '60', '64', '72', '80', '96'
 ]
-
 
 export const Gap = Extension.create({
     name: 'gap',
@@ -36,70 +31,13 @@ export const Gap = Extension.create({
                 attributes: {
                     gapX: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_gap = new Set(
-                                this.options.gaps.map(
-                                    (x) => Array.from(generate_responsive_cls(`gap-x-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_gap.has(name)) {
-                                    const result = name.split('-')
-                                    const [part1, part2] = result[0].split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-                                    const gap = result.slice(2).join('-')
-
-                                    matches.push({
-                                        gap: gap,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_gapX_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.gaps, 'gap-x-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'gapX')
                     },
-
                     gapY: {
                         default: null,
-                        
-                        parseHTML: elem => {
-                            const is_gap = new Set(
-                                this.options.gaps.map(
-                                    (x) => Array.from(generate_responsive_cls(`gap-y-${x}`))
-                                ).flat()
-                            )
-
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                if (is_gap.has(name)) {
-                                    const result = name.split('-')
-                                    const [part1, part2] = result[0].split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-                                    const gap = result.slice(2).join('-')
-
-                                    matches.push({
-                                        gap: gap,
-                                        breakpoint: breakpoint
-                                    })
-                                }
-                            }
-
-                            return matches.length ? matches : null
-                        },
-                        
-                        renderHTML: attrs => {
-                            return render_gapY_attrs(attrs)
-                        },
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.gaps, 'gap-y-'),
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'gapY')
                     },
                 },
             },
@@ -108,28 +46,39 @@ export const Gap = Extension.create({
 
     addCommands() {
         return {
-            setGap: (side, gap, breakpoint = null) => (p) => {
-                const type = this.options.types.find((e) => p.editor.isActive(e))
-                const oldAttrs = p.editor.getAttributes(type)[side]
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+            setGap: ({side, gap, selected=null, type=undefined, breakpoint=undefined}) => (p) => {
+                if (!selected && !type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
+                let attrs = selected ? selected.node.attrs[side] : p.editor.getAttributes(type)[side]
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
+
+                const tw = side == 'gapX' ? 'gap-x-' : 'gap-y-'
 
                 if (this.options.gaps.indexOf(gap) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        gap: gap,
+                        tw: `${tw}${gap}`
                     })
                 }
 
-                console.log(side)
+                attr = Object.fromEntries([[`${side}`, attr]])
                 console.log(attr)
-                console.log(Object.fromEntries([[`${side}`, attr ]]))
 
-                return p.commands._updateAttributes(
-                    type, Object.fromEntries([[`${side}`, attr ]])
-                )
+                if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
             },
         }
     },

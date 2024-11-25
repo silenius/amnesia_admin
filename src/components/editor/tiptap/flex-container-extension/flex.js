@@ -38,6 +38,26 @@ const align_contents = [
     'content-stretch'
 ]
 
+const _flex = ({ attr_name, attr_value, attr_values, selected, p, breakpoint }) => {
+    let attrs = selected.node.attrs[attr_name]
+    let attr = Array.isArray(attrs)
+        ? attrs.filter((x) => x.breakpoint != breakpoint)
+        : []
+
+    if (attr_values.indexOf(attr_value) !== -1) {
+        attr.push({
+            breakpoint: breakpoint,
+            tw: attr_value
+        })
+    }
+
+    attr = Object.fromEntries([[`${attr_name}`, attr]])
+
+    return p.commands._updateNodeAttributes(
+        selected.pos, selected.node, attr
+    )
+}
+
 export const FlexContainer = Node.create({
     name: 'flexContainer',
     content: 'flexItem*',
@@ -132,102 +152,60 @@ export const FlexContainer = Node.create({
             },
             */
 
-            setFlexDirection: (direction, breakpoint = null) => (p) => {
-                const oldAttrs = p.editor.getAttributes(this.name)['direction']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
-                if (this.options.directions.indexOf(direction) !== -1) {
-                    // New value
-                    attr.push({
-                        breakpoint: breakpoint,
-                        tw: direction,
-                    })
-                }
-
-                return p.commands._updateAttributes(
-                    this.name, { direction: attr }
-                )
+            setFlexDirection: ({direction, selected, breakpoint = null}) => (p) => {
+                return _flex({
+                    attr_name: 'direction',
+                    attr_value: direction,
+                    attr_values: this.options.directions,
+                    breakpoint: breakpoint,
+                    selected: selected,
+                    p: p
+                })
             },
 
-            setFlexWrap: (wrap, breakpoint = null) => (p) => {
-                const oldAttrs = p.editor.getAttributes(this.name)['wrap']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
-                if (this.options.wraps.indexOf(wrap) !== -1) {
-                    // New value
-                    attr.push({
-                        breakpoint: breakpoint,
-                        tw: wrap,
-                    })
-                }
-
-                return p.commands._updateAttributes(
-                    this.name, { wrap: attr }
-                )
+            setFlexWrap: ({wrap, selected, breakpoint = null}) => (p) => {
+                return _flex({
+                    attr_name: 'wrap',
+                    attr_value: wrap,
+                    attr_values: this.options.wraps,
+                    breakpoint: breakpoint,
+                    selected: selected,
+                    p: p
+                })
             },
 
-            setFlexJustifyContent: (justify, breakpoint = null) => (p) => {
-                const oldAttrs = p.editor.getAttributes(this.name)['justify_content']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
-                if (this.options.justify_contents.indexOf(justify) !== -1) {
-                    // New value
-                    attr.push({
-                        breakpoint: breakpoint,
-                        tw: justify,
-                    })
-                }
-
-                return p.commands._updateAttributes(
-                    this.name, { justify_content: attr }
-                )
+            setFlexJustifyContent: ({justify, selected, breakpoint = null}) => (p) => {
+                return _flex({
+                    attr_name: 'justify_content',
+                    attr_value: justify,
+                    attr_values: this.options.justify_contents,
+                    breakpoint: breakpoint,
+                    selected: selected,
+                    p: p
+                })
             },
 
-            setFlexAlignItems: (align, breakpoint = null) => (p) => {
-                const oldAttrs = p.editor.getAttributes(this.name)['align_items']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
-                if (this.options.align_items.indexOf(align) !== -1) {
-                    // New value
-                    attr.push({
-                        breakpoint: breakpoint,
-                        tw: align,
-                    })
-                }
-
-                return p.commands._updateAttributes(
-                    this.name, { align_items: attr }
-                )
+            setFlexAlignItems: ({align, selected, breakpoint = null}) => (p) => {
+                return _flex({
+                    attr_name: 'align_items',
+                    attr_value: align,
+                    attr_values: this.options.align_items,
+                    breakpoint: breakpoint,
+                    selected: selected,
+                    p: p
+                })
             },
 
-            setFlexAlignContent: (align, breakpoint = null) => (p) => {
-                const oldAttrs = p.editor.getAttributes(this.name)['align_content']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
-                if (this.options.align_contents.indexOf(align) !== -1) {
-                    // New value
-                    attr.push({
-                        breakpoint: breakpoint,
-                        tw: align,
-                    })
-                }
-
-                return p.commands._updateAttributes(
-                    this.name, { align_content: attr }
-                )
+            setFlexAlignContent: ({align, selected, breakpoint = null}) => (p) => {
+                return _flex({
+                    attr_name: 'align_content',
+                    attr_value: align,
+                    attr_values: this.options.align_contents,
+                    breakpoint: breakpoint,
+                    selected: selected,
+                    p: p
+                })
             },
-
-
         }
     },
 
