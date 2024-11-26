@@ -3,6 +3,9 @@
 
     <!-- mt: margin top -->
 
+        attrs:{{ selected.node.attrs.ml }} getside: {{ get_side('ml') }}
+
+
     <Listbox as="div" v-model="mt">
       <ListboxButton>top: {{ mt }}</ListboxButton>
       <ListboxOptions :class="class_opts">
@@ -81,7 +84,7 @@
 
 <script setup>
 
-import { computed } from 'vue'
+import { watch, ref, getCurrentInstance, nextTick, computed } from 'vue'
 import marginSvg from "@/assets/margin.svg";
 
 import {
@@ -98,8 +101,10 @@ const props = defineProps({
   extension: Object,
   transaction: Object,
   editor: Object,
-  selected: Object
+  selected: Object,
 })
+
+const inst = getCurrentInstance()
 
 const emits = defineEmits(['select-margin'])
 
@@ -120,40 +125,44 @@ const get_side = (side) => {
   }
 }
 
-const set_side = (side, value) => emits('select-margin', {
-  side: side, 
-  level: value, 
-  breakpoint: props.breakpoint
-})
+const set_side = (side, value) => {
+  emits('select-margin', {
+    side: side, 
+    level: value, 
+    breakpoint: props.breakpoint
+  })
+
+  inst.proxy.$forceUpdate()
+}
 
 const mx = computed({
   get() { return get_side('mx') },
-  set(value) { return set_side('mx', value) }
+  set(value) { set_side('mx', value) }
 })
 
 const my = computed({
   get() { return get_side('my') },
-  set(value) { return set_side('my', value) }
+  set(value) { set_side('my', value) }
 })
 
 const mt = computed({
   get() { return get_side('mt') },
-  set(value) { return set_side('mt', value) }
+  set(value) { set_side('mt', value) }
 })
 
 const mr = computed({
   get() { return get_side('mr') },
-  set(value) { return set_side('mr', value) }
+  set(value) { set_side('mr', value) }
 })
 
 const mb = computed({
   get() { return get_side('mb') },
-  set(value) { return set_side('mb', value) }
+  set(value) { set_side('mb', value) }
 })
 
 const ml = computed({
   get() { return get_side('ml') },
-  set(value) { return set_side('ml', value) }
+  set(value) { set_side('ml', value) }
 })
 
 </script>
