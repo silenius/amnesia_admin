@@ -3,7 +3,7 @@
 
     <!-- mt: margin top -->
 
-        attrs:{{ selected.node.attrs.ml }} getside: {{ get_side('ml') }}
+    <p>attrs:{{ atrs['ml'] }}</p>
 
 
     <Listbox as="div" v-model="mt">
@@ -102,6 +102,8 @@ const props = defineProps({
   transaction: Object,
   editor: Object,
   selected: Object,
+  nodee: Object,
+  atrs: Object
 })
 
 const inst = getCurrentInstance()
@@ -124,6 +126,20 @@ const get_side = (side) => {
     return 'none'
   }
 }
+
+watch( () => props.selected, () => {
+  console.log('SELECTED CHANGED')
+})
+
+watch( () => props.atrs, () => {
+  console.log('ATTRS CHANGED')
+}, { deep: true })
+
+watch( () => props.nodee, () => {
+  console.log('NODE CHANGED')
+  console.log(props.nodee?.attrs.ml)
+}, { deep: true })
+
 
 const set_side = (side, value) => {
   emits('select-margin', {
@@ -161,7 +177,14 @@ const mb = computed({
 })
 
 const ml = computed({
-  get() { return get_side('ml') },
+  get() {
+    try {
+    return props.nodee.attrs['ml'].find(
+        (x) => x.breakpoint == props.breakpoint
+    ).tw
+    } catch (e) { return 'none' }
+    return get_side('ml') 
+  },
   set(value) { set_side('ml', value) }
 })
 

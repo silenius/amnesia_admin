@@ -5,6 +5,7 @@ import { Extension } from '@tiptap/core'
 import { useTiptap } from '@/composables/tiptap'
 
 import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
 const { getSelectedNode } = useTiptap()
@@ -24,12 +25,16 @@ const outlineNodePlugin = new Plugin({
 
         apply(tr, value) {
             console.debug('===> BEGIN outlineNode apply: [tr] ', tr, ' [value] ', value)
+
+            value = value.map(tr.mapping, tr.doc)
+
             if (tr.getMeta('highlightNode')) {
                 const { pos, node } = tr.getMeta('highlightNode')
                 const hl = find_dec(value, 'highlight') 
 
                 value = value.remove(hl)
 
+                console.log('=== highlightNode ===', pos, node)
                 if (pos && node) {
                     value = value.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
@@ -45,6 +50,7 @@ const outlineNodePlugin = new Plugin({
 
                 value = value.remove(sl)
 
+                console.log('=== selectNode ===', pos, node)
                 if (pos && node) {
                     value = value.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
@@ -56,7 +62,7 @@ const outlineNodePlugin = new Plugin({
 
             console.debug('===> END outlineNode apply')
 
-            return value.map(tr.mapping, tr.doc)
+            return value
         }
     },
 
@@ -79,12 +85,23 @@ export const TipTapCommands = Extension.create({
 
     addCommands() {
         return {
+            _after: (selected) => ({tr, dispatch}) => {
+                if (dispatch) {
+                    tr.setMeta('selectNode', selected)
+                }
+
+                return true 
+            },
+
             _updateNodeAttributes: (pos, node, attributes = {}) => ({ tr }) => {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,
                     ...attributes,
                 })
+
+                return true
             },
+
             _updateAttributes: (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
                 let nodeType = null
                 let markType = null

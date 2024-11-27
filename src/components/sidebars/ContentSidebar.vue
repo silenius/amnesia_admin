@@ -14,8 +14,8 @@
         <button 
           v-for="t in active_types.values()"
           @click="select_node(t)"
-          @mouseover="highlight_node(t)" 
-          @mouseout="highlight_node()"
+          @mouseover="highlight_node(t, 'highlightNode')" 
+          @mouseout="highlight_node({}, 'highlightNode')"
           :data-pos="t.pos"
           type="button" 
           :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == selected?.pos}]"
@@ -279,9 +279,9 @@ Fix width to the current breakpoint.
             :extension="ext_margin" 
             :editor="select_editor"
             :selected="selected"
-            @select-margin="({side, level, breakpoint}) => {
-              select_editor.chain().setMargin({side: side, level: level,
-                breakpoint: breakpoint, selected: selected}).focus().run() }"
+            :nodee="selected.node"
+            :atrs="selected_attrs"
+            @select-margin="(p) => do_select_margin(p)"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -641,22 +641,40 @@ const select_editor = ref()
 const active_types = ref(new Map())
 const selected = ref({})
 
-watch(selected, () => {
+
+const do_select_margin = ({side, level, breakpoint}) => {
+  const s = unref(selected)
+  select_editor.value.chain().focus().setMargin({
+    side: side, 
+    level: level, 
+    breakpoint: breakpoint, 
+    selected: s
+  })._after(s).run()
+
+  const foo = select_editor.value.$pos(s.pos+1)
+  console.log('S NODE: ', s.node)
+  console.log('S POS: ', s.pos)
+  console.log('F NODE: ', foo.node)
+  console.log('F POS: ', foo.pos)
+
+  selected.value.node = foo.node
+}
+
+watch(selected, (newSelected, oldSelected) => {
   console.log('========> SELECTION CHANGED <========')
+  highlight_node(newSelected, 'selectNode')
 }, { deep: true })
 
 
 const selected_type = computed(() => selected.value?.node?.type.name)
+const selected_attrs = computed(() => selected.value?.node?.attrs)
 const selection_has_text = ref(false)
 
-const highlight_node = (p) => {
+const highlight_node = (p, key) => {
   if (!p) {
     p = {node: null, pos: null}
   } 
-
-  select_editor.value.chain().focus().setMeta(
-    'highlightNode', p
-  ).run()
+  select_editor.value.chain().focus().setMeta(key, p).run()
 }
 
 /*
@@ -694,10 +712,6 @@ const select_node = (p) => {
   select_editor.value.view.dispatch(tr)
   */
 
-  select_editor.value.chain().focus().setMeta(
-    'selectNode', {pos: p.pos, node: p.node}
-  ).run()
-
   selected.value = p
 
   /*
@@ -729,18 +743,18 @@ watch(editors, () => {
     })
     */
 
-    /*
     select_editor.value.on('transaction', ({ editor, transaction }) => {
+      console.debug('===> [EVENT] TRANSACTION <===')
     })
-    */
 
     select_editor.value.on('update', ({ editor, transaction }) => {
-      console.debug('===> CONTENT UPDATE <===', transaction)
+      console.debug('===> [EVENT] CONTENT UPDATE <===', transaction)
+      //selected.value.node = selected.value.node.copy()
       //transaction.replaceSelectionWith(selected.value.node)
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
-      console.debug('===> BEGIN SELECTION UPDATE')
+      console.debug('===> [EVENT] BEGIN SELECTION UPDATE')
 
       if (transaction.getMeta('selectNode') || transaction.getMeta('highlightNode')) {
         console.debug('--- SKIP UPDATE ---')
@@ -795,10 +809,13 @@ watch(editors, () => {
 
       */
 
+      //select_node(last)
+
       if (!active_types.value?.has(selected.value?.pos)) {
         select_node(last)
       } else {
         console.log('==== NODE WITHIN ACTIVE TYPES ====')
+        highlight_node(selected.value, 'selectNode')
       }
 
       /*
@@ -809,7 +826,7 @@ watch(editors, () => {
       }
       */
 
-      console.debug('===> END SELECTION UPDATE')
+      console.debug('===> [EVENT] END SELECTION UPDATE')
     })
 
   }
