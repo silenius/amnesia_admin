@@ -13,9 +13,9 @@
       <div class="flex flex-col gap-y-2 items-start">
         <button 
           v-for="t in active_types.values()"
-          @click="select_node(t)"
-          @mouseover="highlight_node(t, 'highlightNode')" 
-          @mouseout="highlight_node({}, 'highlightNode')"
+          @click="selected = t"
+          @mouseover="decorate('highlightNode', t)" 
+          @mouseout="decorate('highlightNode')"
           :data-pos="t.pos"
           type="button" 
           :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == selected?.pos}]"
@@ -279,9 +279,7 @@ Fix width to the current breakpoint.
             :extension="ext_margin" 
             :editor="select_editor"
             :selected="selected"
-            :nodee="selected.node"
-            :atrs="selected_attrs"
-            @select-margin="(p) => do_select_margin(p)"
+            @select-margin="(p) => select_editor.chain().focus().setMargin({...p, selected: selected}).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -641,93 +639,19 @@ const select_editor = ref()
 const active_types = ref(new Map())
 const selected = ref({})
 
-
-const do_select_margin = ({side, level, breakpoint}) => {
-  const s = unref(selected)
-  select_editor.value.chain().focus().setMargin({
-    side: side, 
-    level: level, 
-    breakpoint: breakpoint, 
-    selected: s
-  })._after(s).run()
-
-  const foo = select_editor.value.$pos(s.pos+1)
-  console.log('S NODE: ', s.node)
-  console.log('S POS: ', s.pos)
-  console.log('F NODE: ', foo.node)
-  console.log('F POS: ', foo.pos)
-
-  selected.value.node = foo.node
-}
-
 watch(selected, (newSelected, oldSelected) => {
-  console.log('========> SELECTION CHANGED <========')
-  highlight_node(newSelected, 'selectNode')
+  console.debug('===> [WATCH] SELECTED')
+  decorate('selectNode', newSelected)
 }, { deep: true })
 
-
 const selected_type = computed(() => selected.value?.node?.type.name)
-const selected_attrs = computed(() => selected.value?.node?.attrs)
 const selection_has_text = ref(false)
 
-const highlight_node = (p, key) => {
+const decorate = (key, p) => {
   if (!p) {
     p = {node: null, pos: null}
   } 
   select_editor.value.chain().focus().setMeta(key, p).run()
-}
-
-/*
-const foo = () => {
-  const mypos = select_editor.value.state.doc.resolve(selected.value.pos)
-  const sel = new NodeSelection(mypos)
-  const tr = select_editor.value.state.tr.setSelection(sel)
-  select_editor.value.view.dispatch(tr)
-  highlight_node(selected)
-  console.log(sel)
-}
-*/
-
-const select_node = (p) => {
-  console.debug('===> BEGIN select_node: [p] ', p)
-
-  /*
-  const rp = select_editor.value.state.doc.resolve(p.pos)
-  const s = new NodeSelection(rp)
-
-  const tr = select_editor.value.state.tr.setMeta(
-    'selectNode', {pos: p.pos, node: p.node}
-  ).setNodeMarkup(
-    p.pos, undefined, { 
-      ...p.node.attrs,
-        'ml': [{
-          breakpoint: null,
-          tw: 'ml-8'
-        }]
-    }
-  )
-
-  console.log(tr.constructor.name)
-
-  select_editor.value.view.dispatch(tr)
-  */
-
-  selected.value = p
-
-  /*
-  select_editor.value.chain().focus().setMeta(
-    'selectNode', {pos: p.pos, node: p.node}
-  ).run()
-  */
-
-  //select_editor.value.chain().focus().setTextSelection(p.pos).run()
-  /*
-  let tr = select_editor.value.state.tr.setMeta(
-    'selectNode', {pos: p.pos, node: p.node}
-  )
-  */
-
-  console.debug('===> END select_node')
 }
 
 watch(editors, () => {
@@ -738,26 +662,25 @@ watch(editors, () => {
       return false
     }
 
-    /*
-    select_editor.value.on('focus', ({ editor, event }) => {
-    })
-    */
-
     select_editor.value.on('transaction', ({ editor, transaction }) => {
-      console.debug('===> [EVENT] TRANSACTION <===')
+      console.debug('===> [EVENT] TRANSACTION')
     })
 
     select_editor.value.on('update', ({ editor, transaction }) => {
-      console.debug('===> [EVENT] CONTENT UPDATE <===', transaction)
-      //selected.value.node = selected.value.node.copy()
-      //transaction.replaceSelectionWith(selected.value.node)
+      console.debug('===> [EVENT] CONTENT UPDATE', transaction)
+      /*  
+          Nodes are immutable so we need to update the reference otherwise
+          we're keeping a reference to an object that is not being mutated
+      */
+
+      selected.value.node = transaction.doc.nodeAt(selected.value.pos)
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
       console.debug('===> [EVENT] BEGIN SELECTION UPDATE')
 
       if (transaction.getMeta('selectNode') || transaction.getMeta('highlightNode')) {
-        console.debug('--- SKIP UPDATE ---')
+        console.debug('--- SKIP UPDATE')
         return
       }
 
@@ -793,38 +716,12 @@ watch(editors, () => {
         selection_has_text.value = false
       }
 
-      /*
-      const pos = selection.$cursor ? selection.$cursor : selection.$head
-      const path_types = pos.path.filter(
-        (x) => typeof(x) === 'object' && select_editor.value.isActive(x.type.name)
-      ).map(
-        (x) => x.type.name
-      )
-
-      if (selection.jsonID == 'node') {
-        path_types.push(selection.node.type.name)
-      }
-
-      active_types.value = [...new Set(path_types)]
-
-      */
-
-      //select_node(last)
-
       if (!active_types.value?.has(selected.value?.pos)) {
-        select_node(last)
+        selected.value = last
       } else {
-        console.log('==== NODE WITHIN ACTIVE TYPES ====')
+        console.debug('--- NODE WITHIN ACTIVE TYPES')
         highlight_node(selected.value, 'selectNode')
       }
-
-      /*
-      if (!selected.value || (selected.value && !active_types.value.has(selected.value.pos))) {
-        select_node(last)
-      } else {
-        console.log('===> Selected Node ', selected.value)
-      }
-      */
 
       console.debug('===> [EVENT] END SELECTION UPDATE')
     })

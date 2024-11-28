@@ -3,9 +3,6 @@
 
     <!-- mt: margin top -->
 
-    <p>attrs:{{ atrs['ml'] }}</p>
-
-
     <Listbox as="div" v-model="mt">
       <ListboxButton>top: {{ mt }}</ListboxButton>
       <ListboxOptions :class="class_opts">
@@ -84,7 +81,7 @@
 
 <script setup>
 
-import { watch, ref, getCurrentInstance, nextTick, computed } from 'vue'
+import { watch, ref, computed } from 'vue'
 import marginSvg from "@/assets/margin.svg";
 
 import {
@@ -102,11 +99,7 @@ const props = defineProps({
   transaction: Object,
   editor: Object,
   selected: Object,
-  nodee: Object,
-  atrs: Object
 })
-
-const inst = getCurrentInstance()
 
 const emits = defineEmits(['select-margin'])
 
@@ -127,28 +120,12 @@ const get_side = (side) => {
   }
 }
 
-watch( () => props.selected, () => {
-  console.log('SELECTED CHANGED')
-})
-
-watch( () => props.atrs, () => {
-  console.log('ATTRS CHANGED')
-}, { deep: true })
-
-watch( () => props.nodee, () => {
-  console.log('NODE CHANGED')
-  console.log(props.nodee?.attrs.ml)
-}, { deep: true })
-
-
 const set_side = (side, value) => {
-  emits('select-margin', {
+  return emits('select-margin', {
     side: side, 
     level: value, 
     breakpoint: props.breakpoint
   })
-
-  inst.proxy.$forceUpdate()
 }
 
 const mx = computed({
@@ -177,14 +154,7 @@ const mb = computed({
 })
 
 const ml = computed({
-  get() {
-    try {
-    return props.nodee.attrs['ml'].find(
-        (x) => x.breakpoint == props.breakpoint
-    ).tw
-    } catch (e) { return 'none' }
-    return get_side('ml') 
-  },
+  get() { return get_side('ml') },
   set(value) { set_side('ml', value) }
 })
 

@@ -118,7 +118,6 @@ const get_side = (side) => {
   } catch (e) {
     return 'none'
   }
-
 }
 
 const set_side = (side, value) => emits('select-padding', {

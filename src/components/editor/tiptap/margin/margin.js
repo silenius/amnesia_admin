@@ -103,12 +103,6 @@ export const Margin = Extension.create({
 
                 attr = Object.fromEntries([[`${side}`, attr]])
             
-                    p.commands._updateNodeAttributes(
-                        selected.pos, selected.node, attr
-                    )
-
-                    return true
-
                 if (!p.editor.state.selection.empty) {
                     return p.commands.setMark('textClass', attr)
                 } else if (selected) {

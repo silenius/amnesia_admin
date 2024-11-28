@@ -85,14 +85,6 @@ export const TipTapCommands = Extension.create({
 
     addCommands() {
         return {
-            _after: (selected) => ({tr, dispatch}) => {
-                if (dispatch) {
-                    tr.setMeta('selectNode', selected)
-                }
-
-                return true 
-            },
-
             _updateNodeAttributes: (pos, node, attributes = {}) => ({ tr }) => {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,
