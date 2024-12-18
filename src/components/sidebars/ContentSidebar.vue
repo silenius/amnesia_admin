@@ -39,13 +39,6 @@
             Configure block-level flex container.
           </div>
 
-          <button @click="select_editor.commands.deleteNode('flexContainer')"
-            class="text-white bg-red-700 hover:bg-red-800 font-medium
-            rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
-            dark:hover:bg-red-700">
-            Delete
-          </button>
-
           <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
             <div class="flex flex-col">
               <span>Direction</span>
@@ -54,9 +47,7 @@
                 :extension="ext_flex" 
                 :editor="select_editor"
                 :selected="selected"
-                @select-direction="({direction, breakpoint}) =>
-                  select_editor.chain().setFlexDirection({direction: direction,
-                    breakpoint: breakpoint, selected: selected}).run()"
+                @select-direction="(p) => select_editor.chain().setFlexDirection({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -67,9 +58,7 @@
                 :extension="ext_flex" 
                 :editor="select_editor"
                 :selected="selected"
-                @select-wrap="({wrap, breakpoint}) =>
-                  select_editor.chain().setFlexWrap({wrap: wrap, breakpoint:
-                    breakpoint, selected: selected}).run()"
+                @select-wrap="(p) => select_editor.chain().setFlexWrap({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -80,9 +69,7 @@
                 :extension="ext_flex" 
                 :editor="select_editor"
                 :selected="selected"
-                @select-justify-content="({justify, breakpoint}) =>
-                  select_editor.chain().setFlexJustifyContent({justify:
-                    justify, breakpoint: breakpoint, selected: selected}).run()"
+                @select-justify-content="(p) => select_editor.chain().setFlexJustifyContent({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -94,9 +81,7 @@
                 :extension="ext_flex" 
                 :editor="select_editor"
                 :selected="selected"
-                @select-align-items="({align, breakpoint}) =>
-                  select_editor.chain().setFlexAlignItems({align: align,
-                    breakpoint: breakpoint, selected: selected}).run()"
+                @select-align-items="(p) => select_editor.chain().setFlexAlignItems({ ...p, selected: selected}).run()"
               />
             </div>
 
@@ -108,9 +93,7 @@
                 :extension="ext_flex" 
                 :editor="select_editor"
                 :selected="selected"
-                @select-align-content="({align, breakpoint}) =>
-                  select_editor.chain().setFlexAlignContent({align: align,
-                    breakpoint: breakpoint, selected: selected}).run()"
+                @select-align-content="(p) => select_editor.chain().setFlexAlignContent({ ...p, selected: selected}).run()"
               />
             </div>
           </div>
@@ -122,7 +105,7 @@
               :extension="ext_gap" 
               :editor="select_editor"
               :selected="selected"
-              @select-gap="({side, gap, breakpoint}) => select_editor.chain().setGap({side: side, gap: gap, breakpoint: breakpoint, selected: selected}).run()"
+              @select-gap="(p) => select_editor.chain().setGap({...p, selected: selected}).run()"
             />
           </div>
         </DisclosurePanel>
@@ -165,9 +148,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
-                @select-basis="({basis, breakpoint}) => select_editor.chain().setFlexBasis({
-                  basis: basis, breakpoint: breakpoint, selected: selected
-                }).run()"
+                @select-basis="(p) => select_editor.chain().setFlexBasis({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -177,9 +158,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
-                @select-grow="({grow, breakpoint}) => select_editor.chain().setFlexGrow({
-                  grow: grow, breakpoint: breakpoint, selected: selected
-                }).run()"
+                @select-grow="(p) => select_editor.chain().setFlexGrow({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -189,9 +168,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
-                @select-shrink="({shrink, breakpoint}) => select_editor.chain().setFlexShrink({
-                  shrink: shrink, breakpoint: breakpoint, selected: selected
-                }).run()"
+                @select-shrink="(p) => select_editor.chain().setFlexShrink({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -203,9 +180,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
-                @select-flex-grow-shrink="({flex, breakpoint}) => select_editor.chain().setFlexGrowShrink({
-                  flex: flex, breakpoint: breakpoint, selected: selected
-                }).run()"
+                @select-flex-grow-shrink="(p) => select_editor.chain().setFlexGrowShrink({ ...p, selected: selected }).run()"
               />
             </div>
 
@@ -254,9 +229,7 @@ Fix width to the current breakpoint.
             :extension="ext_padding" 
             :editor="select_editor"
             :selected="selected"
-            @select-padding="({side, level, breakpoint}) => select_editor.chain().setPadding(
-              {side: side, level: level, breakpoint: breakpoint, selected: selected}
-            ).focus().run()"
+            @select-padding="(p) => select_editor.chain().setPadding({ ...p, selected: selected}).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -302,7 +275,7 @@ Fix width to the current breakpoint.
             :extension="ext_float" 
             :editor="select_editor"
             :type="selected_type"
-            @select-float="({float, breakpoint}) => select_editor.chain().setFloat(float, breakpoint, selected_type).run()"
+            @select-float="(p) => select_editor.chain().setFloat({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -324,7 +297,7 @@ Fix width to the current breakpoint.
             :extension="ext_float" 
             :editor="select_editor"
             :type="selected_type"
-            @select-clear="({clear, breakpoint}) => select_editor.chain().setClear(clear, breakpoint, selected_type).run()"
+            @select-clear="(p) => select_editor.chain().setClear({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -347,7 +320,7 @@ Fix width to the current breakpoint.
             :extension="ext_align" 
             :editor="select_editor"
             :type="selected_type"
-            @select-align="({align, breakpoint}) => select_editor.chain().setAlign(align, breakpoint, selected_type).run()"
+            @select-align="(p) => select_editor.chain().setAlign({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -375,7 +348,7 @@ Fix width to the current breakpoint.
               :extension="ext_width" 
               :type="selected_type"
               :editor="select_editor"
-              @select-width="({width, breakpoint}) => select_editor.chain().setWidth(width, breakpoint, selected_type).run()"
+              @select-width="(p) => select_editor.chain().setWidth({ ...p, selected: selected }).run()"
             />
 
             <SelectHeight
@@ -384,7 +357,7 @@ Fix width to the current breakpoint.
               :extension="ext_height" 
               :type="selected_type"
               :editor="select_editor"
-              @select-height="({height, breakpoint}) => select_editor.chain().setHeight(height, breakpoint, selected_type).run()"
+              @select-height="(p) => select_editor.chain().setHeight({ ...p, selected: selected }).run()"
             />
 
             <span>Min. Width</span>
@@ -397,7 +370,7 @@ Fix width to the current breakpoint.
               :extension="ext_min_width" 
               :type="selected_type"
               :editor="select_editor"
-              @select-minWidth="({minWidth, breakpoint}) => select_editor.chain().setMinWidth(minWidth, breakpoint, selected_type).run()"
+              @select-minWidth="(p) => select_editor.chain().setMinWidth({ ...p, selected: selected }).run()"
             />
 
             <SelectMinHeight
@@ -406,7 +379,7 @@ Fix width to the current breakpoint.
               :extension="ext_min_height" 
               :type="selected_type"
               :editor="select_editor"
-              @select-minHeight="({minHeight, breakpoint}) => select_editor.chain().setMinHeight(minHeight, breakpoint, selected_type).run()"
+              @select-minHeight="(p) => select_editor.chain().setMinHeight({ ...p, selected: selected }).run()"
             />
 
 
@@ -418,7 +391,7 @@ Fix width to the current breakpoint.
               :extension="ext_max_width" 
               :type="selected_type"
               :editor="select_editor"
-              @select-maxWidth="({maxWidth, breakpoint}) => select_editor.chain().setMaxWidth(maxWidth, breakpoint, selected_type).run()"
+              @select-maxWidth="(p) => select_editor.chain().setMaxWidth({ ...p, selected: selected }).run()"
             />
 
             <SelectMaxHeight
@@ -427,7 +400,7 @@ Fix width to the current breakpoint.
               :extension="ext_max_height" 
               :type="selected_type"
               :editor="select_editor"
-              @select-maxHeight="({maxHeight, breakpoint}) => select_editor.chain().setMaxHeight(maxHeight, breakpoint, selected_type).run()"
+              @select-maxHeight="(p) => select_editor.chain().setMaxHeight({ ...p, selected: selected }).run()"
             />
           </div>
 
@@ -720,7 +693,7 @@ watch(editors, () => {
         selected.value = last
       } else {
         console.debug('--- NODE WITHIN ACTIVE TYPES')
-        highlight_node(selected.value, 'selectNode')
+        decorate('selectNode', selected.value)
       }
 
       console.debug('===> [EVENT] END SELECTION UPDATE')

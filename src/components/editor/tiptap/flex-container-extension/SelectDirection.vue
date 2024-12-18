@@ -25,7 +25,8 @@ const props = defineProps({
   breakpoint: String,
   extension: Object,
   transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -46,6 +47,7 @@ const directions = computed(
 const direction = computed({
 
   get() {
+    getSelectedAttrs(props, 'direction')
     try {
       return getSelectedAttrs(props, 'direction')
     } catch (e) {
