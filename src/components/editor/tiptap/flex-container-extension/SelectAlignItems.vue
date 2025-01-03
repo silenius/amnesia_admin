@@ -23,7 +23,6 @@ import {
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
   selected: Object
 })

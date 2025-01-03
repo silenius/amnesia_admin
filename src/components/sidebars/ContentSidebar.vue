@@ -148,6 +148,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
+                :selected="selected"
                 @select-basis="(p) => select_editor.chain().setFlexBasis({ ...p, selected: selected }).run()"
               />
             </div>
@@ -158,6 +159,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
+                :selected="selected"
                 @select-grow="(p) => select_editor.chain().setFlexGrow({ ...p, selected: selected }).run()"
               />
             </div>
@@ -168,6 +170,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
+                :selected="selected"
                 @select-shrink="(p) => select_editor.chain().setFlexShrink({ ...p, selected: selected }).run()"
               />
             </div>
@@ -180,6 +183,7 @@
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
                 :editor="select_editor"
+                :selected="selected"
                 @select-flex-grow-shrink="(p) => select_editor.chain().setFlexGrowShrink({ ...p, selected: selected }).run()"
               />
             </div>

@@ -11,6 +11,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 import {
   Listbox,
@@ -22,8 +23,8 @@ import {
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -47,9 +48,7 @@ const shrink = computed({
 
   get() {
     try {
-      return attrs.value.shrink.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'shrink')
     } catch (e) {
       return 'none'
     }

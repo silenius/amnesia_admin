@@ -47,7 +47,6 @@ const directions = computed(
 const direction = computed({
 
   get() {
-    getSelectedAttrs(props, 'direction')
     try {
       return getSelectedAttrs(props, 'direction')
     } catch (e) {

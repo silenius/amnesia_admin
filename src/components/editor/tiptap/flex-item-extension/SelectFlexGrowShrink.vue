@@ -56,6 +56,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 import {
   Popover, 
@@ -66,8 +67,8 @@ import {
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
-  editor: Object
+  editor: Object,
+  selected: Object,
 })
 
 const emits = defineEmits([
@@ -108,9 +109,7 @@ const flex = computed({
 
   get() {
     try {
-      return attrs.value.flex.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'flex')
     } catch (e) {
       return 'none'
     }
