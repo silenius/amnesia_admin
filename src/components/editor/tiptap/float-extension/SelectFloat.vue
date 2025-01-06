@@ -23,7 +23,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 import floatLeft from "@/assets/float-left.svg";
 import floatRight from "@/assets/float-right.svg";
 import floatNone from "@/assets/denied.svg";
@@ -31,9 +31,8 @@ import floatNone from "@/assets/denied.svg";
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits(['select-float'])
@@ -42,9 +41,7 @@ const float = computed({
 
   get() { 
     try {
-      return getTypeAttrs(props).float.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'float')
     } catch (e) {
       return undefined
     }

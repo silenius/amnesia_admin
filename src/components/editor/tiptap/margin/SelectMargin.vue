@@ -7,7 +7,7 @@
       <ListboxButton>top: {{ mt }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <button :class="class_opt">{{ level }}</button>
+          <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -19,7 +19,7 @@
         <ListboxButton>left: {{ ml }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
-            <button :class="class_opt">{{ level }}</button>
+            <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
@@ -33,7 +33,7 @@
         <ListboxButton>right: {{ mr }}</ListboxButton>
         <ListboxOptions :class="class_opts">
           <ListboxOption v-for="level in levels" :key="level" :value="level" >
-            <button :class="class_opt">{{ level }}</button>
+            <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
@@ -45,7 +45,7 @@
       <ListboxButton>bottom: {{ mb }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <button :class="class_opt">{{ level }}</button>
+          <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -59,7 +59,7 @@
       <ListboxButton>horizontal: {{ mx }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <button :class="class_opt">{{ level }}</button>
+          <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -70,7 +70,7 @@
       <ListboxButton>vertical: {{ my }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="level in levels" :key="level" :value="level" >
-          <button :class="class_opt">{{ level }}</button>
+          <button :class="class_opt">{{ level !== undefined ? level : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -110,7 +110,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const levels = computed(() => props.extension.options.levels)
+const levels = computed(
+  () => props.extension.options.levels.toSpliced(0, 0, undefined)
+)
 
 const get_side = (side) => {
   try {

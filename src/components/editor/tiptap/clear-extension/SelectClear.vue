@@ -1,5 +1,6 @@
 <template>
   <div class="flex gap-4 mt-4 justify-evenly">
+    clear: {{ clear }}
     <div class="flex flex-col items-center text-xs gap-1">
       <button @click.prevent="clear='clear-none'"><img :src="clearNone"
         :class="img_cls('clear-none')" /></button>
@@ -18,7 +19,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 import clearLeft from "@/assets/float-left.svg";
 import clearRight from "@/assets/float-right.svg";
 import clearNone from "@/assets/denied.svg";
@@ -26,9 +27,8 @@ import clearNone from "@/assets/denied.svg";
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits(['select-clear'])
@@ -36,9 +36,7 @@ const emits = defineEmits(['select-clear'])
 const clear = computed({
   get() { 
     try {
-      return getTypeAttrs(props).clear.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'clear')
     } catch (e) {
       return undefined
     }

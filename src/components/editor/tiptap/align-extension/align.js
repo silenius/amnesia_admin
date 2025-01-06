@@ -39,26 +39,40 @@ export const Align = Extension.create({
 
     addCommands() {
         return {
-            setAlign: (align, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
+            setAlign: ({align, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
 
-                const oldAttrs = p.editor.getAttributes(type)['align']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['align'] : p.editor.getAttributes(type)['align']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.aligns.indexOf(align) !== -1) {
+                    // New value
                     attr.push({
                         breakpoint: breakpoint,
                         tw: align
                     })
                 }
 
-                return p.commands._updateAttributes(
-                    type, { align: attr }
-                )
+                attr = {
+                    align: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
             },
         }
     },

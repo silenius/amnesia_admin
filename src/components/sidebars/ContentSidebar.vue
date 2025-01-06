@@ -123,25 +123,7 @@
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
 
-          <div class="italic my-2">
-            Configure flex item.
-          </div>
-          <div>
-            <button @click="select_editor.commands.deleteNode('flexItem')"
-              class="text-white bg-red-700 hover:bg-red-800 font-medium
-              rounded-full text-xs px-3 py-2 text-center dark:bg-red-600
-              dark:hover:bg-red-700">
-              Delete
-            </button>
-            <button @click=""
-              class="text-white bg-lime-700 hover:bg-lime-800 font-medium
-              rounded-full text-xs px-3 py-2 text-center dark:bg-lime-600
-              dark:hover:bg-lime-700">
-              Add
-            </button>
-
-          </div>
-          <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
+         <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
             <div class="flex flex-col">
               <span>Basis</span>
               <SelectBasis
@@ -278,7 +260,7 @@ Fix width to the current breakpoint.
             :breakpoint="breakpoint"
             :extension="ext_float" 
             :editor="select_editor"
-            :type="selected_type"
+            :selected="selected"
             @select-float="(p) => select_editor.chain().setFloat({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>
@@ -300,7 +282,7 @@ Fix width to the current breakpoint.
             :breakpoint="breakpoint"
             :extension="ext_float" 
             :editor="select_editor"
-            :type="selected_type"
+            :selected="selected"
             @select-clear="(p) => select_editor.chain().setClear({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>
@@ -323,7 +305,7 @@ Fix width to the current breakpoint.
             :breakpoint="breakpoint"
             :extension="ext_align" 
             :editor="select_editor"
-            :type="selected_type"
+            :selected="selected"
             @select-align="(p) => select_editor.chain().setAlign({ ...p, selected: selected }).run()"
           />
         </DisclosurePanel>

@@ -39,14 +39,15 @@ export const Clear = Extension.create({
 
     addCommands() {
         return {
-            setClear: (clear, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
+            setClear: ({clear, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
-                const oldAttrs = p.editor.getAttributes(type)['clear']
 
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['clear'] : p.editor.getAttributes(type)['clear']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.clears.indexOf(clear) !== -1) {
@@ -57,10 +58,22 @@ export const Clear = Extension.create({
                     })
                 }
 
-                return p.commands._updateAttributes(
-                    type, { clear: attr }
-                )
-            },
+                attr = {
+                    clear: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
+            }
         }
-    },
+    }
 })

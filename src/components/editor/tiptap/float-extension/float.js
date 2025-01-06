@@ -39,15 +39,15 @@ export const Float = Extension.create({
 
     addCommands() {
         return {
-            setFloat: (float, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
+            setFloat: ({float, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
-                //const ext = p.editor.extensionManager.extensions.find((e) => e.name == type)
-                const oldAttrs = p.editor.getAttributes(type)['float']
 
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['float'] : p.editor.getAttributes(type)['float']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.floats.indexOf(float) !== -1) {
@@ -58,10 +58,22 @@ export const Float = Extension.create({
                     })
                 }
 
-                return p.commands._updateAttributes(
-                    type, { float: attr }
-                )
- 
+                attr = {
+                    float: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
+
                 // TODO: support mark types (with selection?)
                 /*
                 switch (ext.type) {
