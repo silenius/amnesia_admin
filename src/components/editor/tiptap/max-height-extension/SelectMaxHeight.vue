@@ -2,8 +2,8 @@
   <Listbox as="div" v-model="maxHeight">
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ maxHeight }}</ListboxButton>
     <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="w in maxHeights" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+      <ListboxOption v-for="h in maxHeights" :key="h" :value="h">
+        <button :class="class_opt">{{ h !== undefined ? h : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -19,14 +19,13 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -48,9 +47,7 @@ const maxHeight = computed({
 
   get() { 
     try {
-      return getTypeAttrs(props).maxHeight.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'maxHeight')
     } catch (e) {
       return 'none'
     }

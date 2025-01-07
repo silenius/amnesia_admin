@@ -65,27 +65,41 @@ export const Height = Extension.create({
 
     addCommands() {
         return {
-            setHeight: (height, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
+            setHeight: ({height, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
 
-                const oldAttrs = p.editor.getAttributes(type)['height']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['height'] : p.editor.getAttributes(type)['height']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.heights.indexOf(height) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: height,
+                        tw: height
                     })
                 }
 
-                return p.commands._updateAttributes(
-                    type, { height: attr }
-                )
+                attr = {
+                    height: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
+
             },
         }
     },

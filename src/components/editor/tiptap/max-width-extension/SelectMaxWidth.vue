@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ maxWidth }}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in maxWidths" :key="w" :value="w">
-        <button :class="class_opt">{{ w }}</button>
+        <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -19,14 +19,13 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -48,9 +47,7 @@ const maxWidth = computed({
 
   get() { 
     try {
-      return getTypeAttrs(props).maxWidth.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'maxWidth')
     } catch (e) {
       return 'none'
     }

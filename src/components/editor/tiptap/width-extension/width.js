@@ -3,10 +3,6 @@ import {
 } from '@tiptap/core'
 
 import {
-    render_width_attrs 
-} from './utils'
-
-import {
     extract_tw_attrs,
     render_tw_attrs
 } from '../utils'
@@ -72,27 +68,41 @@ export const Width = Extension.create({
 
     addCommands() {
         return {
-            setWidth: (width, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
+            setWidth: ({width, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
 
-                const oldAttrs = p.editor.getAttributes(type)['width']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['width'] : p.editor.getAttributes(type)['width']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (this.options.widths.indexOf(width) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: width,
+                        tw: width
                     })
                 }
 
-                return p.commands._updateAttributes(
-                    type, { width: attr }
-                )
+                attr = {
+                    width: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
+
             },
         }
     },

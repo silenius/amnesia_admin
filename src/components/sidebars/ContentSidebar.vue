@@ -332,8 +332,8 @@ Fix width to the current breakpoint.
               v-if="ext_width" 
               :breakpoint="breakpoint"
               :extension="ext_width" 
-              :type="selected_type"
               :editor="select_editor"
+              :selected="selected"
               @select-width="(p) => select_editor.chain().setWidth({ ...p, selected: selected }).run()"
             />
 
@@ -341,8 +341,8 @@ Fix width to the current breakpoint.
               v-if="ext_height" 
               :breakpoint="breakpoint"
               :extension="ext_height" 
-              :type="selected_type"
               :editor="select_editor"
+              :selected="selected"
               @select-height="(p) => select_editor.chain().setHeight({ ...p, selected: selected }).run()"
             />
 
@@ -354,7 +354,7 @@ Fix width to the current breakpoint.
               v-if="ext_min_width" 
               :breakpoint="breakpoint"
               :extension="ext_min_width" 
-              :type="selected_type"
+              :selected="selected"
               :editor="select_editor"
               @select-minWidth="(p) => select_editor.chain().setMinWidth({ ...p, selected: selected }).run()"
             />
@@ -363,8 +363,8 @@ Fix width to the current breakpoint.
               v-if="ext_min_height" 
               :breakpoint="breakpoint"
               :extension="ext_min_height" 
-              :type="selected_type"
               :editor="select_editor"
+              :selected="selected"
               @select-minHeight="(p) => select_editor.chain().setMinHeight({ ...p, selected: selected }).run()"
             />
 
@@ -375,8 +375,8 @@ Fix width to the current breakpoint.
               v-if="ext_max_width" 
               :breakpoint="breakpoint"
               :extension="ext_max_width" 
-              :type="selected_type"
               :editor="select_editor"
+              :selected="selected"
               @select-maxWidth="(p) => select_editor.chain().setMaxWidth({ ...p, selected: selected }).run()"
             />
 
@@ -384,8 +384,8 @@ Fix width to the current breakpoint.
               v-if="ext_max_height" 
               :breakpoint="breakpoint"
               :extension="ext_max_height" 
-              :type="selected_type"
               :editor="select_editor"
+              :selected="selected"
               @select-maxHeight="(p) => select_editor.chain().setMaxHeight({ ...p, selected: selected }).run()"
             />
           </div>

@@ -19,14 +19,13 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits([
@@ -48,9 +47,7 @@ const minWidth = computed({
 
   get() { 
     try {
-      return getTypeAttrs(props).minWidth.find(
-        (x) => x.breakpoint == props.breakpoint
-      ).tw
+      return getSelectedAttrs(props, 'minWidth')
     } catch (e) {
       return 'none'
     }
