@@ -414,8 +414,9 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
               :editor="select_editor"
-              :type="selected_type"
-              @select-background-color="({color, variant, breakpoint}) => select_editor.chain().focus().setBackgroundColor(color, variant, breakpoint, selected_type).run()"
+              :selected="selected"
+              @select-background-color="(p) =>
+                select_editor.chain().focus().setBackgroundColor({...p, selected: selected}).run()"
             />
 
           </div>

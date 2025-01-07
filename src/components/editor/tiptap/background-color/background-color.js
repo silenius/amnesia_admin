@@ -6,18 +6,14 @@ import {
 import {
     unshaded_colors,
     shaded_colors,
-    shades
+    shades,
+    build_palette
 } from '../colors'
 
 import {
-    render_bg_color_attrs
-} from './utils'
-
-import {
-    generate_responsive_cls
+    extract_tw_attrs,
+    render_tw_attrs
 } from '../utils'
-
-const is_bg = generate_responsive_cls('bg')
 
 export const BackgroundColor = Extension.create({
     name: 'backgroundColor',
@@ -40,46 +36,17 @@ export const BackgroundColor = Extension.create({
                         default: null,
 
                         parseHTML: (elem) => { 
-                            if (elem.style.backgroundColor) {
-                                return elem.style.backgroundColor
-                            } 
+                            const colors = build_palette(
+                                this.options.shaded_colors,
+                                this.options.shades
+                            ).concat(
+                                this.options.unshaded_colors
+                            )
 
-                            const matches = []
-
-                            for (const name of elem.classList) {
-                                const result = name.split('-')
-
-                                if (result.length > 1 && is_bg.has(result[0])) {
-                                    // bg or md:bg, lg:bg ?
-                                    const [part1, part2] = result[0].split(':')
-                                    const breakpoint = part2 !== undefined ? part1 : null
-                                    // bg-black, bg-transparent, md:bg-white
-                                    if (result.length == 2 && unshaded_colors.has(result[1])) {
-                                        matches.push({
-                                            breakpoint: breakpoint,
-                                            color: result[1]
-                                        })
-                                        // bg-red-500, md:bg-green-800, etc 
-                                    } else if(
-                                        result.length == 3 
-                                            && shaded_colors.has(result[1]) 
-                                            && shades.has(parseInt(result[2]))
-                                    ) {
-                                        matches.push({
-                                            breakpoint: breakpoint,
-                                            color: result[1],
-                                            shade: result[2]
-                                        })
-                                    }
-                                }
-
-                            }
-
-                            return matches.length ? matches : null
-
+                            return extract_tw_attrs(elem, colors, 'bg-')
                         },
 
-                        renderHTML: (attrs) => render_bg_color_attrs(attrs)
+                        renderHTML: (attrs) => render_tw_attrs(attrs, 'backgroundColor')
                     }
                 }
             }
@@ -88,45 +55,54 @@ export const BackgroundColor = Extension.create({
 
     addCommands() {
         return {
-            setBackgroundColor: (color, shade, breakpoint=null, type=undefined) => (p) => {
-                if (!type) {
-                    type = this.options.types.find((e) => p.editor.isActive(e))
-                }
-
-                const oldAttrs = p.editor.getAttributes(type).backgroundColor
-
-                const mark = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
-                    : []
-
+            setBackgroundColor: ({color, shade, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
                 if ((
                     shade !== undefined
-                        && (this.options.shaded_colors.has(color)
-                            || this.options.shades.has(parseInt(shade)))
+                        && (!this.options.shaded_colors.has(color)
+                            || !this.options.shades.has(parseInt(shade)))
                 )
                     || (
                         shade === undefined
-                            && this.options.unshaded_colors.has(color)
+                            && !this.options.unshaded_colors.has(color)
                     )
                 ) {
-                    mark.push({
-                        breakpoint: breakpoint,
-                        color: color, 
-                        shade: shade 
-                    })
+                    return null
                 }
 
-                if (p.state.selection.empty || p.state.selection.node) {
-                    return p.commands._updateAttributes(
-                        type, { backgroundColor: mark }
+                if (!selected && !type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
+                let attrs = selected ? selected.node.attrs['backgroundColor'] : p.editor.getAttributes(type)['backgroundColor']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                    // New value
+                attr.push({
+                    breakpoint: breakpoint,
+                    color: color, 
+                    shade: shade,
+                    tw: `bg-${color}-${shade}`
+                })
+
+                attr = {
+                    backgroundColor: attr
+                }
+
+                if (!p.editor.state.selection.empty) {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
                     )
                 } else {
-                    return p.chain().setMark(
-                        'textClass', { backgroundColor: mark }
-                    ).run()
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
                 }
             },
-
         }
     },
 })

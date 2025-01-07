@@ -1,8 +1,8 @@
 <template>
   <div>
-    <button @click.prevent="open=!open" :class="[`bg-${backgroundColor}`,
-      'font-bold border rounded-full p-2 w-full']">
-      {{ backgroundColor }}
+    LOL: {{ backgroundColor }}
+    <button @click.prevent="open=!open" class="font-bold border rounded-full p-2 w-full">
+      {{ backgroundColor !== undefined ? backgroundColor : 'none' }}
     </button> 
     <SelectColor 
       @select-color="doSelectColor" 
@@ -17,14 +17,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
-  type: String
+  selected: Object
 })
 
 const emits = defineEmits(['select-background-color'])
@@ -32,30 +31,27 @@ const open = ref(false)
 
 const backgroundColor = computed({
   get() {
+    // FIXME
     try {
-      const v = getTypeAttrs(props).backgroundColor.find(
-        (x) => x.breakpoint == props.breakpoint
-      )
-      return v !== undefined ? `${v.color}${v.shade ? `-${v.shade}` : ''}` :
-        'none'
+      return getSelectedAttrs(props, 'backgroundColor')
     } catch(e) {
       return 'none'
     }
   },
 
-  set({color, variant}) {
+  set({color, shade}) {
     return emits('select-background-color', {
       color: color,
-      variant: variant,
+      shade: shade,
       breakpoint: props.breakpoint
     })
 
   }
 })
 
-const doSelectColor = (color, variant) => backgroundColor.value = {
+const doSelectColor = (color, shade) => backgroundColor.value = {
   color: color, 
-  variant: variant, 
+  shade: shade, 
 }
 
 </script>
