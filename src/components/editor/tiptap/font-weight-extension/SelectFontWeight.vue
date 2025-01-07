@@ -5,7 +5,7 @@
     </ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="w in weights" :key="w" :value="w">
-        <button :class="class_opt">{{ w || 'none' }}</button>
+        <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -22,10 +22,11 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object
 })
 
@@ -44,13 +45,14 @@ const weights = computed(
   () => props.extension.options.weights.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('textClass'))
-
 const weight = computed({
 
   get() { 
-    const v = attrs.value.fontWeight?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.tw : null
+    try {
+      return getTypeAttrs(props, 'fontWeight')
+    } catch(e) {
+      return undefined
+    }
   },
 
   set(value) { 

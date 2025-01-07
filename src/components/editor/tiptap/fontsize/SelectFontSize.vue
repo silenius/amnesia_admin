@@ -3,7 +3,7 @@
     <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ size || 'none'}}</ListboxButton>
     <ListboxOptions :class="class_opts">
       <ListboxOption v-for="s in sizes" :key="s" :value="s">
-        <button :class="class_opt">{{ s || 'none' }}</button>
+        <button :class="class_opt">{{ s !== undefined ? s : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -19,10 +19,11 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object
 })
 
@@ -41,13 +42,14 @@ const sizes = computed(
   () => props.extension.options.sizes.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('textClass'))
-
 const size = computed({
 
   get() { 
-    const v = attrs.value.fontSize?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.tw : null
+    try {
+      return getTypeAttrs(props, 'fontSize')
+    } catch (e) {
+      return undefined
+    }
   },
 
   set(value) { 

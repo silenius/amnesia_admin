@@ -1,11 +1,11 @@
 <template>
   <Listbox as="div" v-model="italic">
     <ListboxButton>
-        <img :src="italicImg" :class="img_cls" />
+      <img :src="italicImg" :class="img_cls" />
     </ListboxButton>
     <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="w in italics" :key="w" :value="w">
-        <button :class="class_opt">{{ w || 'none' }}</button>
+      <ListboxOption v-for="i in italics" :key="i" :value="i">
+        <button :class="class_opt">{{ i !== undefined ? i : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
@@ -22,10 +22,11 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object,
 })
 
@@ -37,13 +38,14 @@ const italics = computed(
   () => props.extension.options.italics.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('textClass'))
-
 const italic = computed({
 
   get() { 
-    const v = attrs.value.fontItalic?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.tw : null
+    try {
+      return getTypeAttrs(props, 'fontItalic')
+    } catch (e) {
+      return undefined
+    }
   },
 
   set(value) { 

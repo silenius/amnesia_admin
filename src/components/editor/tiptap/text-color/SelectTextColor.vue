@@ -21,7 +21,6 @@ import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object
 })
 

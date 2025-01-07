@@ -19,10 +19,11 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object
 })
 
@@ -41,13 +42,14 @@ const families = computed(
   () => props.extension.options.families.toSpliced(0, 0, undefined)
 )
 
-const attrs = computed(() => props.editor.getAttributes('textClass'))
-
 const family = computed({
 
   get() { 
-    const v = attrs.value.fontFamily?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.tw : 'none'
+    try {
+      return getTypeAttrs(props, 'fontFamily')
+    } catch (e) {
+      return undefined
+    }
   },
 
   set(value) { 

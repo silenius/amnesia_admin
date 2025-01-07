@@ -19,25 +19,24 @@ import { computed } from 'vue'
 import underlineImg from "@/assets/underline.svg";
 import overlineImg from "@/assets/overline.svg";
 import linethroughImg from "@/assets/strikethrough.svg";
+import { getTypeAttrs } from '@/components/editor/tiptap/utils'
 
 const props = defineProps({
   breakpoint: String,
   extension: Object,
-  transaction: Object,
   editor: Object
 })
 
 const emits = defineEmits(['select-text-decoration'])
 
-const decorations = computed(() => props.extension.options.decorations)
-
-const attrs = computed(() => props.editor.getAttributes('textClass'))
-
 const decoration = computed({
 
   get() { 
-    const v = attrs.value.textDecoration?.find((x) => x.breakpoint == props.breakpoint)
-    return v !== undefined ? v.decoration : null
+    try {
+      return getTypeAttrs(props, 'textDecoration')
+    } catch (e) {
+      return undefined
+    }
   },
 
   set(value) { 
