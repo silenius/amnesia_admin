@@ -1,6 +1,5 @@
 <template>
   <div>
-    LOL: {{ backgroundColor }}
     <button @click.prevent="open=!open" class="font-bold border rounded-full p-2 w-full">
       {{ backgroundColor !== undefined ? backgroundColor : 'none' }}
     </button> 

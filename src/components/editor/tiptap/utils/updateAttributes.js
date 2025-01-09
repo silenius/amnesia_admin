@@ -20,7 +20,6 @@ const outlineNodePlugin = new Plugin({
         init() {
             console.debug('===> BEGIN outlineNode init')
             return DecorationSet.empty
-            console.debug('===> END outlineNode init')
         },
 
         apply(tr, value) {
