@@ -19,23 +19,26 @@ const outlineNodePlugin = new Plugin({
     state: {
         init() {
             console.debug('===> BEGIN outlineNode init')
-            return DecorationSet.empty
+            return {
+                decorations: DecorationSet.empty
+            }
         },
 
         apply(tr, value) {
             console.debug('===> BEGIN outlineNode apply: [tr] ', tr, ' [value] ', value)
+            let { decorations } = value
 
-            value = value.map(tr.mapping, tr.doc)
+            decorations = decorations.map(tr.mapping, tr.doc)
 
             if (tr.getMeta('highlightNode')) {
                 const { pos, node } = tr.getMeta('highlightNode')
-                const hl = find_dec(value, 'highlight') 
+                const hl = find_dec(decorations, 'highlight') 
 
-                value = value.remove(hl)
+                decorations = decorations.remove(hl)
 
                 console.log('=== highlightNode ===', pos, node)
                 if (pos && node) {
-                    value = value.add(tr.doc, [Decoration.node(
+                    decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline-1 outline-dotted outline-red-500",
                         }, { node: 'highlight' })]
@@ -45,13 +48,13 @@ const outlineNodePlugin = new Plugin({
 
             if (tr.getMeta('selectNode')) {
                 const { pos, node } = tr.getMeta('selectNode')
-                const sl = find_dec(value, 'select')
+                const sl = find_dec(decorations, 'select')
 
-                value = value.remove(sl)
+                decorations = decorations.remove(sl)
 
                 console.log('=== selectNode ===', pos, node)
                 if (pos && node) {
-                    value = value.add(tr.doc, [Decoration.node(
+                    decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline outline-1 outline-red-700",
                         }, { node: 'select' })]
@@ -61,13 +64,41 @@ const outlineNodePlugin = new Plugin({
 
             console.debug('===> END outlineNode apply')
 
-            return value
+            return {
+                decorations: decorations
+            }
         }
     },
 
     props: {
+        handleDOMEvents: {
+            click(view, event) {
+                const pos = view.posAtDOM(event.target) - 1
+                const node = view.state.doc.nodeAt(pos)
+
+                const s = outlineNodePlugin.getState(view.state)
+                console.log('CLICK: ', pos, node.type.name, view)
+            },
+            mouseover(view, event) {
+                const pos = view.posAtDOM(event.target) - 1
+                const node = view.state.doc.nodeAt(pos)
+
+                console.log('OVER: ', pos, node.type.name)
+            }
+        },
+        /*
+        handleClickOn: (view, pos, nodePos, event, direct) => {
+            console.log('HANDLE CLICK ON: ', pos)
+            return false
+        },
+        handleClick: (view, pos, event) => {
+            const node = view.state.doc.nodeAt(pos-1)
+            console.log('HANDLE CLICK: ', pos, node.type.name)
+            return false
+        },
+        */
         decorations: (state) => {
-            return outlineNodePlugin.getState(state)
+            return outlineNodePlugin.getState(state).decorations
         }
     }
 })

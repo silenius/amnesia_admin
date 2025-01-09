@@ -645,6 +645,7 @@ watch(editors, () => {
       }
 
       const selection = editor.state.selection
+      console.log('COUCOUZ ZGEZGEZ, ', editor)
       active_types.value.clear()
       let last = {}
 
