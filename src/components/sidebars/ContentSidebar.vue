@@ -13,12 +13,12 @@
       <div class="flex flex-col gap-y-2 items-start">
         <button 
           v-for="t in active_types.values()"
-          @click="selected = t"
+          @click="nodeSelected = t"
           @mouseover="decorate('highlightNode', t)" 
           @mouseout="decorate('highlightNode')"
           :data-pos="t.pos"
           type="button" 
-          :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == selected?.pos}]"
+          :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
           rounded-full text-xs px-3 py-2 dark:bg-red-600
           dark:hover:bg-red-700">{{ t.node.type.name }} {{ t.pos }} </button>
@@ -518,12 +518,14 @@ Fix width to the current breakpoint.
 <script setup>
 
 import { ref, computed, unref, watch } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useEditorStore, useEditorEventStore } from '@/stores/editor'
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/vue'
+
+import { storeToRefs } from 'pinia'
 
 import { NodeSelection } from '@tiptap/pm/state'
 
@@ -559,6 +561,19 @@ import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectS
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
 const { getEditor, editors } = useEditorStore()
+
+const storeEditorEvent = useEditorEventStore()
+const { nodeSelected, nodeHover } = storeToRefs(storeEditorEvent)
+
+watch(nodeSelected, () => {
+  decorate('selectNode', nodeHover.value)
+})
+
+watch(nodeHover, () => {
+  decorate('highlightNode', nodeHover.value)
+})
+
+const selected = computed(() => nodeSelected)
 
 const breakpoint = ref(null)
 const change_breakpoint = (value) => breakpoint.value = value
@@ -597,12 +612,6 @@ const cls_panel = ['text-sm', 'mb-4', 'p-2']
 const select_editor = ref()
 
 const active_types = ref(new Map())
-const selected = ref({})
-
-watch(selected, (newSelected, oldSelected) => {
-  console.debug('===> [WATCH] SELECTED')
-  decorate('selectNode', newSelected)
-}, { deep: true })
 
 const selected_type = computed(() => selected.value?.node?.type.name)
 const selection_has_text = ref(false)
@@ -633,7 +642,7 @@ watch(editors, () => {
           we're keeping a reference to an object that is not being mutated
       */
 
-      selected.value.node = transaction.doc.nodeAt(selected.value.pos)
+      nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
     })
 
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
@@ -645,7 +654,6 @@ watch(editors, () => {
       }
 
       const selection = editor.state.selection
-      console.log('COUCOUZ ZGEZGEZ, ', editor)
       active_types.value.clear()
       let last = {}
 
@@ -677,11 +685,11 @@ watch(editors, () => {
         selection_has_text.value = false
       }
 
-      if (!active_types.value?.has(selected.value?.pos)) {
-        selected.value = last
+      if (!active_types.value?.has(nodeSelected.value?.pos)) {
+        nodeSelected.value = last
       } else {
         console.debug('--- NODE WITHIN ACTIVE TYPES')
-        decorate('selectNode', selected.value)
+        decorate('selectNode', nodeSelected.value)
       }
 
       console.debug('===> [EVENT] END SELECTION UPDATE')

@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { getMarkType } from '@tiptap/core'
 import { getNodeType } from '@tiptap/core'
 import { getSchemaTypeNameByName } from '@tiptap/core'
@@ -7,6 +8,10 @@ import { useTiptap } from '@/composables/tiptap'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from 'prosemirror-view';
+
+import { useEditorEventStore } from '@/stores/editor'
+
+const storeEditorEvent = useEditorEventStore()
 
 const { getSelectedNode } = useTiptap()
 
@@ -40,7 +45,7 @@ const outlineNodePlugin = new Plugin({
                 if (pos && node) {
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
-                            class: "outline-1 outline-dotted outline-red-500",
+                            class: "outline-1 outline outline-indigo-500",
                         }, { node: 'highlight' })]
                     )
                 }
@@ -56,7 +61,7 @@ const outlineNodePlugin = new Plugin({
                 if (pos && node) {
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
-                            class: "outline outline-1 outline-red-700",
+                            class: "outline outline-2 outline-red-700",
                         }, { node: 'select' })]
                     )
                 }
@@ -73,17 +78,26 @@ const outlineNodePlugin = new Plugin({
     props: {
         handleDOMEvents: {
             click(view, event) {
-                const pos = view.posAtDOM(event.target) - 1
-                const node = view.state.doc.nodeAt(pos)
-
-                const s = outlineNodePlugin.getState(view.state)
-                console.log('CLICK: ', pos, node.type.name, view)
+                const { nodeSelected } = storeToRefs(storeEditorEvent)
+                const pos = view.posAtDOM(event.target)
+                const resolvedPos = view.state.doc.resolve(pos)
+                const node = resolvedPos.node()
+                
+                nodeSelected.value = {
+                    node: node,
+                    pos: resolvedPos.pos - 1
+                }
             },
             mouseover(view, event) {
-                const pos = view.posAtDOM(event.target) - 1
-                const node = view.state.doc.nodeAt(pos)
+                const { nodeHover } = storeToRefs(storeEditorEvent)
+                const pos = view.posAtDOM(event.target)
+                const resolvedPos = view.state.doc.resolve(pos)
+                const node = resolvedPos.node()
 
-                console.log('OVER: ', pos, node.type.name)
+                nodeHover.value = {
+                    node: node,
+                    pos: resolvedPos.pos - 1
+                 }
             }
         },
         /*

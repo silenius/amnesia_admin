@@ -9,3 +9,10 @@ export const useEditorStore = defineStore('editor', () => {
 
     return { setEditor, getEditor, editors }
 })
+
+export const useEditorEventStore = defineStore('editorEvent', () => {
+    const nodeSelected = ref()
+    const nodeHover = ref()
+
+    return { nodeSelected, nodeHover }
+})
