@@ -11,6 +11,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { useEditorEventStore } from '@/stores/editor'
 
+
 const storeEditorEvent = useEditorEventStore()
 
 const { getSelectedNode } = useTiptap()
@@ -36,16 +37,18 @@ const outlineNodePlugin = new Plugin({
             decorations = decorations.map(tr.mapping, tr.doc)
 
             if (tr.getMeta('highlightNode')) {
-                const { pos, node } = tr.getMeta('highlightNode')
+                const rpos = tr.getMeta('highlightNode')
+                const pos = rpos.before()
+                const node = rpos.node()
                 const hl = find_dec(decorations, 'highlight') 
 
                 decorations = decorations.remove(hl)
 
-                console.log('=== highlightNode ===', pos, node)
                 if (pos && node) {
+                    console.log('===>>> highlightNode : ', pos, node)
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
-                            class: "outline-1 outline outline-indigo-500",
+                            class: "outline-2 outline outline-indigo-500",
                         }, { node: 'highlight' })]
                     )
                 }
@@ -57,8 +60,8 @@ const outlineNodePlugin = new Plugin({
 
                 decorations = decorations.remove(sl)
 
-                console.log('=== selectNode ===', pos, node)
                 if (pos && node) {
+                    console.log('=== selectNode ===', pos, node)
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline outline-2 outline-red-700",
@@ -76,39 +79,46 @@ const outlineNodePlugin = new Plugin({
     },
 
     props: {
+        handleKeyDown: (view, event) => {
+            console.log('===>>> HANDLEKEYDOWN : ', event.target)
+
+        },
         handleDOMEvents: {
+            /*
             click(view, event) {
-                const { nodeSelected } = storeToRefs(storeEditorEvent)
                 const pos = view.posAtDOM(event.target)
-                const resolvedPos = view.state.doc.resolve(pos)
-                const node = resolvedPos.node()
-                
+                const { nodeSelected } = storeToRefs(storeEditorEvent)
+                const node = view.state.doc.nodeAt(pos)
+
                 nodeSelected.value = {
                     node: node,
-                    pos: resolvedPos.pos - 1
+                    pos: pos
                 }
+            },
+            keyup(view, event) {
+                console.log('===>>> KEYUP : ', event.target)
+            },
+            */
+            keydown(view, event) {
+                console.log('===>>> KEYDOWN : ', event.target)
             },
             mouseover(view, event) {
                 const { nodeHover } = storeToRefs(storeEditorEvent)
                 const pos = view.posAtDOM(event.target)
                 const resolvedPos = view.state.doc.resolve(pos)
-                const node = resolvedPos.node()
 
-                nodeHover.value = {
-                    node: node,
-                    pos: resolvedPos.pos - 1
-                 }
+                nodeHover.value = resolvedPos
+                event.preventDefault()
             }
         },
         /*
-        handleClickOn: (view, pos, nodePos, event, direct) => {
-            console.log('HANDLE CLICK ON: ', pos)
-            return false
+        handleClickOn: (view, pos, node, nodePos, event, direct) => {
+            console.log('===> HANDLE CLICKON <=== : ', pos)
         },
         handleClick: (view, pos, event) => {
-            const node = view.state.doc.nodeAt(pos-1)
-            console.log('HANDLE CLICK: ', pos, node.type.name)
-            return false
+            const node = view.state.doc.nodeAt(pos)
+            const pos2 = view.posAtDOM(event.target)
+            console.log('===> HANDLE CLICK <=== : ', pos, pos2, node?.type.name)
         },
         */
         decorations: (state) => {
@@ -127,8 +137,72 @@ export const TipTapCommands = Extension.create({
         ]
     },
 
+    addStorage() {
+        return {
+            lineage: new Map()
+        }
+    },
+
+    onSelectionUpdate({ editor, transaction}) {
+        const { selection } = transaction
+        let level = 0
+
+        this.storage.lineage.clear()
+
+        transaction.doc.nodesBetween(selection.from, selection.to, (node, pos) => {
+            if (!node.isText) {
+                this.lineage.set(pos, {
+                    node: node,
+                    pos: pos,
+                    level: level+=1
+                })
+            }
+        })
+    },
+
     addCommands() {
         return {
+            /*
+            _setTw : (key, value, valid_values, breakpoint, type, selected) => () => {
+                if (!selected && !type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
+                let attrs = selected ? selected.node.attrs[key] : p.editor.getAttributes(type)[key]
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
+                    : []
+
+                if (valid_values.indexOf(value) !== -1) {
+                    // New value
+                    attr.push({
+                        breakpoint: breakpoint,
+                        tw: `${side}-${level}`
+                    })
+                }
+
+                attr = Object.fromEntries([[`${key}`, attr]])
+
+                console.log('PADDING ATTR: ', attr)
+                console.log(p.state.selection)
+                console.log(selected)
+
+                if (!p.state.selection.empty && p.state.selection.toJSON().type == 'text') {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands._updateAttributes(
+                        type, attr
+                    )
+                }
+
+
+            },
+            */
             _updateNodeAttributes: (pos, node, attributes = {}) => ({ tr }) => {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,

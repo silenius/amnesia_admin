@@ -838,6 +838,7 @@ const editor = useEditor({
   ]
 })
 
+
 const { setEditor } = useEditorStore()
 setEditor('current', editor)
 

@@ -66,6 +66,7 @@ export const Padding = Extension.create({
     addCommands() {
         return {
             setPadding: ({side, level, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+                console.log(p)
                 if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
@@ -86,7 +87,7 @@ export const Padding = Extension.create({
 
                 attr = Object.fromEntries([[`${side}`, attr]])
 
-                if (!p.editor.state.selection.empty) {
+                if (!p.state.selection.empty && p.state.selection.toJSON().type == 'text') {
                     return p.commands.setMark('textClass', attr)
                 } else if (selected) {
                     return p.commands._updateNodeAttributes(

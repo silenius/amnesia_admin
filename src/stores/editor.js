@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+
 const editors = ref(new Map())
 
 export const useEditorStore = defineStore('editor', () => {
@@ -13,6 +14,7 @@ export const useEditorStore = defineStore('editor', () => {
 export const useEditorEventStore = defineStore('editorEvent', () => {
     const nodeSelected = ref()
     const nodeHover = ref()
+    const lineage = ref(new Map())
 
-    return { nodeSelected, nodeHover }
+    return { nodeSelected, nodeHover, lineage }
 })
