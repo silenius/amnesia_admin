@@ -37,15 +37,14 @@ const outlineNodePlugin = new Plugin({
             decorations = decorations.map(tr.mapping, tr.doc)
 
             if (tr.getMeta('highlightNode')) {
-                const rpos = tr.getMeta('highlightNode')
-                const pos = rpos.before()
-                const node = rpos.node()
+                const { pos } = tr.getMeta('highlightNode')
+                const node = tr.doc.nodeAt(pos)
                 const hl = find_dec(decorations, 'highlight') 
 
                 decorations = decorations.remove(hl)
 
                 if (pos && node) {
-                    console.log('===>>> highlightNode : ', pos, node)
+                    console.log('===>>> highlightNode : ', pos, node.type.name)
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline-2 outline outline-indigo-500",
@@ -55,13 +54,14 @@ const outlineNodePlugin = new Plugin({
             } 
 
             if (tr.getMeta('selectNode')) {
-                const { pos, node } = tr.getMeta('selectNode')
+                const { pos } = tr.getMeta('selectNode')
+                const node = tr.doc.nodeAt(pos)
                 const sl = find_dec(decorations, 'select')
 
                 decorations = decorations.remove(sl)
 
                 if (pos && node) {
-                    console.log('=== selectNode ===', pos, node)
+                    console.log('=== selectNode ===', pos, node.type.name)
                     decorations = decorations.add(tr.doc, [Decoration.node(
                         pos, pos + node.nodeSize, {
                             class: "outline outline-2 outline-red-700",
@@ -79,26 +79,81 @@ const outlineNodePlugin = new Plugin({
     },
 
     props: {
-        handleKeyDown: (view, event) => {
-            console.log('===>>> HANDLEKEYDOWN : ', event.target)
-
-        },
         handleDOMEvents: {
-            /*
             click(view, event) {
-                const pos = view.posAtDOM(event.target)
-                const { nodeSelected } = storeToRefs(storeEditorEvent)
-                const node = view.state.doc.nodeAt(pos)
+                const { nodeSelected, lineage } = storeToRefs(storeEditorEvent)
+                const selection = view.state.selection
+                // We clicked in the editor, retrieve the PM document position
+                let pos = view.posAtDOM(event.target)
+
+                // Compute the new lineage from that pos
+                const new_lineage = new Map()
+                let level = 0
+
+                view.state.doc.nodesBetween(selection.from, selection.to, (node, pos) => {
+                    if (!node.isText) {
+                        new_lineage.set(pos, {
+                            node: node,
+                            pos: pos,
+                            level: level+=1
+                        })
+                    }
+                })
+
+                lineage.value = new_lineage
+
+                // Check which node do we have at this pos
+                let node = view.state.doc.nodeAt(pos)
+                
+                if (node.isText) {
+                    // If it's a text, set pos to the deepest node in the
+                    // lineage tree (99% of the time Paragraph, but could also
+                    // be Image or ...)
+                    pos = [...lineage.value.keys()].at(-1)
+                } else {
+                    // If not then find the closest node in the lineage tree at
+                    // this pos
+                    pos = [...lineage.value.keys()].reduce(
+                        (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
+                    )
+                }
+
+                node = view.state.doc.nodeAt(pos)
 
                 nodeSelected.value = {
                     node: node,
                     pos: pos
                 }
             },
-            keyup(view, event) {
-                console.log('===>>> KEYUP : ', event.target)
+
+            mouseover(view, event) {
+                const { nodeHover } = storeToRefs(storeEditorEvent)
+                const selection = view.state.selection
+                // We clicked in the editor, retrieve the PM document position
+                let pos = view.posAtDOM(event.target)
+
+                // Compute the new lineage from that pos
+                const lineage = []
+
+                view.state.doc.nodesBetween(pos, pos, (node, _pos) => {
+                    if (!node.isText) {
+                        lineage.push(_pos)
+                    }
+                })
+
+                pos = lineage.reduce(
+                    (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
+                )
+
+                // Check which node do we have at this pos
+                const node = view.state.doc.nodeAt(pos)
+                
+                nodeHover.value = {
+                    node: node,
+                    pos: pos
+                }
             },
-            */
+
             keyup(view, event) {
                 const selection = view.state.selection
                 const { lineage } = storeToRefs(storeEditorEvent)
@@ -119,25 +174,7 @@ const outlineNodePlugin = new Plugin({
                 lineage.value = new_lineage
             },
 
-            mouseover(view, event) {
-                const { nodeHover } = storeToRefs(storeEditorEvent)
-                const pos = view.posAtDOM(event.target)
-
-                const resolvedPos = view.state.doc.resolve(pos)
-
-                nodeHover.value = resolvedPos
-            }
         },
-        /*
-        handleClickOn: (view, pos, node, nodePos, event, direct) => {
-            console.log('===> HANDLE CLICKON <=== : ', pos)
-        },
-        handleClick: (view, pos, event) => {
-            const node = view.state.doc.nodeAt(pos)
-            const pos2 = view.posAtDOM(event.target)
-            console.log('===> HANDLE CLICK <=== : ', pos, pos2, node?.type.name)
-        },
-        */
         decorations: (state) => {
             return outlineNodePlugin.getState(state).decorations
         }
