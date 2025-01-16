@@ -99,16 +99,33 @@ const outlineNodePlugin = new Plugin({
                 console.log('===>>> KEYUP : ', event.target)
             },
             */
-            keydown(view, event) {
-                console.log('===>>> KEYDOWN : ', event.target)
+            keyup(view, event) {
+                const selection = view.state.selection
+                const { lineage } = storeToRefs(storeEditorEvent)
+                let level = 0
+
+                const new_lineage = new Map()
+
+                view.state.doc.nodesBetween(selection.from, selection.to, (node, pos) => {
+                    if (!node.isText) {
+                        new_lineage.set(pos, {
+                            node: node,
+                            pos: pos,
+                            level: level+=1
+                        })
+                    }
+                })
+
+                lineage.value = new_lineage
             },
+
             mouseover(view, event) {
                 const { nodeHover } = storeToRefs(storeEditorEvent)
                 const pos = view.posAtDOM(event.target)
+
                 const resolvedPos = view.state.doc.resolve(pos)
 
                 nodeHover.value = resolvedPos
-                event.preventDefault()
             }
         },
         /*
@@ -137,6 +154,7 @@ export const TipTapCommands = Extension.create({
         ]
     },
 
+    /*
     addStorage() {
         return {
             lineage: new Map()
@@ -144,21 +162,8 @@ export const TipTapCommands = Extension.create({
     },
 
     onSelectionUpdate({ editor, transaction}) {
-        const { selection } = transaction
-        let level = 0
-
-        this.storage.lineage.clear()
-
-        transaction.doc.nodesBetween(selection.from, selection.to, (node, pos) => {
-            if (!node.isText) {
-                this.lineage.set(pos, {
-                    node: node,
-                    pos: pos,
-                    level: level+=1
-                })
-            }
-        })
     },
+    */
 
     addCommands() {
         return {

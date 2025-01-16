@@ -9,10 +9,10 @@
 
     <!-- NODE -->
 
-    <section name="node" class="my-4" :class="cls_section" v-if="active_types && active_types.size > 0">
+    <section name="node" class="my-4" :class="cls_section" v-if="lineage && lineage.size > 0">
       <div class="flex flex-col gap-y-2 items-start">
         <button 
-          v-for="t in active_types.values()"
+          v-for="t in lineage.values()"
           @click="nodeSelected = t"
           @mouseover="decorate('highlightNode', t)" 
           @mouseout="decorate('highlightNode')"
@@ -123,7 +123,7 @@
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
 
-         <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
+          <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
             <div class="flex flex-col">
               <span>Basis</span>
               <SelectBasis
@@ -566,6 +566,7 @@ const storeEditorEvent = useEditorEventStore()
 const { 
   nodeSelected, 
   nodeHover, 
+  lineage
 } = storeToRefs(storeEditorEvent)
 
 watch(nodeSelected, () => {
@@ -574,6 +575,17 @@ watch(nodeSelected, () => {
 
 watch(nodeHover, () => {
   decorate('highlightNode', nodeHover.value)
+})
+
+watch(lineage, () => {
+  nodeSelected.value = [...lineage.value].at(-1)
+  /*
+  if (!lineage.value?.has(nodeSelected.value?.pos)) {
+    nodeSelected.value = [...lineage.value].at(-1)
+  } else {
+    decorate('selectNode', nodeSelected.value)
+  }
+  */
 })
 
 const selected = nodeSelected
@@ -614,7 +626,7 @@ const cls_panel = ['text-sm', 'mb-4', 'p-2']
 
 const select_editor = ref()
 
-const active_types = ref(new Map())
+//const active_types = ref(new Map())
 
 const selected_type = computed(() => selected.value?.node?.type.name)
 const selection_has_text = ref(false)
@@ -649,6 +661,7 @@ watch(editors, () => {
       nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
     })
 
+      /*
     select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
       console.debug('===> [EVENT] BEGIN SELECTION UPDATE')
 
@@ -683,14 +696,18 @@ watch(editors, () => {
         })
 
       })
+      */
 
       // Does the selection contains text?
+      /*
       if (editor.state.doc.textBetween(selection.from, selection.to)) {
         selection_has_text.value = true
       } else {
         selection_has_text.value = false
       }
+      */
 
+      /*
       if (!active_types.value?.has(nodeSelected.value?.pos)) {
         nodeSelected.value = last
       } else {
@@ -700,6 +717,7 @@ watch(editors, () => {
 
       console.debug('===> [EVENT] END SELECTION UPDATE')
     })
+      */
 
   }
 }, { deep: true })
