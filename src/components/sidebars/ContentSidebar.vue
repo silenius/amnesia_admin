@@ -426,7 +426,7 @@ Fix width to the current breakpoint.
 
     <!-- TYPOGRAPHY -->
 
-    <section name="typography" v-if="selection_has_text" :class="cls_section">
+    <section name="typography" :class="cls_section">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Typography</span>
@@ -527,8 +527,6 @@ import {
 
 import { storeToRefs } from 'pinia'
 
-import { NodeSelection } from '@tiptap/pm/state'
-
 import SelectBreakpoint from '@/components/editor/tiptap/breakpoint/SelectBreakpoint.vue'
 import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
 import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
@@ -578,14 +576,11 @@ watch(nodeHover, () => {
 })
 
 watch(lineage, () => {
-  nodeSelected.value = [...lineage.value].at(-1)
-  /*
   if (!lineage.value?.has(nodeSelected.value?.pos)) {
-    nodeSelected.value = [...lineage.value].at(-1)
+    nodeSelected.value = [...lineage.value.values()].at(-1)
   } else {
     decorate('selectNode', nodeSelected.value)
   }
-  */
 })
 
 const selected = nodeSelected
@@ -629,7 +624,6 @@ const select_editor = ref()
 //const active_types = ref(new Map())
 
 const selected_type = computed(() => selected.value?.node?.type.name)
-const selection_has_text = ref(false)
 
 const decorate = (key, p) => {
   if (!p) {
@@ -660,65 +654,6 @@ watch(editors, () => {
 
       nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
     })
-
-      /*
-    select_editor.value.on('selectionUpdate', ({ editor, transaction }) => {
-      console.debug('===> [EVENT] BEGIN SELECTION UPDATE')
-
-      if (transaction.getMeta('selectNode') || transaction.getMeta('highlightNode')) {
-        console.debug('=== SKIP UPDATE ===')
-        return
-      }
-
-      const selection = editor.state.selection
-      active_types.value.clear()
-      let last = {}
-
-      transaction.selection.ranges.forEach(range => {
-        const from = range.$from.pos
-        const to = range.$to.pos
-        let level = 0
-
-        console.log('===>>> FROM : ', from, ' TO : ', to)
-
-        editor.state.doc.nodesBetween(from, to, (node, pos, parent, index) => {
-          if (!node.isText) {
-            console.debug('TYPE: ', node.type.name, 'POS: ', pos, 'PARENT: ', parent, ' NODE: ', node, ' INDEX: ', index, ' LEVEL: ', level)
-            const data = {
-              node: node,
-              level: level+=1,
-              pos: pos
-            }
-
-            active_types.value.set(pos, data)
-            last = data
-          }
-        })
-
-      })
-      */
-
-      // Does the selection contains text?
-      /*
-      if (editor.state.doc.textBetween(selection.from, selection.to)) {
-        selection_has_text.value = true
-      } else {
-        selection_has_text.value = false
-      }
-      */
-
-      /*
-      if (!active_types.value?.has(nodeSelected.value?.pos)) {
-        nodeSelected.value = last
-      } else {
-        console.debug('--- NODE WITHIN ACTIVE TYPES')
-        decorate('selectNode', nodeSelected.value)
-      }
-
-      console.debug('===> [EVENT] END SELECTION UPDATE')
-    })
-      */
-
   }
 }, { deep: true })
 
