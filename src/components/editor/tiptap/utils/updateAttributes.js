@@ -104,7 +104,7 @@ const outlineNodePlugin = new Plugin({
 
                 // Check which node do we have at this pos
                 let node = view.state.doc.nodeAt(pos)
-                
+
                 if (node.isText) {
                     // If it's a text, set pos to the deepest node in the
                     // lineage tree (99% of the time Paragraph, but could also
@@ -141,13 +141,15 @@ const outlineNodePlugin = new Plugin({
                     }
                 })
 
-                pos = lineage.reduce(
-                    (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
-                )
+                if (lineage.length > 0) {
+                    pos = lineage.reduce(
+                        (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
+                    )
+                }
 
                 // Check which node do we have at this pos
                 const node = view.state.doc.nodeAt(pos)
-                
+
                 nodeHover.value = {
                     node: node,
                     pos: pos
