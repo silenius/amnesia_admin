@@ -66,7 +66,6 @@ export const Padding = Extension.create({
     addCommands() {
         return {
             setPadding: ({side, level, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
-                console.log(p)
                 if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }

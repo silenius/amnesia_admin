@@ -20,6 +20,7 @@ export const inputRegex = /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\
 
 export default Node.create({
     name: 'image',
+    atom: true,
 
     addOptions() {
         return {
