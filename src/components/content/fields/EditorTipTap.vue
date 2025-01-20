@@ -401,6 +401,8 @@ import {
   BubbleMenu
 } from '@tiptap/vue-3'
 
+import { storeToRefs } from 'pinia'
+
 //import StarterKit from "@tiptap/starter-kit"
 import Typography from '@tiptap/extension-typography'
 import Document from '@tiptap/extension-document'
@@ -840,7 +842,7 @@ const editor = useEditor({
 
 
 const { setEditor } = useEditorStore()
-setEditor('current', editor)
+setEditor(editor)
 
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {

@@ -36,34 +36,40 @@ const outlineNodePlugin = new Plugin({
 
             if (tr.getMeta('highlightNode')) {
                 const { pos } = tr.getMeta('highlightNode')
-                const node = tr.doc.nodeAt(pos)
-                const hl = find_dec(decorations, 'highlight') 
 
-                decorations = decorations.remove(hl)
+                if (pos) {
+                    const node = tr.doc.nodeAt(pos)
+                    const hl = find_dec(decorations, 'highlight') 
 
-                if (pos && node) {
-                    console.log('===>>> Highlight', pos, node?.type.name)
-                    decorations = decorations.add(tr.doc, [Decoration.node(
-                        pos, pos + node.nodeSize, {
-                            class: "outline-2 outline outline-indigo-500",
-                        }, { node: 'highlight' })]
-                    )
+                    decorations = decorations.remove(hl)
+
+                    if (node) {
+                        console.log('===>>> Highlight', pos, node?.type.name)
+                        decorations = decorations.add(tr.doc, [Decoration.node(
+                            pos, pos + node.nodeSize, {
+                                class: "outline-2 outline outline-indigo-500",
+                            }, { node: 'highlight' })]
+                        )
+                    }
                 }
-            } 
+            }
 
             if (tr.getMeta('selectNode')) {
                 const { pos } = tr.getMeta('selectNode')
-                const node = tr.doc.nodeAt(pos)
-                const sl = find_dec(decorations, 'select')
 
-                decorations = decorations.remove(sl)
+                if (pos) {
+                    const node = tr.doc.nodeAt(pos)
+                    const sl = find_dec(decorations, 'select')
 
-                if (pos && node) {
-                    decorations = decorations.add(tr.doc, [Decoration.node(
-                        pos, pos + node.nodeSize, {
-                            class: "outline outline-2 outline-red-700",
-                        }, { node: 'select' })]
-                    )
+                    decorations = decorations.remove(sl)
+
+                    if (node) {
+                        decorations = decorations.add(tr.doc, [Decoration.node(
+                            pos, pos + node.nodeSize, {
+                                class: "outline outline-2 outline-red-700",
+                            }, { node: 'select' })]
+                        )
+                    }
                 }
             }
 
@@ -77,85 +83,30 @@ const outlineNodePlugin = new Plugin({
         handleDOMEvents: {
             click(view, event) {
                 const { nodeSelected, lineage } = storeToRefs(storeEditorEvent)
-                // We clicked in the editor, retrieve the PM document position
-                let pos = view.posAtDOM(event.target)
-
-                let idx_end = pos
-                if (event.target.tagName == 'IMG') {
-                    idx_end += 1
-                }
-
-                console.log('===>>> CLICK1: ', pos)
-
-                // Compute the new lineage from that pos
-                const new_lineage = new Map()
-                let level = 0
-
-                view.state.doc.nodesBetween(pos, idx_end, (node, _pos) => {
-                    if (!node.isText) {
-                        console.log('===>>> CLICK LOOP: ', _pos, node.type.name)
-                        new_lineage.set(_pos, {
-                            node: node,
-                            pos: _pos,
-                            level: level+=1
-                        })
-                    }
-                })
-
-                lineage.value = new_lineage
-
-                if (new_lineage.size > 0) {
-                    pos = [...lineage.value.keys()].reduce(
-                        (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
-                    )
-                }
-
+                const target = event.target
+                const children = Array.from(target.parentNode?.childNodes || []);
+                const offset = children.indexOf(target);
+                const pos = view.posAtDOM(target.parentElement, offset);
                 const node = view.state.doc.nodeAt(pos)
-
-                console.log('===>>> CLICK2: ', pos, node.type.name)
 
                 nodeSelected.value = {
                     node: node,
                     pos: pos
                 }
+
+                console.log('===>>> CLICK: ', pos, node?.type.name)
+
             },
 
             mouseover(view, event) {
                 const { nodeHover } = storeToRefs(storeEditorEvent)
-                // We clicked in the editor, retrieve the PM document position
-                let pos = view.posAtDOM(event.target)
-                let rpos = view.state.doc.resolve(pos)
-
-                console.log(view.nodeDOM(rpos.pos).firstChild)
-                console.log(event.target)
-                console.log(view.nodeDOM(rpos.pos).firstChild == event.target)
-
-                if (view.nodeDOM(rpos.pos) != event.target) {
-                    pos = rpos.before()
-                }
-
-                console.log('===>>> HOVER1: ', pos, event.target, rpos)
-
-                // Compute the new lineage from that pos
-                const lineage = []
-
-                view.state.doc.nodesBetween(pos, pos+1, (node, _pos) => {
-                    console.log('===>>> HOVER LOOP: ', _pos, node.type.name, node.isText)
-                    if (!node.isText) {
-                        lineage.push(_pos)
-                    }
-                })
-
-                if (lineage.length > 0) {
-                    pos = lineage.reduce(
-                        (prev, curr) => Math.abs(curr - pos) < Math.abs(prev - pos) ? curr : prev
-                    )
-                }
-
-                // Check which node do we have at this pos
+                const target = event.target
+                const children = Array.from(target.parentNode?.childNodes || []);
+                const offset = children.indexOf(target);
+                const pos = view.posAtDOM(target.parentElement, offset);
                 const node = view.state.doc.nodeAt(pos)
 
-                console.log('===>>> HOVER2: ', pos, node?.type.name)
+                console.log('===>>> HOVER: ', pos, node?.type.name)
 
                 nodeHover.value = {
                     node: node,

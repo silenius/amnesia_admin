@@ -558,7 +558,7 @@ import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGro
 import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
 
-const { getEditor, editors } = useEditorStore()
+const { editor } = storeToRefs(useEditorStore())
 
 const storeEditorEvent = useEditorEventStore()
 const { 
@@ -633,9 +633,9 @@ const decorate = (key, p) => {
   select_editor.value.chain().focus().setMeta(key, p).run()
 }
 
-watch(editors, () => {
+watch(editor, () => {
   if (!select_editor.value) {
-    select_editor.value = unref(editors.get('current'))
+    select_editor.value = editor
 
     if (!select_editor.value) {
       return false
