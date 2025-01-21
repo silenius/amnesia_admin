@@ -44,7 +44,6 @@ const outlineNodePlugin = new Plugin({
                     decorations = decorations.remove(hl)
 
                     if (node) {
-                        console.log('===>>> Highlight', pos, node?.type.name)
                         decorations = decorations.add(tr.doc, [Decoration.node(
                             pos, pos + node.nodeSize, {
                                 class: "outline-2 outline outline-indigo-500",
@@ -93,9 +92,6 @@ const outlineNodePlugin = new Plugin({
                     node: node,
                     pos: pos
                 }
-
-                console.log('===>>> CLICK: ', pos, node?.type.name)
-
             },
 
             mouseover(view, event) {
@@ -105,8 +101,6 @@ const outlineNodePlugin = new Plugin({
                 const offset = children.indexOf(target);
                 const pos = view.posAtDOM(target.parentElement, offset);
                 const node = view.state.doc.nodeAt(pos)
-
-                console.log('===>>> HOVER: ', pos, node?.type.name)
 
                 nodeHover.value = {
                     node: node,

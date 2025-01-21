@@ -1,5 +1,5 @@
 <template>
-  <div v-if="select_editor" class="px-2 bg-gray-700 max-w-64 min-h-screen text-gray-200 flex flex-col">
+  <div v-if="editor" class="px-2 bg-gray-700 max-w-64 min-h-screen text-gray-200 flex flex-col">
 
     <!-- BREAKPOINT -->
 
@@ -45,9 +45,9 @@
               <SelectDirection
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-direction="(p) => select_editor.chain().setFlexDirection({ ...p, selected: nodeSelected }).run()"
+                @select-direction="(p) => editor.chain().setFlexDirection({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -56,9 +56,9 @@
               <SelectWrap
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-wrap="(p) => select_editor.chain().setFlexWrap({ ...p, selected: nodeSelected }).run()"
+                @select-wrap="(p) => editor.chain().setFlexWrap({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -67,9 +67,9 @@
               <SelectJustifyContent
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-justify-content="(p) => select_editor.chain().setFlexJustifyContent({ ...p, selected: nodeSelected }).run()"
+                @select-justify-content="(p) => editor.chain().setFlexJustifyContent({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -79,9 +79,9 @@
               <SelectAlignItems
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-align-items="(p) => select_editor.chain().setFlexAlignItems({ ...p, selected: nodeSelected}).run()"
+                @select-align-items="(p) => editor.chain().setFlexAlignItems({ ...p, selected: nodeSelected}).run()"
               />
             </div>
 
@@ -91,9 +91,9 @@
               <SelectAlignContent
                 :breakpoint="breakpoint"
                 :extension="ext_flex" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-align-content="(p) => select_editor.chain().setFlexAlignContent({ ...p, selected: nodeSelected}).run()"
+                @select-align-content="(p) => editor.chain().setFlexAlignContent({ ...p, selected: nodeSelected}).run()"
               />
             </div>
           </div>
@@ -103,9 +103,9 @@
             <SelectGap
               :breakpoint="breakpoint"
               :extension="ext_gap" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-gap="(p) => select_editor.chain().setGap({...p, selected: nodeSelected}).run()"
+              @select-gap="(p) => editor.chain().setGap({...p, selected: nodeSelected}).run()"
             />
           </div>
         </DisclosurePanel>
@@ -129,9 +129,9 @@
               <SelectBasis
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-basis="(p) => select_editor.chain().setFlexBasis({ ...p, selected: nodeSelected }).run()"
+                @select-basis="(p) => editor.chain().setFlexBasis({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -140,9 +140,9 @@
               <SelectGrow
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-grow="(p) => select_editor.chain().setFlexGrow({ ...p, selected: nodeSelected }).run()"
+                @select-grow="(p) => editor.chain().setFlexGrow({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -151,9 +151,9 @@
               <SelectShrink
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-shrink="(p) => select_editor.chain().setFlexShrink({ ...p, selected: nodeSelected }).run()"
+                @select-shrink="(p) => editor.chain().setFlexShrink({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -164,9 +164,9 @@
                 class="w-full"
                 :breakpoint="breakpoint"
                 :extension="ext_flex_item" 
-                :editor="select_editor"
+                :editor="editor"
                 :selected="nodeSelected"
-                @select-flex-grow-shrink="(p) => select_editor.chain().setFlexGrowShrink({ ...p, selected: nodeSelected }).run()"
+                @select-flex-grow-shrink="(p) => editor.chain().setFlexGrowShrink({ ...p, selected: nodeSelected }).run()"
               />
             </div>
 
@@ -191,8 +191,8 @@ Fix width to the current breakpoint.
 <SelectContainer
 :breakpoint="breakpoint"
 :extension="ext_container" 
-:editor="select_editor"
-@select-container="({container, breakpoint}) => select_editor.chain().setContainer(container, breakpoint).run()"
+:editor="editor"
+@select-container="({container, breakpoint}) => editor.chain().setContainer(container, breakpoint).run()"
 />
 </DisclosurePanel>
 </Disclosure>
@@ -213,9 +213,9 @@ Fix width to the current breakpoint.
             v-if="ext_padding" 
             :breakpoint="breakpoint"
             :extension="ext_padding" 
-            :editor="select_editor"
+            :editor="editor"
             :selected="nodeSelected"
-            @select-padding="(p) => select_editor.chain().setPadding({ ...p, selected: nodeSelected}).focus().run()"
+            @select-padding="(p) => editor.chain().setPadding({ ...p, selected: nodeSelected}).focus().run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -236,9 +236,9 @@ Fix width to the current breakpoint.
             v-if="ext_margin" 
             :breakpoint="breakpoint"
             :extension="ext_margin" 
-            :editor="select_editor"
+            :editor="editor"
             :selected="nodeSelected"
-            @select-margin="(p) => select_editor.chain().focus().setMargin({...p, selected: nodeSelected}).run()"
+            @select-margin="(p) => editor.chain().focus().setMargin({...p, selected: nodeSelected}).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -259,9 +259,9 @@ Fix width to the current breakpoint.
             v-if="ext_float" 
             :breakpoint="breakpoint"
             :extension="ext_float" 
-            :editor="select_editor"
+            :editor="editor"
             :selected="nodeSelected"
-            @select-float="(p) => select_editor.chain().setFloat({ ...p, selected: nodeSelected }).run()"
+            @select-float="(p) => editor.chain().setFloat({ ...p, selected: nodeSelected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -281,9 +281,9 @@ Fix width to the current breakpoint.
           <SelectClear
             :breakpoint="breakpoint"
             :extension="ext_float" 
-            :editor="select_editor"
+            :editor="editor"
             :selected="nodeSelected"
-            @select-clear="(p) => select_editor.chain().setClear({ ...p, selected: nodeSelected }).run()"
+            @select-clear="(p) => editor.chain().setClear({ ...p, selected: nodeSelected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -304,9 +304,9 @@ Fix width to the current breakpoint.
             v-if="ext_align" 
             :breakpoint="breakpoint"
             :extension="ext_align" 
-            :editor="select_editor"
+            :editor="editor"
             :selected="nodeSelected"
-            @select-align="(p) => select_editor.chain().setAlign({ ...p, selected: nodeSelected }).run()"
+            @select-align="(p) => editor.chain().setAlign({ ...p, selected: nodeSelected }).run()"
           />
         </DisclosurePanel>
       </Disclosure>
@@ -332,18 +332,18 @@ Fix width to the current breakpoint.
               v-if="ext_width" 
               :breakpoint="breakpoint"
               :extension="ext_width" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-width="(p) => select_editor.chain().setWidth({ ...p, selected: nodeSelected }).run()"
+              @select-width="(p) => editor.chain().setWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectHeight
               v-if="ext_height" 
               :breakpoint="breakpoint"
               :extension="ext_height" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-height="(p) => select_editor.chain().setHeight({ ...p, selected: nodeSelected }).run()"
+              @select-height="(p) => editor.chain().setHeight({ ...p, selected: nodeSelected }).run()"
             />
 
             <span>Min. Width</span>
@@ -355,17 +355,17 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="ext_min_width" 
               :selected="nodeSelected"
-              :editor="select_editor"
-              @select-minWidth="(p) => select_editor.chain().setMinWidth({ ...p, selected: nodeSelected }).run()"
+              :editor="editor"
+              @select-minWidth="(p) => editor.chain().setMinWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectMinHeight
               v-if="ext_min_height" 
               :breakpoint="breakpoint"
               :extension="ext_min_height" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-minHeight="(p) => select_editor.chain().setMinHeight({ ...p, selected: nodeSelected }).run()"
+              @select-minHeight="(p) => editor.chain().setMinHeight({ ...p, selected: nodeSelected }).run()"
             />
 
 
@@ -375,18 +375,18 @@ Fix width to the current breakpoint.
               v-if="ext_max_width" 
               :breakpoint="breakpoint"
               :extension="ext_max_width" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-maxWidth="(p) => select_editor.chain().setMaxWidth({ ...p, selected: nodeSelected }).run()"
+              @select-maxWidth="(p) => editor.chain().setMaxWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectMaxHeight
               v-if="ext_max_height" 
               :breakpoint="breakpoint"
               :extension="ext_max_height" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
-              @select-maxHeight="(p) => select_editor.chain().setMaxHeight({ ...p, selected: nodeSelected }).run()"
+              @select-maxHeight="(p) => editor.chain().setMaxHeight({ ...p, selected: nodeSelected }).run()"
             />
           </div>
 
@@ -413,10 +413,10 @@ Fix width to the current breakpoint.
               v-if="ext_background_color" 
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
-              :editor="select_editor"
+              :editor="editor"
               :selected="nodeSelected"
               @select-background-color="(p) =>
-                select_editor.chain().focus().setBackgroundColor({...p, selected: nodeSelected}).run()"
+                editor.chain().focus().setBackgroundColor({...p, selected: nodeSelected}).run()"
             />
 
           </div>
@@ -443,8 +443,8 @@ Fix width to the current breakpoint.
               v-if="ext_font_italic"
               :breakpoint="breakpoint"
               :extension="ext_font_italic"
-              :editor="select_editor"
-              @select-font-italic="({italic}) => select_editor.chain().focus().setFontItalic(italic, breakpoint).run()"
+              :editor="editor"
+              @select-font-italic="({italic}) => editor.chain().focus().setFontItalic(italic, breakpoint).run()"
             />
 
             <SelectFontWeight 
@@ -452,8 +452,8 @@ Fix width to the current breakpoint.
               v-if="ext_font_weight"
               :breakpoint="breakpoint"
               :extension="ext_font_weight"
-              :editor="select_editor"
-              @select-font-weight="({weight}) => select_editor.chain().focus().setFontWeight(weight, breakpoint).run()"
+              :editor="editor"
+              @select-font-weight="({weight}) => editor.chain().focus().setFontWeight(weight, breakpoint).run()"
             />
 
             <SelectTextDecoration 
@@ -461,8 +461,8 @@ Fix width to the current breakpoint.
               v-if="ext_text_decoration"
               :breakpoint="breakpoint"
               :extension="ext_text_decoration"
-              :editor="select_editor"
-              @select-text-decoration="({decoration}) => select_editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
+              :editor="editor"
+              @select-text-decoration="({decoration}) => editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
             />
 
           </div>
@@ -476,8 +476,8 @@ Fix width to the current breakpoint.
                 v-if="ext_text_color" 
                 :breakpoint="breakpoint"
                 :extension="ext_text_color" 
-                :editor="select_editor"
-                @select-text-color="({color, variant, breakpoint}) => select_editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
+                :editor="editor"
+                @select-text-color="({color, variant, breakpoint}) => editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
               />
             </div>
 
@@ -489,8 +489,8 @@ Fix width to the current breakpoint.
                 v-if="ext_font_size"
                 :breakpoint="breakpoint"
                 :extension="ext_font_size"
-                :editor="select_editor"
-                @select-font-size="({size}) => select_editor.chain().focus().setFontSize(size, breakpoint).run()"
+                :editor="editor"
+                @select-font-size="({size}) => editor.chain().focus().setFontSize(size, breakpoint).run()"
               />
             </div>
 
@@ -502,8 +502,8 @@ Fix width to the current breakpoint.
                 v-if="ext_font_family"
                 :breakpoint="breakpoint"
                 :extension="ext_font_family"
-                :editor="select_editor"
-                @select-font-family="({family}) => select_editor.chain().focus().setFontFamily(family, breakpoint).run()"
+                :editor="editor"
+                @select-font-family="({family}) => editor.chain().focus().setFontFamily(family, breakpoint).run()"
               />
             </div>
 
@@ -619,10 +619,6 @@ const cls_disclosure_button = [
 const cls_section = []
 const cls_panel = ['text-sm', 'mb-4', 'p-2']
 
-const select_editor = ref()
-
-//const active_types = ref(new Map())
-
 const selected_type = computed(() => selected.value?.node?.type.name)
 
 const decorate = (key, p) => {
@@ -630,37 +626,29 @@ const decorate = (key, p) => {
     p = {node: null, pos: null}
   } 
 
-  select_editor.value.chain().focus().setMeta(key, p).run()
+  editor.value.chain().focus().setMeta(key, p).run()
 }
 
 watch(editor, () => {
-  if (!select_editor.value) {
-    select_editor.value = editor
+  if (!editor.value) {
+    return false
+  }
 
-    if (!select_editor.value) {
-      return false
-    }
+  editor.value.on('transaction', ({ editor, transaction }) => {
+    console.debug('===> [EVENT] TRANSACTION')
+  })
 
-    select_editor.value.on('transaction', ({ editor, transaction }) => {
-      console.debug('===> [EVENT] TRANSACTION')
-    })
-
-    select_editor.value.on('update', ({ editor, transaction }) => {
-      console.debug('===> [EVENT] CONTENT UPDATE', transaction)
-      /*  
+  editor.value.on('update', ({ editor, transaction }) => {
+    console.debug('===> [EVENT] CONTENT UPDATE', transaction)
+    /*  
           Nodes are immutable so we need to update the reference otherwise
           we're keeping a reference to an object that is not being mutated
-      */
+    */
 
-      nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
-    })
-  }
-}, { deep: true })
+    nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
+  })
 
-watch(select_editor, () => {
-  if (select_editor.value) {
-    console.log(select_editor.value)
-    const exts = select_editor.value.extensionManager.extensions
+    const exts = editor.value.extensionManager.extensions
 
     ext_padding.value = exts.find(ext => ext.name == 'padding')
     ext_margin.value = exts.find(ext => ext.name == 'margin')
@@ -685,6 +673,6 @@ watch(select_editor, () => {
     ext_flex_item.value = exts.find(ext => ext.name == 'flexItem')
     ext_gap.value = exts.find(ext => ext.name == 'gap')
   }
-})
+)
 
 </script>

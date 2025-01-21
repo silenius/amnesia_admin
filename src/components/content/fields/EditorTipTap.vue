@@ -731,7 +731,7 @@ const editor = useEditor({
   },
   onSelectionUpdate: ({editor: e, transaction: tr}) => {
     emit('update:selection', e)
-    setEditor('current', e)
+    setEditor(e)
     /*
     console.debug(
       '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
