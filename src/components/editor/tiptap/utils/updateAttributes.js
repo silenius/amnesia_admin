@@ -11,7 +11,6 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { useEditorEventStore } from '@/stores/editor'
 
-
 const storeEditorEvent = useEditorEventStore()
 
 const { getSelectedNode } = useTiptap()
@@ -81,12 +80,18 @@ const outlineNodePlugin = new Plugin({
     props: {
         handleDOMEvents: {
             click(view, event) {
-                const { nodeSelected, lineage } = storeToRefs(storeEditorEvent)
+                const { nodeSelected } = storeToRefs(storeEditorEvent)
                 const target = event.target
-                const children = Array.from(target.parentNode?.childNodes || []);
-                const offset = children.indexOf(target);
-                const pos = view.posAtDOM(target.parentElement, offset);
-                const node = view.state.doc.nodeAt(pos)
+                const children = Array.from(target.parentNode?.childNodes || [])
+                const offset = children.indexOf(target)
+                let pos = view.posAtDOM(target.parentElement, offset)
+                let node = view.state.doc.nodeAt(pos)
+
+                if (!node || node.isText) {
+                    const $pos = view.state.doc.resolve(pos)
+                    pos = $pos.before()
+                    node = view.state.doc.nodeAt(pos)
+                }
 
                 nodeSelected.value = {
                     node: node,
@@ -97,10 +102,16 @@ const outlineNodePlugin = new Plugin({
             mouseover(view, event) {
                 const { nodeHover } = storeToRefs(storeEditorEvent)
                 const target = event.target
-                const children = Array.from(target.parentNode?.childNodes || []);
-                const offset = children.indexOf(target);
-                const pos = view.posAtDOM(target.parentElement, offset);
-                const node = view.state.doc.nodeAt(pos)
+                const children = Array.from(target.parentNode?.childNodes || [])
+                const offset = children.indexOf(target)
+                let pos = view.posAtDOM(target.parentNode, offset)
+                let node = view.state.doc.nodeAt(pos)
+
+                if (!node || node.isText) {
+                    const $pos = view.state.doc.resolve(pos)
+                    pos = $pos.before()
+                    node = view.state.doc.nodeAt(pos)
+                }
 
                 nodeHover.value = {
                     node: node,
@@ -109,25 +120,22 @@ const outlineNodePlugin = new Plugin({
             },
 
             keyup(view, event) {
+                const { nodeSelected, nodeHover } = storeToRefs(storeEditorEvent)
                 const selection = view.state.selection
-                const { lineage } = storeToRefs(storeEditorEvent)
-                let level = 0
+                const $pos = selection.$anchor
+                let pos = $pos.pos
+                let node = view.state.doc.nodeAt(pos)
 
-                const new_lineage = new Map()
+                if (!node || node.isText) {
+                    pos = $pos.before()
+                    node = view.state.doc.nodeAt(pos)
+                }
 
-                view.state.doc.nodesBetween(selection.from, selection.to, (node, pos) => {
-                    if (!node.isText) {
-                        new_lineage.set(pos, {
-                            node: node,
-                            pos: pos,
-                            level: level+=1
-                        })
-                    }
-                })
-
-                lineage.value = new_lineage
+                nodeSelected.value = {
+                    node: node,
+                    pos: pos
+                }
             },
-
         },
         decorations: (state) => {
             return outlineNodePlugin.getState(state).decorations
@@ -153,6 +161,7 @@ export const TipTapCommands = Extension.create({
     },
 
     onSelectionUpdate({ editor, transaction}) {
+        console.log('===>>> SELECTION UPDATE', transaction)
     },
     */
 

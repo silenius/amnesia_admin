@@ -1,11 +1,11 @@
-import { ref, watch } from 'vue'
+import { ref, watch, toValue } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 
 export const useEditorStore = defineStore('editor', () => {
     const editor = ref()
 
     function setEditor(e) {
-        editor.value = e
+        editor.value = toValue(e)
     }
 
     return { setEditor, editor }
@@ -13,12 +13,24 @@ export const useEditorStore = defineStore('editor', () => {
 
 export const useEditorEventStore = defineStore('editorEvent', () => {
     const { editor } = storeToRefs(useEditorStore())
-
     const nodeSelected = ref()
     const nodeHover = ref()
     const lineage = ref(new Map())
 
+    watch (nodeHover, () => {
+        console.debug('===>>> [WATCH] nodeHover: ', 
+            nodeHover?.value?.pos, 
+            nodeHover?.value?.node?.type.name
+        )
+ 
+    })
+
     watch (nodeSelected, () => {
+        console.debug('===>>> [WATCH] nodeSelected: ', 
+            nodeSelected?.value?.pos, 
+            nodeSelected?.value?.node?.type.name
+        )
+        
         const { pos, node } = nodeSelected.value
         let level = 0
 

@@ -842,10 +842,11 @@ const editor = useEditor({
 
 
 const { setEditor } = useEditorStore()
-setEditor(editor)
 
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {
+  setEditor(editor)
+
   try {
     const { data } = await getDefaultMediaFolder()
     default_media_folder.value = data

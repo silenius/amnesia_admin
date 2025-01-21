@@ -517,7 +517,7 @@ Fix width to the current breakpoint.
 
 <script setup>
 
-import { ref, computed, unref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useEditorStore, useEditorEventStore } from '@/stores/editor'
 import {
   Disclosure,
@@ -634,45 +634,46 @@ watch(editor, () => {
     return false
   }
 
+  /*
   editor.value.on('transaction', ({ editor, transaction }) => {
     console.debug('===> [EVENT] TRANSACTION')
   })
+  */
 
-  editor.value.on('update', ({ editor, transaction }) => {
-    console.debug('===> [EVENT] CONTENT UPDATE', transaction)
+  editor.value.on('update', ({ transaction }) => {
     /*  
-          Nodes are immutable so we need to update the reference otherwise
-          we're keeping a reference to an object that is not being mutated
+      Nodes are immutable so we need to update the reference otherwise
+      we're keeping a reference to an object that is not being mutated
     */
 
     nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
+    decorate('selectNode', nodeSelected.value)
   })
 
-    const exts = editor.value.extensionManager.extensions
+  const exts = editor.value.extensionManager.extensions
 
-    ext_padding.value = exts.find(ext => ext.name == 'padding')
-    ext_margin.value = exts.find(ext => ext.name == 'margin')
-    ext_float.value = exts.find(ext => ext.name == 'float')
-    ext_align.value = exts.find(ext => ext.name == 'align')
-    ext_text_color.value = exts.find(ext => ext.name == 'textColor')
-    ext_background_color.value = exts.find(ext => ext.name == 'backgroundColor')
-    ext_font_size.value = exts.find(ext => ext.name == 'fontSize')
-    ext_font_family.value = exts.find(ext => ext.name == 'fontFamily')
-    ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
-    ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
-    ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
-    ext_width.value = exts.find(ext => ext.name == 'width')
-    ext_min_width.value = exts.find(ext => ext.name == 'minWidth')
-    ext_max_width.value = exts.find(ext => ext.name == 'maxWidth')
-    ext_height.value = exts.find(ext => ext.name == 'height')
-    ext_min_height.value = exts.find(ext => ext.name == 'minHeight')
-    ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
-    ext_container.value = exts.find(ext => ext.name == 'container')
-    ext_clear.value = exts.find(ext => ext.name == 'clear')
-    ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
-    ext_flex_item.value = exts.find(ext => ext.name == 'flexItem')
-    ext_gap.value = exts.find(ext => ext.name == 'gap')
-  }
-)
+  ext_padding.value = exts.find(ext => ext.name == 'padding')
+  ext_margin.value = exts.find(ext => ext.name == 'margin')
+  ext_float.value = exts.find(ext => ext.name == 'float')
+  ext_align.value = exts.find(ext => ext.name == 'align')
+  ext_text_color.value = exts.find(ext => ext.name == 'textColor')
+  ext_background_color.value = exts.find(ext => ext.name == 'backgroundColor')
+  ext_font_size.value = exts.find(ext => ext.name == 'fontSize')
+  ext_font_family.value = exts.find(ext => ext.name == 'fontFamily')
+  ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
+  ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
+  ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
+  ext_width.value = exts.find(ext => ext.name == 'width')
+  ext_min_width.value = exts.find(ext => ext.name == 'minWidth')
+  ext_max_width.value = exts.find(ext => ext.name == 'maxWidth')
+  ext_height.value = exts.find(ext => ext.name == 'height')
+  ext_min_height.value = exts.find(ext => ext.name == 'minHeight')
+  ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
+  ext_container.value = exts.find(ext => ext.name == 'container')
+  ext_clear.value = exts.find(ext => ext.name == 'clear')
+  ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
+  ext_flex_item.value = exts.find(ext => ext.name == 'flexItem')
+  ext_gap.value = exts.find(ext => ext.name == 'gap')
+})
 
 </script>
