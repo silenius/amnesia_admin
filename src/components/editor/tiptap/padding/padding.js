@@ -93,7 +93,7 @@ export const Padding = Extension.create({
                         selected.pos, selected.node, attr
                     )
                 } else {
-                    return p.commands._updateAttributes(
+                    return p.commands.updateAttributes(
                         type, attr
                     )
                 }

@@ -82,7 +82,7 @@ export const Container = Extension.create({
                     })
                 }
 
-                return p.commands._updateAttributes(
+                return p.commands.updateAttributes(
                     type, { container: attr }
                 )
             },

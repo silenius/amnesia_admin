@@ -1,19 +1,19 @@
 <template>
 
     <Listbox as="div" v-model="gapX">
-      <ListboxButton>{{ gapX }}</ListboxButton>
+      <ListboxButton>{{ gapX !== undefined ? gapX : 'none' }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="gap in gaps" :key="gap" :value="gap" >
-          <button :class="class_opt">{{ gap }}</button>
+          <button :class="class_opt">{{ gap !== undefined ? gap : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
 
     <Listbox as="div" v-model="gapY">
-      <ListboxButton>{{ gapY }}</ListboxButton>
+      <ListboxButton>{{ gapY !== undefined ? gapY : 'none' }}</ListboxButton>
       <ListboxOptions :class="class_opts">
         <ListboxOption v-for="gap in gaps" :key="gap" :value="gap" >
-          <button :class="class_opt">{{ gap }}</button>
+          <button :class="class_opt">{{ gap !== undefined ? gap : 'none' }}</button>
         </ListboxOption>
       </ListboxOptions>
     </Listbox>
@@ -48,7 +48,9 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const gaps = computed(() => props.extension.options.gaps)
+const gaps = computed(
+  () => props.extension.options.gaps.toSpliced(0, 0, undefined)
+)
 
 const get_side = (side) => {
   try {

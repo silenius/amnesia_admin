@@ -146,7 +146,7 @@ export const FlexContainer = Node.create({
                                                [attr, value]]))
                 }
 
-                return p.commands._updateAttributes(
+                return p.commands.updateAttributes(
                     this.name, Oject.fromEntries([[attr, v]])
                 )
             },

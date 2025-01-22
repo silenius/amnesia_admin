@@ -68,14 +68,13 @@ export const Gap = Extension.create({
                 }
 
                 attr = Object.fromEntries([[`${side}`, attr]])
-                console.log(attr)
 
                 if (selected) {
                     return p.commands._updateNodeAttributes(
                         selected.pos, selected.node, attr
                     )
                 } else {
-                    return p.commands._updateAttributes(
+                    return p.commands.updateAttributes(
                         type, attr
                     )
                 }
