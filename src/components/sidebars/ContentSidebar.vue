@@ -246,7 +246,7 @@ Fix width to the current breakpoint.
 
     <!-- FLOAT -->
 
-    <section name="float" :class="cls_section" v-if="ext_float">
+    <section name="float" :class="cls_section" v-if="ext_float && selected_type != 'flexItem' && selected_type != 'flexContainer'">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Float</span>

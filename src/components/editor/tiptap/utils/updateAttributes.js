@@ -45,7 +45,7 @@ const outlineNodePlugin = new Plugin({
                     if (node) {
                         decorations = decorations.add(tr.doc, [Decoration.node(
                             pos, pos + node.nodeSize, {
-                                class: "outline-2 outline outline-indigo-500",
+                                class: "outline-1 outline outline-indigo-500",
                             }, { node: 'highlight' })]
                         )
                     }
@@ -64,7 +64,7 @@ const outlineNodePlugin = new Plugin({
                     if (node) {
                         decorations = decorations.add(tr.doc, [Decoration.node(
                             pos, pos + node.nodeSize, {
-                                class: "outline outline-2 outline-red-700",
+                                class: "outline outline-1 outline-red-500",
                             }, { node: 'select' })]
                         )
                     }
@@ -167,7 +167,6 @@ export const TipTapCommands = Extension.create({
 
     addCommands() {
         return {
-            /*
             _setTw : (key, value, valid_values, breakpoint, type, selected) => () => {
                 if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
@@ -189,10 +188,6 @@ export const TipTapCommands = Extension.create({
 
                 attr = Object.fromEntries([[`${key}`, attr]])
 
-                console.log('PADDING ATTR: ', attr)
-                console.log(p.state.selection)
-                console.log(selected)
-
                 if (!p.state.selection.empty && p.state.selection.toJSON().type == 'text') {
                     return p.commands.setMark('textClass', attr)
                 } else if (selected) {
@@ -207,7 +202,6 @@ export const TipTapCommands = Extension.create({
 
 
             },
-            */
             _updateNodeAttributes: (pos, node, attributes = {}) => ({ tr }) => {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,
