@@ -27,7 +27,7 @@
 
     <!-- FLEX CONTAINER -->
 
-    <section :class="cls_section" v-if="ext_flex && selected_type == 'flexContainer'">
+    <section :class="cls_section" v-if="exts.flexContainer">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex container</span>
@@ -44,7 +44,7 @@
               <span>Direction</span>
               <SelectDirection
                 :breakpoint="breakpoint"
-                :extension="ext_flex" 
+                :extension="exts.flexContainer" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-direction="(p) => editor.chain().setFlexDirection({ ...p, selected: nodeSelected }).run()"
@@ -55,7 +55,7 @@
               <span>Wrap</span>
               <SelectWrap
                 :breakpoint="breakpoint"
-                :extension="ext_flex" 
+                :extension="exts.flexContainer" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-wrap="(p) => editor.chain().setFlexWrap({ ...p, selected: nodeSelected }).run()"
@@ -66,7 +66,7 @@
               <span>Justify content</span>
               <SelectJustifyContent
                 :breakpoint="breakpoint"
-                :extension="ext_flex" 
+                :extension="exts.flexContainer" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-justify-content="(p) => editor.chain().setFlexJustifyContent({ ...p, selected: nodeSelected }).run()"
@@ -78,7 +78,7 @@
 
               <SelectAlignItems
                 :breakpoint="breakpoint"
-                :extension="ext_flex" 
+                :extension="exts.flexContainer" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-align-items="(p) => editor.chain().setFlexAlignItems({ ...p, selected: nodeSelected}).run()"
@@ -90,7 +90,7 @@
 
               <SelectAlignContent
                 :breakpoint="breakpoint"
-                :extension="ext_flex" 
+                :extension="exts.flexContainer" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-align-content="(p) => editor.chain().setFlexAlignContent({ ...p, selected: nodeSelected}).run()"
@@ -114,7 +114,7 @@
 
     <!-- FLEX ITEM -->
 
-    <section :class="cls_section" v-if="ext_flex_item && selected_type == 'flexItem'"> 
+    <section :class="cls_section" v-if="exts.flexItem">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Flex item</span>
@@ -128,7 +128,7 @@
               <span>Basis</span>
               <SelectBasis
                 :breakpoint="breakpoint"
-                :extension="ext_flex_item" 
+                :extension="exts.flexItem" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-basis="(p) => editor.chain().setFlexBasis({ ...p, selected: nodeSelected }).run()"
@@ -139,7 +139,7 @@
               <span>Grow</span>
               <SelectGrow
                 :breakpoint="breakpoint"
-                :extension="ext_flex_item" 
+                :extension="exts.flexItem" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-grow="(p) => editor.chain().setFlexGrow({ ...p, selected: nodeSelected }).run()"
@@ -150,7 +150,7 @@
               <span>Shrink</span>
               <SelectShrink
                 :breakpoint="breakpoint"
-                :extension="ext_flex_item" 
+                :extension="exts.flexItem" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-shrink="(p) => editor.chain().setFlexShrink({ ...p, selected: nodeSelected }).run()"
@@ -163,7 +163,7 @@
               <SelectFlexGrowShrink
                 class="w-full"
                 :breakpoint="breakpoint"
-                :extension="ext_flex_item" 
+                :extension="exts.flexItem" 
                 :editor="editor"
                 :selected="nodeSelected"
                 @select-flex-grow-shrink="(p) => editor.chain().setFlexGrowShrink({ ...p, selected: nodeSelected }).run()"
@@ -200,7 +200,7 @@ Fix width to the current breakpoint.
 -->
     <!-- PADDING -->
 
-    <section name="padding" :class="cls_section" v-if="ext_padding">
+    <section name="padding" :class="cls_section" v-if="exts.padding">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Padding</span>
@@ -210,9 +210,9 @@ Fix width to the current breakpoint.
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling an element's padding.</div>
           <SelectPadding 
-            v-if="ext_padding" 
+            v-if="exts.padding" 
             :breakpoint="breakpoint"
-            :extension="ext_padding" 
+            :extension="exts.padding" 
             :editor="editor"
             :selected="nodeSelected"
             @select-padding="(p) => editor.chain().setPadding({ ...p, selected: nodeSelected}).focus().run()"
@@ -223,7 +223,7 @@ Fix width to the current breakpoint.
 
     <!-- MARGIN -->
 
-    <section name="margin" :class="cls_section" v-if="ext_margin">
+    <section name="margin" :class="cls_section" v-if="exts.margin">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Margin</span>
@@ -233,9 +233,9 @@ Fix width to the current breakpoint.
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling an element's margin.</div>
           <SelectMargin 
-            v-if="ext_margin" 
+            v-if="exts.margin" 
             :breakpoint="breakpoint"
-            :extension="ext_margin" 
+            :extension="exts.margin" 
             :editor="editor"
             :selected="nodeSelected"
             @select-margin="(p) => editor.chain().focus().setMargin({...p, selected: nodeSelected}).run()"
@@ -246,7 +246,7 @@ Fix width to the current breakpoint.
 
     <!-- FLOAT -->
 
-    <section name="float" :class="cls_section" v-if="ext_float && selected_type != 'flexItem' && selected_type != 'flexContainer'">
+    <section name="float" :class="cls_section" v-if="exts.float">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Float</span>
@@ -256,9 +256,8 @@ Fix width to the current breakpoint.
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling the wrapping of content around an element.</div>
           <SelectFloat
-            v-if="ext_float" 
             :breakpoint="breakpoint"
-            :extension="ext_float" 
+            :extension="exts.float" 
             :editor="editor"
             :selected="nodeSelected"
             @select-float="(p) => editor.chain().setFloat({ ...p, selected: nodeSelected }).run()"
@@ -269,7 +268,7 @@ Fix width to the current breakpoint.
 
     <!-- CLEAR -->
 
-    <section name="clear" :class="cls_section" v-if="ext_clear">
+    <section name="clear" :class="cls_section" v-if="exts.clear">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Clear</span>
@@ -280,7 +279,7 @@ Fix width to the current breakpoint.
           <div class="italic my-2">It sets wether an element must be moved below (cleared) floating elements that precede it.</div>
           <SelectClear
             :breakpoint="breakpoint"
-            :extension="ext_float" 
+            :extension="exts.clear" 
             :editor="editor"
             :selected="nodeSelected"
             @select-clear="(p) => editor.chain().setClear({ ...p, selected: nodeSelected }).run()"
@@ -291,7 +290,7 @@ Fix width to the current breakpoint.
 
     <!-- ALIGN -->
 
-    <section name="align" :class="cls_section" v-if="ext_align">
+    <section name="align" :class="cls_section" v-if="exts.align">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Align</span>
@@ -301,9 +300,9 @@ Fix width to the current breakpoint.
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling the alignment.</div>
           <SelectAlign
-            v-if="ext_align" 
+            v-if="exts.align" 
             :breakpoint="breakpoint"
-            :extension="ext_align" 
+            :extension="exts.align" 
             :editor="editor"
             :selected="nodeSelected"
             @select-align="(p) => editor.chain().setAlign({ ...p, selected: nodeSelected }).run()"
@@ -325,65 +324,65 @@ Fix width to the current breakpoint.
           <div class="italic mt-2">Utilities for sizings of an element.</div>
           <div class="grid grid-rows-6 grid-cols-2 gap-x-2 justify-items-stretch items-end text-center">
 
-            <span>Width</span>
-            <span>Height</span>
+            <span v-if="exts.width">Width</span>
+            <span v-if="exts.height">Height</span>
 
             <SelectWidth
-              v-if="ext_width" 
+              v-if="exts.width" 
               :breakpoint="breakpoint"
-              :extension="ext_width" 
+              :extension="exts.width" 
               :editor="editor"
               :selected="nodeSelected"
               @select-width="(p) => editor.chain().setWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectHeight
-              v-if="ext_height" 
+              v-if="exts.height" 
               :breakpoint="breakpoint"
-              :extension="ext_height" 
+              :extension="exts.height" 
               :editor="editor"
               :selected="nodeSelected"
               @select-height="(p) => editor.chain().setHeight({ ...p, selected: nodeSelected }).run()"
             />
 
-            <span>Min. Width</span>
+            <span v-if="exts.minWidth">Min. Width</span>
 
-            <span>Min. Height</span>
+            <span v-if="exts.minHeight">Min. Height</span>
 
             <SelectMinWidth
-              v-if="ext_min_width" 
+              v-if="exts.minWidth" 
               :breakpoint="breakpoint"
-              :extension="ext_min_width" 
+              :extension="exts.minWidth" 
               :selected="nodeSelected"
               :editor="editor"
               @select-minWidth="(p) => editor.chain().setMinWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectMinHeight
-              v-if="ext_min_height" 
+              v-if="exts.minHeight" 
               :breakpoint="breakpoint"
-              :extension="ext_min_height" 
+              :extension="exts.minHeight" 
               :editor="editor"
               :selected="nodeSelected"
               @select-minHeight="(p) => editor.chain().setMinHeight({ ...p, selected: nodeSelected }).run()"
             />
 
 
-            <span>Max. Width</span>
-            <span>Max. Height</span>
+            <span v-if="exts.maxWidth">Max. Width</span>
+            <span v-if="exts.maxHeight">Max. Height</span>
             <SelectMaxWidth
-              v-if="ext_max_width" 
+              v-if="exts.maxWidth" 
               :breakpoint="breakpoint"
-              :extension="ext_max_width" 
+              :extension="exts.maxWidth" 
               :editor="editor"
               :selected="nodeSelected"
               @select-maxWidth="(p) => editor.chain().setMaxWidth({ ...p, selected: nodeSelected }).run()"
             />
 
             <SelectMaxHeight
-              v-if="ext_max_height" 
+              v-if="exts.maxHeight" 
               :breakpoint="breakpoint"
-              :extension="ext_max_height" 
+              :extension="exts.maxHeight" 
               :editor="editor"
               :selected="nodeSelected"
               @select-maxHeight="(p) => editor.chain().setMaxHeight({ ...p, selected: nodeSelected }).run()"
@@ -396,7 +395,7 @@ Fix width to the current breakpoint.
 
     <!-- BACKGROUNDS -->
 
-    <section name="colors" :class="cls_section">
+    <section name="colors" :class="cls_section" v-if="exts.backgroundColor">
       <Disclosure v-slot="{ open }">
         <DisclosureButton :class="cls_disclosure_button">
           <span>Background</span>
@@ -410,7 +409,7 @@ Fix width to the current breakpoint.
 
             <SelectBackgroundColor
               class="w-full"
-              v-if="ext_background_color" 
+              v-if="exts.backgroundColor" 
               :breakpoint="breakpoint"
               :extension="ext_text_color" 
               :editor="editor"
@@ -440,27 +439,27 @@ Fix width to the current breakpoint.
 
             <SelectFontItalic 
               class="flex"
-              v-if="ext_font_italic"
+              v-if="exts.fontItalic"
               :breakpoint="breakpoint"
-              :extension="ext_font_italic"
+              :extension="exts.fontItalic"
               :editor="editor"
               @select-font-italic="({italic}) => editor.chain().focus().setFontItalic(italic, breakpoint).run()"
             />
 
             <SelectFontWeight 
               class="flex"
-              v-if="ext_font_weight"
+              v-if="exts.fontWeight"
               :breakpoint="breakpoint"
-              :extension="ext_font_weight"
+              :extension="exts.fontWeight"
               :editor="editor"
               @select-font-weight="({weight}) => editor.chain().focus().setFontWeight(weight, breakpoint).run()"
             />
 
             <SelectTextDecoration 
               class="flex gap-2"
-              v-if="ext_text_decoration"
+              v-if="exts.textDecoration"
               :breakpoint="breakpoint"
-              :extension="ext_text_decoration"
+              :extension="exts.textDecoration"
               :editor="editor"
               @select-text-decoration="({decoration}) => editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
             />
@@ -473,9 +472,9 @@ Fix width to the current breakpoint.
 
               <SelectTextColor
                 class="w-full"
-                v-if="ext_text_color" 
+                v-if="exts.textColor" 
                 :breakpoint="breakpoint"
-                :extension="ext_text_color" 
+                :extension="exts.textColor" 
                 :editor="editor"
                 @select-text-color="({color, variant, breakpoint}) => editor.chain().focus().setTextColor(color, variant, breakpoint).run()"
               />
@@ -486,9 +485,9 @@ Fix width to the current breakpoint.
 
               <SelectFontSize 
                 class="w-full"
-                v-if="ext_font_size"
+                v-if="exts.fontSize"
                 :breakpoint="breakpoint"
-                :extension="ext_font_size"
+                :extension="exts.fontSize"
                 :editor="editor"
                 @select-font-size="({size}) => editor.chain().focus().setFontSize(size, breakpoint).run()"
               />
@@ -499,9 +498,9 @@ Fix width to the current breakpoint.
 
               <SelectFontFamily 
                 class="w-full"
-                v-if="ext_font_family"
+                v-if="exts.fontFamily"
                 :breakpoint="breakpoint"
-                :extension="ext_font_family"
+                :extension="exts.fontFamily"
                 :editor="editor"
                 @select-font-family="({family}) => editor.chain().focus().setFontFamily(family, breakpoint).run()"
               />
@@ -588,28 +587,37 @@ const selected = nodeSelected
 const breakpoint = ref(null)
 const change_breakpoint = (value) => breakpoint.value = value
 
-const ext_padding = ref()
-const ext_margin = ref()
-const ext_float = ref()
-const ext_align = ref()
-const ext_text_color = ref()
-const ext_background_color = ref()
-const ext_font_size = ref()
-const ext_font_family = ref()
-const ext_font_weight = ref()
-const ext_font_italic = ref()
-const ext_text_decoration = ref()
-const ext_width = ref()
-const ext_min_width = ref()
-const ext_max_width = ref()
-const ext_height = ref()
-const ext_min_height = ref()
-const ext_max_height = ref()
-const ext_container = ref()
-const ext_clear = ref()
-const ext_flex = ref()
-const ext_flex_item = ref()
-const ext_gap = ref()
+const exts = computed(() => {
+  const obj = {}
+
+  editor.value.extensionManager.extensions.reduce(
+    (accumulator, currentValue) => {
+      let match = false
+
+      switch (currentValue.type) {
+        case 'node':
+          match = nodeSelected?.value?.node.type.name === currentValue.name
+          break
+        case 'extension':
+          match = currentValue?.options?.types?.indexOf(nodeSelected?.value?.node.type.name) 
+          match = match !== -1 && match !== undefined
+          break
+        case 'mark':
+          match = true
+          break
+        default:
+          console.debug('===>>> [COMPUTED] exts, NO MATCH: ', currentValue)
+          break
+      }
+
+      if (match) {
+          obj[currentValue.name] = { ...currentValue }
+      }
+    }, obj
+  ) // reduce
+  
+  return obj
+})
 
 const cls_disclosure_button = [
   'flex', 'w-full', '', 'items-center', 'justify-between', 
@@ -650,30 +658,6 @@ watch(editor, () => {
     decorate('selectNode', nodeSelected.value)
   })
 
-  const exts = editor.value.extensionManager.extensions
-
-  ext_padding.value = exts.find(ext => ext.name == 'padding')
-  ext_margin.value = exts.find(ext => ext.name == 'margin')
-  ext_float.value = exts.find(ext => ext.name == 'float')
-  ext_align.value = exts.find(ext => ext.name == 'align')
-  ext_text_color.value = exts.find(ext => ext.name == 'textColor')
-  ext_background_color.value = exts.find(ext => ext.name == 'backgroundColor')
-  ext_font_size.value = exts.find(ext => ext.name == 'fontSize')
-  ext_font_family.value = exts.find(ext => ext.name == 'fontFamily')
-  ext_font_weight.value = exts.find(ext => ext.name == 'fontWeight')
-  ext_font_italic.value = exts.find(ext => ext.name == 'fontItalic')
-  ext_text_decoration.value = exts.find(ext => ext.name == 'textDecoration')
-  ext_width.value = exts.find(ext => ext.name == 'width')
-  ext_min_width.value = exts.find(ext => ext.name == 'minWidth')
-  ext_max_width.value = exts.find(ext => ext.name == 'maxWidth')
-  ext_height.value = exts.find(ext => ext.name == 'height')
-  ext_min_height.value = exts.find(ext => ext.name == 'minHeight')
-  ext_max_height.value = exts.find(ext => ext.name == 'maxHeight')
-  ext_container.value = exts.find(ext => ext.name == 'container')
-  ext_clear.value = exts.find(ext => ext.name == 'clear')
-  ext_flex.value = exts.find(ext => ext.name == 'flexContainer')
-  ext_flex_item.value = exts.find(ext => ext.name == 'flexItem')
-  ext_gap.value = exts.find(ext => ext.name == 'gap')
 })
 
 </script>
