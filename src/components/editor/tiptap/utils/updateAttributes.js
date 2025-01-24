@@ -182,7 +182,7 @@ export const TipTapCommands = Extension.create({
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: `${side}-${level}`
+                        tw: value
                     })
                 }
 

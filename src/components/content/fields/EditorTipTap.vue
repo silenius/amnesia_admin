@@ -567,7 +567,7 @@ const insert_flex = (cpt) => {
               content: [
                 {
                   type: 'text',
-                  text: `Flex child ${x}`
+                  text: `Item ${x}`
                 }
               ]
             },
@@ -579,8 +579,8 @@ const insert_flex = (cpt) => {
   {
     type: 'flexContainer',
     attrs: {
-        gapX: [{'breakpoint': null, 'gap': '2'}],
-        gapY: [{'breakpoint': null, 'gap': '2'}],
+        gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
+        gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
     },
     content: content
   }
