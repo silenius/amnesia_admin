@@ -102,7 +102,7 @@
             <span>Vertical Gap</span>
             <SelectGap
               :breakpoint="breakpoint"
-              :extension="ext_gap" 
+              :extension="exts.gap" 
               :editor="editor"
               :selected="nodeSelected"
               @select-gap="(p) => editor.chain().setGap({...p, selected: nodeSelected}).run()"
@@ -411,7 +411,7 @@ Fix width to the current breakpoint.
               class="w-full"
               v-if="exts.backgroundColor" 
               :breakpoint="breakpoint"
-              :extension="ext_text_color" 
+              :extension="exts.backgroundColor" 
               :editor="editor"
               :selected="nodeSelected"
               @select-background-color="(p) =>
@@ -606,7 +606,7 @@ const exts = computed(() => {
           match = true
           break
         default:
-          console.debug('===>>> [COMPUTED] exts, NO MATCH: ', currentValue)
+          console.debug('===>>> [COMPUTED] extension excluded: ', currentValue)
           break
       }
 

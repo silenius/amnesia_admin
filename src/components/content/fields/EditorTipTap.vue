@@ -779,10 +779,10 @@ const editor = useEditor({
       types: ['paragraph']
     }),
     FontSize.configure({
-      types: ['textClass']
+      types: ['textClass', 'paragraph']
     }),
     TextColor.configure({
-      types: ['textClass', 'textStyle']
+      types: ['textClass', 'textStyle', 'paragraph']
     }),
     BackgroundColor.configure({
       types: ['flexContainer', 'flexItem', 'paragraph', 'textClass', 'image', 'video']
@@ -794,17 +794,17 @@ const editor = useEditor({
       types: ['flexContainer', 'flexItem', 'video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
     }),
     FontWeight.configure({
-      types: ['textClass'] 
+      types: ['textClass', 'paragraph'] 
     }),
     FontFamily.configure({
-      types: ['textClass'],
+      types: ['textClass', 'paragraph'],
       families: fonts
     }),
     FontItalic.configure({
-      types: ['textClass']
+      types: ['textClass', 'paragraph']
     }),
     TextDecoration.configure({
-      types: ['textClass']
+      types: ['textClass', 'paragraph']
     }),
     Width.configure({
       types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
