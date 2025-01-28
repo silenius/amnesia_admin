@@ -59,7 +59,8 @@ const compute_resize_xy = () => {
 }
 
 const startResizeMove = (e) => {
-  //compute_resize_xy()
+  e.preventDefault()
+  compute_resize_xy()
   const { clientX, clientY } = e
 
   const diffs = {
@@ -80,14 +81,14 @@ const startResizeMove = (e) => {
   }
 
   // Preserve ratio
-  //new_size.height = new_size.width / node_ratio.value
+  new_size.height = new_size.width / node_ratio.value
 
   emits('resize', new_size)
 }
 
 const startResize = (e) => {
+  e.preventDefault()
   resize_from.value = e.target.getAttribute('data-resize')
-  console.log(e)
   cursorX.value = e.clientX
   cursorY.value = e.clientY
 
