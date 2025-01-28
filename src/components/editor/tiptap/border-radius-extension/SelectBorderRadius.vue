@@ -1,8 +1,8 @@
 <template>
-  <Listbox as="div" v-model="width">
-    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ width }}</ListboxButton>
+  <Listbox as="div" v-model="radius">
+    <ListboxButton class="font-bold border rounded-full p-2 w-full">{{ radius }}</ListboxButton>
     <ListboxOptions :class="class_opts">
-      <ListboxOption v-for="w in widths" :key="w" :value="w">
+      <ListboxOption v-for="w in radiuses" :key="w" :value="w">
         <button :class="class_opt">{{ w !== undefined ? w : 'none'}}</button>
       </ListboxOption>
     </ListboxOptions>
@@ -28,7 +28,7 @@ const props = defineProps({
   selected: Object
 })
 
-const emits = defineEmits(['select-border-width'])
+const emits = defineEmits(['select-border-radius'])
 
 const class_opts = [
   'absolute', 'text-center', 'max-h-48', 'rounded', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
@@ -37,23 +37,23 @@ const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
 ]
 
-const widths = computed(
-  () => props.extension.options.widths.toSpliced(0, 0, undefined)
+const radiuses = computed(
+  () => props.extension.options.radiuses.toSpliced(0, 0, undefined)
 )
 
-const width = computed({
+const radius = computed({
 
   get() { 
     try {
-      return getSelectedAttrs(props, 'borderWidth')
+      return getSelectedAttrs(props, 'borderRadius')
     } catch (e) {
       return 'none'
     }
   },
   
   set(value) { 
-    return emits('select-border-width', {
-      width: value, 
+    return emits('select-border-radius', {
+      radius: value, 
       breakpoint: props.breakpoint
     })
   }

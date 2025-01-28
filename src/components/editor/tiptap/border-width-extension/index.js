@@ -1,5 +1,5 @@
-import { Float } from './float'
+import { BorderWidth } from './width'
 
-export * from './float'
+export * from './width'
 
-export default Float
+export default BorderWidth

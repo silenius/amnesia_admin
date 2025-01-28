@@ -8,17 +8,18 @@ import {
     render_tw_attrs
 } from '../utils'
 
-const widths = [
-    'border-0', 'border', 'border-2', 'border-4', 'border-8'
+const radiuses = [
+    'rounded-none', 'rounded-sm', 'rounded', 'rounded-md', 'rounded-lg', 
+    'rounded-xl', 'rounded-2xl', 'rounded-3xl', 'rounded-full'
 ]
 
-export const BorderWidth = Extension.create({
-    name: 'borderWidth',
+export const BorderRadius = Extension.create({
+    name: 'borderRadius',
 
     addOptions() {
         return {
             types: [],
-            widths: widths,
+            radiuses: radiuses,
         }
     },
 
@@ -27,10 +28,10 @@ export const BorderWidth = Extension.create({
             {
                 types: this.options.types,
                 attributes: {
-                    borderWidth: {
+                    borderRadius: {
                         default: null,
-                        parseHTML: elem => extract_tw_attrs(elem, this.options.widths),
-                        renderHTML: attrs => render_tw_attrs(attrs, 'borderWidth')
+                        parseHTML: elem => extract_tw_attrs(elem, this.options.radiuses),
+                        renderHTML: attrs => render_tw_attrs(attrs, 'borderRadius')
                     },
                 },
             },
@@ -39,27 +40,27 @@ export const BorderWidth = Extension.create({
 
     addCommands() {
         return {
-            setBorderWidth: ({width, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
+            setBorderRadius: ({radius, breakpoint=null, type=undefined, selected=undefined}) => (p) => {
                 if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }
 
-                let attrs = selected ? selected.node.attrs['borderWidth'] : p.editor.getAttributes(type)['borderWidth']
+                let attrs = selected ? selected.node.attrs['borderRadius'] : p.editor.getAttributes(type)['borderRadius']
 
                 let attr = Array.isArray(attrs)
                     ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
-                if (this.options.widths.indexOf(width) !== -1) {
+                if (this.options.radiuses.indexOf(radius) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: width
+                        tw: radius
                     })
                 }
 
                 attr = {
-                    borderWidth: attr
+                    borderRadius: attr
                 }
 
                 if (!p.editor.state.selection.empty) {

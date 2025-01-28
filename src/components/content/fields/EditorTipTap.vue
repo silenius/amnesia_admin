@@ -447,6 +447,9 @@ import Gap from '@/components/editor/tiptap/gap-extension'
 import Article from '@/components/editor/tiptap/article-extension'
 import Div from '@/components/editor/tiptap/div-extension'
 import Section from '@/components/editor/tiptap/section-extension'
+import BorderWidth from '@/components/editor/tiptap/border-width-extension'
+import BorderColor from '@/components/editor/tiptap/border-color-extension'
+import BorderRadius from '@/components/editor/tiptap/border-radius-extension'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -822,6 +825,15 @@ const editor = useEditor({
       types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     Height.configure({
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
+    }),
+    BorderWidth.configure({
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
+    }),
+    BorderColor.configure({
+      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
+    }),
+    BorderRadius.configure({
       types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
     Table,

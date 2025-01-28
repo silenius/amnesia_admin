@@ -423,6 +423,49 @@ Fix width to the current breakpoint.
       </Disclosure>
     </section>
 
+    <!-- BORDERS -->
+
+    <section name="border" :class="cls_section">
+      <Disclosure v-slot="{ open }">
+        <DisclosureButton :class="cls_disclosure_button">
+          <span>Borders</span>
+          <font-awesome-icon v-if="open" icon="fa-solid fa-caret-down" />
+          <font-awesome-icon v-else="" icon="fa-solid fa-caret-right" />
+        </DisclosureButton>
+        <DisclosurePanel :class="cls_panel">
+          <div class="italic my-2">Utilities for controlling an element's borders.</div>
+          <SelectBorderWidth
+            :breakpoint="breakpoint"
+            :extension="exts.borderWidth" 
+            :editor="editor"
+            :selected="nodeSelected"
+            @select-border-width="(p) => editor.chain().setBorderWidth({ ...p, selected: nodeSelected }).run()"
+          />
+
+          <SelectBorderColor
+            v-if="exts.borderColor" 
+            :breakpoint="breakpoint"
+            :extension="exts.borderColor" 
+            :editor="editor"
+            :selected="nodeSelected"
+            @select-border-color="(p) =>
+              editor.chain().focus().setBorderColor({...p, selected: nodeSelected}).run()"
+          />
+
+          <SelectBorderRadius
+            v-if="exts.borderRadius" 
+            :breakpoint="breakpoint"
+            :extension="exts.borderRadius" 
+            :editor="editor"
+            :selected="nodeSelected"
+            @select-border-radius="(p) =>
+              editor.chain().focus().setBorderRadius({...p, selected: nodeSelected}).run()"
+          />
+
+        </DisclosurePanel>
+      </Disclosure>
+    </section>
+
     <!-- TYPOGRAPHY -->
 
     <section name="typography" :class="cls_section">
@@ -556,6 +599,9 @@ import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension
 import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGrow.vue'
 import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
 import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
+import SelectBorderWidth from '@/components/editor/tiptap/border-width-extension/SelectBorderWidth.vue'
+import SelectBorderColor from '@/components/editor/tiptap/border-color-extension/SelectBorderColor.vue'
+import SelectBorderRadius from '@/components/editor/tiptap/border-radius-extension/SelectBorderRadius.vue'
 
 const { editor } = storeToRefs(useEditorStore())
 
@@ -611,11 +657,11 @@ const exts = computed(() => {
       }
 
       if (match) {
-          obj[currentValue.name] = { ...currentValue }
+        obj[currentValue.name] = { ...currentValue }
       }
     }, obj
   ) // reduce
-  
+
   return obj
 })
 
