@@ -1,6 +1,6 @@
 <template>
   <node-view-wrapper :as="as" :class="wrapper_cls">
-    <img draggable data-drag-handle 
+    <img  
       ref="img" 
       class="rounded-lg" 
       :src="node.attrs.src" 
@@ -29,7 +29,7 @@ const as = computed(() => props.node.type.spec.inline ? 'span' : 'div')
 const editable = computed(() => props.editor.view.editable)
 
 const img_cls = computed(() => ({
-  'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&
+  'rounded-lg': props.selected &&
     editable.value,
   'inline': props.node.type.spec.inline,
   'block': !props.node.type.spec.inline

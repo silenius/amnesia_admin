@@ -37,39 +37,29 @@ const container_width = computed(() => container?.clientWidth)
 watch(() => props.selected, () => {
   if (props.selected) {
     compute_resize_xy()
-    window.addEventListener('scroll', compute_resize_xy) 
-  } else {
-    window.removeEventListener('scroll', compute_resize_xy)
   }
 })
 
 const compute_resize_xy = () => {
   const coords = props.node.getBoundingClientRect()
+  const editor = props.editor.options.element
+  const editor_coords = editor.getBoundingClientRect()
 
-  if (coords) {
-    resize_xy.value = {
-      scrollY: window.scrollY,
-      scrollX: window.scrollX,
-      top: coords.top,
-      bottom: coords.bottom,
-      left: coords.left,
-      right: coords.right,
-    }
+  const top = parseInt(coords.top - editor_coords.top + editor.scrollTop)
+  const bottom = parseInt(coords.bottom - editor_coords.top)
+  const left = parseInt(coords.left - editor_coords.left + editor.scrollLeft)
+  const right = parseInt(coords.right - editor_coords.left)
 
-    const diffY = window.scrollY - resize_xy.value.scrollY
-    const diffX = window.scrollX - resize_xy.value.scrollX
-
-    resize_xy.value.top -= diffY
-    resize_xy.value.bottom -= diffY
-    resize_xy.value.left -= diffX
-    resize_xy.value.right -= diffX
-
-    resize_xy.value.scrollY = window.scrollY
-    resize_xy.value.scrollX = window.scrollX
+  resize_xy.value = {
+    top: top - 1,
+    bottom: bottom - 1,
+    left: left - 1,
+    right: right - 1
   }
 }
 
 const startResizeMove = (e) => {
+  //compute_resize_xy()
   const { clientX, clientY } = e
 
   const diffs = {
@@ -90,13 +80,14 @@ const startResizeMove = (e) => {
   }
 
   // Preserve ratio
-  new_size.height = new_size.width / node_ratio.value
+  //new_size.height = new_size.width / node_ratio.value
 
   emits('resize', new_size)
 }
 
 const startResize = (e) => {
   resize_from.value = e.target.getAttribute('data-resize')
+  console.log(e)
   cursorX.value = e.clientX
   cursorY.value = e.clientY
 
@@ -119,7 +110,7 @@ const node_ratio = computed(() => {
   return rect.width / rect.height
 })
 
-const resize_cls = 'rounded fixed z-50 h-2 w-2 bg-indigo-500'
+const resize_cls = 'absolute h-2 w-2 bg-indigo-500'
 
 const resize_tl = computed(() => {
   return [

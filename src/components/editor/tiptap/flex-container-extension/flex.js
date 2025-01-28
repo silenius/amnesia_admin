@@ -63,7 +63,7 @@ export const FlexContainer = Node.create({
     content: 'flexItem*',
     group: 'block',
     inline: false,
-    draggable: true,
+    draggable: false,
     selectable: true,
 
     addOptions() {

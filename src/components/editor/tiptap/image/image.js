@@ -44,7 +44,7 @@ export default Node.create({
         return this.options.selectable
     },
 
-    draggable: true,
+    draggable: false,
 
     marks: '',
 

@@ -280,7 +280,7 @@
                   :class="insert_video_button"
                   @click="insertVideo">
                   Insert
-               </button>
+                </button>
 
               </div>
             </DialogPanel>
@@ -450,6 +450,7 @@ import Section from '@/components/editor/tiptap/section-extension'
 import BorderWidth from '@/components/editor/tiptap/border-width-extension'
 import BorderColor from '@/components/editor/tiptap/border-color-extension'
 import BorderRadius from '@/components/editor/tiptap/border-radius-extension'
+//import resizable from '@/components/editor/tiptap/extension-resize'
 import { useEditorStore } from '@/stores/editor'
 
 import {
@@ -562,31 +563,31 @@ const insert_flex = (cpt) => {
   const content = Array.from(
     Array.from({ length: cpt }, (_, index) => index+1), 
     (x) => {
-    return {
+      return {
         type: 'flexItem',
         content: [
-            { 
-              type: 'paragraph', 
-              content: [
-                {
-                  type: 'text',
-                  text: `Item ${x}`
-                }
-              ]
-            },
+          { 
+            type: 'paragraph', 
+            content: [
+              {
+                type: 'text',
+                text: `Item ${x}`
+              }
+            ]
+          },
         ]
       }
-  })
+    })
 
   editor.value.commands.insertContent([
-  {
-    type: 'flexContainer',
-    attrs: {
+    {
+      type: 'flexContainer',
+      attrs: {
         gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
         gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
-    },
-    content: content
-  }
+      },
+      content: content
+    }
   ])
 
   modals.value.flex_container = false
@@ -848,7 +849,20 @@ const editor = useEditor({
     Gap,
     Article,
     Div,
-    Section
+    Section,
+    /*
+    resizable.configure({
+      types: ["image", "video"], // resizable type
+      handlerStyle: { // handler point style
+        width: "8px",
+        height: "8px",
+        background: "#07c160",
+      },
+      layerStyle: { // layer mask style
+        border: "2px solid #07c160",
+      },
+    }),
+    */
   ]
 })
 
