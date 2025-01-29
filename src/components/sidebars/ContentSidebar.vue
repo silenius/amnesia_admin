@@ -322,71 +322,82 @@ Fix width to the current breakpoint.
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
           <div class="italic mt-2">Utilities for sizings of an element.</div>
-          <div class="grid grid-rows-6 grid-cols-2 gap-x-2 justify-items-stretch items-end text-center">
+          <div class="grid grid-cols-2 gap-2 justify-items-stretch items-end text-center">
 
-            <span v-if="exts.width">Width</span>
-            <span v-if="exts.height">Height</span>
+            <div v-if="exts.width" class="flex flex-col w-full text-center">
+              <span>Width</span>
+              <SelectWidth
+                v-if="exts.width" 
+                :breakpoint="breakpoint"
+                :extension="exts.width" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-width="(p) => editor.chain().setWidth({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
 
-            <SelectWidth
-              v-if="exts.width" 
-              :breakpoint="breakpoint"
-              :extension="exts.width" 
-              :editor="editor"
-              :selected="nodeSelected"
-              @select-width="(p) => editor.chain().setWidth({ ...p, selected: nodeSelected }).run()"
-            />
-
-            <SelectHeight
-              v-if="exts.height" 
-              :breakpoint="breakpoint"
-              :extension="exts.height" 
-              :editor="editor"
-              :selected="nodeSelected"
-              @select-height="(p) => editor.chain().setHeight({ ...p, selected: nodeSelected }).run()"
-            />
-
-            <span v-if="exts.minWidth">Min. Width</span>
-
-            <span v-if="exts.minHeight">Min. Height</span>
-
-            <SelectMinWidth
-              v-if="exts.minWidth" 
-              :breakpoint="breakpoint"
-              :extension="exts.minWidth" 
-              :selected="nodeSelected"
-              :editor="editor"
-              @select-minWidth="(p) => editor.chain().setMinWidth({ ...p, selected: nodeSelected }).run()"
-            />
-
-            <SelectMinHeight
-              v-if="exts.minHeight" 
-              :breakpoint="breakpoint"
-              :extension="exts.minHeight" 
-              :editor="editor"
-              :selected="nodeSelected"
-              @select-minHeight="(p) => editor.chain().setMinHeight({ ...p, selected: nodeSelected }).run()"
-            />
+            <div class="flex flex-col w-full text-center">
+              <span v-if="exts.height">Height</span>
+              <SelectHeight
+                v-if="exts.height" 
+                :breakpoint="breakpoint"
+                :extension="exts.height" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-height="(p) => editor.chain().setHeight({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
 
 
-            <span v-if="exts.maxWidth">Max. Width</span>
-            <span v-if="exts.maxHeight">Max. Height</span>
-            <SelectMaxWidth
-              v-if="exts.maxWidth" 
-              :breakpoint="breakpoint"
-              :extension="exts.maxWidth" 
-              :editor="editor"
-              :selected="nodeSelected"
-              @select-maxWidth="(p) => editor.chain().setMaxWidth({ ...p, selected: nodeSelected }).run()"
-            />
 
-            <SelectMaxHeight
-              v-if="exts.maxHeight" 
-              :breakpoint="breakpoint"
-              :extension="exts.maxHeight" 
-              :editor="editor"
-              :selected="nodeSelected"
-              @select-maxHeight="(p) => editor.chain().setMaxHeight({ ...p, selected: nodeSelected }).run()"
-            />
+            <div class="flex flex-col w-full text-center">
+              <span v-if="exts.minWidth">Min. Width</span>
+              <SelectMinWidth
+                v-if="exts.minWidth" 
+                :breakpoint="breakpoint"
+                :extension="exts.minWidth" 
+                :selected="nodeSelected"
+                :editor="editor"
+                @select-minWidth="(p) => editor.chain().setMinWidth({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
+
+            <div class="flex flex-col w-full text-center">
+              <span v-if="exts.minHeight">Min. Height</span>
+              <SelectMinHeight
+                v-if="exts.minHeight" 
+                :breakpoint="breakpoint"
+                :extension="exts.minHeight" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-minHeight="(p) => editor.chain().setMinHeight({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
+
+
+            <div class="flex flex-col w-full text-center">
+              <span v-if="exts.maxWidth">Max. Width</span>
+              <SelectMaxWidth
+                v-if="exts.maxWidth" 
+                :breakpoint="breakpoint"
+                :extension="exts.maxWidth" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-maxWidth="(p) => editor.chain().setMaxWidth({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
+
+            <div class="flex flex-col w-full text-center">
+              <span v-if="exts.maxHeight">Max. Height</span>
+              <SelectMaxHeight
+                v-if="exts.maxHeight" 
+                :breakpoint="breakpoint"
+                :extension="exts.maxHeight" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-maxHeight="(p) => editor.chain().setMaxHeight({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
           </div>
 
         </DisclosurePanel>
@@ -434,33 +445,41 @@ Fix width to the current breakpoint.
         </DisclosureButton>
         <DisclosurePanel :class="cls_panel">
           <div class="italic my-2">Utilities for controlling an element's borders.</div>
-          <SelectBorderWidth
-            :breakpoint="breakpoint"
-            :extension="exts.borderWidth" 
-            :editor="editor"
-            :selected="nodeSelected"
-            @select-border-width="(p) => editor.chain().setBorderWidth({ ...p, selected: nodeSelected }).run()"
-          />
+          <div class="gap-2 grid justify-items-center items-center grid-cols-2">
 
-          <SelectBorderColor
-            v-if="exts.borderColor" 
-            :breakpoint="breakpoint"
-            :extension="exts.borderColor" 
-            :editor="editor"
-            :selected="nodeSelected"
-            @select-border-color="(p) =>
-              editor.chain().focus().setBorderColor({...p, selected: nodeSelected}).run()"
-          />
+            <div v-if="exts.borderWidth" class="flex flex-col w-full text-center">
+              <span>Width</span>
+              <SelectBorderWidth
+                :breakpoint="breakpoint"
+                :extension="exts.borderWidth" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-border-width="(p) => editor.chain().setBorderWidth({ ...p, selected: nodeSelected }).run()"
+              />
+            </div>
 
-          <SelectBorderRadius
-            v-if="exts.borderRadius" 
-            :breakpoint="breakpoint"
-            :extension="exts.borderRadius" 
-            :editor="editor"
-            :selected="nodeSelected"
-            @select-border-radius="(p) =>
-              editor.chain().focus().setBorderRadius({...p, selected: nodeSelected}).run()"
-          />
+            <div v-if="exts.borderColor" class="flex flex-col w-full text-center">
+              <span>Color</span>
+              <SelectBorderColor
+                :breakpoint="breakpoint"
+                :extension="exts.borderColor" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-border-color="(p) => editor.chain().focus().setBorderColor({...p, selected: nodeSelected}).run()"
+              />
+            </div>
+
+            <div v-if="exts.borderRadius" class="flex flex-col w-full text-center">
+              <span>Radius</span>
+              <SelectBorderRadius
+                :breakpoint="breakpoint"
+                :extension="exts.borderRadius" 
+                :editor="editor"
+                :selected="nodeSelected"
+                @select-border-radius="(p) => editor.chain().focus().setBorderRadius({...p, selected: nodeSelected}).run()"
+              />
+            </div>
+          </div>
 
         </DisclosurePanel>
       </Disclosure>

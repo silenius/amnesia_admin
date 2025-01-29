@@ -35,6 +35,7 @@ const container = props.editor.view.dom
 const container_width = computed(() => container?.clientWidth)
 
 watch(() => props.selected, () => {
+  // If selected, display resize buttons
   if (props.selected) {
     compute_resize_xy()
   }
