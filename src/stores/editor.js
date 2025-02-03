@@ -17,6 +17,11 @@ export const useEditorEventStore = defineStore('editorEvent', () => {
     const nodeHover = ref()
     const lineage = ref(new Map())
 
+    watch (editor, () => {
+        nodeHover.value = null
+        nodeSelected.value = null
+    })
+
     watch (nodeHover, () => {
         console.debug('===>>> [WATCH] nodeHover: ', 
             nodeHover?.value?.pos, 

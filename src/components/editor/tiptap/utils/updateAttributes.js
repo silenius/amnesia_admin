@@ -167,7 +167,7 @@ export const TipTapCommands = Extension.create({
 
     addCommands() {
         return {
-            _setTw : (key, value, valid_values, breakpoint, type, selected) => () => {
+            _setTw : (target, key, value, valid_values, breakpoint, type, selected) => () => {
                 if (!selected && !type) {
                     type = this.options.types.find((e) => p.editor.isActive(e))
                 }

@@ -560,11 +560,15 @@ const input_video_autoplay = ref()
 const input_video_controls = ref()
 
 const insert_flex = (cpt) => {
-  const content = Array.from(
+  const flex_items = Array.from(
     Array.from({ length: cpt }, (_, index) => index+1), 
     (x) => {
       return {
         type: 'flexItem',
+        attrs: {
+          basis: [{'breakpoint': null, 'tw': `basis-1/${cpt}`}],
+          borderWidth: [{'breakpoint': null, 'tw': 'border'}],
+        },
         content: [
           { 
             type: 'paragraph', 
@@ -579,16 +583,24 @@ const insert_flex = (cpt) => {
       }
     })
 
-  editor.value.commands.insertContent([
-    {
+  const flex_container = {
       type: 'flexContainer',
       attrs: {
         gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
         gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
+        align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
       },
-      content: content
-    }
-  ])
+      content: flex_items
+  }
+
+  const section = {
+    type: 'section',
+    content: [
+      flex_container
+    ]
+  }
+
+  editor.value.commands.insertContent(section)
 
   modals.value.flex_container = false
 }
