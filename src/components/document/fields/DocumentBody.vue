@@ -3,11 +3,11 @@
     <label>
       <p class="font-bold">Body</p>
       <p class="text-xs">The content of the document</p>
-      <EditorTipTap v-model:content="value" />
       <span class="text-red-500" v-if="errors.body">
         {{ errors.body }}
       </span>
     </label>
+    <EditorTipTap v-model:content="value" />
   </div>
 </template>
 

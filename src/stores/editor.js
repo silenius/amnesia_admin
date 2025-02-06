@@ -35,7 +35,11 @@ export const useEditorEventStore = defineStore('editorEvent', () => {
             nodeSelected?.value?.pos, 
             nodeSelected?.value?.node?.type.name
         )
-        
+
+        if (!nodeSelected.value) {
+            return false
+        }
+
         const { pos, node } = nodeSelected.value
         let level = 0
 

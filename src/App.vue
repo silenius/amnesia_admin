@@ -12,7 +12,7 @@ import { RouterView } from 'vue-router'
         <aside class="basis-0 backdrop-blur-sm shadow-gray-900 shadow-md bg-gray-700">
           <RouterView class="p-2 md:p-4" name="LeftSideBar" />
         </aside>
-        <div class="grow overflow-scroll ">
+        <div class="self-start grow overflow-scroll ">
           <RouterView name="default" />
         </div>
         <aside class="basis-0 fixed top-0 backdrop-blur-sm shadow-gray-900 shadow-md bg-gray-700">

@@ -373,6 +373,10 @@
         @click="add_flex_container"
       />
 
+      <font-awesome-icon icon="fa-solid fa-book-bookmark"
+        @click="add_flex_container"
+      />
+
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
         v-if="!editor.state.selection.empty" />
