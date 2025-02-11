@@ -27,7 +27,6 @@ export const useEditorEventStore = defineStore('editorEvent', () => {
             nodeHover?.value?.pos, 
             nodeHover?.value?.node?.type.name
         )
- 
     })
 
     watch (nodeSelected, () => {

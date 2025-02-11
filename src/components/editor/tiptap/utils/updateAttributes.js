@@ -36,7 +36,7 @@ const outlineNodePlugin = new Plugin({
             if (tr.getMeta('highlightNode')) {
                 const { pos } = tr.getMeta('highlightNode')
 
-                if (pos) {
+                if (parseInt(pos) >= 0) {
                     const node = tr.doc.nodeAt(pos)
                     const hl = find_dec(decorations, 'highlight') 
 
@@ -55,7 +55,7 @@ const outlineNodePlugin = new Plugin({
             if (tr.getMeta('selectNode')) {
                 const { pos } = tr.getMeta('selectNode')
 
-                if (pos) {
+                if (parseInt(pos) >= 0) {
                     const node = tr.doc.nodeAt(pos)
                     const sl = find_dec(decorations, 'select')
 
