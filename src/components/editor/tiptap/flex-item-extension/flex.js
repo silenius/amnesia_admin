@@ -81,6 +81,7 @@ export const FlexItem = Node.create({
     inline: false,
     draggable: false,
     selectable: true,
+    atom: true,
 
     addOptions() {
         return {

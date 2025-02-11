@@ -597,14 +597,7 @@ const insert_flex = (cpt) => {
       content: flex_items
   }
 
-  const section = {
-    type: 'section',
-    content: [
-      flex_container
-    ]
-  }
-
-  editor.value.commands.insertContent(section)
+  editor.value.commands.insertContent(flex_container)
 
   modals.value.flex_container = false
 }

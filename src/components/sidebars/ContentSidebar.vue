@@ -661,10 +661,10 @@ const exts = computed(() => {
 
       switch (currentValue.type) {
         case 'node':
-          match = nodeSelected?.value?.node.type.name === currentValue.name
+          match = nodeSelected?.value?.node?.type.name === currentValue.name
           break
         case 'extension':
-          match = currentValue?.options?.types?.indexOf(nodeSelected?.value?.node.type.name) 
+          match = currentValue?.options?.types?.indexOf(nodeSelected?.value?.node?.type.name) 
           match = match !== -1 && match !== undefined
           break
         case 'mark':

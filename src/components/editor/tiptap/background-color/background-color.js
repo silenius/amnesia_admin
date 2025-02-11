@@ -79,12 +79,14 @@ export const BackgroundColor = Extension.create({
                     ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
+                const tw = shade ? `bg-${color}-${shade}` : `bg-${color}`
+
                     // New value
                 attr.push({
                     breakpoint: breakpoint,
                     color: color, 
                     shade: shade,
-                    tw: `bg-${color}-${shade}`
+                    tw: tw
                 })
 
                 attr = {
