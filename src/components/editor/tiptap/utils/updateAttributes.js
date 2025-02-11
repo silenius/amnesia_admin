@@ -167,15 +167,19 @@ export const TipTapCommands = Extension.create({
 
     addCommands() {
         return {
-            _setTw : (target, key, value, valid_values, breakpoint, type, selected) => () => {
-                if (!selected && !type) {
-                    type = this.options.types.find((e) => p.editor.isActive(e))
+            _setTw : ({target, types, key, value, valid_values, breakpoint}) => (p) => {
+                let type
+
+                if (target === undefined) {
+                    type = types.find((e) => p.editor.isActive(e))
+                    if (!type) return false
                 }
 
-                let attrs = selected ? selected.node.attrs[key] : p.editor.getAttributes(type)[key]
+                const attrs = type ? p.editor.getAttributes(target) : target.node.attrs
+                let attr = attrs[key]
 
-                let attr = Array.isArray(attrs)
-                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
+                attr = Array.isArray(attr)
+                    ? attr.filter((x) => x.breakpoint !== breakpoint)
                     : []
 
                 if (valid_values.indexOf(value) !== -1) {
@@ -190,9 +194,9 @@ export const TipTapCommands = Extension.create({
 
                 if (!p.state.selection.empty && p.state.selection.toJSON().type == 'text') {
                     return p.commands.setMark('textClass', attr)
-                } else if (selected) {
+                } else if (target) {
                     return p.commands._updateNodeAttributes(
-                        selected.pos, selected.node, attr
+                        target.pos, target.node, attr
                     )
                 } else {
                     return p.commands.updateAttributes(

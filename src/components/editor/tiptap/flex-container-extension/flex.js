@@ -65,10 +65,12 @@ export const FlexContainer = Node.create({
     inline: false,
     draggable: false,
     selectable: true,
+    atom: true,
 
     addOptions() {
         return {
             types: [],
+            str: 'Container',
             directions: directions,
             wraps: wraps,
             justify_contents: justify_contents,
@@ -211,7 +213,28 @@ export const FlexContainer = Node.create({
 
     addKeyboardShortcuts() {
         return {
+            Backspace: ({ editor }) => {
+                console.log('===>>> BACKSPACE', editor)
+                /*
+                if (editor.isActive('flexContainer')) {
+                    const selection = editor.state.selection
+                    console.log(selection.$anchor.pos)
+                    const n = editor.state.doc.nodeAt(selection.$anchor.pos-1)
+                    console.log(n)
+                    return n?.type.name == 'flexItem' || false
+                }
+                */
+            },
+            Delete: ({ editor }) => {
+                console.log('===>>> DELETE')
+                /*
+                if (editor.isActive('flexContainer')) {
+                    return true
+                }
+                */
+            },
             Enter: ({ editor }) => {
+                console.log('===>>> ENTER')
                 const selection = editor.state.selection
                 //console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
 

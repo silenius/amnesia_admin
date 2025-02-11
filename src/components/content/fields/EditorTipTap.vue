@@ -374,7 +374,7 @@
       />
 
       <font-awesome-icon icon="fa-solid fa-book-bookmark"
-        @click="add_flex_container"
+        @click="add_tmpl1"
       />
 
       <font-awesome-icon icon="fa-solid fa-link" 
@@ -456,6 +456,8 @@ import BorderColor from '@/components/editor/tiptap/border-color-extension'
 import BorderRadius from '@/components/editor/tiptap/border-radius-extension'
 //import resizable from '@/components/editor/tiptap/extension-resize'
 import { useEditorStore } from '@/stores/editor'
+
+import placeholder_img from "@/assets/image-combiner.svg";
 
 import {
   TransitionRoot,
@@ -563,6 +565,8 @@ const input_video_url = ref()
 const input_video_autoplay = ref()
 const input_video_controls = ref()
 
+/* INSERT FLEX CONTAINER */
+
 const insert_flex = (cpt) => {
   const flex_items = Array.from(
     Array.from({ length: cpt }, (_, index) => index+1), 
@@ -588,18 +592,41 @@ const insert_flex = (cpt) => {
     })
 
   const flex_container = {
-      type: 'flexContainer',
-      attrs: {
-        gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
-        gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
-        align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
-      },
-      content: flex_items
+    type: 'flexContainer',
+    attrs: {
+      gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
+      gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
+      align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
+    },
+    content: flex_items
   }
 
   editor.value.commands.insertContent(flex_container)
 
   modals.value.flex_container = false
+}
+
+const add_tmpl1 = () => {
+  editor.value.commands.insertContent(`
+<section class="flex gap-x-2 gap-y-2">
+  <article class="basis-1/3">
+    <section class="flex flex-col">
+      <article class="basis-1/4"><amnesia-img src="${placeholder_img}" /></article>
+      <article class="basis-3/4 mt-2 mb-2">
+        <p class="font-bold text-2xl">Title</p>
+        <p>Lorem ipsum blablabla</p>
+      </article>
+    </section>
+  </article>
+  <article class="basis-1/3"><p>foobar</p></article>
+  <article class="basis-1/3"><p>foobar</p></article>
+</section>
+`, {
+      parseOptions: {
+        preserveWhitespace: false,
+      },
+    }
+  )
 }
 
 const insertImage = (value) => {
