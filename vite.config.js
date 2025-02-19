@@ -14,6 +14,7 @@ export default defineConfig(({ command, mode }) => {
     define : {
     },
     server : {
+          cors: true,
           host: "dev.lan",
           watch: {
               usePolling: true,

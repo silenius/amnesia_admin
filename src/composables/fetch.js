@@ -1,4 +1,4 @@
-import { unref, } from 'vue'
+import { toValue } from 'vue'
 
 export class HTTPError extends Error {
     constructor(message, response) {
@@ -19,9 +19,9 @@ export async function useFetchBackend(url, options) {
         ...options
     }
 
-    url = backend_url(url)
+    url = backend_url(toValue(url))
     
-    const res = await fetch(unref(url), opts)
+    const res = await fetch(url, opts)
 
     if (res.ok) {
         return {
@@ -33,8 +33,10 @@ export async function useFetchBackend(url, options) {
     }
 }
 
-export function backend_url(src) {
-    const base = import.meta.env.VITE_BASE_BACKEND
+export function backend_url(src, base) {
+    if (base === undefined) {
+        base = import.meta.env.VITE_BASE_BACKEND
+    }
 
     try {
         src = src.toString()
