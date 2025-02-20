@@ -1,10 +1,28 @@
-@import '@fontsource-variable/open-sans';
-@import '@fontsource-variable/caveat';
-@import '@fontsource/kalam';
-@import '@fontsource/roboto';
-@import '@fontsource/pacifico';
-@import '@fontsource/lobster-two';
+@import '@fontsource-variable/open-sans' layer(base);
+@import '@fontsource-variable/caveat' layer(base);
+@import '@fontsource/kalam' layer(base);
+@import '@fontsource/roboto' layer(base);
+@import '@fontsource/pacifico' layer(base);
+@import '@fontsource/lobster-two' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}

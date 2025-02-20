@@ -188,7 +188,7 @@ const menuColors = {
             <Menu as="div" class="relative text-left">
               <div>
                 <MenuButton class="rounded inline-flex w-full justify-center
-                  px-4 py-1 text-xs font-medium focus:outline-none
+                  px-4 py-1 text-xs font-medium focus:outline-hidden
                   focus-visible:ring-2 focus-visible:ring-white
                   focus-visible:ring-opacity-75"
                   :class="menuColors[permission.allow]">
@@ -206,7 +206,7 @@ enter-to-class="transform scale-100 opacity-100"
                 leave-from-class="transform scale-100 opacity-100"
                 leave-to-class="transform scale-95 opacity-0"
               >
-                <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                   <div class="px-1 py-1">
                     <MenuItem v-if="permission.allow !== false" v-slot="{ active }">
                     <button @click="change_permission(permission, false)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">

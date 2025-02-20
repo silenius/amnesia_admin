@@ -1,5 +1,5 @@
 <template>
-  <button class="hover:outline-none text-white bg-amber-400 hover:bg-amber-500 hover:ring-4 hover:ring-amber-100 font-medium rounded-full text-sm p-2 dark:focus:ring-amber-900">
+  <button class="hover:outline-hidden text-white bg-amber-400 hover:bg-amber-500 hover:ring-4 hover:ring-amber-100 font-medium rounded-full text-sm p-2 dark:focus:ring-amber-900">
     <font-awesome-icon :class="icon_cls" :icon="icon" />
     <template v-if="label">{{ label }}</template>
   </button>

@@ -17,7 +17,7 @@
         </MenuButton>
 
         <MenuItems
-          class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden"
         >
           <MenuItem v-slot="{ active }">
           <button @click="doLogout" :class="['group flex w-full items-center rounded-md px-2 py-2 text-xs', active ? 'bg-violet-500 text-white' : 'text-gray-900']">
@@ -89,7 +89,7 @@
                   <div class="flex items-center justify-between">
                     <div class="flex items-start">
                       <div class="flex items-center h-5">
-                        <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required="">
+                        <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required="">
                       </div>
                       <div class="ml-3 text-sm">
                         <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
@@ -97,7 +97,7 @@
                     </div>
                     <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</a>
                   </div>
-                  <button @click.prevent="doLogin" type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign in</button>
+                  <button @click.prevent="doLogin" type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-hidden focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign in</button>
                   <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                     Don’t have an account yet? <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</a>
                   </p>
@@ -105,7 +105,7 @@
 
                   <button
                     type="button"
-                    class="mt-4 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    class="mt-4 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     @click="closeModal"
                   >
                     Close
@@ -116,7 +116,7 @@
         </div>
       </Dialog>
     </TransitionRoot>
-    <button @click="login_modal_open=true" class="border p-2 rounded hover:bg-white hover:text-violet-500 bg-violet-500 border-violet-400">
+    <button @click="login_modal_open=true" class="border p-2 rounded-sm hover:bg-white hover:text-violet-500 bg-violet-500 border-violet-400">
       login 
     </button>
   </div>

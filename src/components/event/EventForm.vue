@@ -91,7 +91,7 @@ onMounted( async () => {
         <ContentSecurity v-model:acls="event.acls" />
       </template>
     </FormTabGroup>
-    <button type="submit" class="mt-4 rounded w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    <button type="submit" class="mt-4 rounded-sm w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>

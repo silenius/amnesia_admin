@@ -18,7 +18,7 @@
           @mouseout="decorate('highlightNode')"
           :data-pos="t.pos"
           type="button" 
-          :class="[`ml-${t.level}`, {'outline-none ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
+          :class="[`ml-${t.level}`, {'outline-hidden ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
           class="text-white bg-red-700 hover:bg-red-800 font-medium
           rounded-full text-xs px-3 py-2 dark:bg-red-600
           dark:hover:bg-red-700">{{ t.node.type.name }} {{ t.pos }} </button>

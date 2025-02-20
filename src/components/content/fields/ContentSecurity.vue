@@ -28,7 +28,7 @@
       >
         <td class="px-1 py-1">
           <span class="rounded inline-flex w-full justify-center
-            px-4 py-1 text-xs font-medium focus:outline-none
+            px-4 py-1 text-xs font-medium focus:outline-hidden
             focus-visible:ring-2 focus-visible:ring-white
             focus-visible:ring-opacity-75"
             :class="menuColors[acl.allow]">
@@ -103,7 +103,7 @@
         </td>
         <td class="px-1 py-1">
           <span class="rounded inline-flex w-full justify-center
-            px-4 py-1 text-xs font-medium focus:outline-none
+            px-4 py-1 text-xs font-medium focus:outline-hidden
             focus-visible:ring-2 focus-visible:ring-white
             focus-visible:ring-opacity-75"
             :class="menuColors[acl.allow]">
