@@ -3,7 +3,7 @@
   <!-- MODAL CHOOSE LINK -->
 
   <TransitionRoot appear :show="modals.choose_link" as="template">
-    <Dialog as="div" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -42,7 +42,7 @@
                 <!-- BROWSE SITE -->
 
                 <div class="flex flex-col gap-2">
-                  <button @click="modals.file_browser=true" class="p-2 hover:outline-none text-white bg-rose-500
+                  <button @click="modals.file_browser=true" class="p-2 hover:outline-hidden text-white bg-rose-500
                     hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm dark:focus:ring-amber-900">
                     <font-awesome-icon icon="fa-solid fa-folder-tree" class="h-8 w-8" />
                   </button>
@@ -54,7 +54,7 @@
               <div class="mt-4">
                 <button
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('choose_link')">
                   Close
                 </button>
@@ -69,7 +69,7 @@
   <!-- MODAL CHOOSE IMAGE -->
 
   <TransitionRoot appear :show="modals.choose_image" as="template">
-    <Dialog as="div" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -137,7 +137,7 @@
               <div class="mt-4">
                 <button
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('choose_image')">
                   Close
                 </button>
@@ -152,7 +152,7 @@
   <!-- MODAL CHOOSE FLEX -->
 
   <TransitionRoot appear :show="modals.flex_container" as="template">
-    <Dialog as="div" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -199,7 +199,7 @@
               <div class="mt-4 flex gap-2">
                 <button
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('flex_container')">
                   Close
                 </button>
@@ -214,7 +214,7 @@
   <!-- MODAL CHOOSE VIDEO -->
 
   <TransitionRoot appear :show="modals.video" as="template">
-    <Dialog as="div" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -269,14 +269,14 @@
               <div class="mt-4 flex gap-2">
                 <button
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('video')">
                   Close
                 </button>
                 <button
                   :disabled="!guess_video(input_video_url).type"
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
                   :class="insert_video_button"
                   @click="insertVideo">
                   Insert
@@ -293,7 +293,7 @@
   <!-- MODAL FILE BROWSER -->
 
   <TransitionRoot appear :show="modals.file_browser" as="template">
-    <Dialog as="div" class="relative z-[1500]">
+    <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -347,7 +347,7 @@
               <div class="mt-4">
                 <button
                   type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="closeModal('file_browser')">
                   Close
                 </button>

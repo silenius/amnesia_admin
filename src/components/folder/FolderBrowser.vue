@@ -29,14 +29,14 @@
             <!-- ADD CONTENT TO FOLDER -->
 
             <Menu as="div" class="relative inline" v-if="addTypes">
-              <MenuButton class="hover:outline-none text-white bg-emerald-400
+              <MenuButton class="hover:outline-hidden text-white bg-emerald-400
                 hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100
                 font-medium rounded-full text-sm px-3 py-2.5 mr-2 mb-2 dark:focus:ring-emerald-900">
                 <font-awesome-icon class="h-4 w-4" icon="fa-regular fa-square-plus" />
                 Add
               </MenuButton>
               <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
-                rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                 <MenuItem as="div" v-slot="{ active }" v-for="t in addTypes" :key="t.id">
                 <button @click="$emit('add-content', folder, t.name)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md p-2 text-sm', ]" > 
                   <font-awesome-icon class="w-4 h-4 mr-2" :icon="['fa-solid', t.icons.fa]" /> {{ t.name }}
@@ -82,7 +82,7 @@
 
         <Menu as="div" class="relative inline-block text-left">
           <div>
-            <MenuButton v-slot="{ open }" class="hover:bg-slate-300 bg-slate-200 px-4 py-1 font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <MenuButton v-slot="{ open }" class="hover:bg-slate-300 bg-slate-200 px-4 py-1 font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
               {{ selected.size }} items selected
               <font-awesome-icon class="h-4 w-4 align-middle text-gray-600 inline" :icon="open ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'" />
             </MenuButton>
@@ -98,7 +98,7 @@
             leave-to-class="transform scale-95 opacity-0"
           >
             <MenuItems
-              class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden"
             >
               <div class="px-1 py-1">
 
@@ -175,7 +175,7 @@
 
             <td class="text-center">
               <font-awesome-icon :class="stateClass(content.state)"
-                class="inline-block drop-shadow align-middle mr-2" icon="fa-solid fa-circle" />
+                class="inline-block drop-shadow-sm align-middle mr-2" icon="fa-solid fa-circle" />
               <span class="text-xs">{{ content.state.name }}</span>
             </td>
 
@@ -191,7 +191,7 @@
               <div class="text-right">
                 <Menu as="div" class="text-left">
                   <div>
-                    <MenuButton class="rounded inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <MenuButton class="rounded-sm inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                       actions
                     </MenuButton>
                   </div>
@@ -204,7 +204,7 @@
                     leave-from-class="transform scale-100 opacity-100"
                     leave-to-class="transform scale-95 opacity-0"
                   >
-                    <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                       <div>
                         <template v-for="action in actions">
                           <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
@@ -253,7 +253,7 @@
               class="absolute border-slate-300 top-1 left-1" />
 
             <font-awesome-icon :class="stateClass(content.state)"
-              class="absolute right-1 top-0.5 h-4 w-4 drop-shadow" icon="fa-solid fa-circle" />
+              class="absolute right-1 top-0.5 h-4 w-4 drop-shadow-sm" icon="fa-solid fa-circle" />
 
             <div class="flex flex-col h-32 w-32 overflow-scroll mb-1 border">
 
@@ -285,7 +285,7 @@
               <div class="text-right">
                 <Menu as="div" class="relative text-left">
                   <div>
-                    <MenuButton class="inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <MenuButton class="inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                       actions
                     </MenuButton>
                   </div>
@@ -298,7 +298,7 @@
                     leave-from-class="transform scale-100 opacity-100"
                     leave-to-class="transform scale-95 opacity-0"
                   >
-                    <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                       <div>
                         <template v-for="action in actions">
                           <MenuItem v-if="action.enabled(content)" v-slot="{ active }">

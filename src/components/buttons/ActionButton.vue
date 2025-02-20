@@ -25,7 +25,7 @@ const classObj = ref({
 </script>
 
 <template>
-  <button class="w-full p-1 rounded" :class="classObj">
+  <button class="w-full p-1 rounded-sm" :class="classObj">
     {{ label }}
   </button>
 </template>

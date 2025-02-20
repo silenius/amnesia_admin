@@ -16,8 +16,8 @@ const maxWidths = [
 
     'max-w-full', 'max-w-min', 'max-w-max', 'max-w-fit', 'max-w-prose',
 
-    'max-w-screen-sm', 'max-w-screen-md', 'max-w-screen-lg', 'max-w-screen-xl',
-    'max-w-screen-2xl',
+    'max-w-(--breakpoint-sm)', 'max-w-(--breakpoint-md)', 'max-w-(--breakpoint-lg)', 'max-w-(--breakpoint-xl)',
+    'max-w-(--breakpoint-2xl)',
 
     'max-w-0', 'max-w-px', 'max-w-0.5', 'max-w-1', 'max-w-1.5', 'max-w-2', 
     'max-w-2.5', 'max-w-3', 'max-w-3.5', 'max-w-4', 'max-w-5', 'max-w-6', 

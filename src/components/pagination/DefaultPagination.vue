@@ -1,6 +1,6 @@
 <template>
   <div v-if="pages.length > 0">
-    <nav class="isolate gap-2 inline-flex rounded-md shadow p-2" aria-label="Pagination">
+    <nav class="isolate gap-2 inline-flex rounded-md shadow-sm p-2" aria-label="Pagination">
       <a class="px-2" @click.prevent="change_page(1)" href="">
         <font-awesome-icon :icon="['fas', 'angles-left']" class="h-4 w-4" />
       </a>

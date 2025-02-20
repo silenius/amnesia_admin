@@ -60,7 +60,7 @@ const italic = computed({
 const img_cls = computed(() => ['w-8', 'h-8', 'rounded-md', 'bg-slate-100', 'p-1', 'hover:bg-white', 'hover:p-0.5', italic.value ? 'outline-offset-2 outline outline-2 outline-pink-700' : ''])
 
 const class_opts = [
-  'absolute', 'text-center', 'max-h-48', 'rounded', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
+  'absolute', 'text-center', 'max-h-48', 'rounded-sm', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'
 ]
 const class_opt = [
   'px-4', 'hover:bg-slate-800', 'w-full', 'hover:text-white'
