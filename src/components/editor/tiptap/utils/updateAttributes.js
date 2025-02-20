@@ -120,7 +120,7 @@ const outlineNodePlugin = new Plugin({
             },
 
             keyup(view, event) {
-                const { nodeSelected, nodeHover } = storeToRefs(storeEditorEvent)
+                const { nodeSelected } = storeToRefs(storeEditorEvent)
                 const selection = view.state.selection
                 const $pos = selection.$anchor
                 let pos = $pos.pos
