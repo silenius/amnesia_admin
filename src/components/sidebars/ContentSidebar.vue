@@ -692,8 +692,6 @@ const cls_disclosure_button = [
 const cls_section = []
 const cls_panel = ['text-sm', 'mb-4', 'p-2']
 
-const selected_type = computed(() => selected.value?.node?.type.name)
-
 const decorate = (key, p) => {
   if (!p) {
     p = {node: null, pos: null}

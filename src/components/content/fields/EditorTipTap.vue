@@ -455,7 +455,7 @@ import BorderWidth from '@/components/editor/tiptap/border-width-extension'
 import BorderColor from '@/components/editor/tiptap/border-color-extension'
 import BorderRadius from '@/components/editor/tiptap/border-radius-extension'
 //import resizable from '@/components/editor/tiptap/extension-resize'
-import { useEditorStore } from '@/stores/editor'
+import { useEditorStore, useEditorEventStore } from '@/stores/editor'
 
 import placeholder_img from "@/assets/image-combiner.svg";
 
@@ -602,7 +602,6 @@ const insert_flex = (cpt) => {
   }
 
   editor.value.commands.insertContent(flex_container)
-
   modals.value.flex_container = false
 }
 
@@ -904,6 +903,12 @@ const editor = useEditor({
 
 
 const { setEditor } = useEditorStore()
+const storeEditorEvent = useEditorEventStore()
+const { 
+  nodeSelected, 
+  nodeHover, 
+  lineage
+} = storeToRefs(storeEditorEvent)
 
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {
