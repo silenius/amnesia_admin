@@ -1,9 +1,9 @@
 <template>
   <div @mousedown="startResize" @mouseup="stopResize">
-    <span :class="[resize_cls, resize_tl]" data-resize="tl" />
-    <span :class="[resize_cls, resize_tr]" data-resize="tr" />
-    <span :class="[resize_cls, resize_bl]" data-resize="bl" />
-    <span :class="[resize_cls, resize_br]" data-resize="br" />
+    <span :style="resize_tl" :class="[resize_cls, 'cursor-nwse-resize']"  data-resize="tl" /> 
+    <span :style="resize_tr" :class="[resize_cls, 'cursor-nesw-resize']" data-resize="tr" />
+    <span :style="resize_bl" :class="[resize_cls, 'cursor-nesw-resize']" data-resize="bl" />
+    <span :style="resize_br" :class="[resize_cls, 'cursor-nwse-resize']" data-resize="br" />
   </div>
 </template>
 
@@ -114,36 +114,24 @@ const node_ratio = computed(() => {
 
 const resize_cls = 'absolute h-2 w-2 bg-indigo-500'
 
-const resize_tl = computed(() => {
-  return [
-    'cursor-nwse-resize', 
-    `top-[${resize_xy.value.top}px]`,
-    `left-[${resize_xy.value.left}px]`,
-  ]
-})
+const resize_tl = computed(() => ({
+    top: `${resize_xy.value.top}px`,
+    left: `${resize_xy.value.left}px`,
+}))
 
-const resize_tr = computed(() => {
-  return [
-    'cursor-nesw-resize',
-    `top-[${resize_xy.value.top}px]`,
-    `left-[${resize_xy.value.right}px]`
-  ]
-})
+const resize_tr = computed(() => ({
+    top: `${resize_xy.value.top}px`,
+    left: `${resize_xy.value.right}px`
+}))
 
-const resize_bl = computed(() => {
-  return [
-    'cursor-nesw-resize',
-    `top-[${resize_xy.value.bottom}px]`,
-    `left-[${resize_xy.value.left}px]`
-  ]
-})
+const resize_bl = computed(() => ({
+    top: `${resize_xy.value.bottom}px`,
+    left: `${resize_xy.value.left}px`
+}))
 
-const resize_br = computed(() => {
-  return [
-    'cursor-nwse-resize',
-    `top-[${resize_xy.value.bottom}px]`,
-    `left-[${resize_xy.value.right}px]`
-  ]
-})
+const resize_br = computed(() => ({
+    top: `${resize_xy.value.bottom}px`,
+    left: `${resize_xy.value.right}px`
+}))
 
 </script>
