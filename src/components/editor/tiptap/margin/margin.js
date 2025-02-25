@@ -103,7 +103,7 @@ export const Margin = Extension.create({
 
                 attr = Object.fromEntries([[`${side}`, attr]])
             
-                if (!p.editor.state.selection.empty) {
+                if (!p.state.selection.empty && p.state.selection.toJSON().type == 'text') {
                     return p.commands.setMark('textClass', attr)
                 } else if (selected) {
                     return p.commands._updateNodeAttributes(
