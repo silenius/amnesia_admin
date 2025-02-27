@@ -3,13 +3,13 @@ import { getMarkType } from '@tiptap/core'
 import { getNodeType } from '@tiptap/core'
 import { getSchemaTypeNameByName } from '@tiptap/core'
 import { Extension } from '@tiptap/core'
-import { useTiptap } from '@/composables/tiptap'
+import { useTiptap } from '../../../../composables/tiptap'
 
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
-import { useEditorEventStore } from '@/stores/editor'
+import { useEditorEventStore } from '../../../../stores/editor'
 
 const storeEditorEvent = useEditorEventStore()
 

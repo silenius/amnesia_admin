@@ -421,43 +421,42 @@ import TextStyle from '@tiptap/extension-text-style'
 import Link from '@tiptap/extension-link'
 import History from '@tiptap/extension-history'
 //import Youtube from '@tiptap/extension-youtube'
-import Image from '@/components/editor/tiptap/image/image'
-import Video from '@/components/editor/tiptap/video-extension/video'
-import { guess_video } from '@/components/editor/tiptap/video-extension/utils'
-import FontSize from '@/components/editor/tiptap/fontsize'
-import TextClass from '@/components/editor/tiptap/text-class'
-import { Float } from '@/components/editor/tiptap/float-extension'
-import { Align } from '@/components/editor/tiptap/align-extension'
-import TextColor from '@/components/editor/tiptap/text-color'
-import BackgroundColor from '@/components/editor/tiptap/background-color'
-import Padding from '@/components/editor/tiptap/padding'
-import Margin from '@/components/editor/tiptap/margin'
-import FontWeight from '@/components/editor/tiptap/font-weight-extension'
-import FontFamily from '@/components/editor/tiptap/font-family-extension'
-import FontItalic from '@/components/editor/tiptap/font-italic-extension'
-import TextDecoration from '@/components/editor/tiptap/text-decoration-extension'
-import Width from '@/components/editor/tiptap/width-extension'
-import MinWidth from '@/components/editor/tiptap/min-width-extension'
-import MaxWidth from '@/components/editor/tiptap/max-width-extension'
-import Height from '@/components/editor/tiptap/height-extension'
-import MinHeight from '@/components/editor/tiptap/min-height-extension'
-import MaxHeight from '@/components/editor/tiptap/max-height-extension'
-import Container from '@/components/editor/tiptap/container-extension'
-import Clear from '@/components/editor/tiptap/clear-extension'
-import TipTapCommands from '@/components/editor/tiptap/utils/updateAttributes'
-import FlexContainer from '@/components/editor/tiptap/flex-container-extension'
-import FlexItem from '@/components/editor/tiptap/flex-item-extension'
-import Gap from '@/components/editor/tiptap/gap-extension'
-import Article from '@/components/editor/tiptap/article-extension'
-import Div from '@/components/editor/tiptap/div-extension'
-import Section from '@/components/editor/tiptap/section-extension'
-import BorderWidth from '@/components/editor/tiptap/border-width-extension'
-import BorderColor from '@/components/editor/tiptap/border-color-extension'
-import BorderRadius from '@/components/editor/tiptap/border-radius-extension'
-//import resizable from '@/components/editor/tiptap/extension-resize'
-import { useEditorStore, useEditorEventStore } from '@/stores/editor'
+import Image from '../../editor/tiptap/image/image'
+import Video from '../../editor/tiptap/video-extension/video'
+import { guess_video } from '../../editor/tiptap/video-extension/utils'
+import FontSize from '../../editor/tiptap/fontsize'
+import TextClass from '../../editor/tiptap/text-class'
+import { Float } from '../../editor/tiptap/float-extension'
+import { Align } from '../../editor/tiptap/align-extension'
+import TextColor from '../../editor/tiptap/text-color'
+import BackgroundColor from '../../editor/tiptap/background-color'
+import Padding from '../../editor/tiptap/padding'
+import Margin from '../../editor/tiptap/margin'
+import FontWeight from '../../editor/tiptap/font-weight-extension'
+import FontFamily from '../../editor/tiptap/font-family-extension'
+import FontItalic from '../../editor/tiptap/font-italic-extension'
+import TextDecoration from '../../editor/tiptap/text-decoration-extension'
+import Width from '../../editor/tiptap/width-extension'
+import MinWidth from '../../editor/tiptap/min-width-extension'
+import MaxWidth from '../../editor/tiptap/max-width-extension'
+import Height from '../../editor/tiptap/height-extension'
+import MinHeight from '../../editor/tiptap/min-height-extension'
+import MaxHeight from '../../editor/tiptap/max-height-extension'
+import Container from '../../editor/tiptap/container-extension'
+import Clear from '../../editor/tiptap/clear-extension'
+import TipTapCommands from '../../editor/tiptap/utils/updateAttributes'
+import FlexContainer from '../../editor/tiptap/flex-container-extension'
+import FlexItem from '../../editor/tiptap/flex-item-extension'
+import Gap from '../../editor/tiptap/gap-extension'
+import Article from '../../editor/tiptap/article-extension'
+import Div from '../../editor/tiptap/div-extension'
+import Section from '../../editor/tiptap/section-extension'
+import BorderWidth from '../../editor/tiptap/border-width-extension'
+import BorderColor from '../../editor/tiptap/border-color-extension'
+import BorderRadius from '../../editor/tiptap/border-radius-extension'
+import { useEditorStore } from '../../../stores/editor'
 
-import placeholder_img from "@/assets/image-combiner.svg";
+import placeholder_img from "../../../assets/image-combiner.svg";
 
 import {
   TransitionRoot,
@@ -469,11 +468,11 @@ import {
 } from '@headlessui/vue'
 
 import { fontFamily } from '../../../fonts'
-import FolderBrowser from '@/components/folder/FolderBrowser.vue'
-import { useContent } from '@/composables/contents.js'
-import { useFolder } from '@/composables/folders.js'
-import { useFile } from '@/composables/files.js'
-import { backend_url } from '@/composables/fetch.js';
+import FolderBrowser from '../../folder/FolderBrowser.vue'
+import { useContent } from '../../../composables/contents.js'
+import { useFolder } from '../../../composables/folders.js'
+import { useFile } from '../../../composables/files.js'
+import { backend_url } from '../../../composables/fetch.js';
 
 const props = defineProps({
   content: String,
@@ -903,12 +902,6 @@ const editor = useEditor({
 
 
 const { setEditor } = useEditorStore()
-const storeEditorEvent = useEditorEventStore()
-const { 
-  nodeSelected, 
-  nodeHover, 
-  lineage
-} = storeToRefs(storeEditorEvent)
 
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {

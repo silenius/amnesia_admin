@@ -4,7 +4,7 @@
 
 <script setup>
   import { ref, computed, watch, unref } from 'vue'
-  import { yes_no } from '@/components/form/InputCheckboxDefaults.js'
+  import { yes_no } from './InputCheckboxDefaults.js'
 
   const props = defineProps({
     values: {

@@ -1,5 +1,5 @@
-import { useFetchBackend } from '@/composables/fetch.js'
-import { useValidators } from '@/composables/validators.js'
+import { useFetchBackend } from './fetch.js'
+import { useValidators } from './validators.js'
 
 const { isEmpty, minLength } = useValidators()
 

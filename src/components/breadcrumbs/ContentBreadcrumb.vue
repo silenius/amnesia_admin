@@ -14,7 +14,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useFolder } from '@/composables/folders.js'
+import { useFolder } from '../../composables/folders.js'
 
 const { getLineage } = useFolder()
 const items = ref([])

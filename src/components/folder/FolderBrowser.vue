@@ -346,12 +346,12 @@ import {
 import { 
   actions as default_actions,
   selectActions as select_actions
-} from '@/components/folder/FolderBrowserActions.js'
+} from '../folder/FolderBrowserActions.js'
 
-import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
-import InputCheckbox from '@/components/form/InputCheckbox.vue'
-import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
-import EditContentButton from '@/components/buttons/EditContentButton.vue'
+import ContentBreadcrumb from '../breadcrumbs/ContentBreadcrumb.vue'
+import InputCheckbox from '../form/InputCheckbox.vue'
+import DefaultPagination from '../pagination/DefaultPagination.vue'
+import EditContentButton from '../buttons/EditContentButton.vue'
 
 const props = defineProps({
   // The folder being browsed
