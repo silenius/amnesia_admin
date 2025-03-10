@@ -2,7 +2,7 @@
 
   <!-- MODAL CHOOSE LINK -->
 
-  <TransitionRoot appear :show="modals.choose_link" as="template">
+  <TransitionRoot appear :show="modals.choose_link" v-if="editable" as="template">
     <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
@@ -68,7 +68,7 @@
 
   <!-- MODAL CHOOSE IMAGE -->
 
-  <TransitionRoot appear :show="modals.choose_image" as="template">
+  <TransitionRoot appear :show="modals.choose_image" v-if="editable" as="template">
     <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
@@ -151,7 +151,7 @@
 
   <!-- MODAL CHOOSE FLEX -->
 
-  <TransitionRoot appear :show="modals.flex_container" as="template">
+  <TransitionRoot appear :show="modals.flex_container" v-if="editable" as="template">
     <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
@@ -213,7 +213,7 @@
 
   <!-- MODAL CHOOSE VIDEO -->
 
-  <TransitionRoot appear :show="modals.video" as="template">
+  <TransitionRoot appear :show="modals.video" v-if="editable" as="template">
     <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
@@ -292,7 +292,7 @@
 
   <!-- MODAL FILE BROWSER -->
 
-  <TransitionRoot appear :show="modals.file_browser" as="template">
+  <TransitionRoot appear :show="modals.file_browser" v-if="editable" as="template">
     <Dialog as="div" class="relative z-1500">
       <TransitionChild
         as="template"
@@ -758,33 +758,11 @@ const onFileChange = async (event) => {
 const doBrowse = id => folder_id.value = id
 
 const fonts = Object.keys(fontFamily).concat(['sans', 'serif', 'mono'])
-
-const editor = useEditor({
-  content: props.content,
-  editable: props.editable,
-  injectCSS: props.injectCSS,
-  onUpdate: ({editor: e, transaction: tr}) => {
-    //console.debug('===>>> Editor update: ', e)
-    emit('update:content', e.getHTML())
-  },
-  onSelectionUpdate: ({editor: e, transaction: tr}) => {
-    emit('update:selection', e)
-    setEditor(e)
-    /*
-    console.debug(
-      '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
-    )
-    */
-  },
-  onTransaction: (p) => {
-    //console.debug('===>>> Editor transaction: ', p)
-  },
-  extensions: [
+const extensions = [
     Document,
     Paragraph,
     Text,
     History,
-    TipTapCommands,
     Typography,
     /*
     Youtube,
@@ -898,8 +876,37 @@ const editor = useEditor({
     }),
     */
   ]
-})
 
+if (props.editable) {
+  extensions.push(TipTapCommands)
+}
+
+const editor = useEditor({
+  content: props.content,
+  editable: props.editable,
+  extensions: extensions,
+  injectCSS: props.injectCSS,
+  onUpdate: ({editor: e, transaction: tr}) => {
+    //console.debug('===>>> Editor update: ', e)
+    if (props.editable) {
+      emit('update:content', e.getHTML())
+    }
+  },
+  onSelectionUpdate: ({editor: e, transaction: tr}) => {
+    if (props.editable) {
+      emit('update:selection', e)
+      setEditor(e)
+    }
+    /*
+    console.debug(
+      '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
+    )
+    */
+  },
+  onTransaction: (p) => {
+    //console.debug('===>>> Editor transaction: ', p)
+  },
+})
 
 const { setEditor } = useEditorStore()
 
