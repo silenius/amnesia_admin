@@ -882,7 +882,6 @@ if (props.editable) {
   extensions.push(TipTapCommands)
 }
 
-
 const editor = useEditor({
   content: props.content,
   editable: props.editable,
@@ -911,6 +910,7 @@ const editor = useEditor({
 })
 
 watch(() => props.content, () => editor.value.commands.setContent(props.content))
+watch(() => props.editable, () => editor.value.commands.setEditable(props.editable))
 
 const { setEditor } = useEditorStore()
 
