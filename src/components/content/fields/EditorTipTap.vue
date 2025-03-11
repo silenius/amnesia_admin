@@ -394,6 +394,7 @@ import {
   ref, 
   unref,
   watchEffect, 
+  watch,
   onMounted, 
   onBeforeUnmount,
   computed
@@ -881,6 +882,7 @@ if (props.editable) {
   extensions.push(TipTapCommands)
 }
 
+
 const editor = useEditor({
   content: props.content,
   editable: props.editable,
@@ -907,6 +909,8 @@ const editor = useEditor({
     //console.debug('===>>> Editor transaction: ', p)
   },
 })
+
+watch(() => props.content, () => editor.value.commands.setContent(props.content))
 
 const { setEditor } = useEditorStore()
 
