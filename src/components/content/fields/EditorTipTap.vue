@@ -409,52 +409,6 @@ import {
 import { storeToRefs } from 'pinia'
 
 //import StarterKit from "@tiptap/starter-kit"
-import Typography from '@tiptap/extension-typography'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import TextAlign from '@tiptap/extension-text-align'
-import Table from '@tiptap/extension-table'
-import TableRow from '@tiptap/extension-table-row'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
-import TextStyle from '@tiptap/extension-text-style'
-import Link from '@tiptap/extension-link'
-import History from '@tiptap/extension-history'
-//import Youtube from '@tiptap/extension-youtube'
-import Image from '../../editor/tiptap/image/image'
-import Video from '../../editor/tiptap/video-extension/video'
-import { guess_video } from '../../editor/tiptap/video-extension/utils'
-import FontSize from '../../editor/tiptap/fontsize'
-import TextClass from '../../editor/tiptap/text-class'
-import { Float } from '../../editor/tiptap/float-extension'
-import { Align } from '../../editor/tiptap/align-extension'
-import TextColor from '../../editor/tiptap/text-color'
-import BackgroundColor from '../../editor/tiptap/background-color'
-import Padding from '../../editor/tiptap/padding'
-import Margin from '../../editor/tiptap/margin'
-import FontWeight from '../../editor/tiptap/font-weight-extension'
-import FontFamily from '../../editor/tiptap/font-family-extension'
-import FontItalic from '../../editor/tiptap/font-italic-extension'
-import TextDecoration from '../../editor/tiptap/text-decoration-extension'
-import Width from '../../editor/tiptap/width-extension'
-import MinWidth from '../../editor/tiptap/min-width-extension'
-import MaxWidth from '../../editor/tiptap/max-width-extension'
-import Height from '../../editor/tiptap/height-extension'
-import MinHeight from '../../editor/tiptap/min-height-extension'
-import MaxHeight from '../../editor/tiptap/max-height-extension'
-import Container from '../../editor/tiptap/container-extension'
-import Clear from '../../editor/tiptap/clear-extension'
-import TipTapCommands from '../../editor/tiptap/utils/updateAttributes'
-import FlexContainer from '../../editor/tiptap/flex-container-extension'
-import FlexItem from '../../editor/tiptap/flex-item-extension'
-import Gap from '../../editor/tiptap/gap-extension'
-import Article from '../../editor/tiptap/article-extension'
-import Div from '../../editor/tiptap/div-extension'
-import Section from '../../editor/tiptap/section-extension'
-import BorderWidth from '../../editor/tiptap/border-width-extension'
-import BorderColor from '../../editor/tiptap/border-color-extension'
-import BorderRadius from '../../editor/tiptap/border-radius-extension'
 import { useEditorStore } from '../../../stores/editor'
 
 import placeholder_img from "../../../assets/image-combiner.svg";
@@ -468,12 +422,14 @@ import {
   DialogDescription
 } from '@headlessui/vue'
 
-import { fontFamily } from '../../../fonts'
+import TipTapCommands from '../../../components/editor/tiptap/utils/updateAttributes'
+
 import FolderBrowser from '../../folder/FolderBrowser.vue'
 import { useContent } from '../../../composables/contents.js'
 import { useFolder } from '../../../composables/folders.js'
 import { useFile } from '../../../composables/files.js'
 import { backend_url } from '../../../composables/fetch.js';
+import { build_editor, default_extensions } from '../../editor/tiptap';
 
 const props = defineProps({
   content: String,
@@ -608,17 +564,17 @@ const insert_flex = (cpt) => {
 const add_tmpl1 = () => {
   editor.value.commands.insertContent(`
 <section class="flex gap-x-2 gap-y-2">
-  <article class="basis-1/3">
-    <section class="flex flex-col">
-      <article class="basis-1/4"><amnesia-img src="${placeholder_img}" /></article>
-      <article class="basis-3/4 mt-2 mb-2">
-        <p class="font-bold text-2xl">Title</p>
-        <p>Lorem ipsum blablabla</p>
-      </article>
-    </section>
-  </article>
-  <article class="basis-1/3"><p>foobar</p></article>
-  <article class="basis-1/3"><p>foobar</p></article>
+<article class="basis-1/3">
+<section class="flex flex-col">
+<article class="basis-1/4"><amnesia-img src="${placeholder_img}" /></article>
+<article class="basis-3/4 mt-2 mb-2">
+<p class="font-bold text-2xl">Title</p>
+<p>Lorem ipsum blablabla</p>
+</article>
+</section>
+</article>
+<article class="basis-1/3"><p>foobar</p></article>
+<article class="basis-1/3"><p>foobar</p></article>
 </section>
 `, {
       parseOptions: {
@@ -758,131 +714,12 @@ const onFileChange = async (event) => {
 
 const doBrowse = id => folder_id.value = id
 
-const fonts = Object.keys(fontFamily).concat(['sans', 'serif', 'mono'])
-const extensions = [
-    Document,
-    Paragraph,
-    Text,
-    History,
-    Typography,
-    /*
-    Youtube,
-    TextAlign.configure({
-      types: ['image', 'paragraph'],
-    })
-    ,*/
-    //ResizableMedia
-    Image.configure({
-      inline: false,
-      allowBase64: true,
-      onSrc: (src) => {
-        const match = src.match(/^(?<id>\d+)\/download(\/inline)?$/)
-        return match ? backend_url(match.groups.id) : src
-      }
-    }),
-    Video,
-    Float.configure({
-      types: ['video', 'image', 'paragraph', 'textClass'],
-    }),
-    Clear.configure({
-      types: ['video', 'image', 'paragraph', 'textClass'],
-    }),
-    Align.configure({
-      types: ['video', 'image', 'paragraph'],
-    }),
-    TextStyle,
-    TextClass,
-    Container.configure({
-      types: ['paragraph']
-    }),
-    FontSize.configure({
-      types: ['textClass', 'paragraph']
-    }),
-    TextColor.configure({
-      types: ['textClass', 'textStyle', 'paragraph']
-    }),
-    BackgroundColor.configure({
-      types: ['flexContainer', 'flexItem', 'paragraph', 'textClass', 'image', 'video']
-    }),
-    Margin.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'bulletList', 'paragraph', 'textClass', 'textStyle']
-    }),
-    Padding.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'bulletList', 'textClass', 'paragraph', 'textStyle']
-    }),
-    FontWeight.configure({
-      types: ['textClass', 'paragraph'] 
-    }),
-    FontFamily.configure({
-      types: ['textClass', 'paragraph'],
-      families: fonts
-    }),
-    FontItalic.configure({
-      types: ['textClass', 'paragraph']
-    }),
-    TextDecoration.configure({
-      types: ['textClass', 'paragraph']
-    }),
-    Width.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    MinWidth.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    MinHeight.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    MaxWidth.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    MaxHeight.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    Height.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    BorderWidth.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    BorderColor.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    BorderRadius.configure({
-      types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
-    }),
-    Table,
-    TableHeader,
-    TableRow,
-    TableCell,
-    Link.configure({
-      spanning: false
-    }),
-    FlexContainer,
-    FlexItem,
-    Gap,
-    Article,
-    Div,
-    Section,
-    /*
-    resizable.configure({
-      types: ["image", "video"], // resizable type
-      handlerStyle: { // handler point style
-        width: "8px",
-        height: "8px",
-        background: "#07c160",
-      },
-      layerStyle: { // layer mask style
-        border: "2px solid #07c160",
-      },
-    }),
-    */
-  ]
-
+const extensions = [...default_extensions]
 if (props.editable) {
   extensions.push(TipTapCommands)
 }
 
-const editor = useEditor({
+const editor = build_editor({
   content: props.content,
   editable: props.editable,
   extensions: extensions,
@@ -898,16 +735,14 @@ const editor = useEditor({
       emit('update:selection', e)
       setEditor(e)
     }
-    /*
-    console.debug(
-      '===>>> Editor selection update, editor: ', e, ' transaction: ', tr
-    )
-    */
   },
   onTransaction: (p) => {
     //console.debug('===>>> Editor transaction: ', p)
   },
+
 })
+
+
 
 /*
 watch(() => props.content, () => editor.value.commands.setContent(props.content))
