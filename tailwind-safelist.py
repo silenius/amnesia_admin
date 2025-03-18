@@ -65,25 +65,36 @@ others: set[str] = {
     'h-2.5', 'h-3', 'h-3.5', 'h-4', 'h-5', 'h-6', 'h-7', 'h-8', 'h-9', 'h-10',
     'h-11', 'h-12', 'h-14', 'h-16', 'h-20', 'h-24', 'h-28', 'h-32', 'h-36',
     'h-40', 'h-44', 'h-48', 'h-52', 'h-56', 'h-60', 'h-64', 'h-72', 'h-80',
-    'h-96'
+    'h-96', 'font-thin', 'font-extralight', 'font-light', 'font-normal',
+    'font-medium', 'font-semibold', 'font-bold', 'font-extrabold',
+    'font-black', 'underline', 'overline', 'line-through', 'no-underline',
+    'text-left', 'text-center', 'text-right', 'text-justify', 'text-start',
+    'text-end', 'text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl',
+    'text-2xl', 'text-3xl', 'text-4xl', 'text-5xl', 'text-6xl', 'text-7xl',
+    'text-8xl', 'text-9xl', 'container', 'hidden', 'absolute', 'relative'
 }
 
 bps = {
-    'sm', 'md', 'lg', 'xl', '2xl'
+    'hover', 'sm', 'md', 'lg', 'xl', '2xl'
 }
+
+def write_attr(f, attr):
+    f.write(f'{attr} ')
+    for bp in bps:
+        f.write(f'{bp}:{attr} ')
 
 with io.open('tailwind-safelist.txt', 'w') as f:
     for attr in it.chain(margins, paddings):
         for level in margins_paddings_levels:
-            f.write(f'{attr}-{level} ')
+            write_attr(f, f'{attr}-{level}')
     for color in it.chain(colors, colors_unique):
         for attr in {'border', 'fill', 'outline', 'ring', 'caret', 'bg', 'text'}:
             if color in colors_unique:
-                f.write(f'{attr}-{color} ')
+                write_attr(f, f'{attr}-{color}')
             else:
                 for level in color_levels:
-                    f.write(f'{attr}-{color}-{level} ')
+                    write_attr(f, f'{attr}-{color}-{level}')
     for item in others:
-        f.write(f'{item} ')
-        for bp in bps:
-            f.write(f'{bp}:{item} ')
+        write_attr(f, item)
+    for i in range(1, 10):
+        f.write(f'group/{i} group-hover/{i}:block ')
