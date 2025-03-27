@@ -11,6 +11,7 @@ import {
 import { useFolder } from '@/composables/folders.js'
 import { useContent } from '@/composables/contents.js'
 import { createBrowser } from '@/composables/browser.js'
+import { backend_url } from '@/composables/fetch.js'
 import FolderBrowser from '@/components/folder/FolderBrowser.vue'
 import InputCheckbox from '@/components/form/InputCheckbox.vue'
 import { yes_no_unknown } from '@/components/form/InputCheckboxDefaults.js'
@@ -115,7 +116,7 @@ const openModal = () => {
         <p class="text-xs" v-else>Use default</p>
       </div>
     </label>
-    <img class="h-32 w-auto" v-if="int_value" :src="'/bbpf/' + banner_image + '/download'" />
+    <img class="h-32 w-auto" v-if="int_value" :src="backend_url(banner_image)" />
     <div class="mt-4" v-if="value">
       <button type="button" @click="openModal" class="w-32 hover:bg-green-300
         hover:text-green-800 rounded-md bg-green-200 text-green-700 p-1
