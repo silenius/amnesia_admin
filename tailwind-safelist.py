@@ -9,6 +9,10 @@ paddings: set[str] = {
     'px', 'py', 'pt', 'pb', 'pr', 'pl'
 }
 
+gaps: set[str] = {
+    'gap', 'gap-x', 'gap-y'
+}
+
 color_levels: set[int] = {
     50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
 }
@@ -84,7 +88,7 @@ def write_attr(f, attr):
         f.write(f'{bp}:{attr} ')
 
 with io.open('tailwind-safelist.txt', 'w') as f:
-    for attr in it.chain(margins, paddings):
+    for attr in it.chain(margins, paddings, gaps):
         for level in margins_paddings_levels:
             write_attr(f, f'{attr}-{level}')
     for color in it.chain(colors, colors_unique):
