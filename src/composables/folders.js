@@ -1,5 +1,5 @@
 import { unref } from 'vue'
-import { useFetchBackend } from '@/composables/fetch.js'
+import { useFetchBackend } from './fetch.js'
 
 const folder_to_formdata = (folder_data) => {
 
@@ -58,7 +58,8 @@ const folder_to_formdata = (folder_data) => {
 
 const browse = async (id, opts = {}) => {
     const options = new URLSearchParams(opts)
-    return useFetchBackend(`${id}/browse?${options}`)
+    const { fetchData } = useFetchBackend()
+    return fetchData(`${id}/browse?${options}`)
 }
 
 const paste = async (folder, ids) => {
@@ -96,10 +97,6 @@ const getIndexCandidates = async (id) => {
     })
 }
 
-const getLineage = async (folder_id) => {
-    return useFetchBackend(`${folder_id}/lineage`)
-}
-
 const getDefaultMediaFolder = async() => {
     return useFetchBackend('folder/default_media')
 }
@@ -134,7 +131,6 @@ export function useFolder() {
         browse,
         paste,
         getOrders,
-        getLineage,
         destroyManyContent
     }
 }

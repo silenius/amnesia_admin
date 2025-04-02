@@ -1,9 +1,9 @@
-import { unref } from 'vue'
+import { toValue } from 'vue'
 import { useFetchBackend } from '@/composables/fetch.js'
 
 const event_to_formdata = (event_data) => {
 
-    const event = unref(event_data)
+    const event = toValue(event_data)
     const data = new FormData()
 
     const fields = [

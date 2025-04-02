@@ -1,20 +1,19 @@
-import { ref, unref, computed, readonly, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, toValue, unref, computed, readonly, onMounted } from 'vue'
 import { defineStore } from 'pinia'
 import { useFetchBackend } from '@/composables/fetch.js'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref({})
-    const router = useRouter()
-
     const is_logged = computed(() => user.value?.id !== undefined)
-
+    
     onMounted(async () => {
-        const { data } = await me()
-        user.value = data
-    })
+        const { data, error, fetchData } = useFetchBackend()
+        await fetchData('auth/me')
 
-    const me = async () => useFetchBackend('auth/me')
+        if (!error.value) {
+            user.value = data.value
+        }
+    })
 
     const allow = (permission, acls) => {
         const found = acls.find(
@@ -28,31 +27,38 @@ export const useAuthStore = defineStore('auth', () => {
 
     const login = async(username, password) => {
         const data = new FormData()
+         
+        const { data: userData, error, fetchData } = useFetchBackend()
 
-        data.append('login', unref(username))
-        data.append('password', unref(password))
+        data.append('login', toValue(username))
+        data.append('password', toValue(password))
 
-        try {
-            const { data: user_data } = await useFetchBackend('auth/login', {
-                method: 'POST',
-                body: data
-            })
+        await fetchData('auth/login', {
+            method: 'POST',
+            body: data
+        })
 
-            user.value = user_data
-
-            await router.push('/')
-        } catch (error) {
-            // TODO
-            alert('ERROR')
+        if (!error.value) {
+            user.value = userData.value
+            return true
         }
+
+        return false
     }
 
     const logout = async() => {
-        await useFetchBackend('auth/logout', {
+        const { error, fetchData } = useFetchBackend()
+
+        await fetchData('auth/logout', {
             method: 'POST'
         })
-        user.value = {}
-        router.push('/')
+        
+        if (!error.value) {
+            user.value = {}
+            return true
+        }
+
+        return false
     }
 
     return {

@@ -126,8 +126,8 @@
 
 <script setup>
 
-import { isRef, ref, onMounted, watch } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
 import { 
   Menu, MenuButton, MenuItems, MenuItem,
   Dialog, DialogPanel, DialogTitle, DialogDescription,
@@ -136,6 +136,7 @@ import {
 } from '@headlessui/vue'
 import { useAuthStore } from '@/stores/auth.js'
 
+const router = useRouter()
 const auth = useAuthStore()
 
 const username = ref(null)
@@ -145,7 +146,19 @@ const login_modal_open = ref(false)
 
 const closeModal = () => login_modal_open.value = false
 const openModal = () => login_modal_open.value = true
-const doLogin = async() => await auth.login(username, password)
-const doLogout = async() => await auth.logout()
+
+const doLogin = async() => {
+  const ok = await auth.login(username, password)
+  if (ok) {
+    router.go() 
+  }
+}
+
+const doLogout = async() => {
+  const ok = await auth.logout()
+  if (ok) {
+    router.go()
+  }
+}
 
 </script>

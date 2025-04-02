@@ -9,10 +9,12 @@ export const useUsersStore = defineStore('user', () => {
     const users = ref([])
 
     const getAll = async() => { 
-        try {
-            const { data } = await useFetchBackend('auth/browse') 
+        const { data, error fetchData } = useFetchBackend()
+        await fetchData('auth/browse') 
+
+        if (!error) {
             users.value = data.data.accounts
-        } catch (error) {
+        } else {
             alert('ERROR')
         }
     }

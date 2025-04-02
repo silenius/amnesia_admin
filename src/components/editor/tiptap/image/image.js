@@ -4,7 +4,7 @@ import {
     nodeInputRule,
 } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import { backend_url } from '@/composables/fetch.js';
+import { backend_url } from '../../../../composables/fetch.js';
 import Image from './Image.vue';
 
 /* TODO: add support for <picture>:
