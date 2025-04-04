@@ -1,20 +1,51 @@
-import { ref } from 'vue'
+import { ref, toValue, watch, watchEffect, computed } from 'vue'
 import { useFetchBackend } from './fetch.js'
+import { useFolder } from './useFolder.js'
 
-export function useFolderBrowser() {
-    const { data, error, fetchData } = useFetchBackend()
+export async function useFolderBrowser(folder, opts={}) {
+    const { data, error, loading, fetchData } = useFetchBackend()
 
-    const offset = ref(0)
-    const limit = ref(10)
+    const result = ref([])
+    const query = ref({
+        offset: 0,
+        limit: 10,
+        ...opts
+    })
 
-    const browse = async(folder_id, opts={}) => {
-        const options = new URLSearchParams(opts)
-        return fetchData(`${folder}/browse?${options}`)
+    const meta = ref({})
+
+    const set_limit = (value) => {
+        meta.value.offset = 0
+        meta.value.limit = value
     }
 
+    const set_offset = (value) => {
+        meta.value.offset = value
+    }
+    
+    const browse = async(opts={}) => {
+        const options = new URLSearchParams({
+            ...toValue(query),
+            ...toValue(opts)
+        })
+
+        await fetchData(`${toValue(folder).id}/browse?${options}`)
+
+        if (!toValue(error)) {
+            result.value = toValue(data).data
+            meta.value = toValue(data).meta
+        }
+    }
+
+    await browse(meta)
+
     return {
-        content: data,
+        result,
+        meta,
+        set_limit,
+        set_offset,
         error,
-        browse
+        browse,
+        query
     }
 }
