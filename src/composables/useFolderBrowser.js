@@ -1,4 +1,4 @@
-import { ref, toValue, watch, watchEffect, computed } from 'vue'
+import { ref, toValue, watch, watchEffect, readonly, computed } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useFolder } from './useFolder.js'
 
@@ -12,40 +12,43 @@ export async function useFolderBrowser(folder, opts={}) {
         ...opts
     })
 
+    // metadata returned by *server* side
     const meta = ref({})
 
-    const set_limit = (value) => {
-        meta.value.offset = 0
-        meta.value.limit = value
-    }
-
-    const set_offset = (value) => {
-        meta.value.offset = value
-    }
-    
     const browse = async(opts={}) => {
-        const options = new URLSearchParams({
-            ...toValue(query),
-            ...toValue(opts)
-        })
+        console.log('BEGIN BROWSE')
+        query.value = { 
+            ...query.value, ...toValue(opts)
+        }
 
+        const options = new URLSearchParams(toValue(query))
         await fetchData(`${toValue(folder).id}/browse?${options}`)
 
         if (!toValue(error)) {
             result.value = toValue(data).data
             meta.value = toValue(data).meta
         }
+        console.log('END BROWSE')
     }
 
-    await browse(meta)
+    const goto_page = (page) => {
+        return browse({
+            offset: (page - 1) * toValue(meta).limit
+        })
+    }
+
+    console.log('BEFORE AWAIT')
+    await browse(query)
+    console.log('AFTER AWAIT')
+
+    watch(folder, async () => browse(query))
 
     return {
-        result,
-        meta,
-        set_limit,
-        set_offset,
+        result: readonly(result),
+        meta: readonly(meta),
         error,
         browse,
-        query
+        query,
+        goto_page
     }
 }
