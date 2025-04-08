@@ -1,3 +1,380 @@
+<script setup>
+import { 
+  ref, 
+  unref,
+  watchEffect, 
+  watch,
+  onMounted, 
+  onBeforeUnmount,
+  computed
+} from 'vue'
+
+import { 
+  useEditor, 
+  EditorContent,
+  BubbleMenu
+} from '@tiptap/vue-3'
+
+import { storeToRefs } from 'pinia'
+
+//import StarterKit from "@tiptap/starter-kit"
+import { useEditorStore } from '../../../stores/editor'
+
+import placeholder_img from "../../../assets/image-combiner.svg";
+
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  DialogDescription
+} from '@headlessui/vue'
+
+import TipTapCommands from '../../../components/editor/tiptap/utils/updateAttributes'
+
+import FolderBrowser from '../../folder/FolderBrowser.vue'
+import { useContent } from '../../../composables/useContent.js'
+import { useFolder } from '../../../composables/useFolder.js'
+import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
+import { useFile } from '../../../composables/files.js'
+import { backend_url } from '../../../composables/fetch.js';
+import { build_editor, default_extensions } from '../../editor/tiptap';
+
+const props = defineProps({
+  content: String,
+  editable: {
+    type: Boolean,
+    default: true
+  },
+  injectCSS: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const emit = defineEmits([
+  'update:content',
+  'update:selection'
+])
+
+class NotAnImage extends Error {
+  constructor(message) {
+    super(message)
+  }
+}
+
+const modals = ref({
+  choose_image: false,
+  choose_link: false,
+  file_browser: false,
+  video: false,
+  flex_container: false
+})
+
+const root_folder = ref(1)
+const { folder, load_folder: load } = await useFolder(root_folder)
+const { result: contents } = await useFolderBrowser(folder)
+
+const default_media_folder = ref()
+const actions = ref([
+  {
+    label: 'Select',
+    event: 'select',
+    icon: 'fa-solid fa-hand-point-right',
+    class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+    enabled: (...args) => {
+      const content = args[0];
+      const ask_image_is_image = (_meta.value.filetype == 'image' && content.type.name == 'file' && content.mime.major.name == 'image')
+      const ask_media_is_media = (_meta.value.filetype == 'media' && content.type.name == 'file' && content.mime.major.name == 'video')
+      const ask_link = _meta.value.filetype == 'file'
+
+      return ask_image_is_image || ask_media_is_media || ask_link
+    }
+  }
+])
+
+let _cb = undefined;
+let _meta = ref({});
+
+const doSelect = (content) => {
+  let cb_value = content.id.toString();
+  let cb_meta = {};
+
+  switch(_meta.value.filetype) {
+    case 'image':
+    case 'media':
+      cb_meta = {
+        alt: 'obj ' + content.id
+      };
+      break;
+    // Link
+    case 'file':
+      if (content.type.name == 'file') {
+        cb_value += '/download';
+        cb_meta = {
+          text: 'obj ' + content.id
+        }
+      }
+      break;
+  }
+
+  _cb(cb_value); 
+  closeModal()
+}
+
+const input_upload_file = ref()
+const input_image_url = ref()
+const input_video_url = ref()
+const input_video_autoplay = ref()
+const input_video_controls = ref()
+
+/* INSERT FLEX CONTAINER */
+
+const insert_flex = (cpt) => {
+  const flex_items = Array.from(
+    Array.from({ length: cpt }, (_, index) => index+1), 
+    (x) => {
+      return {
+        type: 'flexItem',
+        attrs: {
+          basis: [{'breakpoint': null, 'tw': `basis-1/${cpt}`}],
+          borderWidth: [{'breakpoint': null, 'tw': 'border'}],
+        },
+        content: [
+          { 
+            type: 'paragraph', 
+            content: [
+              {
+                type: 'text',
+                text: `Item ${x}`
+              }
+            ]
+          },
+        ]
+      }
+    })
+
+  const flex_container = {
+    type: 'flexContainer',
+    attrs: {
+      gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
+      gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
+      align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
+    },
+    content: flex_items
+  }
+
+  editor.value.commands.insertContent(flex_container)
+  modals.value.flex_container = false
+}
+
+const add_tmpl1 = () => {
+  editor.value.commands.insertContent(`
+<section class="flex gap-x-2 gap-y-2">
+<article class="basis-1/3">
+<section class="flex flex-col">
+<article class="basis-1/4"><amnesia-img src="${placeholder_img}" /></article>
+<article class="basis-3/4 mt-2 mb-2">
+<p class="font-bold text-2xl">Title</p>
+<p>Lorem ipsum blablabla</p>
+</article>
+</section>
+</article>
+<article class="basis-1/3"><p>foobar</p></article>
+<article class="basis-1/3"><p>foobar</p></article>
+</section>
+`, {
+      parseOptions: {
+        preserveWhitespace: false,
+      },
+    }
+  )
+}
+
+const insertImage = (value) => {
+  editor.value.commands.setImage({
+    'data-objectid': value,
+    'src': backend_url(value)
+  })
+}
+
+const insertImageURL = () => {
+  editor.value.commands.setImage(
+    { 'src': input_image_url.value }
+  )
+  modals.value.choose_image = false
+  input_image_url.value = ''
+}
+
+const insertVideo = () => {
+  editor.value.commands.setVideo({ 
+    src: input_video_url.value,
+    autoplay: input_video_autoplay.value,
+    controls: input_video_controls.value
+  })
+  modals.value.video = false
+  input_video_url.value = ''
+  input_video_autoplay.value = false
+}
+
+const insert_video_button = computed(
+  () => guess_video(input_video_url.value).type 
+    ? 'hover:bg-green-200 bg-green-100 text-green-900 focus-visible:ring-green-500'
+    : 'bg-slate-100 text-slate-300'
+)
+
+const insertLink = (value) => {
+  editor.value.commands.setLink({
+    'href': backend_url(value).href
+  })
+}
+
+const remove_link = (value) => {
+  editor.value.commands.unsetLink()
+}
+
+watchEffect( async () => {
+  let opts = [];
+
+  if (_meta.value) {
+    switch (_meta.value.filetype) {
+      case 'image':
+        _cb = insertImage
+        opts = [
+          ['filter_types', 'folder'],
+          ['filter_types', 'file'], 
+          ['filter_mimes', 'image/*']
+        ]
+        break;
+      case 'media':
+        opts = [
+          ['filter_types', 'folder'],
+          ['filter_types', 'file'],
+          ['filter_mimes', 'video/*']
+        ]
+        break;
+      case 'file':
+        _cb = insertLink
+        break
+    }
+  }
+
+  /*
+  const { data: folder_data } = await getContent(folder_id.value)
+  const { data: contents_data } = await browse(folder_data.id, opts)
+  folder.value = folder_data
+  contents.value = contents_data.data
+  */
+})
+
+const closeModal = (...modal) => {
+  const src = modal.length === 0 ? Object.keys(modals.value) : modal
+
+  for (const m of src) {
+    modals.value[m] = false
+  }
+}
+
+const add_video = () => {
+  modals.value.video = true
+}
+
+const add_flex_container = () => modals.value.flex_container = true
+
+const add_image = () => {
+  _meta.value.filetype = 'image'
+  load_folder(1)
+  modals.value.choose_image = true
+}
+
+const add_link = () => {
+  _meta.value.filetype = 'file'
+  load_folder(1)
+  modals.value.choose_link = true
+}
+
+const upload_image = () => input_upload_file.value.click()
+const { createFile } = useFile()
+
+const onFileChange = async (event) => {
+  const uploaded_file = event.target.files[0]
+
+  try {
+    if (!uploaded_file.type.startsWith('image/')) {
+      throw new NotAnImage('The provided file is not an image')
+    }
+
+    const { data } = await createFile(default_media_folder, { 
+      title: uploaded_file.name,
+      content: uploaded_file
+    })
+
+    if (data.mime.major.name !== 'image') {
+      throw new NotAnImage('The uploaded file is not an image')
+    }
+
+    console.info(`===>>> Insert image ${data.id}`)
+    insertImage(data.id)
+    closeModal()
+  } catch (e) {
+    console.error(`===>>> Error: ${e.message}`)
+  }
+}
+
+const doBrowse = id => folder_id.value = id
+
+const extensions = [...default_extensions]
+if (props.editable) {
+  extensions.push(TipTapCommands)
+}
+
+const editor = build_editor({
+  content: props.content,
+  editable: props.editable,
+  extensions: extensions,
+  injectCSS: props.injectCSS,
+  onUpdate: ({editor: e, transaction: tr}) => {
+    //console.debug('===>>> Editor update: ', e)
+    if (props.editable) {
+      emit('update:content', e.getHTML())
+    }
+  },
+  onSelectionUpdate: ({editor: e, transaction: tr}) => {
+    if (props.editable) {
+      emit('update:selection', e)
+      setEditor(e)
+    }
+  },
+  onTransaction: (p) => {
+    //console.debug('===>>> Editor transaction: ', p)
+  },
+
+})
+
+
+
+/*
+watch(() => props.content, () => editor.value.commands.setContent(props.content))
+watch(() => props.editable, () => editor.value.commands.setEditable(props.editable))
+*/
+
+const { setEditor } = useEditorStore()
+
+onBeforeUnmount(() => editor.value.destroy())
+onMounted( async () => {
+  setEditor(editor)
+
+  try {
+    const { data } = await getDefaultMediaFolder()
+    default_media_folder.value = data
+  } catch (e) {
+    console.error('===>>> Error getting default media folder: ', e)
+  }
+
+})
+
+</script>
 <template>
 
   <!-- MODAL CHOOSE LINK -->
@@ -389,379 +766,4 @@
   </div>
 </template>
 
-<script setup>
-import { 
-  ref, 
-  unref,
-  watchEffect, 
-  watch,
-  onMounted, 
-  onBeforeUnmount,
-  computed
-} from 'vue'
 
-import { 
-  useEditor, 
-  EditorContent,
-  BubbleMenu
-} from '@tiptap/vue-3'
-
-import { storeToRefs } from 'pinia'
-
-//import StarterKit from "@tiptap/starter-kit"
-import { useEditorStore } from '../../../stores/editor'
-
-import placeholder_img from "../../../assets/image-combiner.svg";
-
-import {
-  TransitionRoot,
-  TransitionChild,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  DialogDescription
-} from '@headlessui/vue'
-
-import TipTapCommands from '../../../components/editor/tiptap/utils/updateAttributes'
-
-import FolderBrowser from '../../folder/FolderBrowser.vue'
-import { useContent } from '../../../composables/contents.js'
-import { useFolder } from '../../../composables/folders.js'
-import { useFile } from '../../../composables/files.js'
-import { backend_url } from '../../../composables/fetch.js';
-import { build_editor, default_extensions } from '../../editor/tiptap';
-
-const props = defineProps({
-  content: String,
-  editable: {
-    type: Boolean,
-    default: true
-  },
-  injectCSS: {
-    type: Boolean,
-    default: true
-  }
-})
-
-const emit = defineEmits([
-  'update:content',
-  'update:selection'
-])
-
-class NotAnImage extends Error {
-  constructor(message) {
-    super(message)
-  }
-}
-
-const modals = ref({
-  choose_image: false,
-  choose_link: false,
-  file_browser: false,
-  video: false,
-  flex_container: false
-})
-
-const { browse, getDefaultMediaFolder } = useFolder()
-const { getContent } = useContent()
-
-const folder_id = ref(1)
-const folder = ref({})
-const default_media_folder = ref()
-const contents = ref([])
-const actions = ref([
-  {
-    label: 'Select',
-    event: 'select',
-    icon: 'fa-solid fa-hand-point-right',
-    class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
-    enabled: (...args) => {
-      const content = args[0];
-      const ask_image_is_image = (_meta.value.filetype == 'image' && content.type.name == 'file' && content.mime.major.name == 'image')
-      const ask_media_is_media = (_meta.value.filetype == 'media' && content.type.name == 'file' && content.mime.major.name == 'video')
-      const ask_link = _meta.value.filetype == 'file'
-
-      return ask_image_is_image || ask_media_is_media || ask_link
-    }
-  }
-])
-
-let _cb = undefined;
-let _meta = ref({});
-
-const doSelect = (content) => {
-  let cb_value = content.id.toString();
-  let cb_meta = {};
-
-  switch(_meta.value.filetype) {
-    case 'image':
-    case 'media':
-      cb_meta = {
-        alt: 'obj ' + content.id
-      };
-      break;
-    // Link
-    case 'file':
-      if (content.type.name == 'file') {
-        cb_value += '/download';
-        cb_meta = {
-          text: 'obj ' + content.id
-        }
-      }
-      break;
-  }
-
-  _cb(cb_value); 
-  closeModal()
-}
-
-const input_upload_file = ref()
-const input_image_url = ref()
-const input_video_url = ref()
-const input_video_autoplay = ref()
-const input_video_controls = ref()
-
-/* INSERT FLEX CONTAINER */
-
-const insert_flex = (cpt) => {
-  const flex_items = Array.from(
-    Array.from({ length: cpt }, (_, index) => index+1), 
-    (x) => {
-      return {
-        type: 'flexItem',
-        attrs: {
-          basis: [{'breakpoint': null, 'tw': `basis-1/${cpt}`}],
-          borderWidth: [{'breakpoint': null, 'tw': 'border'}],
-        },
-        content: [
-          { 
-            type: 'paragraph', 
-            content: [
-              {
-                type: 'text',
-                text: `Item ${x}`
-              }
-            ]
-          },
-        ]
-      }
-    })
-
-  const flex_container = {
-    type: 'flexContainer',
-    attrs: {
-      gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
-      gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
-      align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
-    },
-    content: flex_items
-  }
-
-  editor.value.commands.insertContent(flex_container)
-  modals.value.flex_container = false
-}
-
-const add_tmpl1 = () => {
-  editor.value.commands.insertContent(`
-<section class="flex gap-x-2 gap-y-2">
-<article class="basis-1/3">
-<section class="flex flex-col">
-<article class="basis-1/4"><amnesia-img src="${placeholder_img}" /></article>
-<article class="basis-3/4 mt-2 mb-2">
-<p class="font-bold text-2xl">Title</p>
-<p>Lorem ipsum blablabla</p>
-</article>
-</section>
-</article>
-<article class="basis-1/3"><p>foobar</p></article>
-<article class="basis-1/3"><p>foobar</p></article>
-</section>
-`, {
-      parseOptions: {
-        preserveWhitespace: false,
-      },
-    }
-  )
-}
-
-const insertImage = (value) => {
-  editor.value.commands.setImage({
-    'data-objectid': value,
-    'src': backend_url(value)
-  })
-}
-
-const insertImageURL = () => {
-  editor.value.commands.setImage(
-    { 'src': input_image_url.value }
-  )
-  modals.value.choose_image = false
-  input_image_url.value = ''
-}
-
-const insertVideo = () => {
-  editor.value.commands.setVideo({ 
-    src: input_video_url.value,
-    autoplay: input_video_autoplay.value,
-    controls: input_video_controls.value
-  })
-  modals.value.video = false
-  input_video_url.value = ''
-  input_video_autoplay.value = false
-}
-
-const insert_video_button = computed(
-  () => guess_video(input_video_url.value).type 
-    ? 'hover:bg-green-200 bg-green-100 text-green-900 focus-visible:ring-green-500'
-    : 'bg-slate-100 text-slate-300'
-)
-
-const insertLink = (value) => {
-  editor.value.commands.setLink({
-    'href': backend_url(value).href
-  })
-}
-
-const remove_link = (value) => {
-  editor.value.commands.unsetLink()
-}
-
-watchEffect( async () => {
-  let opts = [];
-
-  if (_meta.value) {
-    switch (_meta.value.filetype) {
-      case 'image':
-        _cb = insertImage
-        opts = [
-          ['filter_types', 'folder'],
-          ['filter_types', 'file'], 
-          ['filter_mimes', 'image/*']
-        ]
-        break;
-      case 'media':
-        opts = [
-          ['filter_types', 'folder'],
-          ['filter_types', 'file'],
-          ['filter_mimes', 'video/*']
-        ]
-        break;
-      case 'file':
-        _cb = insertLink
-        break
-    }
-  }
-
-  const { data: folder_data } = await getContent(folder_id.value)
-  const { data: contents_data } = await browse(folder_data.id, opts)
-  folder.value = folder_data
-  contents.value = contents_data.data
-})
-
-const closeModal = (...modal) => {
-  const src = modal.length === 0 ? Object.keys(modals.value) : modal
-
-  for (const m of src) {
-    modals.value[m] = false
-  }
-}
-
-const add_video = () => {
-  modals.value.video = true
-}
-
-const add_flex_container = () => modals.value.flex_container = true
-
-const add_image = () => {
-  _meta.value.filetype = 'image'
-  folder_id.value = 1
-  modals.value.choose_image = true
-}
-
-const add_link = () => {
-  _meta.value.filetype = 'file'
-  folder_id.value = 1
-  modals.value.choose_link = true
-}
-
-const upload_image = () => input_upload_file.value.click()
-const { createFile } = useFile()
-
-const onFileChange = async (event) => {
-  const uploaded_file = event.target.files[0]
-
-  try {
-    if (!uploaded_file.type.startsWith('image/')) {
-      throw new NotAnImage('The provided file is not an image')
-    }
-
-    const { data } = await createFile(default_media_folder, { 
-      title: uploaded_file.name,
-      content: uploaded_file
-    })
-
-    if (data.mime.major.name !== 'image') {
-      throw new NotAnImage('The uploaded file is not an image')
-    }
-
-    console.info(`===>>> Insert image ${data.id}`)
-    insertImage(data.id)
-    closeModal()
-  } catch (e) {
-    console.error(`===>>> Error: ${e.message}`)
-  }
-}
-
-const doBrowse = id => folder_id.value = id
-
-const extensions = [...default_extensions]
-if (props.editable) {
-  extensions.push(TipTapCommands)
-}
-
-const editor = build_editor({
-  content: props.content,
-  editable: props.editable,
-  extensions: extensions,
-  injectCSS: props.injectCSS,
-  onUpdate: ({editor: e, transaction: tr}) => {
-    //console.debug('===>>> Editor update: ', e)
-    if (props.editable) {
-      emit('update:content', e.getHTML())
-    }
-  },
-  onSelectionUpdate: ({editor: e, transaction: tr}) => {
-    if (props.editable) {
-      emit('update:selection', e)
-      setEditor(e)
-    }
-  },
-  onTransaction: (p) => {
-    //console.debug('===>>> Editor transaction: ', p)
-  },
-
-})
-
-
-
-/*
-watch(() => props.content, () => editor.value.commands.setContent(props.content))
-watch(() => props.editable, () => editor.value.commands.setEditable(props.editable))
-*/
-
-const { setEditor } = useEditorStore()
-
-onBeforeUnmount(() => editor.value.destroy())
-onMounted( async () => {
-  setEditor(editor)
-
-  try {
-    const { data } = await getDefaultMediaFolder()
-    default_media_folder.value = data
-  } catch (e) {
-    console.error('===>>> Error getting default media folder: ', e)
-  }
-
-})
-
-</script>

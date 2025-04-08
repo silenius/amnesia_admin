@@ -13,7 +13,9 @@ import { RouterView } from 'vue-router'
           <RouterView class="p-2 md:p-4" name="LeftSideBar" />
         </aside>
         <div class="self-start grow overflow-scroll ">
+          <Suspense>
           <RouterView name="default" />
+          </Suspense>
         </div>
         <aside class="basis-0 fixed top-0 backdrop-blur-xs shadow-gray-900 shadow-md bg-gray-700">
           <RouterView class="p-2 md:p-4" name="RightSideBar" />

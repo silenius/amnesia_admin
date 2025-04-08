@@ -1,25 +1,23 @@
 <script setup>
+import { toRefs, ref } from 'vue'
 import { useLineage } from '../../composables/lineage.js'
-import { watchEffect } from 'vue'
 
 const base = import.meta.env.BASE_URL
 
 const props = defineProps({
-  content_id: {
-    type: Number,
+  content: {
+    type: Object,
     required: true
   }
 })
+
+const { content } = toRefs(props)
+const { lineage } = await useLineage(content)
 
 const emits = defineEmits([
   'navigate'
 ])
 
-const { get_lineage, lineage } = useLineage()
-
-watchEffect(() => {
-  get_lineage(props.content_id)
-})
 </script>
 
 <template>

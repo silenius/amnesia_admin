@@ -7,12 +7,15 @@ import FolderEdit from '@/views/folders/FolderEdit.vue'
 import DocumentEdit from '@/views/documents/DocumentEdit.vue'
 import FileEdit from '@/views/files/FileEdit.vue'
 import EventEdit from '@/views/events/EventEdit.vue'
-import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
 
 import { HTTPError } from '@/composables/fetch.js'
 
 const props = defineProps({
-  content: Object
+  content: {
+    type: Object,
+    required: true
+  }
 })
 
 const router = useRouter()
@@ -63,9 +66,9 @@ const doBrowse = async (id) => await router.push({
 
 <template>
   <div class="m-4">
-    <ContentBreadcrumb 
-      :content="props.content" 
-      @item-select="(content) => doBrowse(content.id)"
+    <Breadcrumb 
+      :content="content" 
+      @navigate="(content) => $router.push(`/${content.id}`)"
       class="p-2 inline-block shadow-md"
     />
 

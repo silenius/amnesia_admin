@@ -21,14 +21,13 @@ import Pagination from '../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
 const props = defineProps({
-  content_id: {
-    type: Number,
+  content: {
+    type: Object,
     required: true
   }
 })
 
-const { content_id } = toRefs(props)
-const { folder, load } = await useFolder(content_id)
+const { content: folder } = toRefs(props)
 
 //const content_id = computed(() => props.content_id)
 //const move_folder = ref(null)
@@ -225,7 +224,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
 </Dialog>
 -->
     <Breadcrumb 
-      :content_id="folder.id" 
+      :content="folder" 
       @navigate="(content) => router.push({name: 'browse-content', params: {id: content.id}})" 
       class="p-2 shadow-md"
     />

@@ -1,20 +1,19 @@
 <script setup>
-import { watchEffect, ref } from 'vue'
+import { watchEffect, ref, toRefs } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { useContent } from '@/composables/contents.js'
+import { useContent } from '@/composables/useContent.js'
 
 const props = defineProps({
-  content_id: Number
+  content_id: {
+    type: Number,
+    required: true
+  }
 })
 
+const { content_id } = toRefs(props)
+const { content } = await useContent(content_id)
+
 const router = useRouter()
-
-const content = ref({})
-
-const { 
-  getContent,
-  getContentParentACLS
-} = useContent()
 
 /*
 watchEffect(async () => {
@@ -22,10 +21,6 @@ watchEffect(async () => {
   const { data: acls } = await getContentParentACLS(props.content_id)
   content.value = data
   content.value['__acls'] = acls
-  // FIXME
-  if (content.value.props === null) {
-    content.value.props = {}
-  }
 })
 */
 
@@ -44,7 +39,7 @@ const doEdit = async (content_id) => {
       <RouterView 
         @edit-content="(n) => doEdit(n)" 
         class="m-4 grow" 
-        :content_id="content_id" 
+        :content="content" 
       />
     </Suspense>
 

@@ -90,7 +90,6 @@ const canEdit = computed(() => {
   return props.editButton === true
 })
 
-
 const get_container = (node) => {
   let target = node
   const elem = unref(view) == 'tabular' ? 'tr' : 'li'
