@@ -72,7 +72,16 @@ import {
     faSquarePersonConfined,
     faPlus,
     faBars,
-    faBookBookmark
+    faBookBookmark,
+    faForward,
+    faForwardStep,
+    faBackward,
+    faBackwardStep,
+    faListOl,
+    faPhone,
+    faEnvelope,
+    faGlobe,
+
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -155,6 +164,15 @@ library.add(faPlus)
 library.add(faSquarePersonConfined)
 library.add(faBars)
 library.add(faBookBookmark)
+library.add(faForward)
+library.add(faForwardStep)
+library.add(faBackward)
+library.add(faBackwardStep)
+library.add(faListOl)
+library.add(faPhone)
+library.add(faEnvelope)
+library.add(faGlobe)
+
 
 const app = createApp(App)
 const pinia = createPinia()

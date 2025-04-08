@@ -4,7 +4,9 @@ import { useValidators } from './validators.js'
 const { isEmpty, minLength } = useValidators()
 
 const getContent = async (id) => {
-    return useFetchBackend(`${id}`)
+    const { data, fetchData } = useFetchBackend()
+    await fetchData(id)
+    return data
 }
 
 const getContentACL = async (id) => {

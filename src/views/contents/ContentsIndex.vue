@@ -16,6 +16,7 @@ const {
   getContentParentACLS
 } = useContent()
 
+/*
 watchEffect(async () => {
   const { data } = await getContent(props.content_id)
   const { data: acls } = await getContentParentACLS(props.content_id)
@@ -26,11 +27,12 @@ watchEffect(async () => {
     content.value.props = {}
   }
 })
+*/
 
-const doEdit = async (content) => { 
+const doEdit = async (content_id) => { 
   await router.push({
     name: 'edit-content', 
-    params: { id: content.id }
+    params: { id: content_id }
   })
 }
 
@@ -38,19 +40,19 @@ const doEdit = async (content) => {
 
 <template>
   <div class="flex flex-row">
-    <RouterView 
-      @edit-content="(n) => doEdit(n)" 
-      class="m-4 grow" 
-      :content="content" 
-      v-if="content.id" 
-    />
+    <Suspense>
+      <RouterView 
+        @edit-content="(n) => doEdit(n)" 
+        class="m-4 grow" 
+        :content_id="content_id" 
+      />
+    </Suspense>
 
     <aside class="basis-0 backdrop-blur-xs shadow-gray-900 shadow-md bg-gray-700">
-    <RouterView 
-      name="RightSideBar" 
-      :content="content"
-      v-if="content.id"
-    />
+      <RouterView 
+        name="RightSideBar" 
+        v-if="content_id"
+      />
     </aside>
   </div>
 </template>

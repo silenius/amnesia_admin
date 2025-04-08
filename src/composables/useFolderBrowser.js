@@ -1,4 +1,4 @@
-import { ref, toValue, watch, watchEffect, readonly, computed } from 'vue'
+import { nextTick, ref, toValue, watch, watchEffect, readonly, computed } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useFolder } from './useFolder.js'
 
@@ -6,6 +6,8 @@ export async function useFolderBrowser(folder, opts={}) {
     const { data, error, loading, fetchData } = useFetchBackend()
 
     const result = ref([])
+
+    // metadata sets on *client* side
     const query = ref({
         offset: 0,
         limit: 10,
@@ -16,9 +18,11 @@ export async function useFolderBrowser(folder, opts={}) {
     const meta = ref({})
 
     const browse = async(opts={}) => {
-        console.log('BEGIN BROWSE')
-        query.value = { 
-            ...query.value, ...toValue(opts)
+        if (toValue(opts)) {
+            query.value = { 
+                ...query.value, 
+                ...toValue(opts)
+            }
         }
 
         const options = new URLSearchParams(toValue(query))
@@ -28,7 +32,6 @@ export async function useFolderBrowser(folder, opts={}) {
             result.value = toValue(data).data
             meta.value = toValue(data).meta
         }
-        console.log('END BROWSE')
     }
 
     const goto_page = (page) => {
@@ -37,11 +40,11 @@ export async function useFolderBrowser(folder, opts={}) {
         })
     }
 
-    console.log('BEFORE AWAIT')
     await browse(query)
-    console.log('AFTER AWAIT')
-
-    watch(folder, async () => browse(query))
+    watch(folder, async () => {
+        query.value.offset = 0
+        await browse(query)
+    })
 
     return {
         result: readonly(result),
