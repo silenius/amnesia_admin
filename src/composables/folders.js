@@ -97,9 +97,11 @@ const getIndexCandidates = async (id) => {
     })
 }
 
+/*
 const getDefaultMediaFolder = async() => {
     return useFetchBackend('folder/default_media')
 }
+*/
 
 const getOrders = async (opts = {}) => {
     const options = new URLSearchParams()
@@ -127,7 +129,6 @@ export function useFolder() {
         updateFolder,
         createFolder,
         getIndexCandidates,
-        getDefaultMediaFolder,
         browse,
         paste,
         getOrders,

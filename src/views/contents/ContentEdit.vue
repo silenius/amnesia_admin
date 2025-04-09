@@ -69,7 +69,7 @@ const doBrowse = async (id) => await router.push({
     <Breadcrumb 
       :content="content" 
       @navigate="(content) => $router.push(`/${content.id}`)"
-      class="p-2 inline-block shadow-md"
+      class="p-2 shadow-md mb-4"
     />
 
     <component 

@@ -32,10 +32,12 @@ import {
 } from '@headlessui/vue'
 
 import TipTapCommands from '../../../components/editor/tiptap/utils/updateAttributes'
+import Pagination from '../../../components/pagination/Pagination.vue'
+import Breadcrumb from '../../../components/breadcrumbs/Breadcrumb.vue'
 
 import FolderBrowser from '../../folder/FolderBrowser.vue'
 import { useContent } from '../../../composables/useContent.js'
-import { useFolder } from '../../../composables/useFolder.js'
+import { useFolder, useMediaFolder } from '../../../composables/useFolder.js'
 import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
 import { useFile } from '../../../composables/files.js'
 import { backend_url } from '../../../composables/fetch.js';
@@ -72,11 +74,10 @@ const modals = ref({
   flex_container: false
 })
 
-const root_folder = ref(1)
-const { folder, load_folder: load } = await useFolder(root_folder)
-const { result: contents } = await useFolderBrowser(folder)
+const { folder, load: load_folder } = await useFolder(ref(1))
+const { result: contents, meta: browse_meta, goto_page } = await useFolderBrowser(folder)
+const { media_folder } = await useMediaFolder()
 
-const default_media_folder = ref()
 const actions = ref([
   {
     label: 'Select',
@@ -305,7 +306,7 @@ const onFileChange = async (event) => {
       throw new NotAnImage('The provided file is not an image')
     }
 
-    const { data } = await createFile(default_media_folder, { 
+    const { data } = await createFile(media_folder, { 
       title: uploaded_file.name,
       content: uploaded_file
     })
@@ -321,8 +322,6 @@ const onFileChange = async (event) => {
     console.error(`===>>> Error: ${e.message}`)
   }
 }
-
-const doBrowse = id => folder_id.value = id
 
 const extensions = [...default_extensions]
 if (props.editable) {
@@ -364,14 +363,6 @@ const { setEditor } = useEditorStore()
 onBeforeUnmount(() => editor.value.destroy())
 onMounted( async () => {
   setEditor(editor)
-
-  try {
-    const { data } = await getDefaultMediaFolder()
-    default_media_folder.value = data
-  } catch (e) {
-    console.error('===>>> Error getting default media folder: ', e)
-  }
-
 })
 
 </script>
@@ -491,8 +482,8 @@ onMounted( async () => {
                   </button>
 
                   <!-- UPLOAD IMAGE -->
-
-                  <button v-if="default_media_folder" @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
+                  {{ media_folder }}
+                  <button v-if="media_folder" @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-4 w-4" />
                   </button>
                   <input @change="onFileChange" accept="image/*" type="file" ref="input_upload_file" class="hidden" />
@@ -706,10 +697,15 @@ onMounted( async () => {
               </DialogTitle>
               <div class="mt-2">
                 <p class="text-sm text-gray-500">
+                  <Breadcrumb 
+                    :content="folder" 
+                    @navigate="(content) => load_folder(content.id)" 
+                    class="p-2 shadow-md"
+                  />
                   <FolderBrowser
-                    @browse="doBrowse"
+                    @browse="(id) => load_folder(id)"
                     @select="doSelect"
-                    @breadcrumb-select="(content) => doBrowse(content.id)"
+                    @breadcrumb-select="(content) => load_folder(content.id)"
                     :contents="contents"
                     :folder="folder"
                     :actions="actions"
@@ -717,6 +713,13 @@ onMounted( async () => {
                     :view="'gallery'"
                     :forceClick="true"
                     v-if="folder && contents"
+                  />
+                  <Pagination
+                    :limit="browse_meta.limit"
+                    :offset="browse_meta.offset"
+                    :total="browse_meta.count"
+                    @goto-page="(page) => goto_page(page)"
+                    class="flex justify-center my-4"
                   />
                 </p>
               </div>

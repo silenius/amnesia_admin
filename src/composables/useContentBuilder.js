@@ -1,11 +1,11 @@
 import { ref, toValue, watch } from 'vue'
 
 export function useBuildContent(data) {
-    const formatted = ref({})
+    const formatted = ref(null)
 
     const build = () => {
         if (!toValue(data)) {
-            formatted.value = {}
+            formatted.value = null
         } else {
             const copy = { ...toValue(data) }
             for (const key of ['added', 'updated', 'last_update']) {

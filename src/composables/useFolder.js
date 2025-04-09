@@ -7,7 +7,7 @@ export async function useFolder(folder_id) {
     const { formatted: formatted_data } = useBuildFolder(data)
 
     const load = async (id=folder_id) => {
-        await fetchData(`/folder/${toValue(id)}`)
+        await fetchData(`folder/${toValue(id)}`)
     }
 
     await load(folder_id)
@@ -16,5 +16,20 @@ export async function useFolder(folder_id) {
     return {
         folder: formatted_data,
         load: load
+    }
+}
+
+export async function useMediaFolder() {
+    const { data, error, loading, fetchData } = useFetchBackend()
+    const { formatted: formatted_data } = useBuildFolder(data)
+
+    const load_media_folder = async () => {
+        await fetchData('folder/default_media')
+    }
+
+    await load_media_folder()
+
+    return {
+        media_folder: formatted_data    
     }
 }
