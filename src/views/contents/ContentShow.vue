@@ -1,26 +1,5 @@
-<template>
-  <div class="m-4">
-    <div class="flex mb-4 items-center grow">
-      <ContentBreadcrumb 
-        :content="content" 
-        @item-select="doBreadcrumbSelect" 
-        class="p-2 shadow-md"
-      />
-    </div>
-
-    <component 
-      :is="mapping[content.type.name]" 
-      :content="content"
-    />
-
-  </div>
-</template>
-
 <script setup>
-import { useRouter } from 'vue-router'
-import { onBeforeMount, onMounted, onUpdated, onUnmounted } from 'vue'
-
-import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
 
 import DocumentShow from '@/views/documents/DocumentShow.vue'
 import FolderShow from '@/views/folders/FolderShow.vue'
@@ -41,17 +20,24 @@ const mapping = {
   file: FileShow,
 }
 
-onBeforeMount(() => console.log('===> ContentShow before mounted'))
-onMounted(() => console.log('===> ContentShow mounted'))
-onUnmounted(() => console.log('===> ContentShow unmounted'))
-onUpdated(() => console.log('===> ContentShow updated'))
-
-const router = useRouter()
-
-const doBreadcrumbSelect = (item) => {
-  router.push(
-    {name: 'show-content', params: {id: item.id}}
-  )
-}
-
 </script>
+
+<template>
+  <div class="m-4">
+    <div class="flex mb-4 items-center grow">
+      <Breadcrumb 
+        :content="content" 
+        @navigate="(content) => $router.push({name: 'show-content', params: {id: content.id}})" 
+        class="p-2 shadow-md"
+      />
+    </div>
+
+    <component 
+      :is="mapping[content.type.name]" 
+      :content="content"
+    />
+
+  </div>
+</template>
+
+
