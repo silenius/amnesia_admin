@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, unref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, unref, toRefs, toValue, computed, onMounted, onUnmounted } from 'vue'
 import { 
   Menu, 
   MenuButton, 
@@ -73,18 +73,11 @@ const emit = defineEmits([
   'edit-content', 'add-content', 'change-weight-content',
   'publish-content', 'unpublish-content',
   'delete-selection', 'move-selection',
-  'breadcrumb-select',  
-  'change-limit',  // change the current browsing limit 
-  'change-pagination'  // change pagination
+
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
 const image_url = (id) => new URL(`${id}`, base)
-
-const view = ref(props.view)
-const view_icon = computed(
-  () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
-)
 
 const canEdit = computed(() => {
   return props.editButton === true
@@ -92,7 +85,7 @@ const canEdit = computed(() => {
 
 const get_container = (node) => {
   let target = node
-  const elem = unref(view) == 'tabular' ? 'tr' : 'li'
+  const elem = toValue(props.view) == 'tabular' ? 'tr' : 'li'
 
   if (target.nodeType != Node.ELEMENT_NODE) {
     target = target.parentNode
@@ -200,7 +193,6 @@ const formatDate = (d) => {
 
           <!-- EDIT FOLDER -->
 
-          <EditContentButton v-if="canEdit" @click.prevent="$emit('edit-content', folder)" />
 
           <!-- ADD CONTENT TO FOLDER -->
 
@@ -223,31 +215,6 @@ const formatDate = (d) => {
 
           <!-- SETTINGS -->
 
-          <Popover class="relative inline">
-            <PopoverButton class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900">
-              <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-solid fa-sliders" />
-            </PopoverButton>
-            <PopoverOverlay class="fixed inset-0 bg-black opacity-25" />
-
-            <PopoverPanel class="absolute right-0 w-max p-4 bg-white z-10">
-              <div class="flex items-start">
-                <InputCheckbox :checked="sortFolderFirst" @change="(n) =>
-                  $emit('reload', {sort_folder_first: n === 'true'})"/>
-                <div class="flex flex-col items-start">
-                  Folders first
-                  <span v-if="sortFolderFirst" class="text-xs">Folders will
-                    appear first in the selected order</span>
-                  <span v-else class="text-xs">Folders won't specially appear first</span>
-                </div>
-              </div>
-            </PopoverPanel>
-          </Popover>
-
-          <!-- VIEW -->
-
-          <button class="text-white bg-rose-500 hover:bg-rose-600 hover:ring-4 hover:ring-rose-100 font-medium rounded-full text-sm p-2 mr-2 mb-2 dark:focus:ring-rose-900" @click.prevent="view = view == 'tabular' ? 'gallery' : 'tabular'">
-            <font-awesome-icon class="h-6 w-6 align-middle" :icon="view_icon" />
-          </button>
         </div>
       </div>
 

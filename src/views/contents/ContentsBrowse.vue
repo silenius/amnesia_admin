@@ -17,6 +17,9 @@ import { useFolderBrowser } from '../../composables/useFolderBrowser.js'
 
 //import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '../../components/folder/FolderBrowser.vue'
+import SelectFolderView from '../../components/folder/SelectFolderView.vue'
+import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
+import SelectFolderFilters from '../../components/folder/SelectFolderFilters.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
@@ -43,7 +46,7 @@ const {
 // Main browser
 
 const {
-  result, meta: browse_meta, browse, goto_page, query
+  result, meta: browse_meta, browse, change_limit, goto_page, query, view
 } = await useFolderBrowser(folder)
 
 /*
@@ -223,17 +226,22 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
 </div>
 </Dialog>
 -->
-    <Breadcrumb 
-      :content="folder" 
-      @navigate="(content) => router.push({name: 'browse-content', params: {id: content.id}})" 
-      class="p-2 shadow-md"
-    />
+    <div class="flex">
+      <Breadcrumb 
+        :content="folder" 
+        @navigate="(content) => router.push({name: 'browse-content', params: {id: content.id}})" 
+        class="p-2 shadow-md"
+      /> 
+
+      <SelectFolderView class="w-12 h-12" :view="view" @set-view="(v) => view=v" />
+      <SelectFolderFilters  />
+      <SelectFolderLimit :folder="folder" :limit="browse_meta.limit" @set-limit="(v) => change_limit(v)" />
+
+    </div>
 
     <FolderBrowser
       class="mt-4"
       @reload="async (n) => await reload(n)"
-      @change-limit="async (n) => await reload({offset: 0, limit: n})"
-      @change-pagination="async (n) => await reload(n)"
       @browse="doBrowse"
       @add-content="doAdd"
       @delete-content="doDelete"
@@ -244,7 +252,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       @change-weight-content="doChangeWeight"
       @delete-selection="doDeleteSelection"
       @move-selection="doMoveSelection"
-      @breadcrumb-select="(content) => content_id = content.id"
+      :view="view"
       :folder="folder"
       :contents="result" 
       :selected="selected"
@@ -253,6 +261,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
     />
 
     <Pagination
+      v-if="browse_meta.count > browse_meta.limit"
       :limit="browse_meta.limit"
       :offset="browse_meta.offset"
       :total="browse_meta.count"

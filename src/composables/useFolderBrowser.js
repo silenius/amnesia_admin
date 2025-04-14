@@ -6,6 +6,7 @@ export async function useFolderBrowser(folder, opts={}) {
     const { data, error, loading, fetchData } = useFetchBackend()
 
     const result = ref([])
+    const view = ref('tabular')
 
     // metadata sets on *client* side
     const query = ref({
@@ -34,11 +35,14 @@ export async function useFolderBrowser(folder, opts={}) {
         }
     }
 
-    const goto_page = (page) => {
-        return browse({
-            offset: (page - 1) * toValue(meta).limit
-        })
-    }
+    const goto_page = (page) => browse({
+        offset: (page - 1) * toValue(meta).limit
+    })
+
+    const change_limit = (limit) => browse({
+        offset: 0,
+        limit: limit
+    })
 
     await browse(query)
     watch(folder, async () => {
@@ -52,6 +56,8 @@ export async function useFolderBrowser(folder, opts={}) {
         error,
         browse,
         query,
-        goto_page
+        goto_page,
+        change_limit,
+        view
     }
 }
