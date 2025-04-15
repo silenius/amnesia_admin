@@ -243,7 +243,6 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       class="mt-4"
       @reload="async (n) => await reload(n)"
       @browse="doBrowse"
-      @add-content="doAdd"
       @delete-content="doDelete"
       @select-content="doSelect"
       @edit-content="(content) => router.push({name: 'edit-content', params: {id: content.id}})"

@@ -56,13 +56,6 @@ const destroyContent = async (id) => {
 }
 
 const setWeight = async(id, weight) => {
-    const data = new FormData()
-    data.append('weight', weight)
-
-    return useFetchBackend(`${id}/weight`, {
-        method: 'POST',
-        body: data
-    })
 }
 
 const publishContent = async (id) => useFetchBackend(`${id}/publish`, {
