@@ -7,7 +7,7 @@ import FolderAdd from '@/views/folders/FolderAdd.vue'
 import DocumentAdd from '@/views/documents/DocumentAdd.vue'
 import FileAdd from '@/views/files/FileAdd.vue'
 import EventAdd from '@/views/events/EventAdd.vue'
-import ContentBreadcrumb from '@/components/breadcrumbs/ContentBreadcrumb.vue'
+import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
 
 import { HTTPError } from '@/composables/fetch.js'
 
@@ -56,20 +56,15 @@ provide('errors', {
   setErrorFromResponse
 })
 
-const doBrowse = async (id) => await router.push({
-  name: 'browse-content', 
-  params: { id: id }
-})
-
 </script>
 
 <template>
 
   <div class="m-4">
-    <ContentBreadcrumb 
-      :content="props.content" 
-      @item-select="(content) => doBrowse(content.id)"
-      class="p-2 inline-block shadow-md"
+    <Breadcrumb 
+      :content="content" 
+      @navigate="(content) => $router.push(`/${content.id}`)"
+      class="p-2 shadow-md mb-4"
     />
 
     <component 

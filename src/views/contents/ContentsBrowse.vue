@@ -10,6 +10,9 @@ import {
 
 import { useFolder } from '../../composables/useFolder.js'
 import { useFolderBrowser } from '../../composables/useFolderBrowser.js'
+import { useContentType } from '../../composables/useContentType.js'
+import { useContentWeight } from '../../composables/useContentWeight.js'
+import { useContentSelection } from '../../composables/useContentSelection.js'
 
 //import { useFolder } from '@/composables/folders.js'
 //import { useContent } from '@/composables/contents.js'
@@ -20,6 +23,8 @@ import FolderBrowser from '../../components/folder/FolderBrowser.vue'
 import SelectFolderView from '../../components/folder/SelectFolderView.vue'
 import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
 import SelectFolderFilters from '../../components/folder/SelectFolderFilters.vue'
+import DropDownAddToFolder from '../../components/folder/DropDownAddToFolder.vue'
+import EditContentButton from '../../components/content/EditContentButton.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
@@ -46,8 +51,12 @@ const {
 // Main browser
 
 const {
-  result, meta: browse_meta, browse, change_limit, goto_page, query, view
+  browse, result, meta: browse_meta, change_limit, goto_page, view
 } = await useFolderBrowser(folder)
+
+const { content_types } = await useContentType()
+const { set_weight } = useContentWeight(folder) 
+const { selection, selection_ids, select_or_unselect } = useContentSelection()
 
 /*
 const { 
@@ -80,9 +89,6 @@ const {
 */
 
 //const { getContentTypes } = useContentTypes()
-
-const selected = ref(new Map())
-const selected_ids = computed(() => Array.from(selected.value.keys()))
 
 //const types = ref([])
 
@@ -120,8 +126,11 @@ const doDelete = async (content) => {
 
 // Change content's weight within it's container
 const doChangeWeight = async (content, weight) => {
-  await setWeight(content_id, weight)
-  reload()
+  const { error } = await set_weight(content.id, weight)
+  if (!error) {
+    browse()
+  }
+  //reload()
 }
 
 // Publish content
@@ -160,13 +169,6 @@ const doAdd = async (folder, t) => {
     name: 'add-content', 
     query: { type: t }
   })
-}
-
-// A content is selected through a checkbox
-const doSelect = (content, evt) => {
-  evt.target.checked 
-    ? selected.value.set(content_id, content)
-    : selected.value.delete(content_id)
 }
 
 /*
@@ -226,7 +228,16 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
 </div>
 </Dialog>
 -->
-    <div class="flex">
+    <div class="flex gap-x-1">
+
+      <DropDownAddToFolder 
+        :folder="folder" 
+        :types="content_types" 
+        @add-content="(folder, type) => doAdd(folder, type)"
+      />
+
+      <EditContentButton @edit-content="() => router.push({name: 'edit-content', params: {id: folder.id}})" class="w-12 h-12" />
+
       <Breadcrumb 
         :content="folder" 
         @navigate="(content) => router.push({name: 'browse-content', params: {id: content.id}})" 
@@ -239,12 +250,13 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
 
     </div>
 
+    <h1 class="my-6 font-bold text-xl underline uppercase tracking-tighter decoration-dotted">{{ folder.title }}</h1>
+
     <FolderBrowser
       class="mt-4"
-      @reload="async (n) => await reload(n)"
       @browse="doBrowse"
       @delete-content="doDelete"
-      @select-content="doSelect"
+      @select-content="(content, checked) => select_or_unselect(content, checked)"
       @edit-content="(content) => router.push({name: 'edit-content', params: {id: content.id}})"
       @publish-content="doPublish"
       @unpublish-content="doUnpublish"
@@ -254,7 +266,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       :view="view"
       :folder="folder"
       :contents="result" 
-      :selected="selected"
+      :selection="selection"
       :canChangeWeight="true"
       :editButton="true"
     />
@@ -265,7 +277,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       :offset="browse_meta.offset"
       :total="browse_meta.count"
       @goto-page="(page) => goto_page(page)"
-      class="flex justify-center my-4"
+      class="flex justify-center my-4 gap-x-2"
     />
 
   </div>

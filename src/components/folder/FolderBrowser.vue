@@ -6,19 +6,12 @@ import {
   MenuButton, 
   MenuItems, 
   MenuItem, 
-  Popover,
-  PopoverButton,
-  PopoverOverlay,
-  PopoverPanel,
 } from '@headlessui/vue'
 
 import { 
   actions as default_actions,
   selectActions as select_actions
 } from '../folder/FolderBrowserActions.js'
-
-import InputCheckbox from '../form/InputCheckbox.vue'
-import EditContentButton from '../buttons/EditContentButton.vue'
 
 const props = defineProps({
   // The folder being browsed
@@ -30,7 +23,7 @@ const props = defineProps({
     type: Array,
     default: []
   },
-  selected: {
+  selection: {
     type: Map,
     default: new Map()
   },
@@ -69,7 +62,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'reload', 'browse', 'delete-content', 'select-content', 'move-content', 
+  'browse', 'delete-content', 'select-content', 'move-content', 
   'edit-content', 'add-content', 'change-weight-content',
   'publish-content', 'unpublish-content',
   'delete-selection', 'move-selection',
@@ -189,29 +182,7 @@ const formatDate = (d) => {
       <div class="justify-self-end">
         <div class="hidden md:flex items-center">
 
-          <!-- PER PAGE -->
-
-          <!-- EDIT FOLDER -->
-
-
           <!-- ADD CONTENT TO FOLDER -->
-
-          <Menu as="div" class="relative inline" v-if="addTypes">
-            <MenuButton class="hover:outline-hidden text-white bg-emerald-400
-              hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100
-              font-medium rounded-full text-sm px-3 py-2.5 mr-2 mb-2 dark:focus:ring-emerald-900">
-              <font-awesome-icon class="h-4 w-4" icon="fa-regular fa-square-plus" />
-              Add
-            </MenuButton>
-            <MenuItems as="div" class="z-10 absolute right-0 mt-2 w-56
-              rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
-              <MenuItem as="div" v-slot="{ active }" v-for="t in addTypes" :key="t.id">
-              <button @click="$emit('add-content', folder, t.name)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md p-2 text-sm', ]" > 
-                <font-awesome-icon class="w-4 h-4 mr-2" :icon="['fa-solid', t.icons.fa]" /> {{ t.name }}
-              </button>
-              </MenuItem>
-            </MenuItems>
-          </Menu>
 
           <!-- SETTINGS -->
 
@@ -220,12 +191,12 @@ const formatDate = (d) => {
 
       <!-- SELECTED ITEMS -->
 
-      <div v-if="selectActions && selected.size > 0">
+      <div v-if="selectActions && selection.size > 0">
 
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton v-slot="{ open }" class="hover:bg-slate-300 bg-slate-200 px-4 py-1 font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-              {{ selected.size }} items selected
+              {{ selection.size }} items selection
               <font-awesome-icon class="h-4 w-4 align-middle text-gray-600 inline" :icon="open ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'" />
             </MenuButton>
 
@@ -271,6 +242,7 @@ const formatDate = (d) => {
             <th class="p-2">Title</th>
             <th class="p-2">Owner</th>
             <th class="p-2 text-center">State</th>
+            <th class="p-2 text-center">Weight</th>
             <th class="p-2 whitespace-nowrap">Last update</th>
             <th class="p-2" v-if="actions"></th>
             <slot name="tabular-th" />
@@ -296,7 +268,9 @@ const formatDate = (d) => {
 
             <!-- SELECT CHECKBOX -->
 
-            <td class="pl-2 w-0" v-if="selectActions"><input :checked="selected.has(content.id)" @click="$emit('select-content', content, $event)" type="checkbox" /></td>
+            <td class="pl-2 w-0" v-if="selectActions"><input
+              :checked="selection.has(content.id)"
+              @click="$emit('select-content', content, $event.target.checked)" type="checkbox" /></td>
 
             <!-- TITLE -->
 
@@ -323,6 +297,12 @@ const formatDate = (d) => {
               <font-awesome-icon :class="stateClass(content.state)"
                 class="inline-block drop-shadow-sm align-middle mr-2" icon="fa-solid fa-circle" />
               <span class="text-xs">{{ content.state.name }}</span>
+            </td>
+
+            <!-- WEIGHT -->
+
+            <td class="text-center text-xs text-slate-500">
+              <span>{{ content.weight }}</span>
             </td>
 
             <!-- LAST UPDATE -->
@@ -398,9 +378,8 @@ const formatDate = (d) => {
             class="relative"
           >
 
-            <input v-if="selectActions" :checked="selected.has(content.id)"
-              @click="$emit('select-content', content, $event)" type="checkbox"
-              class="absolute border-slate-300 top-1 left-1" />
+            <input v-if="selectActions" :checked="selection.has(content.id)"
+              @click="$emit('select-content', content, $event.target.checked)" type="checkbox" class="absolute border-slate-300 top-1 left-1" />
 
             <font-awesome-icon :class="stateClass(content.state)"
               class="absolute right-1 top-0.5 h-4 w-4 drop-shadow-sm" icon="fa-solid fa-circle" />

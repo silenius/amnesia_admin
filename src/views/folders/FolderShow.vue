@@ -55,7 +55,7 @@ import { ref, watch, computed, onBeforeMount, onUnmounted, onMounted, onUpdated 
 import { useFolder } from '@/composables/folders.js'
 import { createBrowser } from '@/composables/browser.js'
 import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
-import EditContentButton from '@/components/buttons/EditContentButton.vue'
+import EditContentButton from '../../components/content/EditContentButton.vue'
 
 onBeforeMount(() => console.log('===> FolderShow before mounted'))
 onMounted(() => console.log('===> FolderShow mounted'))
