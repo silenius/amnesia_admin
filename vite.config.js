@@ -23,11 +23,10 @@ export default defineConfig(({ command, mode }) => {
               interval: 1000,
               binaryInterval: 3000
           },
-          /*
           hmr: {
-              port: 2500
+                host: "home.lan",
+                protocol: "ws"
           }
-          */
       },
     plugins: [
             vue(),

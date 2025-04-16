@@ -25,6 +25,7 @@ import {
     faArrowRight,
     faTrashCan,
     faPenToSquare,
+    faPencil,
     faCalendar,
     faFile,
     faAtom,
@@ -116,6 +117,7 @@ library.add(faArrowRight)
 library.add(faArrowUpFromBracket)
 library.add(faTrashCan)
 library.add(faPenToSquare)
+library.add(faPencil)
 library.add(faCalendar)
 library.add(faFile)
 library.add(faAtom)

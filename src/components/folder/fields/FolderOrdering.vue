@@ -1,61 +1,9 @@
-<template>
-  <div>
-    <p class="font-bold">Ordering</p>
-    <p class="text-xs">This will change the folder's default sort order. Everyone accessing this
-    folder will initially see it sorted this way.</p>
-    <table class="mt-4">
-      <thead>
-        <tr class="text-left text-white bg-slate-500">
-          <th class="p-2">Field</th>
-          <th class="p-2">Direction</th>
-          <th class="p-2">Nulls</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="order in orders.orders" 
-          :key="order.key"
-          :draggable="order.checked"
-          :class="{ 'cursor-move': order.checked }"
-          @drag="drag"
-          @dragstart="start"
-          @dragend="end"
-          @dragleave="leave"
-          @dragenter="enter"
-          @dragover="over"
-          @drop="drop"
-          class="odd:bg-white even:bg-slate-50 text-slate-600"
-        >
-          <td>
-            <input type="checkbox" v-model="order.checked" />
-            {{ order.doc }} ({{ order.cls }} {{ order.prop }})
-          </td>
-          <td>
-            <select v-model="order.direction">
-              <option value="asc">asc</option>
-              <option value="desc">desc</option>
-            </select>
-          </td>
-          <td>
-            <select v-model="order.nulls">
-              <option value="first">first</option>
-              <option value="last">last</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
-
-
 <script setup>
 
 import { ref, unref, watch, inject, computed } from 'vue'
-import { useFolder } from '@/composables/folders.js'
+import { get_orders } from '../../../composables/useFolder.js'
 
 const folder = unref(inject('editable'))
-
-const { getOrders } = useFolder()
 
 const props = defineProps({
   polymorphic_children: {
@@ -95,10 +43,10 @@ watch(() => orders, () => {
 watch(
   [() => props.polymorphic_children, () => props.polymorphic_loading], 
   async () => {
-    const { data } = await getOrders({
-      pl: props.polymorphic_loading,
-      pc: props.polymorphic_children.map(x => x.id)
-    })
+    const data = await get_orders(
+      props.polymorphic_loading,
+      props.polymorphic_children.map(x => x.id)
+    )
     orders.value = data
 
     if (folder.default_order) {
@@ -186,3 +134,54 @@ const drop = (evt) => {
 }
 
 </script>
+<template>
+  <div>
+    <p class="font-bold">Ordering</p>
+    <p class="text-xs">This will change the folder's default sort order. Everyone accessing this
+    folder will initially see it sorted this way.</p>
+    <table class="mt-4">
+      <thead>
+        <tr class="text-left text-white bg-slate-500">
+          <th class="p-2">Field</th>
+          <th class="p-2">Direction</th>
+          <th class="p-2">Nulls</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders.orders" 
+          :key="order.key"
+          :draggable="order.checked"
+          :class="{ 'cursor-move': order.checked }"
+          @drag="drag"
+          @dragstart="start"
+          @dragend="end"
+          @dragleave="leave"
+          @dragenter="enter"
+          @dragover="over"
+          @drop="drop"
+          class="odd:bg-white even:bg-slate-50 text-slate-600"
+        >
+          <td>
+            <input type="checkbox" v-model="order.checked" />
+            {{ order.doc }} ({{ order.cls }} {{ order.prop }})
+          </td>
+          <td>
+            <select v-model="order.direction">
+              <option value="asc">asc</option>
+              <option value="desc">desc</option>
+            </select>
+          </td>
+          <td>
+            <select v-model="order.nulls">
+              <option value="first">first</option>
+              <option value="last">last</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+
+

@@ -13,6 +13,7 @@ import { useFolderBrowser } from '../../composables/useFolderBrowser.js'
 import { useContentType } from '../../composables/useContentType.js'
 import { useContentWeight } from '../../composables/useContentWeight.js'
 import { useContentSelection } from '../../composables/useContentSelection.js'
+import { useContentDelete } from '../../composables/useContentDelete.js'
 
 //import { useFolder } from '@/composables/folders.js'
 //import { useContent } from '@/composables/contents.js'
@@ -25,6 +26,7 @@ import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
 import SelectFolderFilters from '../../components/folder/SelectFolderFilters.vue'
 import DropDownAddToFolder from '../../components/folder/DropDownAddToFolder.vue'
 import EditContentButton from '../../components/content/EditContentButton.vue'
+import DropDownSelection from '../../components/content/DropDownSelection.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
@@ -47,6 +49,7 @@ const {
 } = useFolder()
 */
 
+const router = useRouter()
 
 // Main browser
 
@@ -56,7 +59,15 @@ const {
 
 const { content_types } = await useContentType()
 const { set_weight } = useContentWeight(folder) 
-const { selection, selection_ids, select_or_unselect } = useContentSelection()
+const { selection, selection_ids, clear, unselect, select_or_unselect } = useContentSelection()
+const { destroy } = useContentDelete()
+
+const delete_content = async (content) => {
+  if (await destroy(content.id)) {
+    unselect(content.id)
+    browse()
+  }
+}
 
 /*
 const { 
@@ -76,7 +87,6 @@ const {
   sort_folder_first: move_sort_folder_first,
 } = createBrowser(move_folder_id, browse)
 */
-const router = useRouter()
 
 /*
 const { 
@@ -237,6 +247,9 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       />
 
       <EditContentButton @edit-content="() => router.push({name: 'edit-content', params: {id: folder.id}})" class="w-12 h-12" />
+      <DropDownSelection 
+        @clear-selection="clear()"
+        @delete-selection="() => console.log(selection)" :selection="selection" class="w-12 h-12" />
 
       <Breadcrumb 
         :content="folder" 
@@ -255,20 +268,18 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
     <FolderBrowser
       class="mt-4"
       @browse="doBrowse"
-      @delete-content="doDelete"
+      @delete-content="delete_content"
       @select-content="(content, checked) => select_or_unselect(content, checked)"
       @edit-content="(content) => router.push({name: 'edit-content', params: {id: content.id}})"
       @publish-content="doPublish"
       @unpublish-content="doUnpublish"
       @change-weight-content="doChangeWeight"
-      @delete-selection="doDeleteSelection"
       @move-selection="doMoveSelection"
       :view="view"
       :folder="folder"
       :contents="result" 
       :selection="selection"
       :canChangeWeight="true"
-      :editButton="true"
     />
 
     <Pagination

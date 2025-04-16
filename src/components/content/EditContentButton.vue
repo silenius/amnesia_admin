@@ -2,7 +2,7 @@
 const props = defineProps({
   icon: {
     type: String,
-    default: 'fa-pen-to-square'
+    default: 'fa-solid fa-pencil'
   },
 })
 const emit = defineEmits(['edit-content'])

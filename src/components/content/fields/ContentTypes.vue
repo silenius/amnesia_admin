@@ -1,3 +1,51 @@
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from '@headlessui/vue'
+
+import { useContentType } from '../../../composables/useContentType.js'
+
+const props = defineProps({
+  polymorphic_children: {
+    type: Array,
+    default: []
+  },
+  polymorphic_loading: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits([
+  'update:polymorphic_children'
+])
+
+const { content_types } = await useContentType()
+
+watch(() => props.polymorphic_loading, (v) => {
+  if (v === false) {
+    value.value = []
+  }
+})
+
+const value = computed({
+
+  get() {
+    return props.polymorphic_children
+  },
+
+  set(value) {
+    emit('update:polymorphic_children', value)
+  }
+
+})
+</script>
+
 <template>
   <div>
     <Listbox v-model="value" multiple by="id" v-if="polymorphic_loading">
@@ -25,7 +73,7 @@
           >
             <ListboxOption
               v-slot="{ active, selected }"
-              v-for="t in types"
+              v-for="t in content_types"
               :key="t.id"
               :value="t"
               as="template"
@@ -59,58 +107,4 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
 
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from '@headlessui/vue'
-
-import { useContentTypes } from '@/composables/content_types.js'
-
-const props = defineProps({
-  polymorphic_children: {
-    type: Array,
-    default: []
-  },
-  polymorphic_loading: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const emit = defineEmits([
-  'update:polymorphic_children'
-])
-
-const { getContentTypes } = useContentTypes()
-
-const types = ref([])
-
-onMounted( async () => {
-  const { data } = await getContentTypes()
-  types.value = data
-})
-
-watch(() => props.polymorphic_loading, (v) => {
-  if (v === false) {
-    value.value = []
-  }
-})
-
-const value = computed({
-
-  get() {
-    return props.polymorphic_children
-  },
-
-  set(value) {
-    emit('update:polymorphic_children', value)
-  }
-
-})
-
-</script>

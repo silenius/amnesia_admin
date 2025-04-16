@@ -7,9 +7,12 @@ export function useContentSelection() {
     )
 
     const select = (content) => selection.value.set(content.id, content)
+    
     const unselect = (content_or_id) => selection.value.delete(
         typeof(content_or_id) === 'object' ? content_or_id.id : content_or_id
     )
+
+    const clear = () => selection.value.clear()
 
     const toggle = (content) => selection.value.has(content.id) ? unselect(content) : select(content)
     
@@ -21,6 +24,7 @@ export function useContentSelection() {
         select,
         unselect,
         select_or_unselect,
-        toggle
+        toggle,
+        clear
     }
 }

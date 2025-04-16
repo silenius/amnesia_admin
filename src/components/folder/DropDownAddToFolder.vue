@@ -24,7 +24,7 @@ const emit = defineEmits(['add-content'])
   <Menu as="div" class="relative inline" v-if="types">
     <MenuButton class="w-12 h-12 hover:outline-hidden text-white bg-emerald-400
       hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100 rounded-full text-sm p-2">
-      <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-regular fa-square-plus" />
+      <font-awesome-icon class="h-6 w-6 align-middle" icon="fa-solid fa-plus" />
     </MenuButton>
     <MenuItems as="div" class="z-10 absolute left-0 mt-2 w-56
       rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">

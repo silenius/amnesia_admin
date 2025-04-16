@@ -10,7 +10,6 @@ import {
 
 import { 
   actions as default_actions,
-  selectActions as select_actions
 } from '../folder/FolderBrowserActions.js'
 
 const props = defineProps({
@@ -33,11 +32,53 @@ const props = defineProps({
   },
   actions: {
     type: Array,
-    default: default_actions.slice()
+    default: [
+      {
+        label: 'Publish',
+        event: 'publish-content',
+        icon: 'fa-solid fa-paper-plane',
+        class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+        enabled: (...args) => {
+          const content = args[0]
+          return content.state.name.toLowerCase() !== 'published'
+        }
+      },
+      {
+        label: 'Unpublish',
+        event: 'unpublish-content',
+        icon: 'fa-solid fa-paper-plane fa-flip-horizontal',
+        class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+        enabled: (...args) => {
+          const content = args[0]
+          return content.state.name.toLowerCase() !== 'draft'
+        }
+      },
+      {
+        label: 'Edit',
+        event: 'edit-content',
+        icon: 'fa-solid fa-pen-to-square',
+        class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+        enabled: (...args) => true
+      },
+      {
+        label: 'Move',
+        event: 'move-content',
+        icon: 'fa-solid fa-arrow-up-right-from-square',
+        class: (active) => active ? 'bg-violet-500 text-white' : 'text-gray-900',
+        enabled: (...args) => true
+      }, 
+      {
+        label: 'Delete',
+        event: 'delete-content',
+        icon: 'fa-solid fa-trash-can',
+        class: (active) => active ? 'bg-red-700 text-white' : 'text-red-700',
+        enabled: (...args) => true
+      },
+    ]
   },
-  selectActions: {
-    type: Array,
-    default: select_actions.slice()
+  canSelect: {
+    type: Boolean,
+    default: true
   },
   canChangeWeight: {
     type: Boolean,
@@ -46,14 +87,6 @@ const props = defineProps({
   addTypes: {
     type: Array,
     default: null
-  },
-  editButton: {
-    type: Boolean,
-    default: false
-  },
-  sortFolderFirst: {
-    type: Boolean,
-    default: true
   },
   forceClick: {
     type: Boolean,
@@ -65,16 +98,12 @@ const emit = defineEmits([
   'browse', 'delete-content', 'select-content', 'move-content', 
   'edit-content', 'add-content', 'change-weight-content',
   'publish-content', 'unpublish-content',
-  'delete-selection', 'move-selection',
+  'move-selection',
 
 ])
 
 const base = import.meta.env.VITE_BASE_BACKEND
 const image_url = (id) => new URL(`${id}`, base)
-
-const canEdit = computed(() => {
-  return props.editButton === true
-})
 
 const get_container = (node) => {
   let target = node
@@ -179,66 +208,17 @@ const formatDate = (d) => {
 <template>
   <div>
     <div class="flex flex-col" v-if="contents">
-      <div class="justify-self-end">
-        <div class="hidden md:flex items-center">
-
-          <!-- ADD CONTENT TO FOLDER -->
-
-          <!-- SETTINGS -->
-
-        </div>
-      </div>
-
-      <!-- SELECTED ITEMS -->
-
-      <div v-if="selectActions && selection.size > 0">
-
-        <Menu as="div" class="relative inline-block text-left">
-          <div>
-            <MenuButton v-slot="{ open }" class="hover:bg-slate-300 bg-slate-200 px-4 py-1 font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-              {{ selection.size }} items selection
-              <font-awesome-icon class="h-4 w-4 align-middle text-gray-600 inline" :icon="open ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right'" />
-            </MenuButton>
-
-          </div>
-
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden"
-            >
-              <div class="px-1 py-1">
-
-                <template v-for="action in selectActions">
-                  <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
-                  <button @click="$emit(action.event, content)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
-                    <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
-                  </button>
-                  </MenuItem>
-                </template>
-
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
 
       <!--
-        ################
-        # TABULAR VIEW #
-        ################
-      -->
+################
+# TABULAR VIEW #
+################
+-->
 
       <table class="table-auto w-full box-border border" v-if="view == 'tabular'">
         <thead>
           <tr class="text-left text-white bg-slate-500">
-            <th class="p-2" v-if="selectActions"><input disabled type="checkbox" /></th>
+            <th class="p-2" v-if="canSelect"><input disabled type="checkbox" /></th>
             <th class="p-2">Title</th>
             <th class="p-2">Owner</th>
             <th class="p-2 text-center">State</th>
@@ -268,7 +248,7 @@ const formatDate = (d) => {
 
             <!-- SELECT CHECKBOX -->
 
-            <td class="pl-2 w-0" v-if="selectActions"><input
+            <td class="pl-2 w-0" v-if="canSelect"><input
               :checked="selection.has(content.id)"
               @click="$emit('select-content', content, $event.target.checked)" type="checkbox" /></td>
 
@@ -314,36 +294,34 @@ const formatDate = (d) => {
             <!-- ACTIONS -->
 
             <td class="p-2 w-0" v-if="actions">
-              <div class="text-right">
-                <Menu as="div" class="text-left">
-                  <div>
-                    <MenuButton class="rounded-sm inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                      actions
-                    </MenuButton>
-                  </div>
+              <Menu as="div" class="text-left">
+                <div>
+                  <MenuButton class="rounded-sm inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    actions
+                  </MenuButton>
+                </div>
 
-                  <transition
-                    enter-active-class="transition duration-100 ease-out"
-                    enter-from-class="transform scale-95 opacity-0"
-                    enter-to-class="transform scale-100 opacity-100"
-                    leave-active-class="transition duration-75 ease-out"
-                    leave-from-class="transform scale-100 opacity-100"
-                    leave-to-class="transform scale-95 opacity-0"
-                  >
-                    <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
-                      <div>
-                        <template v-for="action in actions">
-                          <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
-                          <button @click="$emit(action.event, content)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
-                            <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
-                          </button>
-                          </MenuItem>
-                        </template>
-                      </div>
-                    </MenuItems>
-                  </transition>
-                </Menu>
-              </div>
+                <transition
+                  enter-active-class="transition duration-100 ease-out"
+                  enter-from-class="transform scale-95 opacity-0"
+                  enter-to-class="transform scale-100 opacity-100"
+                  leave-active-class="transition duration-75 ease-out"
+                  leave-from-class="transform scale-100 opacity-100"
+                  leave-to-class="transform scale-95 opacity-0"
+                >
+                  <MenuItems class="z-10 w-max absolute right-5 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
+                    <div>
+                      <template v-for="action in actions">
+                        <MenuItem v-if="action.enabled(content)" v-slot="{ active }">
+                        <button @click="$emit(action.event, content)" :class="action.class(active)" class="group flex w-full items-center rounded-md px-2 py-2 text-xs">
+                          <font-awesome-icon class="h-4 w-4" :icon="action.icon"  /> {{ action.label }}
+                        </button>
+                        </MenuItem>
+                      </template>
+                    </div>
+                  </MenuItems>
+                </transition>
+              </Menu>
             </td>
 
             <slot name="tabular-td" :content="content" :emit="$emit" />
@@ -352,10 +330,10 @@ const formatDate = (d) => {
       </table>
 
       <!--
-        ################
-        # GALLERY VIEW #
-        ################
-      -->
+################
+# GALLERY VIEW #
+################
+-->
 
       <div v-if="view == 'gallery'" class="w-fit">
 
@@ -378,7 +356,7 @@ const formatDate = (d) => {
             class="relative"
           >
 
-            <input v-if="selectActions" :checked="selection.has(content.id)"
+            <input v-if="canSelect" :checked="selection.has(content.id)"
               @click="$emit('select-content', content, $event.target.checked)" type="checkbox" class="absolute border-slate-300 top-1 left-1" />
 
             <font-awesome-icon :class="stateClass(content.state)"

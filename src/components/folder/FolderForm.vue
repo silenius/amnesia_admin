@@ -63,11 +63,12 @@ provide('editable', computed(() => props.folder))
           <FolderDefaultLimit class="border-b pb-4" v-model:default_limit="folder.default_limit" />
           <FolderDefaultPage class="border-b pb-4" v-model:index_content_id="folder.index_content_id" />
           <FolderPolymorphicLoading v-model:polymorphic_loading="folder.polymorphic_loading" />
-          <ContentTypes  class="border-b pb-4"
+          <Suspense>
+          <ContentTypes class="border-b pb-4"
             v-model:polymorphic_children="folder.polymorphic_children" 
             :polymorphic_loading="folder.polymorphic_loading"
           />
-
+          </Suspense>
           <FolderOrdering 
             v-model:default_order="folder.default_order"
             :polymorphic_children="folder.polymorphic_children" 

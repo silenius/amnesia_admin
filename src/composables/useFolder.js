@@ -33,3 +33,20 @@ export async function useMediaFolder() {
         media_folder: formatted_data    
     }
 }
+
+export async function get_orders (pl=false, pc=null) {
+    const opts = new URLSearchParams()
+    const { data, error, fetchData } = useFetchBackend()
+
+    opts.append('pl', pl)
+
+    if (Array.isArray(pc)) {
+        pc.forEach((i) => opts.append('pc', i))
+    }
+
+    await fetchData(`folder/polymorphic_orders?${opts}`)
+
+    if (!toValue(error)) {
+        return toValue(data)
+    }
+}
