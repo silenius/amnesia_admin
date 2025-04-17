@@ -1,16 +1,16 @@
 <script setup>
 import { ref, computed, provide, inject, watch } from 'vue'
 
-import ContentTitle from '@/components/content/fields/ContentTitle.vue'
-import ContentDescription from '@/components/content/fields/ContentDescription.vue'
-import ContentIndexed from '@/components/content/fields/ContentIndexed.vue'
-import ContentPublishingDate from '@/components/content/fields/ContentPublishingDate.vue'
-import ContentExpirationDate from '@/components/content/fields/ContentExpirationDate.vue'
-import ContentSecurity from '@/components/content/fields/ContentSecurity.vue'
-import ContentBreadcrumb from '@/components/content/fields/ContentBreadcrumb.vue'
-import ContentBannerImage from '@/components/content/fields/ContentBannerImage.vue'
-import DocumentBody from '@/components/document/fields/DocumentBody.vue'
-import FormTabGroup from '@/components/form/FormTabGroup.vue'
+import ContentTitle from '../content/fields/ContentTitle.vue'
+import ContentDescription from '../content/fields/ContentDescription.vue'
+import ContentIndexed from '../content/fields/ContentIndexed.vue'
+import ContentPublishingDate from '../content/fields/ContentPublishingDate.vue'
+import ContentExpirationDate from '../content/fields/ContentExpirationDate.vue'
+import ContentSecurity from '../content/fields/ContentSecurity.vue'
+import ContentBreadcrumb from '../content/fields/ContentBreadcrumb.vue'
+import ContentBannerImage from '../content/fields/ContentBannerImage.vue'
+import DocumentBody from './fields/DocumentBody.vue'
+import FormTabGroup from '../form/FormTabGroup.vue'
 
 const props = defineProps({
   doc: {

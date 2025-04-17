@@ -26,8 +26,17 @@ export async function useFolderBrowser(folder, opts={}) {
             }
         }
 
-        const options = new URLSearchParams(toValue(query))
-        await fetchData(`${toValue(folder).id}/browse?${options}`)
+        const qs = new URLSearchParams()
+
+        Object.entries(query.value).forEach(
+            ([key, value]) => Array.isArray(value) 
+                // p: ['foo', 'bar'] => p=foo&p=bar
+                ? value.forEach(v => qs.append(key, v)) 
+                // p: somevalue => p=somevalue
+                : qs.append(key, value)
+        )
+
+        await fetchData(`${toValue(folder).id}/browse?${qs}`)
 
         if (!toValue(error)) {
             result.value = toValue(data).data

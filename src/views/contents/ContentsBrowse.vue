@@ -247,6 +247,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       />
 
       <EditContentButton @edit-content="() => router.push({name: 'edit-content', params: {id: folder.id}})" class="w-12 h-12" />
+
       <DropDownSelection 
         @clear-selection="clear()"
         @delete-selection="() => console.log(selection)" :selection="selection" class="w-12 h-12" />

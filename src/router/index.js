@@ -50,6 +50,7 @@ const routes = [
                 path: 'add',
                 components: {
                     default: () => import('../views/contents/ContentAdd.vue'),
+                    RightSideBar: () => import('../components/sidebars/ContentSidebar.vue'),
                 },
                 props: {
                     default: (route) => ({

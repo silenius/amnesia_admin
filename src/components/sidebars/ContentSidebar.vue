@@ -1,3 +1,152 @@
+<script setup>
+
+import { ref, computed, watch } from 'vue'
+import { useEditorStore, useEditorEventStore } from '@/stores/editor'
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/vue'
+
+import { storeToRefs } from 'pinia'
+
+import SelectBreakpoint from '@/components/editor/tiptap/breakpoint/SelectBreakpoint.vue'
+import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
+import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
+import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
+import SelectClear from '@/components/editor/tiptap/clear-extension/SelectClear.vue'
+import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.vue'
+import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextColor.vue'
+import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
+import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
+import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
+import SelectFontFamily from '@/components/editor/tiptap/font-family-extension/SelectFontFamily.vue'
+import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
+import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
+import SelectWidth from '@/components/editor/tiptap/width-extension/SelectWidth.vue'
+import SelectMinWidth from '@/components/editor/tiptap/min-width-extension/SelectMinWidth.vue'
+import SelectMaxWidth from '@/components/editor/tiptap/max-width-extension/SelectMaxWidth.vue'
+import SelectHeight from '@/components/editor/tiptap/height-extension/SelectHeight.vue'
+import SelectMinHeight from '@/components/editor/tiptap/min-height-extension/SelectMinHeight.vue'
+import SelectMaxHeight from '@/components/editor/tiptap/max-height-extension/SelectMaxHeight.vue'
+import SelectContainer from '@/components/editor/tiptap/container-extension/SelectContainer.vue'
+import SelectDirection from '@/components/editor/tiptap/flex-container-extension/SelectDirection.vue'
+import SelectWrap from '@/components/editor/tiptap/flex-container-extension/SelectWrap.vue'
+import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
+import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
+import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
+import SelectBasis from '@/components/editor/tiptap/flex-item-extension/SelectBasis.vue'
+import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension/SelectFlexGrowShrink.vue'
+import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGrow.vue'
+import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
+import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
+import SelectBorderWidth from '@/components/editor/tiptap/border-width-extension/SelectBorderWidth.vue'
+import SelectBorderColor from '@/components/editor/tiptap/border-color-extension/SelectBorderColor.vue'
+import SelectBorderRadius from '@/components/editor/tiptap/border-radius-extension/SelectBorderRadius.vue'
+
+const { editor } = storeToRefs(useEditorStore())
+
+const storeEditorEvent = useEditorEventStore()
+const { 
+  nodeSelected, 
+  nodeHover, 
+  lineage
+} = storeToRefs(storeEditorEvent)
+
+watch(nodeSelected, () => {
+  decorate('selectNode', nodeSelected.value)
+})
+
+watch(nodeHover, () => {
+  decorate('highlightNode', nodeHover.value)
+})
+
+watch(lineage, () => {
+  if (!lineage.value?.has(nodeSelected.value?.pos)) {
+    nodeSelected.value = [...lineage.value.values()].at(-1)
+  } else {
+    decorate('selectNode', nodeSelected.value)
+  }
+})
+
+const selected = nodeSelected
+
+const breakpoint = ref(null)
+const change_breakpoint = (value) => breakpoint.value = value
+
+const exts = computed(() => {
+  const obj = {}
+
+  editor.value.extensionManager.extensions.reduce(
+    (accumulator, currentValue) => {
+      let match = false
+
+      switch (currentValue.type) {
+        case 'node':
+          match = nodeSelected?.value?.node?.type.name === currentValue.name
+          break
+        case 'extension':
+          match = currentValue?.options?.types?.indexOf(nodeSelected?.value?.node?.type.name) 
+          match = match !== -1 && match !== undefined
+          break
+        case 'mark':
+          match = true
+          break
+        default:
+          console.debug('===>>> [COMPUTED] extension excluded: ', currentValue)
+          break
+      }
+
+      if (match) {
+        obj[currentValue.name] = { ...currentValue }
+      }
+    }, obj
+  ) // reduce
+
+  return obj
+})
+
+const cls_disclosure_button = [
+  'flex', 'w-full', '', 'items-center', 'justify-between', 
+  'text-left', 'text-sm', 'font-medium', 'text-slate-100', 'pr-1'
+]
+
+const cls_section = []
+const cls_panel = ['text-sm', 'mb-4', 'p-2']
+
+const decorate = (key, p) => {
+  if (!p) {
+    p = {node: null, pos: null}
+  } 
+
+  editor.value.chain().focus().setMeta(key, p).run()
+}
+
+watch(editor, () => {
+  if (!editor.value) {
+    return false
+  }
+
+  /*
+  editor.value.on('transaction', ({ editor, transaction }) => {
+    console.debug('===> [EVENT] TRANSACTION')
+  })
+  */
+
+  editor.value.on('update', ({ transaction }) => {
+    /*  
+      Nodes are immutable so we need to update the reference otherwise
+      we're keeping a reference to an object that is not being mutated
+    */
+
+    nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
+    decorate('selectNode', nodeSelected.value)
+  })
+
+})
+
+</script>
+
 <template>
   <div v-if="editor" class="px-2 bg-gray-700 max-w-64 min-h-screen text-gray-200 flex flex-col">
 
@@ -576,151 +725,4 @@ Fix width to the current breakpoint.
   </div>
 </template>
 
-<script setup>
 
-import { ref, computed, watch } from 'vue'
-import { useEditorStore, useEditorEventStore } from '@/stores/editor'
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from '@headlessui/vue'
-
-import { storeToRefs } from 'pinia'
-
-import SelectBreakpoint from '@/components/editor/tiptap/breakpoint/SelectBreakpoint.vue'
-import SelectPadding from '@/components/editor/tiptap/padding/SelectPadding.vue'
-import SelectMargin from '@/components/editor/tiptap/margin/SelectMargin.vue'
-import SelectFloat from '@/components/editor/tiptap/float-extension/SelectFloat.vue'
-import SelectClear from '@/components/editor/tiptap/clear-extension/SelectClear.vue'
-import SelectAlign from '@/components/editor/tiptap/align-extension/SelectAlign.vue'
-import SelectTextColor from '@/components/editor/tiptap/text-color/SelectTextColor.vue'
-import SelectBackgroundColor from '@/components/editor/tiptap/background-color/SelectBackgroundColor.vue'
-import SelectFontWeight from '@/components/editor/tiptap/font-weight-extension/SelectFontWeight.vue'
-import SelectFontSize from '@/components/editor/tiptap/fontsize/SelectFontSize.vue'
-import SelectFontFamily from '@/components/editor/tiptap/font-family-extension/SelectFontFamily.vue'
-import SelectFontItalic from '@/components/editor/tiptap/font-italic-extension/SelectFontItalic.vue'
-import SelectTextDecoration from '@/components/editor/tiptap/text-decoration-extension/SelectTextDecoration.vue'
-import SelectWidth from '@/components/editor/tiptap/width-extension/SelectWidth.vue'
-import SelectMinWidth from '@/components/editor/tiptap/min-width-extension/SelectMinWidth.vue'
-import SelectMaxWidth from '@/components/editor/tiptap/max-width-extension/SelectMaxWidth.vue'
-import SelectHeight from '@/components/editor/tiptap/height-extension/SelectHeight.vue'
-import SelectMinHeight from '@/components/editor/tiptap/min-height-extension/SelectMinHeight.vue'
-import SelectMaxHeight from '@/components/editor/tiptap/max-height-extension/SelectMaxHeight.vue'
-import SelectContainer from '@/components/editor/tiptap/container-extension/SelectContainer.vue'
-import SelectDirection from '@/components/editor/tiptap/flex-container-extension/SelectDirection.vue'
-import SelectWrap from '@/components/editor/tiptap/flex-container-extension/SelectWrap.vue'
-import SelectJustifyContent from '@/components/editor/tiptap/flex-container-extension/SelectJustifyContent.vue'
-import SelectAlignItems from '@/components/editor/tiptap/flex-container-extension/SelectAlignItems.vue'
-import SelectAlignContent from '@/components/editor/tiptap/flex-container-extension/SelectAlignContent.vue'
-import SelectBasis from '@/components/editor/tiptap/flex-item-extension/SelectBasis.vue'
-import SelectFlexGrowShrink from '@/components/editor/tiptap/flex-item-extension/SelectFlexGrowShrink.vue'
-import SelectGrow from '@/components/editor/tiptap/flex-item-extension/SelectGrow.vue'
-import SelectShrink from '@/components/editor/tiptap/flex-item-extension/SelectShrink.vue'
-import SelectGap from '@/components/editor/tiptap/gap-extension/SelectGap.vue'
-import SelectBorderWidth from '@/components/editor/tiptap/border-width-extension/SelectBorderWidth.vue'
-import SelectBorderColor from '@/components/editor/tiptap/border-color-extension/SelectBorderColor.vue'
-import SelectBorderRadius from '@/components/editor/tiptap/border-radius-extension/SelectBorderRadius.vue'
-
-const { editor } = storeToRefs(useEditorStore())
-
-const storeEditorEvent = useEditorEventStore()
-const { 
-  nodeSelected, 
-  nodeHover, 
-  lineage
-} = storeToRefs(storeEditorEvent)
-
-watch(nodeSelected, () => {
-  decorate('selectNode', nodeSelected.value)
-})
-
-watch(nodeHover, () => {
-  decorate('highlightNode', nodeHover.value)
-})
-
-watch(lineage, () => {
-  if (!lineage.value?.has(nodeSelected.value?.pos)) {
-    nodeSelected.value = [...lineage.value.values()].at(-1)
-  } else {
-    decorate('selectNode', nodeSelected.value)
-  }
-})
-
-const selected = nodeSelected
-
-const breakpoint = ref(null)
-const change_breakpoint = (value) => breakpoint.value = value
-
-const exts = computed(() => {
-  const obj = {}
-
-  editor.value.extensionManager.extensions.reduce(
-    (accumulator, currentValue) => {
-      let match = false
-
-      switch (currentValue.type) {
-        case 'node':
-          match = nodeSelected?.value?.node?.type.name === currentValue.name
-          break
-        case 'extension':
-          match = currentValue?.options?.types?.indexOf(nodeSelected?.value?.node?.type.name) 
-          match = match !== -1 && match !== undefined
-          break
-        case 'mark':
-          match = true
-          break
-        default:
-          console.debug('===>>> [COMPUTED] extension excluded: ', currentValue)
-          break
-      }
-
-      if (match) {
-        obj[currentValue.name] = { ...currentValue }
-      }
-    }, obj
-  ) // reduce
-
-  return obj
-})
-
-const cls_disclosure_button = [
-  'flex', 'w-full', '', 'items-center', 'justify-between', 
-  'text-left', 'text-sm', 'font-medium', 'text-slate-100', 'pr-1'
-]
-
-const cls_section = []
-const cls_panel = ['text-sm', 'mb-4', 'p-2']
-
-const decorate = (key, p) => {
-  if (!p) {
-    p = {node: null, pos: null}
-  } 
-
-  editor.value.chain().focus().setMeta(key, p).run()
-}
-
-watch(editor, () => {
-  if (!editor.value) {
-    return false
-  }
-
-  /*
-  editor.value.on('transaction', ({ editor, transaction }) => {
-    console.debug('===> [EVENT] TRANSACTION')
-  })
-  */
-
-  editor.value.on('update', ({ transaction }) => {
-    /*  
-      Nodes are immutable so we need to update the reference otherwise
-      we're keeping a reference to an object that is not being mutated
-    */
-
-    nodeSelected.value.node = transaction.doc.nodeAt(nodeSelected.value.pos)
-    decorate('selectNode', nodeSelected.value)
-  })
-
-})
-
-</script>

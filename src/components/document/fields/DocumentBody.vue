@@ -1,19 +1,6 @@
-<template>
-  <div class="mb-4">
-    <label>
-      <p class="font-bold">Body</p>
-      <p class="text-xs">The content of the document</p>
-      <span class="text-red-500" v-if="errors.body">
-        {{ errors.body }}
-      </span>
-    </label>
-    <EditorTipTap v-model:content="value" />
-  </div>
-</template>
-
 <script setup>
 import { inject, computed } from 'vue'
-import EditorTipTap from '@/components/content/fields/EditorTipTap.vue'
+import EditorTipTap from '../../content/fields/EditorTipTap.vue'
 import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({
@@ -25,7 +12,6 @@ const emit = defineEmits([
 ])
 
 const { errors, setError } = inject('errors')
-
 
 const { validateTitle } = useContent()
 
@@ -43,3 +29,17 @@ const value = computed({
 })
 
 </script>
+<template>
+  <div class="mb-4">
+    <label>
+      <p class="font-bold">Body</p>
+      <p class="text-xs">The content of the document</p>
+      <span class="text-red-500" v-if="errors.body">
+        {{ errors.body }}
+      </span>
+    </label>
+    <EditorTipTap v-model:content="value" />
+  </div>
+</template>
+
+
