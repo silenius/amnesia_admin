@@ -1,61 +1,6 @@
 import { unref } from 'vue'
 import { useFetchBackend } from './fetch.js'
 
-const folder_to_formdata = (folder_data) => {
-
-    const folder = unref(folder_data)
-    const data = new FormData()
-
-    const fields = [
-        'title',
-        'description',
-        'exclude_nav',
-        'is_fts',
-        'effective',
-        'expiration',
-        'index_content_id',
-        'polymorphic_loading',
-        'default_limit',
-    ]
-
-    for (let key of fields) {
-        const value = folder[key]
-
-        if (value !== undefined) {
-            data.append(key, value === null ? '' : value)
-        } else {
-            console.log('===> Skipping ', key)
-        }
-    }
-
-    if (folder.polymorphic_loading 
-        && folder.polymorphic_children) {
-        folder.polymorphic_children.forEach(
-            c => data.append('polymorphic_children_ids', c.id)
-        )
-    }
-
-    if (folder.default_order) {
-        data.append('default_order', JSON.stringify(folder.default_order))
-    }
-
-    if (folder.props) {
-        data.append('props', JSON.stringify(folder.props))
-    }
-
-    if (folder.acls) {
-        data.append('acls', JSON.stringify(folder.acls.map(x => {
-            return {
-                allow: x.allow,
-                role_id: x.role.id,
-                permission_id: x.permission.id
-            }
-        })))
-    }
-
-    return data
-}
-
 const browse = async (id, opts = {}) => {
     const options = new URLSearchParams(opts)
     const { fetchData } = useFetchBackend()

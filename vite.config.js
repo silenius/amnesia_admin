@@ -24,8 +24,9 @@ export default defineConfig(({ command, mode }) => {
               binaryInterval: 3000
           },
           hmr: {
-                host: "home.lan",
-                protocol: "ws"
+		overlay: false,
+                //host: "home.lan",
+                //protocol: "ws"
           }
       },
     plugins: [

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, provide, inject, watch } from 'vue'
 
-
 import ContentTitle from '../content/fields/ContentTitle.vue'
 import ContentDescription from '../content/fields/ContentDescription.vue'
 import ContentIndexed from '../content/fields/ContentIndexed.vue'

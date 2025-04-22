@@ -13,8 +13,6 @@ const props = defineProps({
 const { content_id } = toRefs(props)
 const { content } = await useContent(content_id)
 
-const router = useRouter()
-
 /*
 watchEffect(async () => {
   const { data } = await getContent(props.content_id)
@@ -24,20 +22,13 @@ watchEffect(async () => {
 })
 */
 
-const doEdit = async (content_id) => { 
-  await router.push({
-    name: 'edit-content', 
-    params: { id: content_id }
-  })
-}
-
 </script>
 
 <template>
   <div class="flex flex-row">
     <Suspense>
       <RouterView 
-        @edit-content="(n) => doEdit(n)" 
+        @edit-content="(id) => $router.push({name: 'edit-content', params: { id: id }})" 
         class="m-4 grow" 
         :content="content" 
       />

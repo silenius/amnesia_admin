@@ -246,7 +246,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
         @add-content="(folder, type) => doAdd(folder, type)"
       />
 
-      <EditContentButton @edit-content="() => router.push({name: 'edit-content', params: {id: folder.id}})" class="w-12 h-12" />
+      <EditContentButton @edit="() => $router.push(`/${folder.id}/edit`)" class="w-12 h-12" />
 
       <DropDownSelection 
         @clear-selection="clear()"

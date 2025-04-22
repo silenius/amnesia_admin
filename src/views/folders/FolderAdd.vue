@@ -1,25 +1,27 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, toValue } from 'vue'
+import { useRouter } from 'vue-router'
 
-import FolderForm from '@/components/folder/FolderForm.vue'
-import { useFolder } from '@/composables/folders.js'
+import FolderForm from '../../components/folder/FolderForm.vue'
+import { useCreateFolder } from '../../composables/useCreateFolder.js'
 
 const props = defineProps({
     container: Object
 })
 
-const emit = defineEmits(['create'])
+const router = useRouter()
 
-const { createFolder } = useFolder()
+const { create_folder, data, folder, error } = useCreateFolder()
 
-const folder = ref({
-  is_fts: true,
-  polymorphic_loading: false,
-  container_id: props.container.id,
-  exclude_nav: false,
-  props: {}
-})
+const create = async () => {
+  await create_folder(props.container)
+  
+  if (!toValue(error)) {
+    router.push(`/${data.value.id}/browse`)
+  }
+
+}
 
 </script>
 
@@ -28,6 +30,6 @@ const folder = ref({
       :folder="folder" 
       :container="container"
       :action="'Add folder'"
-      @submit-folder="$emit('create', createFolder, folder)" 
+      @submit-folder="create" 
     />
 </template>
