@@ -10,6 +10,7 @@ import {
 
 import { useFolder } from '../../composables/useFolder.js'
 import { useFolderBrowser } from '../../composables/useFolderBrowser.js'
+import { useFolderMove } from '../../composables/useFolderMove.js'
 import { useContentType } from '../../composables/useContentType.js'
 import { useContentWeight } from '../../composables/useContentWeight.js'
 import { useContentSelection } from '../../composables/useContentSelection.js'
@@ -51,6 +52,24 @@ const {
 
 const router = useRouter()
 
+// Move folder
+
+const { 
+  folder: move_folder,
+  load: load_move_folder
+} = await useFolder(ref(1))
+
+const {
+  paste 
+} = useFolderMove(move_folder)
+
+const { 
+  browse: browse_move_folder, 
+  result: move_result, 
+  meta: move_meta,
+  goto_page: move_goto_page
+} = await useFolderBrowser(move_folder, {filter_types:['folder']})
+
 // Main browser
 
 const {
@@ -69,50 +88,7 @@ const delete_content = async (content) => {
   }
 }
 
-/*
-const { 
-  reload, meta, data, limit, offset, sort_folder_first,
-} = createBrowser(content_id, browse)
-*/
-
-
-// Move browser
-/*
-const { 
-  reload: move_reload, 
-  meta: move_meta, 
-  data: move_data, 
-  limit: move_limit, 
-  offset: move_offset,
-  sort_folder_first: move_sort_folder_first,
-} = createBrowser(move_folder_id, browse)
-*/
-
-/*
-const { 
-  setWeight, 
-  destroyContent, 
-  getContent,
-  publishContent,
-  unpublishContent
-} = useContent()
-*/
-
-//const { getContentTypes } = useContentTypes()
-
-//const types = ref([])
-
 const move_modal_open = ref(false)
-
-const doMoveBrowse = async (id) => {
-  const { data } = await getContent(id)
-  move_folder.value = data
-
-  move_reload({
-    offset: 0,
-    filter_types: ['folder'],
-  })
-}
 
 const doBrowse = async (id) => await router.push({
   name: 'browse-content', 
@@ -163,15 +139,14 @@ const doDeleteSelection = async () => {
 }
 
 const doMoveSelection = async () => {
-  await doMoveBrowse(1)
+  await browse_move_folder({offset: 0})
   move_modal_open.value = true
 }
 
 const doMove = async () => {
-  await paste(move_folder.value, selected_ids)
-  reload()
-  selected.value.clear()
+  await paste(selection_ids)
   move_modal_open.value = false
+  await router.push(`${move_folder.id}/browse`)
 }
 
 const doAdd = async (folder, t) => {
@@ -199,45 +174,55 @@ onMounted(async () => {
 
 <template>
   <div>
-    <!--
-<Dialog as="div" :open="move_modal_open" class="relative z-10">
-<div class="fixed inset-0 bg-black bg-opacity-25" />
+    <Dialog as="div" :open="move_modal_open" class="relative z-10">
+      <div class="fixed inset-0 bg-black bg-opacity-25" />
 
-<div class="fixed inset-0 overflow-y-auto">
-<div class="flex min-h-full items-center justify-center p-4 text-center">
-<DialogPanel
-class="w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-<DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
-Move selection
-</DialogTitle>
-<div class="mt-2">
-<p class="text-sm text-gray-500">
-<FolderBrowser
-@browse="doMoveBrowse"
-@breadcrumb-select="(content) => doMoveBrowse(content_id)"
-@change-limit="async (n) => await move_reload({offset: 0, limit: n})"
-@change-pagination="async (n) => await move_reload(n)"
-:actions="null"
-:selectActions="null"
-:folder="move_folder"
-:contents="move_data" 
-:sortFolderFirst="move_sort_folder_first"
-/>
-</p>
-</div>
-<div class="mt-4">
-<button type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="doMove"> Move here </button>
-<button type="button" class="inline-flex justify-center rounded-md
-border border-transparent bg-slate-100 px-4 py-2 text-sm
-font-medium text-slate-900 hover:bg-slate-200 focus:outline-hidden
-focus-visible:ring-2 focus-visible:ring-slate-500
-focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button>
-</div>
-</DialogPanel>
-</div>
-</div>
-</Dialog>
--->
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <DialogPanel
+            class="w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+              Move selection
+            </DialogTitle>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <Breadcrumb 
+                  :content="move_folder" 
+                  @navigate="(content) => load_move_folder(content.id)" 
+                  class="p-2 shadow-md"
+                /> 
+
+                <FolderBrowser
+                  class="mt-4"
+                  @browse="load_move_folder"
+                  :view="'gallery'"
+                  :folder="move_folder"
+                  :contents="move_result" 
+                  :canChangeWeight="false"
+                />
+
+                <Pagination
+                  v-if="move_meta.count > move_meta.limit"
+                  :limit="move_meta.limit"
+                  :offset="move_meta.offset"
+                  :total="move_meta.count"
+                  @goto-page="(page) => move_goto_page(page)"
+                  class="flex justify-center my-4 gap-x-2"
+                />
+              </p>
+            </div>
+            <div class="mt-4">
+              <button type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="doMove"> Move here </button>
+              <button type="button" class="inline-flex justify-center rounded-md
+                border border-transparent bg-slate-100 px-4 py-2 text-sm
+                font-medium text-slate-900 hover:bg-slate-200 focus:outline-hidden
+                focus-visible:ring-2 focus-visible:ring-slate-500
+                focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </div>
+    </Dialog>
     <div class="flex gap-x-1">
 
       <DropDownAddToFolder 
@@ -250,6 +235,7 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
 
       <DropDownSelection 
         @clear-selection="clear()"
+        @move-selection="doMoveSelection"
         @delete-selection="() => console.log(selection)" :selection="selection" class="w-12 h-12" />
 
       <Breadcrumb 
@@ -275,7 +261,6 @@ focus-visible:ring-offset-2 ml-2" @click="move_modal_open=false"> Close </button
       @publish-content="doPublish"
       @unpublish-content="doUnpublish"
       @change-weight-content="doChangeWeight"
-      @move-selection="doMoveSelection"
       :view="view"
       :folder="folder"
       :contents="result" 

@@ -229,6 +229,13 @@ const formatDate = (d) => {
           </tr>
         </thead>
         <tbody>
+          <tr v-if="folder.parent">
+            <td colspan="12" class="py-2 tracking-widest">
+              <font-awesome-icon class="fa-flip-horizontal drop-shadow-lg inline-block mr-2 h-6 w-6" icon="fa-solid fa-arrow-turn-up" />
+              <button @click="$emit('browse', folder.parent.id)"
+                class="underline cursor-pointer px-2 decoration-slate-400 decoration-dotted underline-offset-4">...</button>
+            </td>
+          </tr>
           <tr 
             v-for="content in contents" 
             :key="content.id" 
@@ -256,12 +263,9 @@ const formatDate = (d) => {
 
             <td class="p-2 whitespace-nowrap truncate max-w-md">
               <font-awesome-icon class="drop-shadow-lg inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
-              <button @click="$emit('browse', content.id)"
-                v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
-              <template v-else>
-                <RouterLink :to="{name: 'show-content', params: {id:
-                  content.id}}">{{ content.title }}</RouterLink>
-              </template>
+              <button @click="$emit('browse', content.id)" v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
+              <RouterLink v-else :to="{name: 'show-content', params: {id:
+                content.id}}">{{ content.title }}</RouterLink>
             </td>
 
             <!-- OWNER -->

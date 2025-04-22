@@ -23,6 +23,7 @@ import {
     faFileLines,
     faArrowUpFromBracket,
     faArrowRight,
+    faArrowTurnUp,
     faTrashCan,
     faPenToSquare,
     faPencil,
@@ -82,6 +83,7 @@ import {
     faPhone,
     faEnvelope,
     faGlobe,
+    faChevronUp,
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -99,6 +101,7 @@ import {
 library.add(faSquareCheck)
 library.add(faSquareXmark)
 library.add(faSquare)
+library.add(faChevronUp)
 library.add(faSquareVirus)
 library.add(faUpDownLeftRight)
 library.add(faUserAstronaut)
@@ -115,6 +118,7 @@ library.add(faFolder)
 library.add(faFileLines)
 library.add(faArrowRight)
 library.add(faArrowUpFromBracket)
+library.add(faArrowTurnUp)
 library.add(faTrashCan)
 library.add(faPenToSquare)
 library.add(faPencil)
