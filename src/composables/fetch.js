@@ -44,7 +44,7 @@ export function useFetchBackend() {
             }
         }
         catch (e) {
-            error.value = true
+            error.value = e
         } finally {
             loading.value = false
         }

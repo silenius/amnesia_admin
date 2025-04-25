@@ -37,7 +37,7 @@ const emit = defineEmits([
   'submit-folder'
 ])
 
-const errors = inject('errors')
+const { errors } = inject('errors')
 
 // note provide result is _not_ reactive by default
 provide('editable', computed(() => props.folder))

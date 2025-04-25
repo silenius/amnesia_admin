@@ -13,26 +13,18 @@ const props = defineProps({
 const { content_id } = toRefs(props)
 const { content } = await useContent(content_id)
 
-/*
-watchEffect(async () => {
-  const { data } = await getContent(props.content_id)
-  const { data: acls } = await getContentParentACLS(props.content_id)
-  content.value = data
-  content.value['__acls'] = acls
-})
-*/
-
 </script>
 
 <template>
   <div class="flex flex-row">
-    <Suspense>
-      <RouterView 
-        @edit-content="(id) => $router.push({name: 'edit-content', params: { id: id }})" 
-        class="m-4 grow" 
-        :content="content" 
-      />
-    </Suspense>
+    <RouterView v-slot="{ Component }">
+      <Suspense>
+        <component class="m-4 grow" :content="content" :is="Component" />
+        <template #fallback>
+          Loading ...
+        </template>
+      </Suspense>
+    </RouterView>
 
     <aside class="basis-0 backdrop-blur-xs shadow-gray-900 shadow-md bg-gray-700">
       <RouterView 

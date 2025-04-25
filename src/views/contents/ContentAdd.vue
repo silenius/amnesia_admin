@@ -1,7 +1,6 @@
 <script setup>
 
 import { provide, ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 import FolderAdd from '../folders/FolderAdd.vue'
 import DocumentAdd from '../documents/DocumentAdd.vue'
@@ -16,12 +15,14 @@ const props = defineProps({
   type: String
 })
 
-const router = useRouter()
-
 const errors = ref({})
 
 const setError = (key, value) => {
-  errors.value[key] = value
+  if (value === false) {
+    delete errors.value[key]
+  } else {
+    errors.value[key] = value
+  }
 }
 
 const setErrorFromResponse = async(r) => {
@@ -29,17 +30,6 @@ const setErrorFromResponse = async(r) => {
 
   for (const [k, v] of Object.entries(errors)) {
     setError(k, v.join(''))
-  }
-}
-
-const create = async(factory) => {
-  try {
-    const { data } = await factory(props.content)
-    router.push({name: 'contents', params: {id: data.id}})
-  } catch (e) {
-    if (e instanceof HTTPError) {
-      setErrorFromResponse(e.response)
-    }
   }
 }
 
@@ -70,7 +60,6 @@ provide('errors', {
     <component 
       :is="mapping[props.type]" 
       :container="content"
-      @create="create"
     />
 
   </div>

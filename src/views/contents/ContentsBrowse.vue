@@ -16,11 +16,6 @@ import { useContentWeight } from '../../composables/useContentWeight.js'
 import { useContentSelection } from '../../composables/useContentSelection.js'
 import { useContentDelete } from '../../composables/useContentDelete.js'
 
-//import { useFolder } from '@/composables/folders.js'
-//import { useContent } from '@/composables/contents.js'
-//import { createBrowser } from '@/composables/browser.js'
-
-//import { useContentTypes } from '@/composables/content_types.js'
 import FolderBrowser from '../../components/folder/FolderBrowser.vue'
 import SelectFolderView from '../../components/folder/SelectFolderView.vue'
 import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
@@ -39,16 +34,6 @@ const props = defineProps({
 })
 
 const { content: folder } = toRefs(props)
-
-//const content_id = computed(() => props.content_id)
-//const move_folder = ref(null)
-//const move_folder_id = computed(() => move_folder.value.id)
-
-/*
-const { 
-  browse, paste, destroyManyContent 
-} = useFolder()
-*/
 
 const router = useRouter()
 
@@ -231,7 +216,7 @@ onMounted(async () => {
         @add-content="(folder, type) => doAdd(folder, type)"
       />
 
-      <EditContentButton @edit="() => $router.push(`/${folder.id}/edit`)" class="w-12 h-12" />
+      <EditContentButton @edit="$router.push(`/${folder.id}/edit`)" class="w-12 h-12" />
 
       <DropDownSelection 
         @clear-selection="clear()"

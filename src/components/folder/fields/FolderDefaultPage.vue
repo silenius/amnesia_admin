@@ -73,10 +73,10 @@ const openModal = () => {
     <div>
       <p class="font-bold">Replace default view</p>
       <p class="text-xs">Rather than a listing you can choose a document to replace the default view of the folder</p>
-      <p v-if="doc" class="gap-2 flex flex-col p-2 mt-2 text-white bg-sky-600">
+      <div v-if="doc" class="gap-2 flex flex-col p-2 mt-2 text-white bg-sky-600">
       <p class="font-bold">{{ doc.title }}</p>
       <p class="text-xs">{{ doc.description }}</p>
-      </p>
+      </div>
       <div class="mt-4">
         <button type="button" @click="openModal" class="w-32 hover:bg-green-300
           hover:text-green-800 rounded-md bg-green-200 text-green-700 p-1

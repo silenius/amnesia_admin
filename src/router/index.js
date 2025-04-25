@@ -62,7 +62,6 @@ const routes = [
         ]
     },
 
-
     {
         path: '/accounts',
         components: {

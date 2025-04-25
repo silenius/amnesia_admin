@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import { useFetchBackend } from './fetch.js'
 
-export function useCreateFolder() {
-    const folder = ref({
+export function useCreateDocument() {
+    const doc = ref({
         is_fts: true,
         polymorphic_loading: false,
         exclude_nav: false,
@@ -21,13 +21,11 @@ export function useCreateFolder() {
             'is_fts',
             'effective',
             'expiration',
-            'index_content_id',
-            'polymorphic_loading',
-            'default_limit',
+            'body'
         ]
 
         for (let key of fields) {
-            const value = folder.value[key]
+            const value = doc.value[key]
 
             if (value !== undefined) {
                 form_data.append(key, value === null ? '' : value)
@@ -36,23 +34,12 @@ export function useCreateFolder() {
             }
         }
 
-        if (folder.value.polymorphic_loading 
-            && folder.value.polymorphic_children) {
-            folder.value.polymorphic_children.forEach(
-                c => form_data.append('polymorphic_children_ids', c.id)
-            )
+        if (doc.value.props) {
+            form_data.append('props', JSON.stringify(doc.value.props))
         }
 
-        if (folder.value.default_order) {
-            form_data.append('default_order', JSON.stringify(folder.value.default_order))
-        }
-
-        if (folder.value.props) {
-            form_data.append('props', JSON.stringify(folder.value.props))
-        }
-
-        if (folder.value.acls) {
-            form_data.append('acls', JSON.stringify(folder.value.acls.map(x => {
+        if (doc.value.acls) {
+            form_data.append('acls', JSON.stringify(doc.value.acls.map(x => {
                 return {
                     allow: x.allow,
                     role_id: x.role.id,
@@ -64,18 +51,18 @@ export function useCreateFolder() {
         return form_data
     }
 
-    const create_folder = async(container) => {
-        const form_data = as_formdata(folder)
+    const create_document = async(container) => {
+        const form_data = as_formdata(doc)
 
-        await fetchData(`${container.id}/@@add_folder`, {
+        await fetchData(`${container.id}/@@add_document`, {
             method: 'POST',
             body: form_data
         })
     }
 
     return {
-        folder,
-        create_folder,
+        doc,
+        create_document,
         error,
         data
     }

@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, toValue } from 'vue'
+import { ref, inject, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 
 import FolderForm from '../../components/folder/FolderForm.vue'
@@ -10,17 +10,20 @@ const props = defineProps({
     container: Object
 })
 
+const { setErrorFromResponse } = inject('errors')
+
 const router = useRouter()
 
 const { create_folder, data, folder, error } = useCreateFolder()
 
 const create = async () => {
   await create_folder(props.container)
-  
+
   if (!toValue(error)) {
     router.push(`/${data.value.id}/browse`)
+  } else {
+    setErrorFromResponse(error.value.response)
   }
-
 }
 
 </script>
