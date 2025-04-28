@@ -9,7 +9,7 @@ export const useUsersStore = defineStore('user', () => {
     const users = ref([])
 
     const getAll = async() => { 
-        const { data, error fetchData } = useFetchBackend()
+        const { data, error, fetchData } = useFetchBackend()
         await fetchData('auth/browse') 
 
         if (!error) {

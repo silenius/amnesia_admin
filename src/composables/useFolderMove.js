@@ -2,7 +2,6 @@ import { useFetchBackend } from './fetch.js'
 import { toValue } from 'vue'
 
 export function useFolderMove(folder) {
-    console.log('FOLDER: ::: ', folder)
     const { data, error, loading, fetchData } = useFetchBackend()
 
     const paste = async (ids) => {
@@ -17,6 +16,8 @@ export function useFolderMove(folder) {
     }
 
     return {
+        data,
+        error,
         paste
     }
 }

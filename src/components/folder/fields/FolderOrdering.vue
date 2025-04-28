@@ -22,22 +22,18 @@ const emit = defineEmits([
 
 const orders = ref([])
 
-const selected = computed(() => {
-  return orders.value.orders.filter(
-    item => item.checked
-  )
-})
+const selected = computed(
+  () => orders.value.orders.filter(item => item.checked)
+)
 
 watch(() => orders, () => {
   emit(
     'update:default_order', 
-    selected.value.map(v => {
-      return {
+    selected.value.map(v => ({
         key: v.key,
         nulls: v.nulls,
         direction: v.direction
-      }
-    }))
+    })))
 }, { deep: true })
 
 watch(

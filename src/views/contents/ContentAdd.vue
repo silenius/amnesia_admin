@@ -8,8 +8,6 @@ import FileAdd from '../files/FileAdd.vue'
 import EventAdd from '../events/EventAdd.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
-import { HTTPError } from '@/composables/fetch.js'
-
 const props = defineProps({
   content: Object,
   type: String
@@ -56,6 +54,8 @@ provide('errors', {
       @navigate="(content) => $router.push(`/${content.id}`)"
       class="p-2 shadow-md mb-4"
     />
+
+    {{ errors }}
 
     <component 
       :is="mapping[props.type]" 

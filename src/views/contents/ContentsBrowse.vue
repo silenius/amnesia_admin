@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, toRefs, onMounted, watch } from 'vue'
+import { ref, toValue, toRefs, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   Dialog,
@@ -45,6 +45,8 @@ const {
 } = await useFolder(ref(1))
 
 const {
+  data: paste_data,
+  error: paste_error,
   paste 
 } = useFolderMove(move_folder)
 
@@ -130,8 +132,11 @@ const doMoveSelection = async () => {
 
 const doMove = async () => {
   await paste(selection_ids)
-  move_modal_open.value = false
-  await router.push(`${move_folder.id}/browse`)
+
+  if (!toValue(paste_error)) {
+    move_modal_open.value = false
+    await router.push(`${move_folder.id}/browse`)
+  }
 }
 
 const doAdd = async (folder, t) => {
@@ -161,7 +166,6 @@ onMounted(async () => {
   <div>
     <Dialog as="div" :open="move_modal_open" class="relative z-10">
       <div class="fixed inset-0 bg-black bg-opacity-25" />
-
       <div class="fixed inset-0 overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4 text-center">
           <DialogPanel
@@ -184,6 +188,7 @@ onMounted(async () => {
                   :folder="move_folder"
                   :contents="move_result" 
                   :canChangeWeight="false"
+                  :canSelect="false"
                 />
 
                 <Pagination
