@@ -1,7 +1,7 @@
 <script setup>
 import { watchEffect, ref, toRefs } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { useContent } from '@/composables/useContent.js'
+import { useContent } from '../../composables/useContent.js'
 
 const props = defineProps({
   content_id: {
@@ -11,6 +11,7 @@ const props = defineProps({
 })
 
 const { content_id } = toRefs(props)
+
 const { content } = await useContent(content_id)
 
 </script>

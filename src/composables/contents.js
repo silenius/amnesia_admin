@@ -1,7 +1,4 @@
 import { useFetchBackend } from './fetch.js'
-import { useValidators } from './validators.js'
-
-const { isEmpty, minLength } = useValidators()
 
 const getContent = async (id) => {
     const { data, fetchData } = useFetchBackend()
@@ -66,15 +63,6 @@ const unpublishContent = async (id) => useFetchBackend(`${id}/unpublish`, {
     method: 'POST'
 })
 
-const validateTitle = (value) => {
-    return !value ? isEmpty('title', value) : minLength('title', value, 4)
-}
-
-const validateDescription = (value) => {
-    return false
-}
-
-
 export function useContent() {
     return {
         getContent,
@@ -85,8 +73,6 @@ export function useContent() {
         patchContentACL,
         destroyContent,
         setWeight,
-        validateTitle,
-        validateDescription,
         publishContent,
         unpublishContent,
     }

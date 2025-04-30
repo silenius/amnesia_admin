@@ -90,13 +90,6 @@ const doEdit = async (content) => {
   })
 }
 
-// Delete a content
-const doDelete = async (content) => {
-  await destroyContent(content_id)
-  selected.value.delete(content_id)
-  reload()
-}
-
 // Change content's weight within it's container
 const doChangeWeight = async (content, weight) => {
   const { error } = await set_weight(content.id, weight)
@@ -120,9 +113,13 @@ const doUnpublish = async (content) => {
 
 // Delete selected content
 const doDeleteSelection = async () => {
-  await destroyManyContent(props.content, selected_ids)
-  selected.value.clear()
-  reload()
+  for (const id of toValue(selection_ids)) {
+    if (await destroy(id)) {
+      console.log(`===>>> Content ${id} deleted`)
+      unselect(id)
+    }
+  }
+  browse()
 }
 
 const doMoveSelection = async () => {
@@ -135,7 +132,8 @@ const doMove = async () => {
 
   if (!toValue(paste_error)) {
     move_modal_open.value = false
-    await router.push(`${move_folder.id}/browse`)
+    clear()
+    await router.push(`/${move_folder.value.id}/browse`)
   }
 }
 
@@ -145,20 +143,6 @@ const doAdd = async (folder, t) => {
     query: { type: t }
   })
 }
-
-/*
-watch(() => props.content_id, async () => {
-  await reload({offset:0})
-  selected.value.clear()
-}, { immediate: true })
-*/
-
-/*
-onMounted(async () => {
-  const { data } = await getContentTypes()
-  types.value = data
-})
-*/
 
 </script>
 
@@ -226,7 +210,8 @@ onMounted(async () => {
       <DropDownSelection 
         @clear-selection="clear()"
         @move-selection="doMoveSelection"
-        @delete-selection="() => console.log(selection)" :selection="selection" class="w-12 h-12" />
+        @delete-selection="doDeleteSelection" 
+        :selection="selection" class="w-12 h-12" />
 
       <Breadcrumb 
         :content="folder" 

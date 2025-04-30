@@ -2,6 +2,7 @@ import { ref, readonly, computed } from 'vue'
 
 export function useContentSelection() {
     const selection = ref(new Map())
+
     const selection_ids = computed(
         () => Array.from(selection.value.keys())
     )

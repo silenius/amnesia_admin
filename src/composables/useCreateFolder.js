@@ -1,12 +1,11 @@
-import { ref } from 'vue'
+import { ref, watch, toValue } from 'vue'
 import { useFetchBackend } from './fetch.js'
+import { useCreateContent } from './useCreateContent.js'
 
 export function useCreateFolder() {
-    const folder = ref({
-        is_fts: true,
+    const { content: folder } = useCreateContent({
         polymorphic_loading: false,
         exclude_nav: false,
-        props: {}
     })
 
     const { data, error, fetchData } = useFetchBackend()
@@ -26,7 +25,7 @@ export function useCreateFolder() {
             'default_limit',
         ]
 
-        for (let key of fields) {
+        for (const key of fields) {
             const value = folder.value[key]
 
             if (value !== undefined) {
@@ -73,10 +72,11 @@ export function useCreateFolder() {
         })
     }
 
+    watch(data, () => folder.value = data.value)
+
     return {
         folder,
         create_folder,
-        error,
-        data
+        error
     }
 }

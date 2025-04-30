@@ -2,12 +2,10 @@ import { ref, watch } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useCreateContent.js'
 
-export function useCreateDocument() {
-    const { 
-        content: doc,
-        as_formdata: as_formdata_content
-    } = useCreateContent({
-        body: "<p>Hello World</p>"
+export function useCreateEvent() {
+    const { content: event } = useCreateContent({
+        starts: null,
+        ends: null,
     })
 
     const { data, error, fetchData } = useFetchBackend()
@@ -18,13 +16,21 @@ export function useCreateDocument() {
         const fields = [
             'title',
             'description',
+            'exclude_nav',
+            'is_fts',
             'effective',
             'expiration',
-            'body'
+            'breadcrumb',
+            'body',
+            'starts',
+            'ends',
+            'address',
+            'address_latitude',
+            'address_longitude'
         ]
 
         for (const key of fields) {
-            const value = doc.value[key]
+            const value = event.value[key]
 
             if (value !== undefined) {
                 form_data.append(key, value === null ? '' : value)
@@ -33,12 +39,16 @@ export function useCreateDocument() {
             }
         }
 
-        if (doc.value.props) {
-            form_data.append('props', JSON.stringify(doc.value.props))
+        if (event.value.country) {
+            form_data.append('country_iso', event.value.country.iso)
         }
 
-        if (doc.value.acls) {
-            form_data.append('acls', JSON.stringify(doc.value.acls.map(x => {
+        if (event.value.props) {
+            form_data.append('props', JSON.stringify(event.value.props))
+        }
+
+        if (event.value.acls) {
+            form_data.append('acls', JSON.stringify(event.value.acls.map(x => {
                 return {
                     allow: x.allow,
                     role_id: x.role.id,
@@ -50,20 +60,20 @@ export function useCreateDocument() {
         return form_data
     }
 
-    const create_document = async(container) => {
-        const form_data = as_formdata(doc)
+    const create_event = async(container) => {
+        const form_data = as_formdata(event)
 
-        await fetchData(`${container.id}/@@add_document`, {
+        await fetchData(`${container.id}/@@add_event`, {
             method: 'POST',
             body: form_data
         })
     }
 
-    watch(data, () => doc.value = data.value)
+    watch(data, () => event.value = data.value)
 
     return {
-        doc,
-        create_document,
+        event,
+        create_event,
         error,
     }
 }

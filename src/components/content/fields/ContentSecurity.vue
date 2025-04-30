@@ -1,129 +1,3 @@
-<template>
-  <h3 class="text-lg">Local ACLS</h3>
-  <table class="table-auto border-spacing-4 mb-4">
-    <thead>
-      <tr class="text-left bg-slate-100">
-        <th class="p-2"></th>
-        <th>Role</th>
-        <th>Permission</th>
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr 
-        v-for="(acl, idx) in values"
-        class="cursor-move odd:bg-white even:bg-slate-50 text-slate-600"
-        draggable="true"
-        :data-acl_id="acl.id"
-        :data-weight="acl.weight"
-        :data-idx="idx"
-        @drag="drag"
-        @dragstart="start"
-        @dragend="end"
-        @dragleave="leave"
-        @dragenter="enter"
-        @dragover="over"
-        @drop="drop"
-      >
-        <td class="px-1 py-1">
-          <span class="rounded inline-flex w-full justify-center
-            px-4 py-1 text-xs font-medium focus:outline-hidden
-            focus-visible:ring-2 focus-visible:ring-white
-            focus-visible:ring-opacity-75"
-            :class="menuColors[acl.allow]">
-            <span v-if="acl.allow === true"> Allow </span>
-            <span v-if="acl.allow === false"> Deny </span>
-          </span>
-        </td>
-        <td>
-          {{ acl.role.name }}
-        </td>
-        <td>
-          {{ acl.permission.description }}
-        </td>
-        <td>
-          <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700
-            rounded w-full p-1 text-red-600"
-            @click.prevent="delete_acl(acl, idx)">remove</button>
-        </td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td>
-          <select v-model="selectedAllow" class="w-full">
-            <option value="yes">allow</option>
-            <option value="no">deny</option>
-          </select>
-        </td>
-
-        <td>
-          <select v-model="selectedRole">
-            <option :value="role" v-for="role in roles" :key="role.id">{{ role.name }}</option>
-          </select>
-        </td>
-        <td>
-          <select v-model="selectedPermission">
-            <option :value="permission" v-for="permission in permissions" :key="permission.id">{{ permission.description }}</option>
-          </select>
-        </td>
-        <td>
-          <button @click.prevent="add" class="hover:bg-blue-300 bg-blue-200
-            px-2 hover:text-blue-700 rounded w-full p-1 text-blue-600">add</button>
-        </td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <p class="text-lg">
-    Parent ACLS
-  </p>
-
-  <table class="table-auto border-spacing-4">
-    <thead>
-      <tr class="text-left bg-slate-100">
-        <th>Type</th>
-        <th class="p-2"></th>
-        <th>Role</th>
-        <th>Permission</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr 
-        v-for="acl in recursive_acls"
-        class="odd:bg-white even:bg-slate-50 text-slate-600"
-      >
-        <td>
-          {{ acl.resource.name }}
-          <span v-if="acl.content">
-            {{ acl.content.title }}
-          </span>
-        </td>
-        <td class="px-1 py-1">
-          <span class="rounded inline-flex w-full justify-center
-            px-4 py-1 text-xs font-medium focus:outline-hidden
-            focus-visible:ring-2 focus-visible:ring-white
-            focus-visible:ring-opacity-75"
-            :class="menuColors[acl.allow]">
-            <span v-if="acl.allow === true"> Allow </span>
-            <span v-if="acl.allow === false"> Deny </span>
-          </span>
-        </td>
-        <td>
-          {{ acl.role.name }}
-        </td>
-        <td>
-          {{ acl.permission.description }}
-        </td>
-      </tr>
-      </tbody>
-  </table>
-
-</template>
-
-
 <script setup>
 import { inject, unref, computed, ref, onMounted, watch } from 'vue'
 import { useContent } from '@/composables/contents.js'
@@ -304,6 +178,132 @@ const drop = (evt) => {
 
   evt.preventDefault()
 }
-
-
 </script>
+
+<template>
+  <h3 class="text-lg">Local ACLS</h3>
+  <table class="table-auto border-spacing-4 mb-4">
+    <thead>
+      <tr class="text-left bg-slate-100">
+        <th class="p-2"></th>
+        <th>Role</th>
+        <th>Permission</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr 
+        v-for="(acl, idx) in values"
+        class="cursor-move odd:bg-white even:bg-slate-50 text-slate-600"
+        draggable="true"
+        :data-acl_id="acl.id"
+        :data-weight="acl.weight"
+        :data-idx="idx"
+        @drag="drag"
+        @dragstart="start"
+        @dragend="end"
+        @dragleave="leave"
+        @dragenter="enter"
+        @dragover="over"
+        @drop="drop"
+      >
+        <td class="px-1 py-1">
+          <span class="rounded inline-flex w-full justify-center
+            px-4 py-1 text-xs font-medium focus:outline-hidden
+            focus-visible:ring-2 focus-visible:ring-white
+            focus-visible:ring-opacity-75"
+            :class="menuColors[acl.allow]">
+            <span v-if="acl.allow === true"> Allow </span>
+            <span v-if="acl.allow === false"> Deny </span>
+          </span>
+        </td>
+        <td>
+          {{ acl.role.name }}
+        </td>
+        <td>
+          {{ acl.permission.description }}
+        </td>
+        <td>
+          <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700
+            rounded w-full p-1 text-red-600"
+            @click.prevent="delete_acl(acl, idx)">remove</button>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td>
+          <select v-model="selectedAllow" class="w-full">
+            <option value="yes">allow</option>
+            <option value="no">deny</option>
+          </select>
+        </td>
+
+        <td>
+          <select v-model="selectedRole">
+            <option :value="role" v-for="role in roles" :key="role.id">{{ role.name }}</option>
+          </select>
+        </td>
+        <td>
+          <select v-model="selectedPermission">
+            <option :value="permission" v-for="permission in permissions" :key="permission.id">{{ permission.description }}</option>
+          </select>
+        </td>
+        <td>
+          <button @click.prevent="add" class="hover:bg-blue-300 bg-blue-200
+            px-2 hover:text-blue-700 rounded w-full p-1 text-blue-600">add</button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p class="text-lg">
+    Parent ACLS
+  </p>
+
+  <table class="table-auto border-spacing-4">
+    <thead>
+      <tr class="text-left bg-slate-100">
+        <th>Type</th>
+        <th class="p-2"></th>
+        <th>Role</th>
+        <th>Permission</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr 
+        v-for="acl in recursive_acls"
+        class="odd:bg-white even:bg-slate-50 text-slate-600"
+      >
+        <td>
+          {{ acl.resource.name }}
+          <span v-if="acl.content">
+            {{ acl.content.title }}
+          </span>
+        </td>
+        <td class="px-1 py-1">
+          <span class="rounded inline-flex w-full justify-center
+            px-4 py-1 text-xs font-medium focus:outline-hidden
+            focus-visible:ring-2 focus-visible:ring-white
+            focus-visible:ring-opacity-75"
+            :class="menuColors[acl.allow]">
+            <span v-if="acl.allow === true"> Allow </span>
+            <span v-if="acl.allow === false"> Deny </span>
+          </span>
+        </td>
+        <td>
+          {{ acl.role.name }}
+        </td>
+        <td>
+          {{ acl.permission.description }}
+        </td>
+      </tr>
+      </tbody>
+  </table>
+
+</template>
+
+
+

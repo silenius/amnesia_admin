@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, provide, inject, onMounted, watch } from 'vue'
-import { useCountry } from '@/composables/country.js'
+import { useCountries } from '../../composables/useCountry.js'
 import ContentTitle from '@/components/content/fields/ContentTitle.vue'
 import ContentDescription from '@/components/content/fields/ContentDescription.vue'
 import ContentIndexed from '@/components/content/fields/ContentIndexed.vue'
@@ -22,9 +22,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  container: {
-    type: Object
-  },
   action: {
     type: String,
     default: 'Submit'
@@ -40,16 +37,11 @@ const errors = inject('errors')
 // note provide result is _not_ reactive by default
 provide('editable', computed(() => props.event))
 
-const countries = ref([])
-const { getCountries } = useCountry()
+const { load_countries, countries } = useCountries()
+
+onMounted(async () => await load_countries())
 
 const section_cls="flex flex-col gap-4"
-
-onMounted( async () => {
-  const { data } = await getCountries()
-  countries.value = data
-})
-
 </script>
 
 <template>
@@ -58,8 +50,8 @@ onMounted( async () => {
     <FormTabGroup>
       <template #default>
         <section :class="section_cls">
-          <ContentTitle v-model:title="event.title" />
-          <ContentDescription v-model:description="event.description" />
+          <ContentTitle v-model="event.title" />
+          <ContentDescription v-model="event.description" />
           <EventStart v-model:starts="event.starts" />
           <EventEnds v-model:ends="event.ends" />
           <EventBody v-model:body="event.body" />
@@ -78,14 +70,14 @@ onMounted( async () => {
       </template>
       <template #settings>
         <section :class="section_cls">
-        <ContentPublishingDate v-model:effective="event.effective" />
-        <ContentExpirationDate class="border-b pb-4" v-model:expiration="event.expiration" />
-          </section>
+          <ContentPublishingDate v-model:effective="event.effective" />
+          <ContentExpirationDate class="border-b pb-4" v-model:expiration="event.expiration" />
+        </section>
         <ContentIndexed class="mt-2" v-model:is_fts="event.is_fts" />
       </template>
       <template #props>
-          <ContentBreadcrumb class="pb-4" v-model:breadcrumb="event.props.breadcrumb" />
-          <ContentBannerImage class="border-b pb-4" v-model:banner_image="event.props.banner_image" />
+        <ContentBreadcrumb class="pb-4" v-model:breadcrumb="event.props.breadcrumb" />
+        <ContentBannerImage class="border-b pb-4" v-model:banner_image="event.props.banner_image" />
       </template>
       <template #security>
         <ContentSecurity v-model:acls="event.acls" />

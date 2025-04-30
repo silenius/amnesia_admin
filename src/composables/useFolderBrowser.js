@@ -54,9 +54,9 @@ export async function useFolderBrowser(folder, opts={}) {
     })
 
     await browse(query)
-    watch(folder, async () => {
+    watch(folder, () => {
         query.value.offset = 0
-        await browse(query)
+        browse(query)
     })
 
     return {

@@ -14,13 +14,13 @@ const { setErrorFromResponse } = inject('errors')
 
 const router = useRouter()
 
-const { create_folder, data, folder, error } = useCreateFolder()
+const { create_folder, folder, error } = useCreateFolder()
 
 const create = async () => {
   await create_folder(props.container)
 
   if (!toValue(error)) {
-    router.push(`/${data.value.id}/browse`)
+    router.push(`/${folder.value.id}/browse`)
   } else {
     setErrorFromResponse(error.value.response)
   }
@@ -31,7 +31,6 @@ const create = async () => {
 <template>
     <FolderForm 
       :folder="folder" 
-      :container="container"
       :action="'Add folder'"
       @submit-folder="create" 
     />

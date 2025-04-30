@@ -6,12 +6,10 @@ export async function useFolder(folder_id) {
     const { data, error, loading, fetchData } = useFetchBackend()
     const { formatted: formatted_data } = useBuildFolder(data)
 
-    const load = async (id=folder_id) => {
-        await fetchData(`folder/${toValue(id)}`)
-    }
+    const load = (id=folder_id) => fetchData(`folder/${toValue(id)}`)
 
     await load(folder_id)
-    watch(folder_id, async () => await load(folder_id))
+    watch(folder_id, () => load(folder_id))
 
     return {
         folder: formatted_data,

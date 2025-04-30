@@ -48,6 +48,7 @@ provide('errors', {
 
 <template>
 
+
   <div class="m-4">
     <Breadcrumb 
       :content="content" 
@@ -55,8 +56,7 @@ provide('errors', {
       class="p-2 shadow-md mb-4"
     />
 
-    {{ errors }}
-
+  {{ errors }}
     <component 
       :is="mapping[props.type]" 
       :container="content"

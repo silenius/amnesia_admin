@@ -1,3 +1,54 @@
+<script setup>
+import { watch, ref, computed } from 'vue'
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxButton,
+  ComboboxOptions,
+  ComboboxOption,
+  TransitionRoot,
+} from '@headlessui/vue'
+
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+
+const props = defineProps({
+  countries: {
+    type: Array,
+    default: []
+  },
+  country: {
+    type: Object,
+    default: {}
+  }
+})
+
+const emit = defineEmits([
+  'update:country'
+])
+
+const query = ref('')
+
+const selected = computed({
+
+  get() {
+    return props.country
+  },
+
+  set(value) {
+    emit('update:country', value)
+  }
+
+})
+
+const filteredCountry = computed(() =>
+  query.value === ''
+    ? props.countries
+    : props.countries.filter((c) =>
+      c.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
+    )
+)
+</script>
+
 <template>
   <div class="relative w-72">
     <label>
@@ -70,54 +121,3 @@
     </label>
   </div>
 </template>
-
-<script setup>
-import { watch, ref, computed } from 'vue'
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxButton,
-  ComboboxOptions,
-  ComboboxOption,
-  TransitionRoot,
-} from '@headlessui/vue'
-
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-
-const props = defineProps({
-  countries: {
-    type: Array,
-    default: []
-  },
-  country: {
-    type: Object,
-    default: {}
-  }
-})
-
-const emit = defineEmits([
-  'update:country'
-])
-
-const query = ref('')
-
-const selected = computed({
-
-  get() {
-    return props.country
-  },
-
-  set(value) {
-    emit('update:country', value)
-  }
-
-})
-
-const filteredCountry = computed(() =>
-  query.value === ''
-    ? props.countries
-    : props.countries.filter((c) =>
-      c.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
-    )
-)
-</script>

@@ -1,6 +1,6 @@
 import { useFetchBackend } from '@/composables/fetch.js'
 import { ref, computed, readonly, watch } from 'vue';
-import { useValidators } from '@/composables/validators.js'
+import { isEmpty, minLength } from '../services/validators.js'
 
 const role_to_formdata = (role) => {
     const data = new FormData()
@@ -50,8 +50,6 @@ export function useRoles() {
 // return readonly() ?
 
 export function useRole() {
-    const { isEmpty, minLength } = useValidators()
-
     const getRole = async (id) => {
         return useFetchBackend(`roles/${id}`)
     }
@@ -129,7 +127,7 @@ export function useRole() {
     }
 
     const validateName = (value) => {
-        return !value ? isEmpty('name', value) : minLength('name', value, 4)
+        return !value ? isEmpty('name', value) : minLength('name', value, {min: 4})
     }
 
     const validateDescription = (value) => {

@@ -17,9 +17,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  container: {
-    type: Object
-  },
   action: {
     type: String,
     default: 'Submit'
@@ -45,8 +42,8 @@ provide('editable', computed(() => props.file))
     <FormTabGroup>
       <template #default>
         <section :class="section_cls">
-          <ContentTitle v-model:title="file.title" />
-          <ContentDescription v-model:description="file.description" />
+          <ContentTitle v-model="file.title" />
+          <ContentDescription v-model="file.description" />
           <FileData v-model:content="file.content" />
         </section>
       </template>

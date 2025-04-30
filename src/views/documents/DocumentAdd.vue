@@ -14,13 +14,13 @@ const { setErrorFromResponse } = inject('errors')
 
 const router = useRouter()
 
-const { create_document, data, doc, error } = useCreateDocument()
+const { create_document, doc, error } = useCreateDocument()
 
 const create = async () => {
   await create_document(props.container)
-
+  
   if (!toValue(error)) {
-    router.push(`/${data.value.id}`)
+    router.push(`/${doc.value.id}`)
   } else {
     setErrorFromResponse(error.value.response)
   }

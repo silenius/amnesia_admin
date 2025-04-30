@@ -1,3 +1,40 @@
+<script setup>
+import { inject, computed, ref } from 'vue'
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
+
+const config = ref({
+  wrap: true,
+  enableTime: true,
+  time_24hr: true,
+  minuteIncrement: 15
+})
+
+const props = defineProps({
+  starts: {
+    type: String,
+  }
+})
+
+const emit = defineEmits([
+  'update:starts',
+])
+
+const { errors, setError } = inject('errors')
+
+const value = computed({
+
+  get() {
+    return props.starts
+  },
+
+  set(value) {
+    emit('update:starts', value)
+  }
+
+})
+</script>
+
 <template>
   <div>
     <label>
@@ -20,40 +57,4 @@
       </span>
     </label>
   </div>
-  </template>
-
-<script setup>
-import { inject, computed, ref } from 'vue'
-import flatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
-
-const config = ref({
-  wrap: true,
-  enableTime: true,
-  time_24hr: true,
-  minuteIncrement: 15
-})
-
-const props = defineProps({
-  starts: String
-})
-
-const emit = defineEmits([
-  'update:starts',
-])
-
-const { errors, setError } = inject('errors')
-
-const value = computed({
-
-  get() {
-    return props.starts
-  },
-
-  set(value) {
-    emit('update:starts', value)
-  }
-
-})
-
-</script>
+</template>
