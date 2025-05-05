@@ -7,46 +7,14 @@ export function useCreateDocument() {
         content: doc,
         as_formdata: as_formdata_content
     } = useCreateContent({
-        body: "<p>Hello World</p>"
+        body: "<p>Document content</p>"
     })
 
     const { data, error, fetchData } = useFetchBackend()
 
     const as_formdata = () => {
-        const form_data = new FormData()
-
-        const fields = [
-            'title',
-            'description',
-            'effective',
-            'expiration',
-            'body'
-        ]
-
-        for (const key of fields) {
-            const value = doc.value[key]
-
-            if (value !== undefined) {
-                form_data.append(key, value === null ? '' : value)
-            } else {
-                console.log('===> Skipping ', key)
-            }
-        }
-
-        if (doc.value.props) {
-            form_data.append('props', JSON.stringify(doc.value.props))
-        }
-
-        if (doc.value.acls) {
-            form_data.append('acls', JSON.stringify(doc.value.acls.map(x => {
-                return {
-                    allow: x.allow,
-                    role_id: x.role.id,
-                    permission_id: x.permission.id
-                }
-            })))
-        }
-
+        const fields = [ 'body' ]
+        const form_data = as_formdata_content({extra_fields: fields})
         return form_data
     }
 

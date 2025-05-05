@@ -11,15 +11,18 @@ export function useCreateContent(fields) {
         ...fields
     })
 
-    const as_formdata = () => {
-        const form_data = new FormData()
+    const as_formdata = ({form_data, extra_fields=[]} = {}) => {
+        if (!form_data) {
+            form_data = new FormData()
+        }
 
         const fields = [
             'title',
             'description',
             'effective',
             'expiration',
-            'is_fts'
+            'is_fts',
+            ...extra_fields
         ]
 
         for (const key of fields) {

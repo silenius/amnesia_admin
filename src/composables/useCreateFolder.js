@@ -3,7 +3,7 @@ import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useCreateContent.js'
 
 export function useCreateFolder() {
-    const { content: folder } = useCreateContent({
+    const { content: folder, as_formdata: as_formdata_content } = useCreateContent({
         polymorphic_loading: false,
         exclude_nav: false,
     })
@@ -11,29 +11,14 @@ export function useCreateFolder() {
     const { data, error, fetchData } = useFetchBackend()
 
     const as_formdata = () => {
-        const form_data = new FormData()
-
         const fields = [
-            'title',
-            'description',
             'exclude_nav',
-            'is_fts',
-            'effective',
-            'expiration',
             'index_content_id',
             'polymorphic_loading',
             'default_limit',
         ]
 
-        for (const key of fields) {
-            const value = folder.value[key]
-
-            if (value !== undefined) {
-                form_data.append(key, value === null ? '' : value)
-            } else {
-                console.log('===> Skipping ', key)
-            }
-        }
+        const form_data = as_formdata_content({extra_fields: fields})
 
         if (folder.value.polymorphic_loading 
             && folder.value.polymorphic_children) {
@@ -44,20 +29,6 @@ export function useCreateFolder() {
 
         if (folder.value.default_order) {
             form_data.append('default_order', JSON.stringify(folder.value.default_order))
-        }
-
-        if (folder.value.props) {
-            form_data.append('props', JSON.stringify(folder.value.props))
-        }
-
-        if (folder.value.acls) {
-            form_data.append('acls', JSON.stringify(folder.value.acls.map(x => {
-                return {
-                    allow: x.allow,
-                    role_id: x.role.id,
-                    permission_id: x.permission.id
-                }
-            })))
         }
 
         return form_data
