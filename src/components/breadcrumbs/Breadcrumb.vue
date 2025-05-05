@@ -1,5 +1,5 @@
 <script setup>
-import { toRefs, ref } from 'vue'
+import { toRefs, watch, ref } from 'vue'
 import { useLineage } from '../../composables/lineage.js'
 
 const base = import.meta.env.BASE_URL
@@ -12,6 +12,7 @@ const props = defineProps({
 })
 
 const { content } = toRefs(props)
+
 const { lineage } = await useLineage(content)
 
 const emits = defineEmits([

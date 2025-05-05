@@ -14,7 +14,6 @@
 <script setup>
 import { inject, computed } from 'vue'
 import EditorTipTap from '@/components/content/fields/EditorTipTap.vue'
-import { useContent } from '@/composables/contents.js'
 
 const props = defineProps({
   body: String
@@ -26,9 +25,6 @@ const emit = defineEmits([
 
 const { errors, setError } = inject('errors')
 
-
-const { validateTitle } = useContent()
-
 const value = computed({
 
   get() {
@@ -36,7 +32,6 @@ const value = computed({
   },
 
   set(value) {
-    setError('body', validateTitle(value))
     emit('update:body', value)
   }
 

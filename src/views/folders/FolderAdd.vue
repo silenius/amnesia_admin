@@ -1,8 +1,6 @@
 <script setup>
-
-import { ref, inject, toValue } from 'vue'
+import { inject, toValue } from 'vue'
 import { useRouter } from 'vue-router'
-
 import FolderForm from '../../components/folder/FolderForm.vue'
 import { useCreateFolder } from '../../composables/useCreateFolder.js'
 
@@ -10,9 +8,9 @@ const props = defineProps({
     container: Object
 })
 
-const { setErrorFromResponse } = inject('errors')
-
 const router = useRouter()
+
+const { setErrorFromResponse } = inject('errors')
 
 const { create_folder, folder, error } = useCreateFolder()
 

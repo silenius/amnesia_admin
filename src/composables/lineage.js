@@ -6,11 +6,12 @@ export async function useLineage(content) {
 
     const get_lineage = async () => {
         const id = toValue(content).id
+        console.log('===>>> GET LINEAGE ', id)
         await fetchData(`${id}/lineage`)
     }
 
-    await get_lineage(content)
-    watch(content, async() => await get_lineage(content))
+    await get_lineage()
+    watch(content, () => get_lineage())
 
     return {
         lineage: data,

@@ -11,7 +11,6 @@ const props = defineProps({
 })
 
 const { content_id } = toRefs(props)
-
 const { content } = await useContent(content_id)
 
 </script>

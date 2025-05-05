@@ -82,14 +82,6 @@ const doBrowse = async (id) => await router.push({
   params: { id: id }
 })
 
-// Edit a content
-const doEdit = async (content) => { 
-  await router.push({
-    name: 'edit-content', 
-    params: { id: content.id }
-  })
-}
-
 // Change content's weight within it's container
 const doChangeWeight = async (content, weight) => {
   const { error } = await set_weight(content.id, weight)
@@ -232,7 +224,7 @@ const doAdd = async (folder, t) => {
       @browse="doBrowse"
       @delete-content="delete_content"
       @select-content="(content, checked) => select_or_unselect(content, checked)"
-      @edit-content="(content) => router.push({name: 'edit-content', params: {id: content.id}})"
+      @edit-content="(c) => router.push({name: 'edit-content', params: {id: c.id}})"
       @publish-content="doPublish"
       @unpublish-content="doUnpublish"
       @change-weight-content="doChangeWeight"

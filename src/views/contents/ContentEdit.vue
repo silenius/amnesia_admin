@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, provide } from 'vue'
+import { toRefs, ref, provide } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
@@ -18,12 +18,18 @@ const props = defineProps({
   }
 })
 
+const { content } = toRefs(props)
+
 const router = useRouter()
 
 const errors = ref({})
 
 const setError = (key, value) => {
-  errors.value[key] = value
+  if (value === false) {
+    delete errors.value[key]
+  } else {
+    errors.value[key] = value
+  }
 }
 
 const setErrorFromResponse = async(r) => {
@@ -31,17 +37,6 @@ const setErrorFromResponse = async(r) => {
 
   for (const [k, v] of Object.entries(errors)) {
     setError(k, v.join(''))
-  }
-}
-
-const update = async (factory) => {
-  try {
-    await factory(props.content)
-    router.push({name: 'show-content', params: {id: props.content.id}})
-  } catch (e) {
-    if (e instanceof HTTPError) {
-      setErrorFromResponse(e.response)
-    }
   }
 }
 
@@ -57,11 +52,6 @@ provide('errors', {
   setError
 })
 
-const doBrowse = async (id) => await router.push({
-  name: 'browse-content', 
-  params: { id: id }
-})
-
 </script>
 
 <template>
@@ -75,7 +65,6 @@ const doBrowse = async (id) => await router.push({
     <component 
       :is="mapping[content.type.name]" 
       :content="content"
-      @update="update"
     />
   </div>
 </template>

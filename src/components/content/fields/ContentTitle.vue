@@ -15,8 +15,7 @@
 </template>
 
 <script setup>
-import { inject, computed } from 'vue'
-import { useContent } from '@/composables/contents.js'
+import { inject } from 'vue'
 import { isEmpty, minLength, validate } from "../../../services/validators.js"
 
 const { errors, setError } = inject('errors')

@@ -9,8 +9,14 @@ import EventAdd from '../events/EventAdd.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
 const props = defineProps({
-  content: Object,
-  type: String
+  content: {
+    type: Object,
+    required: true
+  },
+  type: {
+    String,
+    required: true
+  }
 })
 
 const errors = ref({})
@@ -47,8 +53,6 @@ provide('errors', {
 </script>
 
 <template>
-
-
   <div class="m-4">
     <Breadcrumb 
       :content="content" 
@@ -56,12 +60,10 @@ provide('errors', {
       class="p-2 shadow-md mb-4"
     />
 
-  {{ errors }}
     <component 
       :is="mapping[props.type]" 
       :container="content"
     />
 
   </div>
-
 </template>

@@ -1,15 +1,28 @@
 <script setup>
-
-import FolderForm from '@/components/folder/FolderForm.vue'
-import { useFolder } from '@/composables/folders.js'
+import { inject, toValue } from 'vue'
+import { useRouter } from 'vue-router'
+import FolderForm from '../../components/folder/FolderForm.vue'
+import { useUpdateFolder } from '../../composables/useUpdateFolder.js'
 
 const props = defineProps({
   content: Object
 })
 
-const emit = defineEmits(['update'])
+const router = useRouter()
 
-const { updateFolder } = useFolder()
+const { setErrorFromResponse } = inject('errors')
+
+const { update_folder, error } = useUpdateFolder(props.content)
+
+const update = async() => {
+  await update_folder()
+
+  if (!toValue(error)) {
+    router.push(`/${props.content.id}/browse`)
+  } else {
+    setErrorFromResponse(error.value.response)
+  }
+}
 
 </script>
 
@@ -17,6 +30,6 @@ const { updateFolder } = useFolder()
     <FolderForm 
       :folder="content" 
       :action="'Update folder'"
-      @submit-folder="$emit('update', updateFolder)" 
+      @submit-folder="update" 
     />
 </template>

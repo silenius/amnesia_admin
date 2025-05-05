@@ -1,21 +1,15 @@
 import { ref, watch, toValue } from 'vue'
 import { useFetchBackend } from './fetch.js'
-import { useCreateContent } from './useCreateContent.js'
 import { folder_as_formdata } from '../services/folder.js'
 
-export function useCreateFolder() {
-    const { content: folder } = useCreateContent({
-        polymorphic_loading: false,
-        exclude_nav: false,
-    })
-
+export function useUpdateFolder(folder) {
     const { data, error, fetchData } = useFetchBackend()
 
-    const create_folder = async(container) => {
+    const update_folder = async() => {
         const form_data = folder_as_formdata(folder)
 
-        await fetchData(`${container.id}/@@add_folder`, {
-            method: 'POST',
+        await fetchData(folder.value.id, {
+            method: 'PUT',
             body: form_data
         })
     }
@@ -23,8 +17,7 @@ export function useCreateFolder() {
     watch(data, () => folder.value = data.value)
 
     return {
-        folder,
-        create_folder,
+        update_folder,
         error
     }
 }
