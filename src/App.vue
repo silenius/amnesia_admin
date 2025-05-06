@@ -16,9 +16,6 @@ import { RouterView } from 'vue-router'
           <RouterView name="default" v-slot="{ Component }">
             <Suspense>
               <component :is="Component" />
-              <template #fallback>
-                Loading ...
-              </template>
             </Suspense>
           </RouterView>
         </div>

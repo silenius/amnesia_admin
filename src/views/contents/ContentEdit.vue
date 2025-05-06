@@ -1,6 +1,6 @@
 <script setup>
 
-import { toRefs, ref, provide } from 'vue'
+import { watch, toRefs, ref, provide } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
@@ -8,6 +8,8 @@ import DocumentEdit from '@/views/documents/DocumentEdit.vue'
 import FileEdit from '@/views/files/FileEdit.vue'
 import EventEdit from '@/views/events/EventEdit.vue'
 import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
+
+import { useContent } from '../../composables/useContent.js'
 
 import { HTTPError } from '@/composables/fetch.js'
 
