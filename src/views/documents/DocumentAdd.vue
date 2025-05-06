@@ -18,7 +18,7 @@ const { create_document, doc, error } = useCreateDocument()
 
 const create = async () => {
   await create_document(props.container)
-  
+
   if (!toValue(error)) {
     router.push(`/${doc.value.id}`)
   } else {
@@ -29,9 +29,9 @@ const create = async () => {
 
 <template>
   <DocumentForm 
-  :doc="doc" 
-  :container="container"
-  :action="'Add document'"
-  @submit-document="create" 
-/>
+    :doc="doc" 
+    :container="container"
+    :action="'Add document'"
+    @submit-document="create" 
+  />
 </template>

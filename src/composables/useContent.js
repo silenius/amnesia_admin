@@ -1,18 +1,17 @@
 import { useFetchBackend } from './fetch.js'
 import { useBuildContent } from './useContentBuilder.js'
-import { watch, ref, toValue, computed, watchEffect } from 'vue'
+import { watch, toRef } from 'vue'
 
-export async function useContent(content_id) {
+export function useContent(content_id) {
     const { data, error, loading, fetchData } = useFetchBackend()
     const { formatted: formatted_data } = useBuildContent(data)
+    const reactive_content_id = toRef(content_id)
 
-    const load = async (id=content_id) => {
-        console.log('===>>> LOAD CONTENT ', id.value)
-        return fetchData(toValue(id))
+    const load = async () => {
+        await fetchData(reactive_content_id.value)
     }
 
-    await load(content_id)
-    watch(content_id, () => load(content_id))
+    watch(reactive_content_id, () => load(), {immediate: true})
 
     return {
         content: formatted_data,

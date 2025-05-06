@@ -74,9 +74,10 @@ const modals = ref({
   flex_container: false
 })
 
-const { folder, load: load_folder } = await useFolder(ref(1))
-const { result: contents, meta: browse_meta, goto_page } = await useFolderBrowser(folder)
-const { media_folder } = await useMediaFolder()
+const folder_id = ref(1)
+const { folder } = useFolder(folder_id)
+const { result: contents, meta: browse_meta, goto_page } = useFolderBrowser(folder)
+const { media_folder } = useMediaFolder()
 
 const actions = ref([
   {
@@ -261,12 +262,6 @@ watchEffect( async () => {
     }
   }
 
-  /*
-  const { data: folder_data } = await getContent(folder_id.value)
-  const { data: contents_data } = await browse(folder_data.id, opts)
-  folder.value = folder_data
-  contents.value = contents_data.data
-  */
 })
 
 const closeModal = (...modal) => {
@@ -285,13 +280,13 @@ const add_flex_container = () => modals.value.flex_container = true
 
 const add_image = () => {
   _meta.value.filetype = 'image'
-  load_folder(1)
+  folder_id.value = 1
   modals.value.choose_image = true
 }
 
 const add_link = () => {
   _meta.value.filetype = 'file'
-  load_folder(1)
+  folder_id.value = 1
   modals.value.choose_link = true
 }
 
@@ -699,13 +694,13 @@ onMounted( async () => {
                 <p class="text-sm text-gray-500">
                   <Breadcrumb 
                     :content="folder" 
-                    @navigate="(content) => load_folder(content.id)" 
+                    @navigate="(content) => folder_id = content.id" 
                     class="p-2 shadow-md"
                   />
                   <FolderBrowser
-                    @browse="(id) => load_folder(id)"
+                    @browse="(id) => folder_id = id"
                     @select="doSelect"
-                    @breadcrumb-select="(content) => load_folder(content.id)"
+                    @breadcrumb-select="(content) => folder_id = content.id"
                     :contents="contents"
                     :folder="folder"
                     :actions="actions"

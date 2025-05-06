@@ -14,9 +14,7 @@ import { RouterView } from 'vue-router'
         </aside>
         <div class="self-start grow overflow-scroll ">
           <RouterView name="default" v-slot="{ Component }">
-            <Suspense>
-              <component :is="Component" />
-            </Suspense>
+            <component :is="Component" />
           </RouterView>
         </div>
         <aside class="basis-0 fixed top-0 backdrop-blur-xs shadow-gray-900 shadow-md bg-gray-700">

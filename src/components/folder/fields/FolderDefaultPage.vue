@@ -19,11 +19,12 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
-  'update:index_content_id'
+  'update:index_content_id',
 ])
 
-const { load, folder } = await useFolder(ref(1))
-const { result, meta: browse_meta, goto_page } = await useFolderBrowser(folder, {
+const folder_id = ref(1)
+const { load, folder } = useFolder(folder_id)
+const { result, meta: browse_meta, goto_page } = useFolderBrowser(folder, {
   filter_types: ['document', 'folder'],
   sort_folder_first: true
 })
@@ -50,17 +51,6 @@ const doRemove = () => emits('update:index_content_id', null)
 
 const isOpen = ref(false)
 const doc = ref({})
-
-/*
-watch( () => props.index_content_id, async() => {
-  if (props.index_content_id) {
-    const { data } = await getContent(props.index_content_id)
-    doc.value = data
-  } else {
-    doc.value = null
-  }
-}, { immediate: true })
-*/
 
 const closeModal = () => isOpen.value = false
 const openModal = () => {
@@ -130,18 +120,19 @@ const openModal = () => {
                   <p class="text-sm text-gray-500">
                     <Breadcrumb 
                       :content="folder" 
-                      @navigate="(content) => load(content.id)" 
+                      @navigate="(content) => folder_id=content.id" 
                       class="p-2 shadow-md"
                     /> 
 
                     <FolderBrowser
                       class="mt-4"
-                      @browse="(id) => load(id)"
+                      @browse="(id) => folder_id=id"
                       @select-document="doSelectDocument"
                       :view="'gallery'"
                       :folder="folder"
                       :contents="result" 
                       :canChangeWeight="false"
+                      :canSelect="false"
                       :actions="actions"
                     />
 

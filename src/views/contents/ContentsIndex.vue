@@ -1,8 +1,6 @@
 <script setup>
-import { watch, watchEffect, isRef, isReactive, ref, toRefs, onUnmounted, onMounted, onBeforeMount, onUpdated,
-  onBeforeUpdate } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
-import { useContent } from '../../composables/useContent.js'
+import { toRefs } from 'vue'
+import { RouterView } from 'vue-router'
 
 const props = defineProps({
   content_id: {
@@ -12,38 +10,17 @@ const props = defineProps({
 })
 
 const { content_id } = toRefs(props)
-
-onUnmounted(() => console.log('UNMOUNTED'))
-onMounted(() => {
-  console.log('MOUNTED')
-  console.log(content_id)
-})
-onBeforeMount(() => {
-  console.log('BEFORE MOUNTED')
-  console.log(content_id)
-})
-onUpdated(() => { 
-  console.log('UPDATED') 
-  console.log(content_id)
-})
-onBeforeUpdate(() => console.log('BEFORE UPDATED'))
-
-const { content } = await useContent(content_id)
-
-watch(content, () => console.log('CONTENT CHANGED'))
-
 </script>
 
 <template>
-  <div class="flex flex-row">
+  <div class="flex flex-row" v-if="content_id">
     <RouterView v-slot="{ Component }">
-        <component class="m-4 grow" :content="content" :is="Component" />
+      <component class="m-4 grow" :content_id="content_id" :is="Component" />
     </RouterView>
 
     <aside class="basis-0 backdrop-blur-xs shadow-gray-900 shadow-md bg-gray-700">
       <RouterView 
         name="RightSideBar" 
-        v-if="content_id"
       />
     </aside>
   </div>

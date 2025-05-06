@@ -1,4 +1,7 @@
 <script setup>
+import { toRefs } from 'vue'
+import { useContent } from '../../composables/useContent.js'
+
 import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
 
 import DocumentShow from '@/views/documents/DocumentShow.vue'
@@ -7,11 +10,14 @@ import EventShow from '@/views/events/EventShow.vue'
 import FileShow from '@/views/files/FileShow.vue'
 
 const props = defineProps({
-  content: {
-    type: Object,
+  content_id: {
+    type: Number,
     required: true
   }
 })
+
+const { content_id } = toRefs(props)
+const { content } = useContent(content_id)
 
 const mapping = {
   document: DocumentShow,
@@ -23,7 +29,7 @@ const mapping = {
 </script>
 
 <template>
-  <div class="m-4">
+  <div v-if="content" class="m-4">
     <div class="flex mb-4 items-center grow">
       <Breadcrumb 
         :content="content" 

@@ -1,15 +1,17 @@
 import { useFetchBackend } from './fetch.js'
 import { useBuildFolder } from './useContentBuilder.js'
-import { watch, ref, toValue, computed, watchEffect } from 'vue'
+import { watch, ref, toRef, toValue, computed, watchEffect } from 'vue'
 
-export async function useFolder(folder_id) {
+export function useFolder(folder_id) {
     const { data, error, loading, fetchData } = useFetchBackend()
     const { formatted: formatted_data } = useBuildFolder(data)
+    const reactive_folder_id = toRef(folder_id)
 
-    const load = (id=folder_id) => fetchData(`folder/${toValue(id)}`)
+    const load = async () => {
+        await fetchData(`folder/${reactive_folder_id.value}`)
+    }
 
-    await load(folder_id)
-    watch(folder_id, () => load(folder_id))
+    watch(reactive_folder_id, () => load(), {immediate: true})
 
     return {
         folder: formatted_data,
@@ -17,7 +19,7 @@ export async function useFolder(folder_id) {
     }
 }
 
-export async function useMediaFolder() {
+export function useMediaFolder() {
     const { data, error, loading, fetchData } = useFetchBackend()
     const { formatted: formatted_data } = useBuildFolder(data)
 
@@ -25,7 +27,7 @@ export async function useMediaFolder() {
         await fetchData('folder/default_media')
     }
 
-    await load_media_folder()
+    load_media_folder()
 
     return {
         media_folder: formatted_data    

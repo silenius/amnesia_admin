@@ -2,7 +2,7 @@ import { ref, toValue, watch, watchEffect, readonly, computed } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useFolder } from './useFolder.js'
 
-export async function useFolderBrowser(folder, opts={}) {
+export function useFolderBrowser(folder, opts={}) {
     const { data, error, loading, fetchData } = useFetchBackend()
 
     const result = ref([])
@@ -36,7 +36,7 @@ export async function useFolderBrowser(folder, opts={}) {
                 : qs.append(key, value)
         )
 
-        await fetchData(`${toValue(folder).id}/browse?${qs}`)
+        await fetchData(`${folder.value.id}/browse?${qs}`)
 
         if (!toValue(error)) {
             result.value = toValue(data).data
@@ -53,11 +53,12 @@ export async function useFolderBrowser(folder, opts={}) {
         limit: limit
     })
 
-    await browse(query)
     watch(folder, () => {
         query.value.offset = 0
-        browse(query)
-    })
+        if (folder.value) {
+            browse(query)
+        }
+    }, {immediate: true})
 
     return {
         result: readonly(result),

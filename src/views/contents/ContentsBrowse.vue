@@ -27,22 +27,26 @@ import Pagination from '../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
 const props = defineProps({
-  content: {
-    type: Object,
+  content_id: {
+    type: Number,
     required: true
   }
 })
 
-const { content: folder } = toRefs(props)
+const { content_id } = toRefs(props)
+
+const { folder } = useFolder(content_id)
 
 const router = useRouter()
 
 // Move folder
 
+const move_folder_id = ref(1)
+
 const { 
   folder: move_folder,
   load: load_move_folder
-} = await useFolder(ref(1))
+} = useFolder(move_folder_id)
 
 const {
   data: paste_data,
@@ -55,15 +59,15 @@ const {
   result: move_result, 
   meta: move_meta,
   goto_page: move_goto_page
-} = await useFolderBrowser(move_folder, {filter_types:['folder']})
+} = useFolderBrowser(move_folder, {filter_types:['folder']})
 
 // Main browser
 
 const {
   browse, result, meta: browse_meta, change_limit, goto_page, view
-} = await useFolderBrowser(folder)
+} = useFolderBrowser(folder)
 
-const { content_types } = await useContentType()
+const { content_types } = useContentType()
 const { set_weight } = useContentWeight(folder) 
 const { selection, selection_ids, clear, unselect, select_or_unselect } = useContentSelection()
 const { destroy } = useContentDelete()
@@ -139,7 +143,7 @@ const doAdd = async (folder, t) => {
 </script>
 
 <template>
-  <div>
+  <div v-if="folder">
     <Dialog as="div" :open="move_modal_open" class="relative z-10">
       <div class="fixed inset-0 bg-black bg-opacity-25" />
       <div class="fixed inset-0 overflow-y-auto">
@@ -153,13 +157,13 @@ const doAdd = async (folder, t) => {
               <p class="text-sm text-gray-500">
                 <Breadcrumb 
                   :content="move_folder" 
-                  @navigate="(content) => load_move_folder(content.id)" 
+                  @navigate="(content) => move_folder_id = content.id" 
                   class="p-2 shadow-md"
                 /> 
 
                 <FolderBrowser
                   class="mt-4"
-                  @browse="load_move_folder"
+                  @browse="(id) => move_folder_id = id"
                   :view="'gallery'"
                   :folder="move_folder"
                   :contents="move_result" 
@@ -192,9 +196,8 @@ const doAdd = async (folder, t) => {
     <div class="flex gap-x-1">
 
       <DropDownAddToFolder 
-        :folder="folder" 
         :types="content_types" 
-        @add-content="(folder, type) => doAdd(folder, type)"
+        @add-content="(t) => $router.push({ name: 'add-content', query: { type: t }})"
       />
 
       <EditContentButton @edit="$router.push(`/${folder.id}/edit`)" class="w-12 h-12" />

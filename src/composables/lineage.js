@@ -1,17 +1,14 @@
-import { ref, computed, watch, toValue } from 'vue'
+import { ref, computed, watch, watchEffect, toValue } from 'vue'
 import { useFetchBackend } from './fetch.js'
 
-export async function useLineage(content) {
+export function useLineage(content) {
     const { data, error, fetchData } = useFetchBackend()
 
     const get_lineage = async () => {
-        const id = toValue(content).id
-        console.log('===>>> GET LINEAGE ', id)
-        await fetchData(`${id}/lineage`)
+        await fetchData(`${content.value.id}/lineage`)
     }
 
-    await get_lineage()
-    watch(content, () => get_lineage())
+    watch(content, () => get_lineage(), { immediate: true })
 
     return {
         lineage: data,

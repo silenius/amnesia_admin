@@ -25,7 +25,7 @@ const emit = defineEmits([
   'update:polymorphic_children'
 ])
 
-const { content_types } = await useContentType()
+const { content_types } = useContentType()
 
 watch(() => props.polymorphic_loading, (v) => {
   if (v === false) {
@@ -47,7 +47,7 @@ const value = computed({
 </script>
 
 <template>
-  <div>
+  <div v-if="content_types">
     <Listbox v-model="value" multiple by="id" v-if="polymorphic_loading">
       <div class="relative mt-1">
         <ListboxButton

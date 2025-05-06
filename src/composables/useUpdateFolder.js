@@ -14,8 +14,6 @@ export function useUpdateFolder(folder) {
         })
     }
 
-    watch(data, () => folder.value = data.value)
-
     return {
         update_folder,
         error

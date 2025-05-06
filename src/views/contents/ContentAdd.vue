@@ -1,6 +1,6 @@
 <script setup>
 
-import { provide, ref } from 'vue'
+import { provide, toRefs, ref } from 'vue'
 
 import FolderAdd from '../folders/FolderAdd.vue'
 import DocumentAdd from '../documents/DocumentAdd.vue'
@@ -8,9 +8,11 @@ import FileAdd from '../files/FileAdd.vue'
 import EventAdd from '../events/EventAdd.vue'
 import Breadcrumb from '../../components/breadcrumbs/Breadcrumb.vue'
 
+import { useContent } from '../../composables/useContent.js'
+
 const props = defineProps({
-  content: {
-    type: Object,
+  content_id: {
+    type: Number,
     required: true
   },
   type: {
@@ -18,6 +20,9 @@ const props = defineProps({
     required: true
   }
 })
+
+const { content_id } = toRefs(props)
+const { content } = useContent(content_id)
 
 const errors = ref({})
 
@@ -53,7 +58,7 @@ provide('errors', {
 </script>
 
 <template>
-  <div class="m-4">
+  <div class="m-4" v-if="content">
     <Breadcrumb 
       :content="content" 
       @navigate="(content) => $router.push(`/${content.id}`)"

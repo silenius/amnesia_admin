@@ -1,3 +1,43 @@
+<script setup>
+import { toRefs, ref, watch, computed }  from 'vue'
+import { useFolder } from '@/composables/folders.js'
+import { createBrowser } from '@/composables/browser.js'
+import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
+import EditContentButton from '../../components/content/EditContentButton.vue'
+
+const { browse } = useFolder()
+
+const base = import.meta.env.VITE_BASE_BACKEND
+const image_url = (id) => new URL(`${id}`, base)
+
+const props = defineProps({
+  content: {
+    type: Object,
+    required: true
+  },
+  view: {
+    type: String,
+    default: 'tabular'
+  },
+
+})
+
+const view = ref(props.view)
+const view_icon = computed(
+  () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
+)
+
+const folder_id = computed(() => props.content.id)
+
+const { 
+  reload, meta, data, limit, offset, sort_folder_first,
+} = createBrowser(folder_id, browse)
+
+watch(() => props.content.id, async () => {
+  await reload({offset:0})
+}, { immediate: true })
+
+</script>
 <template>          
 
   <!-- VIEW -->
@@ -50,48 +90,4 @@
   />
 </template>
 
-<script setup>
-import { ref, watch, computed, onBeforeMount, onUnmounted, onMounted, onUpdated } from 'vue'
-import { useFolder } from '@/composables/folders.js'
-import { createBrowser } from '@/composables/browser.js'
-import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
-import EditContentButton from '../../components/content/EditContentButton.vue'
 
-onBeforeMount(() => console.log('===> FolderShow before mounted'))
-onMounted(() => console.log('===> FolderShow mounted'))
-onUnmounted(() => console.log('===> FolderShow unmounted'))
-onUpdated(() => console.log('===> FolderShow updated'))
-const { browse } = useFolder()
-
-const base = import.meta.env.VITE_BASE_BACKEND
-const image_url = (id) => new URL(`${id}`, base)
-
-const props = defineProps({
-  content: {
-    type: Object,
-    required: true
-  },
-  view: {
-    type: String,
-    default: 'tabular'
-  },
-
-})
-
-const view = ref(props.view)
-const view_icon = computed(
-  () => view.value == 'tabular' ? 'fa-image fa-regular' : 'fa-solid fa-list'
-)
-
-
-const folder_id = computed(() => props.content.id)
-
-const { 
-  reload, meta, data, limit, offset, sort_folder_first,
-} = createBrowser(folder_id, browse)
-
-watch(() => props.content.id, async () => {
-  await reload({offset:0})
-}, { immediate: true })
-
-</script>

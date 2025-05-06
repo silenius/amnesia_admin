@@ -1,7 +1,7 @@
 <script setup>
 
-import { watch, toRefs, ref, provide } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
+import { toRefs, ref, provide } from 'vue'
+import { useContent } from '../../composables/useContent.js'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
 import DocumentEdit from '@/views/documents/DocumentEdit.vue'
@@ -9,20 +9,15 @@ import FileEdit from '@/views/files/FileEdit.vue'
 import EventEdit from '@/views/events/EventEdit.vue'
 import Breadcrumb from '@/components/breadcrumbs/Breadcrumb.vue'
 
-import { useContent } from '../../composables/useContent.js'
-
-import { HTTPError } from '@/composables/fetch.js'
-
 const props = defineProps({
-  content: {
-    type: Object,
+  content_id: {
+    type: Number,
     required: true
   }
 })
 
-const { content } = toRefs(props)
-
-const router = useRouter()
+const { content_id } = toRefs(props)
+const { content } = useContent(content_id)
 
 const errors = ref({})
 
@@ -51,13 +46,14 @@ const mapping = {
 
 provide('errors', {
   errors,
-  setError
+  setError,
+  setErrorFromResponse
 })
 
 </script>
 
 <template>
-  <div class="m-4">
+  <div class="m-4" v-if="content">
     <Breadcrumb 
       :content="content" 
       @navigate="(content) => $router.push(`/${content.id}`)"

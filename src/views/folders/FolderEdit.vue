@@ -1,24 +1,29 @@
 <script setup>
-import { inject, toValue } from 'vue'
+import { inject, toRefs, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 import FolderForm from '../../components/folder/FolderForm.vue'
 import { useUpdateFolder } from '../../composables/useUpdateFolder.js'
 
 const props = defineProps({
-  content: Object
+  content: {
+    type: Object,
+    required: true
+  }
 })
+
+const { content: folder } = toRefs(props)
 
 const router = useRouter()
 
 const { setErrorFromResponse } = inject('errors')
 
-const { update_folder, error } = useUpdateFolder(props.content)
+const { update_folder, error } = useUpdateFolder(folder)
 
 const update = async() => {
   await update_folder()
 
   if (!toValue(error)) {
-    router.push(`/${props.content.id}/browse`)
+    router.push(`/${folder.value.id}/browse`)
   } else {
     setErrorFromResponse(error.value.response)
   }
@@ -28,7 +33,7 @@ const update = async() => {
 
 <template>
     <FolderForm 
-      :folder="content" 
+      :folder="folder" 
       :action="'Update folder'"
       @submit-folder="update" 
     />
