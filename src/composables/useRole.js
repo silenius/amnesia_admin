@@ -1,16 +1,24 @@
-import { useFetchBackend } from '@/composables/fetch.js'
+import { useFetchBackend } from './fetch.js'
 import { ref, computed, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
 
-const role_to_formdata = (role) => {
-    const data = new FormData()
+export function useRoles() {
+    const { data, error, loading, fetchData } = useFetchBackend()
 
-    data.append('name', role.value.name)
-    data.append('description', role.value.description)
+    const load = async () => {
+        await fetchData('roles/browse')
+    }
 
-    return data
+    load()
+
+    return {
+        roles: data?.data?.roles,
+        load_roles: load
+    }
 }
 
+
+/*
 export function useRoles() {
 
     const roles = ref([])
@@ -44,6 +52,7 @@ export function useRoles() {
         createRole
     }
 }
+*/
 
 // TODO: use Pinia?
 // return .value ??

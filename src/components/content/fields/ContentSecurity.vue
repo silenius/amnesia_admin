@@ -1,8 +1,9 @@
 <script setup>
-import { inject, unref, computed, ref, onMounted, watch } from 'vue'
+import { toRefs, inject, unref, computed, ref, onMounted, watch } from 'vue'
 import { useContent } from '@/composables/contents.js'
-import { usePermissions } from '@/composables/permissions.js'
-import { useRoles } from '@/composables/roles.js'
+import { usePermission } from '../../../composables/usePermission.js'
+import { useRoles } from '../../../composables/useRole.js'
+import { useContentACL } from '../../../composables/useACL.js'
 
 const props = defineProps({
   acls:  {
@@ -11,17 +12,19 @@ const props = defineProps({
   }
 })
 
+const { acls } = toRefs(props)
+
 const emit = defineEmits([
   'update:acls'
 ])
 
 const recursive_acls = ref([])
-const values = ref([...props.acls])
 
-const content = unref(inject('editable'))
+const content = inject('editable')
 
-const { getPermissions, permissions } = usePermissions()
-const { getRoles, roles } = useRoles()
+const { permissions } = usePermission()
+const { roles } = useRoles()
+/*
 const { 
   addContentACL, 
   deleteContentACL, 
@@ -29,6 +32,7 @@ const {
   getContentACL,
   getContentParentACLS
 } = useContent()
+*/
 
 const selectedAllow = ref()
 const selectedPermission = ref()
@@ -36,13 +40,13 @@ const selectedRole = ref()
 
 const refresh = async () => {
   const { data } = await getContentACL(content.id)  
-  values.value = data
+  acls.value = data
 }
 
 const add = async () => {
   try {
     if (!content.id) {
-      values.value.unshift({
+      acls.value.unshift({
         allow: selectedAllow.value === 'yes' ? true : false,
         role: selectedRole.value,
         permission: selectedPermission.value
@@ -63,16 +67,16 @@ const add = async () => {
     }
 }
 
-watch(values, () => emit('update:acls', values), { deep: true })
+watch(acls, () => emit('update:acls', acls), { deep: true })
 
 onMounted( async () => {
+  /*
   if (content.id) {
     refresh()
   }
   const { data } = await getContentParentACLS(content.container_id)
   recursive_acls.value = data
-  getPermissions()
-  getRoles()
+  */
 })
 
 const delete_acl = async (acl, idx) => {
@@ -80,7 +84,7 @@ const delete_acl = async (acl, idx) => {
     await deleteContentACL(acl.id)
     refresh()
   } else {
-    values.value.splice(idx, 1)
+    acls.value.splice(idx, 1)
   }
 }
 
@@ -94,8 +98,8 @@ const update_weight = async (data, weight) => {
     refresh()
   } else {
     console.info(`===> Update ACL at idx ${data.idx} weight to idx ${weight}`)
-    const acl = values.value.splice(data.idx, 1)
-    values.value.splice(weight, 0, acl[0])
+    const acl = acls.value.splice(data.idx, 1)
+    acls.value.splice(weight, 0, acl[0])
   }
 }
 
@@ -194,7 +198,7 @@ const drop = (evt) => {
 
     <tbody>
       <tr 
-        v-for="(acl, idx) in values"
+        v-for="(acl, idx) in acls"
         class="cursor-move odd:bg-white even:bg-slate-50 text-slate-600"
         draggable="true"
         :data-acl_id="acl.id"
@@ -240,12 +244,12 @@ const drop = (evt) => {
           </select>
         </td>
 
-        <td>
+        <td v-if="roles">
           <select v-model="selectedRole">
             <option :value="role" v-for="role in roles" :key="role.id">{{ role.name }}</option>
           </select>
         </td>
-        <td>
+        <td v-if="permissions">
           <select v-model="selectedPermission">
             <option :value="permission" v-for="permission in permissions" :key="permission.id">{{ permission.description }}</option>
           </select>

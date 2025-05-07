@@ -11,10 +11,10 @@ export function useContent(content_id) {
         await fetchData(reactive_content_id.value)
     }
 
-    watch(reactive_content_id, () => load(), {immediate: true})
+    watch(reactive_content_id, () => load(), { immediate: true })
 
     return {
         content: formatted_data,
-        load: load
+        load,
     }
 }

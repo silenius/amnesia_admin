@@ -193,6 +193,8 @@ const doAdd = async (folder, t) => {
         </div>
       </div>
     </Dialog>
+
+    <h1 class="mb-4 font-bold text-xl underline uppercase tracking-tighter decoration-dotted">{{ folder.title }}</h1>
     <div class="flex gap-x-1">
 
       <DropDownAddToFolder 
@@ -220,7 +222,6 @@ const doAdd = async (folder, t) => {
 
     </div>
 
-    <h1 class="my-6 font-bold text-xl underline uppercase tracking-tighter decoration-dotted">{{ folder.title }}</h1>
 
     <FolderBrowser
       class="mt-4"
