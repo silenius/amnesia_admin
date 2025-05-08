@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, provide, inject, watch } from 'vue'
+import { ref, computed, provide, toRefs, inject, watch } from 'vue'
 
 import ContentTitle from '../content/fields/ContentTitle.vue'
 import ContentDescription from '../content/fields/ContentDescription.vue'
@@ -28,6 +28,8 @@ const props = defineProps({
   }
 })
 
+const { folder } = toRefs(props)
+
 const section_cls="flex flex-col gap-4"
 
 const emit = defineEmits([
@@ -35,7 +37,7 @@ const emit = defineEmits([
 ])
 
 // note provide result is _not_ reactive by default
-provide('editable', computed(() => props.folder))
+provide('editable', folder)
 
 </script>
 
@@ -74,9 +76,7 @@ provide('editable', computed(() => props.folder))
         <ContentBannerImage class="border-b pb-4" v-model:banner_image="folder.props.banner_image" />
       </template>
       <template #security :class="section_cls">
-        <ContentSecurity 
-          v-model:acls="folder.acls"
-        />
+        <ContentSecurity />
       </template>
     </FormTabGroup>
     <button type="submit" class="mt-4 rounded-sm w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">

@@ -1,91 +1,29 @@
 <script setup>
 import { toRefs, inject, unref, computed, ref, onMounted, watch } from 'vue'
-import { useContent } from '@/composables/contents.js'
 import { usePermission } from '../../../composables/usePermission.js'
 import { useRoles } from '../../../composables/useRole.js'
 import { useContentACL } from '../../../composables/useACL.js'
 
-const props = defineProps({
-  acls:  {
-    type: Array,
-    default: []
-  }
-})
-
-const { acls } = toRefs(props)
-
-const emit = defineEmits([
-  'update:acls'
-])
+const content = inject('editable')
+const { acls, add_acl, remove_acl } = useContentACL(content)
 
 const recursive_acls = ref([])
 
-const content = inject('editable')
-
 const { permissions } = usePermission()
 const { roles } = useRoles()
-/*
-const { 
-  addContentACL, 
-  deleteContentACL, 
-  patchContentACL, 
-  getContentACL,
-  getContentParentACLS
-} = useContent()
-*/
 
 const selectedAllow = ref()
 const selectedPermission = ref()
 const selectedRole = ref()
 
-const refresh = async () => {
-  const { data } = await getContentACL(content.id)  
-  acls.value = data
-}
-
 const add = async () => {
   try {
-    if (!content.id) {
-      acls.value.unshift({
-        allow: selectedAllow.value === 'yes' ? true : false,
-        role: selectedRole.value,
-        permission: selectedPermission.value
-      })
-    } else {
-        await addContentACL(
-          content.id,
-          selectedAllow.value,
-          selectedRole.value.id, 
-          selectedPermission.value.id
-        )
-        refresh()
-    }
+    add_acl(selectedAllow, selectedRole, selectedPermission)
   } finally {
       selectedAllow.value=''
       selectedPermission.value=''
       selectedRole.value=''
-    }
-}
-
-watch(acls, () => emit('update:acls', acls), { deep: true })
-
-onMounted( async () => {
-  /*
-  if (content.id) {
-    refresh()
-  }
-  const { data } = await getContentParentACLS(content.container_id)
-  recursive_acls.value = data
-  */
-})
-
-const delete_acl = async (acl, idx) => {
-  if (content.id) {
-    await deleteContentACL(acl.id)
-    refresh()
-  } else {
-    acls.value.splice(idx, 1)
-  }
+   }
 }
 
 const update_weight = async (data, weight) => {
@@ -185,8 +123,14 @@ const drop = (evt) => {
 </script>
 
 <template>
-  <h3 class="text-lg">Local ACLS</h3>
-  <table class="table-auto border-spacing-4 mb-4">
+  <h1 class="text-2xl">Manage ACLS</h1>
+  <p class="mb-4">
+    This section allows you to manage the access-control list (ACL) for the
+    content. An ACL specifies which roles are granted access to content, as
+    well as what operations are allowed on the given content.
+  </p>
+  <h3 class="text-lg">Local ACL</h3>
+  <table class="border-collapse mb-4">
     <thead>
       <tr class="text-left bg-slate-100">
         <th class="p-2"></th>
@@ -231,7 +175,7 @@ const drop = (evt) => {
         <td>
           <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700
             rounded w-full p-1 text-red-600"
-            @click.prevent="delete_acl(acl, idx)">remove</button>
+            @click.prevent="remove_acl(acl, idx)">remove</button>
         </td>
       </tr>
       </tbody>
@@ -239,8 +183,8 @@ const drop = (evt) => {
       <tr>
         <td>
           <select v-model="selectedAllow" class="w-full">
-            <option value="yes">allow</option>
-            <option value="no">deny</option>
+            <option :value="true">allow</option>
+            <option :value="false">deny</option>
           </select>
         </td>
 
@@ -263,7 +207,7 @@ const drop = (evt) => {
   </table>
 
   <p class="text-lg">
-    Parent ACLS
+    Parent ACL
   </p>
 
   <table class="table-auto border-spacing-4">
@@ -308,6 +252,3 @@ const drop = (evt) => {
   </table>
 
 </template>
-
-
-

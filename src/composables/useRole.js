@@ -5,6 +5,10 @@ import { isEmpty, minLength } from '../services/validators.js'
 export function useRoles() {
     const { data, error, loading, fetchData } = useFetchBackend()
 
+    const roles = computed(
+        () => data.value?.data?.roles
+    )
+
     const load = async () => {
         await fetchData('roles/browse')
     }
@@ -12,7 +16,7 @@ export function useRoles() {
     load()
 
     return {
-        roles: data?.data?.roles,
+        roles: roles,
         load_roles: load
     }
 }
