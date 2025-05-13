@@ -1,8 +1,12 @@
 import { useFetchBackend } from './fetch.js'
-import { computed, watch, toRef, toValue } from 'vue'
+import { computed, readonly, watch, toRef, toValue } from 'vue'
 
 export function useContentACL(content) {
     const { data, error, loading, fetchData } = useFetchBackend()
+    const { 
+        data: rec_data, error: rec_error, loading: rec_loading, 
+        fetchData: rec_fetchData 
+    } = useFetchBackend()
     const reactive_content = toRef(content)
 
     const acls = computed(
@@ -12,6 +16,10 @@ export function useContentACL(content) {
     const load = async() => {
         await fetchData(`${reactive_content.value.id}/acl`)
         reactive_content.value.acls = toValue(data)
+    }
+
+    const load_recursive_acls = async() => {
+        await rec_fetchData(`${reactive_content.value.id}/acls`)
     }
 
     const add_acl = async(allow, role, permission) => {
@@ -64,6 +72,8 @@ export function useContentACL(content) {
 
     return {
         acls,
+        recursive_acls: readonly(rec_data),
+        load_recursive_acls: load_recursive_acls,
         add_acl,
         remove_acl
     }

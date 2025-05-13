@@ -5,9 +5,10 @@ import { useRoles } from '../../../composables/useRole.js'
 import { useContentACL } from '../../../composables/useACL.js'
 
 const content = inject('editable')
-const { acls, add_acl, remove_acl } = useContentACL(content)
-
-const recursive_acls = ref([])
+onMounted(() => load_recursive_acls())
+const { 
+  acls, recursive_acls, add_acl, remove_acl, load_recursive_acls 
+} = useContentACL(content)
 
 const { permissions } = usePermission()
 const { roles } = useRoles()
@@ -133,6 +134,7 @@ const drop = (evt) => {
   <table class="border-collapse mb-4">
     <thead>
       <tr class="text-left bg-slate-100">
+        <th></th>
         <th class="p-2"></th>
         <th>Role</th>
         <th>Permission</th>
@@ -156,6 +158,7 @@ const drop = (evt) => {
         @dragover="over"
         @drop="drop"
       >
+        <td>LOCAL</td>
         <td class="px-1 py-1">
           <span class="rounded inline-flex w-full justify-center
             px-4 py-1 text-xs font-medium focus:outline-hidden
@@ -178,6 +181,29 @@ const drop = (evt) => {
             @click.prevent="remove_acl(acl, idx)">remove</button>
         </td>
       </tr>
+      <template v-for="acl in recursive_acls">
+      <tr v-if="acl.content?.id != content.id">
+        <td>{{ acl.resource.name }}</td>
+        <td class="px-1 py-1">
+          <span class="rounded inline-flex w-full justify-center
+            px-4 py-1 text-xs font-medium focus:outline-hidden
+            focus-visible:ring-2 focus-visible:ring-white
+            focus-visible:ring-opacity-75"
+            :class="menuColors[acl.allow]">
+            <span v-if="acl.allow === true"> Allow </span>
+            <span v-if="acl.allow === false"> Deny </span>
+          </span>
+        </td>
+        <td>
+          {{ acl.role.name }}
+        </td>
+        <td>
+          {{ acl.permission.description }}
+        </td>
+        <td>
+        </td>
+      </tr>
+      </template>
       </tbody>
       <tfoot>
       <tr>
@@ -205,50 +231,4 @@ const drop = (evt) => {
       </tr>
     </tfoot>
   </table>
-
-  <p class="text-lg">
-    Parent ACL
-  </p>
-
-  <table class="table-auto border-spacing-4">
-    <thead>
-      <tr class="text-left bg-slate-100">
-        <th>Type</th>
-        <th class="p-2"></th>
-        <th>Role</th>
-        <th>Permission</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr 
-        v-for="acl in recursive_acls"
-        class="odd:bg-white even:bg-slate-50 text-slate-600"
-      >
-        <td>
-          {{ acl.resource.name }}
-          <span v-if="acl.content">
-            {{ acl.content.title }}
-          </span>
-        </td>
-        <td class="px-1 py-1">
-          <span class="rounded inline-flex w-full justify-center
-            px-4 py-1 text-xs font-medium focus:outline-hidden
-            focus-visible:ring-2 focus-visible:ring-white
-            focus-visible:ring-opacity-75"
-            :class="menuColors[acl.allow]">
-            <span v-if="acl.allow === true"> Allow </span>
-            <span v-if="acl.allow === false"> Deny </span>
-          </span>
-        </td>
-        <td>
-          {{ acl.role.name }}
-        </td>
-        <td>
-          {{ acl.permission.description }}
-        </td>
-      </tr>
-      </tbody>
-  </table>
-
 </template>
