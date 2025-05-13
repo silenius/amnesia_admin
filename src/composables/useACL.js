@@ -2,11 +2,15 @@ import { useFetchBackend } from './fetch.js'
 import { computed, readonly, watch, toRef, toValue } from 'vue'
 
 export function useContentACL(content) {
+    // Content ACL
     const { data, error, loading, fetchData } = useFetchBackend()
+    
+    // Content ACL recursive
     const { 
         data: rec_data, error: rec_error, loading: rec_loading, 
         fetchData: rec_fetchData 
     } = useFetchBackend()
+
     const reactive_content = toRef(content)
 
     const acls = computed(
@@ -22,11 +26,32 @@ export function useContentACL(content) {
         await rec_fetchData(`${reactive_content.value.id}/acls`)
     }
 
+    const change_weight = async({acl_id, acl_idx, weight}) => {
+        if (reactive_content.value.id) {
+            const { error, fetchData } = useFetchBackend()
+            
+            const form_data = new FormData()
+            form_data.append('weight', weight)
+
+            await fetchData(`acls/${acl_id}`, {
+                method: 'PATCH',
+                body: form_data
+            })
+
+            if (!toValue(error)) {
+                await load()
+            }
+        } else {
+            const acl = acls.value.splice(acl_idx, 1)
+            acls.value.splice(weight, 0, acl[0])
+        }
+    }
+
     const add_acl = async(allow, role, permission) => {
         // Do we add an ACL to an existing content?
         if (reactive_content.value.id) {
             const { 
-                data: acl_data, error: acl_error, fetchData: add
+                error, fetchData: add
             } = useFetchBackend()
             
             const form_data = new FormData()
@@ -40,7 +65,7 @@ export function useContentACL(content) {
                 body: form_data
             })
 
-            if (!toValue(acl_error)) {
+            if (!toValue(error)) {
                 await load()
             }
         } else {
@@ -74,6 +99,7 @@ export function useContentACL(content) {
         acls,
         recursive_acls: readonly(rec_data),
         load_recursive_acls: load_recursive_acls,
+        change_acl_weight: change_weight,
         add_acl,
         remove_acl
     }

@@ -15,6 +15,7 @@ import { useContentType } from '../../composables/useContentType.js'
 import { useContentWeight } from '../../composables/useContentWeight.js'
 import { useContentSelection } from '../../composables/useContentSelection.js'
 import { useContentDelete } from '../../composables/useContentDelete.js'
+import { publish, unpublish } from '../../services/content.js'
 
 import FolderBrowser from '../../components/folder/FolderBrowser.vue'
 import SelectFolderView from '../../components/folder/SelectFolderView.vue'
@@ -95,16 +96,16 @@ const doChangeWeight = async (content, weight) => {
   //reload()
 }
 
-// Publish content
+// Publish oontent
 const doPublish = async (content) => {
-  await publishContent(content_id)
-  reload()
+  await publish(content.id)
+  browse()
 }
 
 // Unpublish content
 const doUnpublish = async (content) => {
-  await unpublishContent(content_id)
-  reload()
+  await unpublish(content.id)
+  browse()
 }
 
 // Delete selected content

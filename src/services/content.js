@@ -1,4 +1,5 @@
 import { toValue } from 'vue'
+import { useFetchBackend } from '../composables/fetch.js'
 
 export const content_as_formdata = ({content, form_data, extra_fields=[]} = {}) => {
     const content_value = toValue(content)
@@ -41,4 +42,14 @@ export const content_as_formdata = ({content, form_data, extra_fields=[]} = {}) 
     }
 
     return form_data
+}
+
+export const publish = async(id) => {
+    const { fetchData } = useFetchBackend()
+    await fetchData(`${toValue(id)}/publish`, {method: 'POST'})
+}
+
+export const unpublish = async(id) => {
+    const { fetchData } = useFetchBackend()
+    await fetchData(`${toValue(id)}/unpublish`, {method: 'POST'})
 }
