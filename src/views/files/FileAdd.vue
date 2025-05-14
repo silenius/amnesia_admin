@@ -1,33 +1,35 @@
 <script setup>
+import { ref, toValue, inject } from 'vue'
+import { useRouter } from 'vue-router'
 
-import { ref } from 'vue'
-
-import FileForm from '@/components/file/FileForm.vue'
-import { useFile } from '@/composables/files.js'
+import FileForm from '../../components/file/FileForm.vue'
+import { useCreateFile } from '../../composables/useFile.js'
 
 const props = defineProps({
-    container: Object
+  container: Object
 })
 
-const emit = defineEmits(['create'])
+const { setErrorFromResponse } = inject('errors')
 
-const { createFile } = useFile()
+const router = useRouter()
 
-const file = ref({
-  is_fts: true,
-  exclude_nav: false,
-  container_id: props.container.id,
-  props: {}
-})
+const { create_file, file, error } = useCreateFile()
 
+const create = async () => {
+  await create_file(props.container)
+
+  if (!toValue(error)) {
+    router.push(`/${file.value.id}`)
+  } else {
+    setErrorFromResponse(error.value.response)
+  }
+}
 </script>
 
 <template>
-    <h1>Add file</h1>
-    <FileForm 
-      :file="file" 
-      :container="container"
-      :action="'Add file'"
-      @submit-file="$emit('create', createFile, file)" 
-    />
+  <FileForm 
+    :file="file" 
+    :action="'Add file'"
+    @submit-file="create" 
+  />
 </template>

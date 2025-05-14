@@ -84,6 +84,7 @@ import {
     faEnvelope,
     faGlobe,
     faChevronUp,
+    faFileCsv,
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -178,6 +179,7 @@ library.add(faListOl)
 library.add(faPhone)
 library.add(faEnvelope)
 library.add(faGlobe)
+library.add(faFileCsv)
 
 
 const app = createApp(App)

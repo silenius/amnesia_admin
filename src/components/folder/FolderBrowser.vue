@@ -262,7 +262,7 @@ const formatDate = (d) => {
             <!-- TITLE -->
 
             <td class="p-2 whitespace-nowrap truncate max-w-md">
-              <font-awesome-icon class="drop-shadow-lg inline-block align-middle mr-2 h-8 w-8" :icon="['fa-solid', content.type.icons['fa']]" />
+              <font-awesome-icon class="drop-shadow-lg inline-block align-middle mr-2 h-8 w-8" :icon="['fas', content.fa_icon]" />
               <button @click="$emit('browse', content.id)" v-if="content.type.name=='folder'" class="underline decoration-slate-400 decoration-dotted underline-offset-4">{{ content.title }}</button>
               <RouterLink v-else :to="{name: 'show-content', params: {id:
                 content.id}}">{{ content.title }}</RouterLink>

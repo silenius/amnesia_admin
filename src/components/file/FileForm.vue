@@ -37,7 +37,6 @@ provide('editable', computed(() => props.file))
 </script>
 
 <template>
-  <span class="text-slate-600">{{ file.title }}</span>
   <form @submit.prevent="$emit('submit-file')">
     <FormTabGroup>
       <template #default>

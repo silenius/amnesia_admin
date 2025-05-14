@@ -2,6 +2,10 @@ import { ref, toValue } from 'vue'
 import { content_as_formdata } from '../services/content.js'
 
 export function useCreateContent(fields) {
+    if (fields === undefined) {
+        fields = {}
+    }
+
     const content = ref({
         title: '',
         is_fts: true,

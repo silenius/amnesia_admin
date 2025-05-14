@@ -163,9 +163,9 @@ const drop = async (evt) => {
           </span>
         </td>
         <td>{{ acl.permission.description }}</td>
-        <td>
+        <td class="text-right">
           <button class="hover:bg-red-300 bg-red-200 px-2 hover:text-red-700
-            rounded w-full p-1 text-red-600"
+            rounded w-24 p-1 text-sm border border-red-300 text-red-600 hover:cursor-pointer"
             @click.prevent="remove_acl(acl, idx)">remove</button>
         </td>
       </tr>
@@ -197,10 +197,13 @@ const drop = async (evt) => {
         </tr>
       </template>
     </tbody>
-    <tfoot>
+  </table>
+  <h2 class="text-xl">Add an new access control entry</h2>
+  <table class="w-min shadow">
+    <tbody>
       <tr>
         <td>
-          <select v-model="selectedAllow" class="w-full">
+          <select v-model="selectedAllow">
             <option :value="true">allow</option>
             <option :value="false">deny</option>
           </select>
@@ -218,9 +221,9 @@ const drop = async (evt) => {
         </td>
         <td>
           <button @click.prevent="add" class="hover:bg-blue-300 bg-blue-200
-            px-2 hover:text-blue-700 rounded w-full p-1 text-blue-600">add</button>
+            px-2 hover:text-blue-700 rounded p-1 text-blue-600">add</button>
         </td>
       </tr>
-    </tfoot>
+    </tbody>
   </table>
 </template>
