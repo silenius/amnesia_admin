@@ -15,7 +15,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['set-view'])
+const emit = defineEmits(['change-filter'])
 
 </script>
 
@@ -28,8 +28,7 @@ const emit = defineEmits(['set-view'])
 
     <PopoverPanel class="absolute right-0 w-max p-4 bg-white z-10">
       <div class="flex items-start">
-        <InputCheckbox :checked="folder_first" @change="(n) =>
-          $emit('reload', {sort_folder_first: n === 'true'})"/>
+        <InputCheckbox :checked="folder_first" @change="(n) => $emit('change-filter', {sort_folder_first: n === 'true'})"/>
         <div class="flex flex-col items-start">
           Folders first
           <span v-if="folder_first" class="text-xs">Folders will

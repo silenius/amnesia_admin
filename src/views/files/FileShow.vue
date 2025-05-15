@@ -15,7 +15,7 @@
 
 <script setup>
 import { onBeforeMount, onMounted, onUnmounted, onUpdated } from 'vue'
-import { backend_url } from '@/composables/fetch.js'
+import { backend_url } from '../../composables/fetch.js'
 
 const props = defineProps({
   content: {

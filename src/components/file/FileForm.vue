@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, provide, inject, watch } from 'vue'
+import { toRefs, ref, computed, provide, inject, watch } from 'vue'
 
 import ContentTitle from '@/components/content/fields/ContentTitle.vue'
 import ContentDescription from '@/components/content/fields/ContentDescription.vue'
@@ -23,6 +23,8 @@ const props = defineProps({
   }
 })
 
+const { file } = toRefs(props)
+
 const section_cls="flex flex-col gap-4"
 
 const emit = defineEmits([
@@ -31,8 +33,7 @@ const emit = defineEmits([
 
 const errors = inject('errors')
 
-// note provide result is _not_ reactive by default
-provide('editable', computed(() => props.file))
+provide('editable', file)
 
 </script>
 

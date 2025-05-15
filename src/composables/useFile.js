@@ -3,7 +3,7 @@ import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useCreateContent.js'
 import { file_as_formdata } from '../services/file.js'
 
-export const useCreateFile = () => {
+export function useCreateFile() {
     const { content: file } = useCreateContent()
 
     const { data, error, fetchData } = useFetchBackend()
@@ -23,5 +23,23 @@ export const useCreateFile = () => {
         file,
         create_file,
         error,
+    }
+}
+
+export function useUpdateFile(file) {
+    const { data, error, fetchData } = useFetchBackend()
+
+    const update_file = async() => {
+        const form_data = file_as_formdata(file)
+
+        await fetchData(file.value.id, {
+            method: 'PUT',
+            body: form_data
+        })
+    }
+
+    return {
+        update_file,
+        error
     }
 }

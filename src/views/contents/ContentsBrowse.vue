@@ -97,15 +97,17 @@ const doChangeWeight = async (content, weight) => {
 }
 
 // Publish oontent
-const doPublish = async (content) => {
-  await publish(content.id)
-  browse()
+const doPublish = (content) => {
+  if (publish(content.id)) {
+    browse()
+  }
 }
 
 // Unpublish content
-const doUnpublish = async (content) => {
-  await unpublish(content.id)
-  browse()
+const doUnpublish = (content) => {
+  if (unpublish(content.id)) {
+    browse()
+  }
 }
 
 // Delete selected content
@@ -218,11 +220,10 @@ const doAdd = async (folder, t) => {
       /> 
 
       <SelectFolderView class="w-12 h-12" :view="view" @set-view="(v) => view=v" />
-      <SelectFolderFilters  />
+      <SelectFolderFilters @change-filter="(p) => browse(p)" />
       <SelectFolderLimit :folder="folder" :limit="browse_meta.limit" @set-limit="(v) => change_limit(v)" />
 
     </div>
-
 
     <FolderBrowser
       class="mt-4"

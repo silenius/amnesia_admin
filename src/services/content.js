@@ -44,12 +44,14 @@ export const content_as_formdata = ({content, form_data, extra_fields=[]} = {}) 
     return form_data
 }
 
-export const publish = async(id) => {
-    const { fetchData } = useFetchBackend()
-    await fetchData(`${toValue(id)}/publish`, {method: 'POST'})
+const change_state = async (id, state) => {
+    const id_value = toValue(id)
+    const { error, fetchData } = useFetchBackend()
+    await fetchData(`${id_value}/${state}`, {method: 'POST'})
+    return !toValue(error)
 }
 
-export const unpublish = async(id) => {
-    const { fetchData } = useFetchBackend()
-    await fetchData(`${toValue(id)}/unpublish`, {method: 'POST'})
-}
+
+export const publish = (id) => change_state(id, 'publish')
+export const unpublish = (id) => change_state(id, 'unpublish')
+export const private_ = (id) => change_state(id, 'private')

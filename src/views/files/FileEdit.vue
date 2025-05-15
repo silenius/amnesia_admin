@@ -1,22 +1,40 @@
 <script setup>
-
-import FileForm from '@/components/file/FileForm.vue'
-import { useFile } from '@/composables/files.js'
+import { inject, toRefs, toValue } from 'vue'
+import { useRouter } from 'vue-router'
+import FileForm from '../../components/file/FileForm.vue'
+import { useUpdateFile } from '../../composables/useFile.js'
 
 const props = defineProps({
-    content: Object
+  content: {
+    type: Object,
+    required: true
+  }
 })
 
-const emit = defineEmits(['update'])
+const { content: file } = toRefs(props)
 
-const { updateFile } = useFile()
+const router = useRouter()
+
+const { setErrorFromResponse } = inject('errors')
+
+const { update_file, error } = useUpdateFile(file)
+
+const update = async() => {
+  await update_file()
+
+  if (!toValue(error)) {
+    router.push(`/${file.value.id}`)
+  } else {
+    setErrorFromResponse(error.value.response)
+  }
+}
 
 </script>
 
 <template>
     <FileForm 
-      :file="content" 
+      :file="file" 
       :action="'Update file'"
-      @submit-file="$emit('update', updateFile)" 
+      @submit-file="update" 
     />
 </template>
