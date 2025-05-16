@@ -2,7 +2,7 @@
 import { inject, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 import FolderForm from '../../components/folder/FolderForm.vue'
-import { useCreateFolder } from '../../composables/useCreateFolder.js'
+import { useCreateFolder } from '../../composables/useFolder.js'
 
 const props = defineProps({
     container: Object

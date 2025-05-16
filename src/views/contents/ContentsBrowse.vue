@@ -65,7 +65,7 @@ const {
 // Main browser
 
 const {
-  browse, result, meta: browse_meta, change_limit, goto_page, view
+  browse, result, meta: browse_meta, error, change_limit, goto_page, view
 } = useFolderBrowser(folder)
 
 const { content_types } = useContentType()
@@ -223,6 +223,11 @@ const doAdd = async (folder, t) => {
       <SelectFolderFilters @change-filter="(p) => browse(p)" />
       <SelectFolderLimit :folder="folder" :limit="browse_meta.limit" @set-limit="(v) => change_limit(v)" />
 
+    </div>
+
+    <div v-if="error" class="bg-red-500 text-white my-8 p-4">
+      Error loading content
+      <span v-if="error.response.status==403">: permission denied</span>
     </div>
 
     <FolderBrowser

@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, unref, watch, inject, computed } from 'vue'
-import { get_orders } from '../../../composables/useFolder.js'
+import { get_orders } from '../../../services/folder.js'
 
 const folder = unref(inject('editable'))
 
@@ -23,13 +23,13 @@ const emit = defineEmits([
 const orders = ref([])
 
 const selected = computed(
-  () => orders.value.orders.filter(item => item.checked)
+  () => orders.value?.filter(item => item.checked)
 )
 
 watch(() => orders, () => {
   emit(
     'update:default_order', 
-    selected.value.map(v => ({
+    selected.value?.map(v => ({
         key: v.key,
         nulls: v.nulls,
         direction: v.direction
@@ -39,22 +39,25 @@ watch(() => orders, () => {
 watch(
   [() => props.polymorphic_children, () => props.polymorphic_loading], 
   async () => {
-    const data = await get_orders(
+    const { data, error } = await get_orders(
       props.polymorphic_loading,
       props.polymorphic_children.map(x => x.id)
     )
-    orders.value = data
+
+    if (!error) {
+      orders.value = data.orders
+    }
 
     if (folder.default_order) {
       folder.default_order.forEach((i, idx) => {
-        for (const [idx2, o] of orders.value.orders.entries()) {
+        for (const [idx2, o] of orders.value.entries()) {
           if (i.key === o.key) {
             o.nulls = i.nulls
             o.direction = i.direction
             o.checked = true
 
-            orders.value.orders.splice(
-              idx, 0, orders.value.orders.splice(idx2, 1)[0]
+            orders.value.splice(
+              idx, 0, orders.value.splice(idx2, 1)[0]
             )
 
             break;
@@ -122,8 +125,8 @@ const drop = (evt) => {
   const from = parseInt(evt.dataTransfer.getData('text/plain')) - 1
   const to = parseInt(tr.rowIndex) - 1
 
-  orders.value.orders.splice(
-    to, 0, orders.value.orders.splice(from, 1)[0]
+  orders.value.splice(
+    to, 0, orders.value.splice(from, 1)[0]
   )
 
   evt.preventDefault()
@@ -144,7 +147,7 @@ const drop = (evt) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in orders.orders" 
+        <tr v-for="order in orders" 
           :key="order.key"
           :draggable="order.checked"
           :class="{ 'cursor-move': order.checked }"

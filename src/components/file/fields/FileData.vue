@@ -42,7 +42,6 @@ const cancel = () => {
   emit('update:content', null)
   preview.value = is_image.value ? backend_url(file.value.id) : false
   cancellable.value = false
-  input.value.value = null
 }
 
 const onFileChange = (event) => {

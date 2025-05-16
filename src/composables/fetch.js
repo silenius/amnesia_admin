@@ -1,4 +1,4 @@
-import { ref, toValue } from 'vue'
+import { reactive, toValue, toRefs } from 'vue'
 
 export class HTTPError extends Error {
     constructor(message, response) {
@@ -8,18 +8,21 @@ export class HTTPError extends Error {
     }
 }
 
-export function useFetchBackend() {
+export function useFetchBackend(url, options) {
     const request_headers = new Headers({
         'accept': 'application/json'
     })
-    const loading = ref(false)
-    const data = ref(null)
-    const response_headers = ref(null)
-    const error = ref(null)
-
+    
+    const state = reactive({
+        loading: false,
+        data: null,
+        response_headers: null,
+        error: null,
+    })
+    
     const fetchData = async (url, options) => {
-        loading.value = true
-        error.value = false
+        state.loading = true
+        state.error = false
 
         try {
             url = backend_url(toValue(url))
@@ -32,25 +35,26 @@ export function useFetchBackend() {
             const res = await fetch(url, opts)
 
             if (res.ok) {
-                response_headers.value = res.headers,
-                data.value = res.status == 204 ? null : await res.json()
-                
-                return { 
-                    data: toValue(data),
-                    error: toValue(error)
-                }
+                state.response_headers = res.headers,
+                state.data = res.status == 204 ? null : await res.json()
             } else {
                 throw new HTTPError(`HTTP error! Status: ${res.status}`, res);
             }
         }
         catch (e) {
-            error.value = e
+            state.error = e
         } finally {
-            loading.value = false
+            state.loading = false
         }
+
+        return state
     }
 
-    return { data, loading, error, response_headers, fetchData }
+    if (url) {
+        return fetchData(url, options)
+    }
+
+    return { ...toRefs(state), fetchData }
 }
 
 export function backend_url(src, base) {

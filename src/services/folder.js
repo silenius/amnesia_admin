@@ -1,5 +1,6 @@
 import { toValue } from 'vue'
 import { content_as_formdata } from './content.js'
+import { useFetchBackend } from '../composables/fetch.js'
 
 export const folder_as_formdata = (folder) => {
     const folder_value = toValue(folder)
@@ -27,3 +28,14 @@ export const folder_as_formdata = (folder) => {
     return form_data
 }
 
+export async function get_orders (pl=false, pc=null) {
+    const opts = new URLSearchParams()
+
+    opts.append('pl', pl)
+
+    if (Array.isArray(pc)) {
+        pc.forEach((i) => opts.append('pc', i))
+    }
+
+    return useFetchBackend(`folder/polymorphic_orders?${opts}`)
+}

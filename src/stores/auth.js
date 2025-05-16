@@ -7,11 +7,9 @@ export const useAuthStore = defineStore('auth', () => {
     const is_logged = computed(() => user.value?.id !== undefined)
     
     onMounted(async () => {
-        const { data, error, fetchData } = useFetchBackend()
-        await fetchData('auth/me')
-
-        if (!error.value) {
-            user.value = data.value
+        const { error, data } = await useFetchBackend('auth/me')
+        if (!error) {
+            user.value = data
         }
     })
 
@@ -26,39 +24,33 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const login = async(username, password) => {
-        const data = new FormData()
+        const form_data = new FormData()
          
-        const { data: userData, error, fetchData } = useFetchBackend()
+        form_data.append('login', toValue(username))
+        form_data.append('password', toValue(password))
 
-        data.append('login', toValue(username))
-        data.append('password', toValue(password))
-
-        await fetchData('auth/login', {
+        const { error, data } = await useFetchBackend('auth/login', {
             method: 'POST',
-            body: data
+            body: form_data
         })
 
-        if (!error.value) {
-            user.value = userData.value
-            return true
+        if (!error) {
+            user.value = data
         }
 
-        return false
+        return !error
     }
 
     const logout = async() => {
-        const { error, fetchData } = useFetchBackend()
-
-        await fetchData('auth/logout', {
+        const { error } = await useFetchBackend('auth/logout', {
             method: 'POST'
         })
         
-        if (!error.value) {
+        if (!error) {
             user.value = {}
-            return true
         }
 
-        return false
+        return !error
     }
 
     return {
