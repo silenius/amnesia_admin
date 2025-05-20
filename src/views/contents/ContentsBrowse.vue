@@ -14,7 +14,7 @@ import { useFolderMove } from '../../composables/useFolderMove.js'
 import { useContentType } from '../../composables/useContentType.js'
 import { useContentWeight } from '../../composables/useContentWeight.js'
 import { useContentSelection } from '../../composables/useContentSelection.js'
-import { useContentDelete } from '../../composables/useContentDelete.js'
+import { useContentDelete } from '../../composables/useContent.js'
 import { publish, unpublish } from '../../services/content.js'
 
 import FolderBrowser from '../../components/folder/FolderBrowser.vue'
@@ -227,7 +227,7 @@ const doAdd = async (folder, t) => {
 
     <div v-if="error" class="bg-red-500 text-white my-8 p-4">
       Error loading content
-      <span v-if="error.response.status==403">: permission denied</span>
+      <span v-if="error.status==403">: permission denied</span>
     </div>
 
     <FolderBrowser

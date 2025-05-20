@@ -1,22 +1,40 @@
 <script setup>
-
-import DocumentForm from '@/components/document/DocumentForm.vue'
-import { useDocument } from '@/composables/documents.js'
+import { inject, toRefs, toValue } from 'vue'
+import { useRouter } from 'vue-router'
+import DocumentForm from '../../components/document/DocumentForm.vue'
+import { useUpdateDocument } from '../../composables/useDocument.js'
 
 const props = defineProps({
-  content: Object
+  content: {
+    type: Object,
+    required: true
+  }
 })
 
-const emit = defineEmits(['update'])
+const { content: doc } = toRefs(props)
 
-const { updateDocument } = useDocument()
+const router = useRouter()
+
+const { setErrorFromResponse } = inject('errors')
+
+const { update_document, error } = useUpdateDocument(doc)
+
+const update = async() => {
+  await update_document()
+
+  if (!toValue(error)) {
+    router.push(`/${doc.value.id}`)
+  } else {
+    setErrorFromResponse(error.value.response)
+  }
+}
 
 </script>
 
 <template>
-  <DocumentForm 
-  :doc="content" 
-  :action="'Update document'"
-  @submit-document="$emit('update', updateDocument)" 
-/>
+    <DocumentForm 
+      :doc="doc" 
+      :action="'Update document'"
+      @submit-document="update" 
+    />
 </template>

@@ -1,23 +1,40 @@
 <script setup>
-
-import EventForm from '@/components/event/EventForm.vue'
-import { useEvent } from '@/composables/events.js'
+import { inject, toRefs, toValue } from 'vue'
+import { useRouter } from 'vue-router'
+import EventForm from '../../components/event/EventForm.vue'
+import { useUpdateEvent } from '../../composables/useEvent.js'
 
 const props = defineProps({
-    content: Object
+  content: {
+    type: Object,
+    required: true
+  }
 })
 
-const emit = defineEmits(['update'])
+const { content: event} = toRefs(props)
 
-const { updateEvent } = useEvent()
+const router = useRouter()
+
+const { setErrorFromResponse } = inject('errors')
+
+const { update_event, error } = useUpdateEvent(event)
+
+const update = async() => {
+  await update_event()
+
+  if (!toValue(error)) {
+    router.push(`/${event.value.id}`)
+  } else {
+    setErrorFromResponse(error.value.response)
+  }
+}
 
 </script>
 
 <template>
-    <h1>Update event</h1>
     <EventForm 
-      :event="content" 
+      :event="event" 
       :action="'Update event'"
-      @submit-event="$emit('update', updateEvent)" 
+      @submit-event="update" 
     />
 </template>

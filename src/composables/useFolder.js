@@ -1,7 +1,7 @@
 import { useFetchBackend } from './fetch.js'
 import { useBuildFolder } from './useContentBuilder.js'
 import { watch, ref, toRef, toValue, computed, watchEffect } from 'vue'
-import { useCreateContent } from './useCreateContent.js'
+import { useCreateContent } from './useContent.js'
 import { folder_as_formdata } from '../services/folder.js'
 
 export function useFolder(folder_id) {
@@ -79,5 +79,3 @@ export function useMediaFolder() {
         media_folder: formatted_data    
     }
 }
-
-

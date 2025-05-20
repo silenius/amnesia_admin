@@ -4,7 +4,7 @@ import { ref, toValue, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 import DocumentForm from '../../components/document/DocumentForm.vue'
-import { useCreateDocument } from '../../composables/useCreateDocument.js'
+import { useCreateDocument } from '../../composables/useDocument.js'
 
 const props = defineProps({
   container: Object
@@ -30,7 +30,6 @@ const create = async () => {
 <template>
   <DocumentForm 
     :doc="doc" 
-    :container="container"
     :action="'Add document'"
     @submit-document="create" 
   />

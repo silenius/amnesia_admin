@@ -61,7 +61,7 @@ provide('editable', computed(() => props.doc))
       </template>
       <template #security>
         <section :class="section_cls">
-          <ContentSecurity v-model:acls="doc.acls" />
+          <ContentSecurity />
         </section>
       </template>
     </FormTabGroup>

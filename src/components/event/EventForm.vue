@@ -45,7 +45,6 @@ const section_cls="flex flex-col gap-4"
 </script>
 
 <template>
-  <span class="text-slate-600">{{ event.title }}</span>
   <form @submit.prevent="$emit('submit-event')">
     <FormTabGroup>
       <template #default>
@@ -80,7 +79,7 @@ const section_cls="flex flex-col gap-4"
         <ContentBannerImage class="border-b pb-4" v-model:banner_image="event.props.banner_image" />
       </template>
       <template #security>
-        <ContentSecurity v-model:acls="event.acls" />
+        <ContentSecurity />
       </template>
     </FormTabGroup>
     <button type="submit" class="mt-4 rounded-sm w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">

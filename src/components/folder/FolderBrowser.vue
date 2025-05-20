@@ -207,7 +207,7 @@ const formatDate = (d) => {
 
 <template>
   <div>
-    <div class="flex flex-col" v-if="contents.length > 0">
+    <div class="flex flex-col">
 
       <!--
 ################

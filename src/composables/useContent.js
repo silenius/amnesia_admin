@@ -1,6 +1,7 @@
+import { ref, watch, toRef } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useBuildContent } from './useContentBuilder.js'
-import { watch, toRef } from 'vue'
+import { content_as_formdata } from '../services/content.js'
 
 export function useContent(content_id) {
     const { data, error, loading, fetchData } = useFetchBackend()
@@ -16,5 +17,39 @@ export function useContent(content_id) {
     return {
         content: formatted_data,
         load,
+    }
+}
+
+export function useCreateContent(fields) {
+    if (fields === undefined) {
+        fields = {}
+    }
+
+    const content = ref({
+        title: '',
+        is_fts: true,
+        effective: null,
+        expiration: null,
+        props: {},
+        acls: [],
+        ...fields
+    })
+
+    return {
+        content
+    }
+}
+
+export function useContentDelete() {
+    const destroy = async(id) => {
+        const { error } = await useFetchBackend(id, {
+            method: 'DELETE'
+        })
+
+        return !error
+    }
+
+    return {
+        destroy
     }
 }

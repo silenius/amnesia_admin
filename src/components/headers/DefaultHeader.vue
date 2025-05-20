@@ -17,22 +17,20 @@ const auth = useAuthStore()
 
 const login_modal_open = ref(false)
 const register_modal_open = ref(false)
-const login_errors = ref([])
+const login_errors = ref()
 
 const doLogin = async(username, password) => {
-  const { error, data } = await auth.login(username, password)
+  const { error } = await auth.login(username, password)
 
   if (!error) {
     router.go() 
   } else {
-    login_errors.value.push(error)
-    console.log(error)
+    login_errors.value = error
   }
 }
 
 const doLogout = async() => {
-  const ok = await auth.logout()
-  if (ok) {
+  if (await auth.logout()) {
     router.push('/')
   }
 }

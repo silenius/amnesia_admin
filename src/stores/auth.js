@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = data
         }
 
-        return { error, data} 
+        return { error, data } 
     }
 
     const logout = async() => {

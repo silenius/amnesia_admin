@@ -4,7 +4,7 @@ import { ref, inject, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EventForm from '../../components/event/EventForm.vue'
-import { useCreateEvent } from '../../composables/useCreateEvent.js'
+import { useCreateEvent } from '../../composables/useEvent.js'
 
 const props = defineProps({
     container: Object
@@ -31,7 +31,6 @@ const create = async () => {
 <template>
     <EventForm 
       :event="event" 
-      :container="container"
       :action="'Add event'"
       @submit-event="create" 
     />

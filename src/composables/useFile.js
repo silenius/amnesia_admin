@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 import { useFetchBackend } from './fetch.js'
-import { useCreateContent } from './useCreateContent.js'
+import { useCreateContent } from './useContent.js'
 import { file_as_formdata } from '../services/file.js'
 
 export function useCreateFile() {

@@ -8,8 +8,5 @@ export const document_as_formdata = (doc) => {
         'body'
     ]
 
-    const form_data = content_as_formdata({content: doc, extra_fields: fields})
-
-    return form_data
+    return content_as_formdata({content: doc, extra_fields: fields})
 }
-

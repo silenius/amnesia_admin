@@ -1,10 +1,10 @@
 import { ref, watch } from 'vue'
 import { useFetchBackend } from './fetch.js'
-import { useCreateContent } from './useCreateContent.js'
+import { useCreateContent } from './useContent.js'
 import { document_as_formdata } from '../services/document.js'
 
 export function useCreateDocument() {
-    const { content: doc, } = useCreateContent({
+    const { content: doc } = useCreateContent({
         body: "<p>Document content</p>"
     })
 
@@ -25,5 +25,23 @@ export function useCreateDocument() {
         doc,
         create_document,
         error,
+    }
+}
+
+export function useUpdateDocument(doc) {
+    const { data, error, fetchData } = useFetchBackend()
+
+    const update_document = async() => {
+        const form_data = document_as_formdata(doc)
+
+        await fetchData(doc.value.id, {
+            method: 'PUT',
+            body: form_data
+        })
+    }
+
+    return {
+        update_document,
+        error
     }
 }

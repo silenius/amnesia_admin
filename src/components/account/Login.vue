@@ -14,8 +14,8 @@ const props = defineProps({
     default: false
   },
   errors: {
-    type: Array,
-    default: []
+    type: Error,
+    required: false
   }
 })
 
@@ -68,10 +68,11 @@ const { show } = toRefs(props)
                   class="float-right" />
               </DialogTitle>
 
-              <div v-if="errors.length > 0" class="bg-red-600 p-2 my-6 text-white">
-                <ul>
-                  <li v-for="error in errors">{{ error }}</li>
-                </ul>
+              <div v-if="errors" class="bg-red-600 p-2 my-6 text-white">
+                <div v-if="errors.name == 'HTTPError'">
+                  <p v-for="error in errors.data">{{ error }}</p>
+                </div>
+                <div v-else>{{ errors }}</div>
               </div>
 
               <div class="space-y-4 md:space-y-6">
