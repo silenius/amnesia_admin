@@ -21,10 +21,11 @@ export function useFolder(folder_id) {
     }
 }
 
-export function useCreateFolder() {
+export function useCreateFolder(fields) {
     const { content: folder } = useCreateContent({
         polymorphic_loading: false,
         exclude_nav: false,
+        ...fields
     })
 
     const { data, error, fetchData } = useFetchBackend()

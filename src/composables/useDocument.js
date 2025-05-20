@@ -3,9 +3,10 @@ import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useContent.js'
 import { document_as_formdata } from '../services/document.js'
 
-export function useCreateDocument() {
+export function useCreateDocument(fields) {
     const { content: doc } = useCreateContent({
-        body: "<p>Document content</p>"
+        body: "<p>Document content</p>",
+        ...fields
     })
 
     const { data, error, fetchData } = useFetchBackend()

@@ -23,7 +23,11 @@ export function useContentACL(content) {
     }
 
     const load_recursive_acls = async() => {
-        await rec_fetchData(`${reactive_content.value.id}/acls`)
+        if (reactive_content.value.id) {
+            await rec_fetchData(`${reactive_content.value.id}/acls`)
+        } else {
+            await rec_fetchData(`${reactive_content.value.container.id}/acls`)
+        }
     }
 
     const change_weight = async({acl_id, acl_idx, weight}) => {

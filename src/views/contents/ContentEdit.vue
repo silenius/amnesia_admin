@@ -1,6 +1,6 @@
 <script setup>
 
-import { toRefs, ref, provide } from 'vue'
+import { toRefs, ref, provide, toValue } from 'vue'
 import { useContent } from '../../composables/useContent.js'
 
 import FolderEdit from '@/views/folders/FolderEdit.vue'
@@ -29,10 +29,10 @@ const setError = (key, value) => {
   }
 }
 
-const setErrorFromResponse = async(r) => {
-  const errors = await r.json()
+const setErrorFromResponse = async(error) => {
+  const error_value = toValue(error)
 
-  for (const [k, v] of Object.entries(errors)) {
+  for (const [k, v] of Object.entries(error_value.data)) {
     setError(k, v.join(''))
   }
 }

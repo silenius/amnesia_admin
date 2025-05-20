@@ -3,10 +3,11 @@ import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useContent.js'
 import { event_as_formdata } from '../services/event.js'
 
-export function useCreateEvent() {
+export function useCreateEvent(fields) {
     const { content: event } = useCreateContent({
         starts: null,
         ends: null,
+        ...fields
     })
 
     const { data, error, fetchData } = useFetchBackend()

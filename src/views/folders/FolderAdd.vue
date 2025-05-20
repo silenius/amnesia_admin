@@ -12,7 +12,9 @@ const router = useRouter()
 
 const { setErrorFromResponse } = inject('errors')
 
-const { create_folder, folder, error } = useCreateFolder()
+const { create_folder, folder, error } = useCreateFolder({
+  container: props.container
+})
 
 const create = async () => {
   await create_folder(props.container)
@@ -20,7 +22,7 @@ const create = async () => {
   if (!toValue(error)) {
     router.push(`/${folder.value.id}/browse`)
   } else {
-    setErrorFromResponse(error.value.response)
+    setErrorFromResponse(error)
   }
 }
 

@@ -25,7 +25,7 @@ const update = async() => {
   if (!toValue(error)) {
     router.push(`/${folder.value.id}/browse`)
   } else {
-    setErrorFromResponse(error.value.response)
+    setErrorFromResponse(error)
   }
 }
 

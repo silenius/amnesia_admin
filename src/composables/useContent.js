@@ -21,10 +21,6 @@ export function useContent(content_id) {
 }
 
 export function useCreateContent(fields) {
-    if (fields === undefined) {
-        fields = {}
-    }
-
     const content = ref({
         title: '',
         is_fts: true,

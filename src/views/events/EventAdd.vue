@@ -14,7 +14,9 @@ const { setErrorFromResponse } = inject('errors')
 
 const router = useRouter()
 
-const { create_event, event, error } = useCreateEvent()
+const { create_event, event, error } = useCreateEvent({
+  container: props.container
+})
 
 const create = async () => {
   await create_event(props.container)
@@ -22,7 +24,7 @@ const create = async () => {
   if (!toValue(error)) {
     router.push(`/${event.value.id}`)
   } else {
-    setErrorFromResponse(error.value.response)
+    setErrorFromResponse(error)
   }
 }
 

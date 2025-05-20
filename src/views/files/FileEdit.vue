@@ -25,7 +25,7 @@ const update = async() => {
   if (!toValue(error)) {
     router.push(`/${file.value.id}`)
   } else {
-    setErrorFromResponse(error.value.response)
+    setErrorFromResponse(error)
   }
 }
 

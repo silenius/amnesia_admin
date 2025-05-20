@@ -3,8 +3,8 @@ import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useContent.js'
 import { file_as_formdata } from '../services/file.js'
 
-export function useCreateFile() {
-    const { content: file } = useCreateContent()
+export function useCreateFile(fields) {
+    const { content: file } = useCreateContent(fields)
 
     const { data, error, fetchData } = useFetchBackend()
 

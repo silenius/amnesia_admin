@@ -13,7 +13,9 @@ const { setErrorFromResponse } = inject('errors')
 
 const router = useRouter()
 
-const { create_file, file, error } = useCreateFile()
+const { create_file, file, error } = useCreateFile({
+  container: props.container
+})
 
 const create = async () => {
   await create_file(props.container)
@@ -21,7 +23,7 @@ const create = async () => {
   if (!toValue(error)) {
     router.push(`/${file.value.id}`)
   } else {
-    setErrorFromResponse(error.value.response)
+    setErrorFromResponse(error)
   }
 }
 </script>
