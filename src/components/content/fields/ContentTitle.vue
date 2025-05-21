@@ -3,7 +3,7 @@
     <label>
       <p class="font-bold">Title</p>
       <p class="text-xs">Main content title</p>
-      <input v-model="model" :class="{'border-red-500 border': errors.title}" class="focus:ring-0 focus:border-indigo-500 border-slate-300 focus:text-slate-800 focus:bg-slate-100 bg-slate-50 w-full" type="text" placeholder="" />
+      <input v-model.lazy="model" :class="{'border-red-500 border': errors.title}" class="focus:ring-0 focus:border-indigo-500 border-slate-300 focus:text-slate-800 focus:bg-slate-100 bg-slate-50 w-full" type="text" placeholder="" />
       <div class="text-red-500" v-if="errors.title?.length">
         Title 
         <span v-for="(error, idx) in errors.title"> {{ error }} 
@@ -26,7 +26,8 @@ const validators = [
 
 const model = defineModel({
   set(value) {
-    setError('title', validate(value.trim(), validators))
+    value = value.trim()
+    setError('title', validate(value, validators))
     return value
   }
 })

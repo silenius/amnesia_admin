@@ -224,7 +224,7 @@ const formatDate = (d) => {
             <th class="p-2 text-center">State</th>
             <th class="p-2 text-center">Weight</th>
             <th class="p-2 whitespace-nowrap">Last update</th>
-            <th class="p-2" v-if="actions"></th>
+            <th class="p-2" v-if="actions.length > 0"></th>
             <slot name="tabular-th" />
           </tr>
         </thead>
@@ -297,7 +297,7 @@ const formatDate = (d) => {
 
             <!-- ACTIONS -->
 
-            <td class="p-2 w-0" v-if="actions">
+            <td class="p-2 w-0" v-if="actions.length > 0">
               <Menu as="div" class="text-left">
                 <div>
                   <MenuButton class="rounded-sm inline-flex w-content justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -427,6 +427,27 @@ const formatDate = (d) => {
 
           </li>
         </ul>
+      </div>
+
+      <!--
+      #############
+      # LIST VIEW #
+      #############
+      -->
+
+      <div v-if="view == 'list'" class="w-fit">
+        <div class="flex flex-col gap-y-2">
+          <div v-for="content in contents"
+            :key="content.id"
+            class="flex gap-2 items-baseline" 
+          >
+            <font-awesome-icon class="block" :icon="['fa-solid', content.fa_icon]" />
+            <div class="flex flex-col">
+              <RouterLink class="font-bold" :to="{name: 'show-content', params: {id: content.id}}">{{ content.title }}</RouterLink>
+              <p class="italic text-sm">{{ content.description}}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

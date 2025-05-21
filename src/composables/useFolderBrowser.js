@@ -68,6 +68,7 @@ export function useFolderBrowser(folder, opts={}) {
         query,
         goto_page,
         change_limit,
-        view
+        view,
+        loading
     }
 }

@@ -46,9 +46,10 @@ export const content_as_formdata = ({content, form_data, extra_fields=[]} = {}) 
 
 const change_state = async (id, state) => {
     const id_value = toValue(id)
-    const { error, fetchData } = useFetchBackend()
-    await fetchData(`${id_value}/${state}`, {method: 'POST'})
-    return !toValue(error)
+    const { error } = useFetchBackend(`${id_value}/${state}`, {
+        method: 'POST'
+    })
+    return !error
 }
 
 

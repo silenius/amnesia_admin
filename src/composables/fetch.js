@@ -1,11 +1,10 @@
 import { reactive, toValue, toRefs } from 'vue'
 
 export class HTTPError extends Error {
-    constructor({message, data, status}) {
+    constructor(message, data) {
         super(message)
         this.name = 'HTTPError'
         this.data = data
-        this.status = status
     }
 }
 
@@ -33,19 +32,21 @@ export function useFetchBackend(url, options) {
                 ...options
             }
 
+            let body = null
+
             const res = await fetch(url, opts)
 
-//            if (res.headers.get('content-type')?.includes('application/json')) { }
+            state.status = res.status
+
+            if (res.headers.get('content-type')?.includes('application/json')) { 
+                body = await res.json()
+            }
 
             if (res.ok) {
-                state.data = res.status == 204 ? null : await res.json()
-                state.status = res.status
+                state.data = body
             } else {
-                throw new HTTPError({
-                    message: `HTTP error (${res.status})`,
-                    data: await res.json(),
-                    status: res.status
-                })
+                state.data = null
+                throw new HTTPError(`HTTP error (${res.statusText})`, body)
             }
         }
         catch (e) {

@@ -38,7 +38,7 @@ const setErrorFromResponse = async(error) => {
   const error_value = toValue(error)
 
   for (const [k, v] of Object.entries(error_value.data)) {
-    setError(k, v.join(''))
+    setError(k, v)
   }
 }
 
