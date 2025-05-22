@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useAuthStore } from '@/stores/auth.js'
-import { useFetchBackend } from '@/composables/fetch.js'
+import { useAuthStore } from './auth.js'
+import { useFetchBackend } from '../composables/fetch.js'
 
 export const useUsersStore = defineStore('user', () => {
     const authStore = useAuthStore()
@@ -9,8 +9,7 @@ export const useUsersStore = defineStore('user', () => {
     const users = ref([])
 
     const getAll = async() => { 
-        const { data, error, fetchData } = useFetchBackend()
-        await fetchData('auth/browse') 
+        const { data, error } = await useFetchBackend('auth/browse')
 
         if (!error) {
             users.value = data.data.accounts

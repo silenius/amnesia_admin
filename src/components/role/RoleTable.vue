@@ -5,12 +5,10 @@ import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
 
-import { useRoles } from '@/composables/roles.js'
+import { useRoles } from '../../composables/useRole.js'
 
-const { roles, getRoles, destroyRole } = useRoles()
+const { roles } = useRoles()
 const router = useRouter()
-
-onMounted(getRoles)
 
 const delete_role = (id) => {
     destroyRole(id)
