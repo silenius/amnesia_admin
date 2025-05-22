@@ -2,7 +2,7 @@
 
 import { ref, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import { useRole } from '@/composables/roles.js'
+import { useRole } from '@/composables/useRole.js'
 
 const props = defineProps({
     role_id: Number

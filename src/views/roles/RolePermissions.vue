@@ -2,7 +2,7 @@
 
 import { watch, onMounted, ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { useRole } from '@/composables/roles.js'
+import { useRole } from '../../composables/useRole.js'
 
 const props = defineProps({
   role: Object

@@ -1,4 +1,5 @@
 import { ref, toValue, watch, watchEffect, readonly, computed } from 'vue'
+import { asURLSearchParams } from '../services/url.js'
 import { useFetchBackend } from './fetch.js'
 import { useFolder } from './useFolder.js'
 
@@ -26,22 +27,9 @@ export function useFolderBrowser(folder, opts={}) {
             }
         }
 
-        const qs = new URLSearchParams()
-
-        Object.entries(query.value).forEach(
-            ([key, value]) => Array.isArray(value) 
-                // p: ['foo', 'bar'] => p=foo&p=bar
-                ? value.forEach(v => qs.append(key, v)) 
-                // p: somevalue => p=somevalue
-                : qs.append(key, value)
-        )
+        const qs = asURLSearchParams(query.value)
 
         await fetchData(`${folder.value.id}/browse?${qs}`)
-
-        if (!toValue(error)) {
-            result.value = toValue(data).data
-            meta.value = toValue(data).meta
-        }
     }
 
     const goto_page = (page) => browse({
@@ -59,6 +47,11 @@ export function useFolderBrowser(folder, opts={}) {
             browse(query)
         }
     }, {immediate: true})
+
+    watch(data, () => {
+        result.value = data.value.data
+        meta.value = data.value.meta
+    })
 
     return {
         result: readonly(result),

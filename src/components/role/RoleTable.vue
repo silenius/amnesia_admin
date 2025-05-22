@@ -38,7 +38,7 @@ const edit_members = (id) => {
 </script>
 
 <template>
-    <table class="table-auto box-border border">
+    <table class="table-auto w-full box-border border">
         <thead>
             <tr class="text-left text-white bg-slate-500">
                 <th class="p-2">Name</th>
@@ -59,12 +59,12 @@ const edit_members = (id) => {
                     <PaperAirplaneIcon v-if="role.virtual" class="inline h-4 w-4 fill-cyan-500" />
                 </td>
                 <td class="tracking-tighter">{{ role.description }}</td>
-                <td>
+                <td class="p-2 w-0">
                     <div class="text-right">
                         <Menu as="div" class="relative text-left">
                             <div>
                                 <MenuButton class="rounded-sm inline-flex w-full justify-center hover:bg-slate-300 bg-slate-200 px-4 py-1 text-xs font-medium text-gray-700 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                                    action
+                                    actions
                                 </MenuButton>
                             </div>
 
