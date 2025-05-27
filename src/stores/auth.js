@@ -1,17 +1,21 @@
 import { ref, toValue, unref, computed, readonly, onMounted } from 'vue'
 import { defineStore } from 'pinia'
-import { useFetchBackend } from '@/composables/fetch.js'
+import { useFetchBackend } from '../composables/fetch.js'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref({})
     const is_logged = computed(() => user.value?.id !== undefined)
-    
+
     onMounted(async () => {
         const { error, data } = await useFetchBackend('auth/me')
         if (!error) {
             user.value = data
         }
     })
+
+    function $reset() {
+        user.value = {}
+    }
 
     const allow = (permission, acls) => {
         const found = acls.find(

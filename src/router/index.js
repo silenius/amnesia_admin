@@ -102,7 +102,11 @@ const routes = [
     {
         path: '/roles/:id(\\d+)',
         name: 'role',
-        component: () => import('../views/roles/RoleIndex.vue'),
+        components: {
+            default: () => import('../views/roles/RoleIndex.vue'),
+            Header: () => import('../components/headers/DefaultHeader.vue'),
+            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
+        },
         props: (route) => ({ 
             role_id: parseInt(route.params.id) 
         }),

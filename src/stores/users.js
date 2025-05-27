@@ -1,62 +1,61 @@
-import { ref } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth.js'
+import { useBrowser } from '../composables/useBrowser.js'
 import { useFetchBackend } from '../composables/fetch.js'
+import { asURLSearchParams } from '../services/url.js'
 
-export const useUsersStore = defineStore('user', () => {
+export const useUsersStore = defineStore('users', () => {
     const authStore = useAuthStore()
+    const { result, meta, query, browse, goto_page, change_limit } = useBrowser('auth/browse')
 
-    const users = ref([])
-
-    const getAll = async() => { 
-        const { data, error } = await useFetchBackend('auth/browse')
-
-        if (!error) {
-            users.value = data.data.accounts
-        } else {
-            alert('ERROR')
-        }
-    }
+    const users = computed(
+        () => result.value?.accounts
+    )
 
     const patch = async (id, items) => {
-        const data = new FormData()
+        const form_data = new FormData()
 
         for (const [key, value] of Object.entries(items)) {
-            data.append(key, value)
+            form_data.append(key, value)
         }
 
-        const { data: user_data } = await useFetchBackend(`auth/${id}`, {
+        const { error, data } = await useFetchBackend(`auth/${id}`, {
             method: 'PATCH',
-            body: data
+            body: form_data
         })
 
-        await getAll()
+        await browse()
 
-        if (user_data.id == authStore.user.id) {
-            authStore.user = { ...authStore.user, ...user_data };
+        if (data.id == authStore.user.id) {
+            authStore.user = { ...authStore.user, ...data };
         }
     }
 
     const deleteUser = async (id) => {
-        try {
-            await useFetchBackend(`auth/${id}`, {
-                method: 'DELETE'
-            })
-        } catch (error) {
-            alert('ERROR')
+        const { error } = await useFetchBackend(`auth/${id}`, {
+            method: 'DELETE'
+        })
+
+        if (!error) {
+            browse()
+
+            if (authStore.user.id == id) {
+                authStore.logout()
+            }
         }
 
-        users.value = users.value.filter(x => x.id !== id)
-
-        if (authStore.user.id == id) {
-            authStore.logout()
-        }
+        return !error
     }
 
     return {
         users,
-        getAll,
+        meta,
+        browse,
+        query,
         patch,
-        deleteUser
+        deleteUser,
+        goto_page,
+        change_limit
     }
 })

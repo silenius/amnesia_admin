@@ -1,23 +1,68 @@
 import { useFetchBackend } from './fetch.js'
-import { ref, computed, readonly, watch } from 'vue';
+import { useBrowser } from './useBrowser.js'
+import { ref, computed, toRef, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
 
 export function useRoles() {
-    const { data, error, loading, fetchData } = useFetchBackend()
+    const browser = useBrowser('roles/browse')
+    const { result, browse } = browser
 
     const roles = computed(
-        () => data.value?.data?.roles
+        () => result.value.roles
     )
 
-    const load = async () => {
-        await fetchData('roles/browse')
-    }
-
-    load()
+    browse()
 
     return {
-        roles: roles,
-        load_roles: load
+        ...browser,
+        roles,
+
+    }
+}
+
+export function useRole(role_id) {
+    const { data, error, loading, fetchData } = useFetchBackend()
+    const reactive_role_id = toRef(role_id)
+
+    const load = async () => {
+        await fetchData(`roles/${reactive_role_id.value}`)
+    }
+
+    watch(reactive_role_id, () => load(), {immediate: true})
+
+    return {
+        role: data,
+        load_role: load
+    }
+}
+
+export function useRoleMembers(role) {
+    const reactive_role = toRef(role)
+    const url = ref(`roles/${role.value.id}/members/all`)
+    const browser = useBrowser(url)
+    const { result } = browser
+
+    const members = computed(
+        () => result.value
+    )
+
+    const addMember = async (account_id) => {
+        const form_data = new FormData()
+        form_data.append('account_id', account_id)
+        
+        const { error } = await useFetchBackend(
+            `roles/${reactive_role.value.id}/members`, {
+                method: 'POST',
+                body: form_data
+            }
+        )
+    }
+
+    browser.browse()
+
+    return {
+        ...browser,
+        members
     }
 }
 
@@ -62,6 +107,7 @@ export function useRoles() {
 // return .value ??
 // return readonly() ?
 
+/*
 export function useRole() {
     const getRole = async (id) => {
         return useFetchBackend(`roles/${id}`)
@@ -161,4 +207,4 @@ export function useRole() {
         deleteMember,
     }
 }
-
+*/

@@ -7,7 +7,13 @@ import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClo
 
 import { useRoles } from '../../composables/useRole.js'
 
-const { roles } = useRoles()
+const props = defineProps({
+  roles: {
+    type: Array,
+    default: []
+  }
+})
+
 const router = useRouter()
 
 const delete_role = (id) => {

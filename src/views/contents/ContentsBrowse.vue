@@ -19,7 +19,7 @@ import { publish, unpublish } from '../../services/content.js'
 
 import FolderBrowser from '../../components/folder/FolderBrowser.vue'
 import SelectFolderView from '../../components/folder/SelectFolderView.vue'
-import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
+import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import SelectFolderFilters from '../../components/folder/SelectFolderFilters.vue'
 import DropDownAddToFolder from '../../components/folder/DropDownAddToFolder.vue'
 import EditContentButton from '../../components/content/EditContentButton.vue'
@@ -221,7 +221,7 @@ const doAdd = async (folder, t) => {
 
       <SelectFolderView class="w-12 h-12" :view="view" @set-view="(v) => view=v" />
       <SelectFolderFilters @change-filter="(p) => browse(p)" />
-      <SelectFolderLimit :folder="folder" :limit="browse_meta.limit" @set-limit="(v) => change_limit(v)" />
+      <SelectLimit :limit="browse_meta.limit" @set-limit="(v) => change_limit(v)" />
 
     </div>
 

@@ -1,16 +1,24 @@
 <script setup>
 
-import { ref, watch, computed, onMounted, onUpdated } from 'vue'
-import { useRole, useRoles } from '@/composables/roles.js'
-import AccountTable from '@/components/account/AccountTable.vue'
+import { ref, watch, toRefs, computed, onMounted, onUpdated } from 'vue'
+import { useRole, useRoleMembers } from '../../composables/useRole.js'
+import AccountTable from '../../components/account/AccountTable.vue'
+import Pagination from '../../components/pagination/Pagination.vue'
+import SelectLimit from '../../components/pagination/SelectLimit.vue'
 
 const props = defineProps({
-    role: Object
+  role: {
+    type: Object,
+    required: true
+  }
 })
 
-const { getMembers, addMember, deleteMember } = useRole()
+const { role } = toRefs(props)
 
-const members = ref([])
+const { members, meta, change_limit, goto_page } = useRoleMembers(role)
+
+/*
+const { getMembers, addMember, deleteMember } = useRole()
 
 watch(() => props.role, async () => {
   const { data } = await getMembers(props.role.id)
@@ -30,15 +38,24 @@ const delete_member = async (id) => {
   const { data } = await getMembers(props.role.id)
   members.value = data
 }
+*/
 
 </script>
 
 
 <template>
-  <div>
-    / Members
-
-    <AccountTable :accounts="members" :enabled="false">
+  <div v-if="members">
+    <div class="flex">
+      <h1 class="flex grow gap-2 items-center mb-4 text-3xl border-b font-bold">
+        <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
+        {{ role.name }} members
+      </h1>
+      <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
+    </div>
+    <h2 class="text-2xl">This sections enables you to manage members of the
+      <span class="font-bold">{{ role.name }}</span> role.</h2>
+ 
+    <AccountTable :accounts="members" :enabled="false" class="mt-4">
       <template #headers>
         <th class="text-center">Member</th>
       </template>
@@ -50,5 +67,14 @@ const delete_member = async (id) => {
         </td>
       </template>
     </AccountTable>
+    <Pagination
+      v-if="meta.count > meta.limit"
+      :limit="meta.limit"
+      :offset="meta.offset"
+      :total="meta.count"
+      @goto-page="goto_page"
+      class="flex justify-center my-4 gap-x-2"
+    />
+
   </div>
 </template>

@@ -2,7 +2,7 @@
 import { toRefs, ref, watch, computed }  from 'vue'
 import { useFolder } from '../../composables/useFolder.js'
 import { useFolderBrowser } from '../../composables/useFolderBrowser.js'
-import SelectFolderLimit from '../../components/folder/SelectFolderLimit.vue'
+import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import SelectFolderFilters from '../../components/folder/SelectFolderFilters.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import EditContentButton from '../../components/content/EditContentButton.vue'
@@ -28,7 +28,7 @@ const view_icon = computed(
 <template>          
   <Teleport defer to="#lol">
     <SelectFolderFilters @change-filter="(p) => browse(p)" />
-    <SelectFolderLimit :folder="content" :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
+    <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
   </Teleport>
 
   <FolderBrowser

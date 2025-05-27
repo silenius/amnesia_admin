@@ -1,29 +1,26 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, toRefs, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import { useRole } from '@/composables/useRole.js'
+import { useRole } from '../../composables/useRole.js'
 
 const props = defineProps({
-    role_id: Number
+  role_id: {
+    type: Number,
+    required: true
+  }
 })
 
-const role = ref({})
-
-const { getRole } = useRole()
-
-onMounted( async () => {
-  const { data } = await getRole(props.role_id)
-  role.value = data
-})
+const { role_id } = toRefs(props)
+const { role } = useRole(role_id)
 
 </script>
 
 <template>
-  <div>
+  <div v-if="role">
     ROLE / {{ role.name }}
     <RouterView 
       :role="role"
-      v-if="role" />
+    />
   </div>
 </template>
