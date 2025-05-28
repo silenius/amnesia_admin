@@ -1,6 +1,6 @@
 import { useFetchBackend } from './fetch.js'
 import { useBrowser } from './useBrowser.js'
-import { ref, computed, toRef, readonly, watch } from 'vue';
+import { onBeforeMount, ref, computed, toRef, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
 
 export function useRoles() {
@@ -11,7 +11,7 @@ export function useRoles() {
         () => result.value.roles
     )
 
-    browse()
+    onBeforeMount(() => browse())
 
     return {
         ...browser,
@@ -40,7 +40,7 @@ export function useRoleMembers(role) {
     const reactive_role = toRef(role)
     const url = ref(`roles/${role.value.id}/members/all`)
     const browser = useBrowser(url)
-    const { result } = browser
+    const { result, browse } = browser
 
     const members = computed(
         () => result.value
@@ -58,11 +58,23 @@ export function useRoleMembers(role) {
         )
     }
 
-    browser.browse()
+    const deleteMember = async (account_id) => {
+        const form_data = new FormData()
+        form_data.append('account_id', account_id)
+        
+        const { error } = useFetchBackend(
+            `roles/${reactive_role.value.id}/members/${account_id}`, {
+                method: 'DELETE',
+                body: form_data
+            }
+        )
+    }
+
+    onBeforeMount(() => browse())
 
     return {
         ...browser,
-        members
+        members: result
     }
 }
 

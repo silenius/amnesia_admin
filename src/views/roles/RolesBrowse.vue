@@ -1,11 +1,10 @@
 <script setup>
-import { onBeforeMount } from 'vue'
 import RoleTable from '@/components/role/RoleTable.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import { useRoles } from '../../composables/useRole.js'
 
-const { roles, result, meta, change_limit, browse, goto_page } = useRoles()
+const { roles, meta, change_limit, goto_page } = useRoles()
 
 </script>
 
