@@ -31,12 +31,11 @@ const doDestroy = async (account) => {
     </div>
     <h2 class="text-2xl">This sections enables you to manage accounts</h2>
     <AccountTable 
-      v-if="users"
+      class="mt-4"
       :accounts="users" 
       :actions="true" 
       @delete-account="doDestroy"
       @toggle-enabled="(a) => user_store.patch(a.id, { enabled: !a.enabled})" 
-      class="mt-4"
     />
     <Pagination
       v-if="meta.count > meta.limit"

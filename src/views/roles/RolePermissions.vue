@@ -1,32 +1,18 @@
 <script setup>
 
-import { watch, onMounted, ref } from 'vue'
+import { watch, onMounted, toRefs, ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { useRole } from '../../composables/useRole.js'
+import { useRolePermissions } from '../../composables/useRole.js'
 
 const props = defineProps({
-  role: Object
+  role: {
+    type: Object,
+    required: true
+  }
 })
 
-const permissions = ref([])
-
-const { 
-  getPermissions, 
-  deleteGlobalACL, 
-  addGlobalACL,
-  patchGlobalACL
-} = useRole()
-
-onMounted( () => {
-  watch(() => props.role, (r, old_r) => {
-    refresh()
-  })
-})
-
-const refresh = async() => {
-  const { data } = await getPermissions(props.role.id)
-  permissions.value = data
-}
+const { role } = toRefs(props)
+const { permissions, change_weight, add_global_acl, delete_global_acl } = useRolePermissions(role)
 
 const get_tr = (node) => {
   let target = node
@@ -42,7 +28,7 @@ const change_permission = async (permission, allow) => {
   if (permission.acl_id === null) {
     console.info(`===> Add new GlobalACL: ${permission.name} / ${allow}`)
     // Add a new ACL
-    await addGlobalACL(
+    await add_global_acl(
       props.role.id,
       permission.id,
       allow
@@ -50,7 +36,7 @@ const change_permission = async (permission, allow) => {
   } else if (allow === null) {
     console.info(`===> Remove GlobalACL: ${permission.acl_id}`)
     // Allow is unset, delete ACL.
-    await deleteGlobalACL(
+    await delete_global_acl(
       permission.acl_id
     )
   } else {
@@ -61,17 +47,6 @@ const change_permission = async (permission, allow) => {
       {'allow': allow}
     )
   }
-
-  refresh()
-}
-
-const update_weight = async (acl_id, weight) => {
-  console.info(`===> Update ACL ${acl_id} weight to ${weight}`)
-  await patchGlobalACL(
-    acl_id,
-    {'weight': weight}
-  )
-  refresh()
 }
 
 const drag = (evt) => {
@@ -121,7 +96,7 @@ const drop = (evt) => {
   const weight = tr.getAttribute('data-weight')
 
   if (acl_id && weight) {
-    update_weight(
+    change_weight(
       evt.dataTransfer.getData('text/plain'),
       tr.getAttribute('data-weight')
     )
@@ -152,9 +127,9 @@ const menuColors = {
 
 
 <template>
-  <table class="table-auto border-spacing-4 text-xs">
+  <table class="table-auto box-border border">
     <thead>
-      <tr class="text-left bg-slate-100">
+      <tr class="text-left text-white bg-slate-500">
         <th class="p-2">Name</th>
         <th>Description</th>
         <th>Status</th>
@@ -163,7 +138,7 @@ const menuColors = {
     </thead>
 
     <tbody>
-      <tr v-for="permission in permissions" 
+      <tr v-for="permission in permissions" class="odd:bg-white even:bg-slate-50 text-slate-600"
         :key="permission.id"
         :class="{ 'cursor-move': permission.allow !== null }"
         :data-weight="permission.weight"
@@ -175,8 +150,7 @@ const menuColors = {
         @dragleave="leave"
         @dragenter="enter"
         @dragover="over"
-        @drop="drop"
-        class="odd:bg-white even:bg-slate-50 text-slate-600">
+        @drop="drop">
         <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
           {{ permission.name }}
         </td>

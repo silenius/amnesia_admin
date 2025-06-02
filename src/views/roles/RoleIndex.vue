@@ -17,10 +17,9 @@ const { role } = useRole(role_id)
 </script>
 
 <template>
-  <div v-if="role">
-    ROLE / {{ role.name }}
-    <RouterView 
-      :role="role"
-    />
-  </div>
+  <RouterView 
+    class="m-4"
+    v-if="role"
+    :role="role"
+  />
 </template>

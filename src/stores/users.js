@@ -7,7 +7,7 @@ import { asURLSearchParams } from '../services/url.js'
 
 export const useUsersStore = defineStore('users', () => {
     const authStore = useAuthStore()
-    const { result, meta, query, browse, goto_page, change_limit } = useBrowser('auth/browse')
+    const { result, meta, query, browse, goto_page, change_limit } = useBrowser('auth/browse', {limit: 50})
 
     const users = computed(
         () => result.value?.accounts

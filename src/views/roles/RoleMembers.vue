@@ -14,31 +14,7 @@ const props = defineProps({
 })
 
 const { role } = toRefs(props)
-
-const { members, meta, change_limit, goto_page } = useRoleMembers(role)
-
-/*
-const { getMembers, addMember, deleteMember } = useRole()
-
-watch(() => props.role, async () => {
-  const { data } = await getMembers(props.role.id)
-  members.value = data
-})
-
-
-const add_member = async (id) => {
-  await addMember(props.role.id, id)
-  const { data } = await getMembers(props.role.id)
-  members.value = data
-
-}
-
-const delete_member = async (id) => {
-  await deleteMember(props.role.id, id)
-  const { data } = await getMembers(props.role.id)
-  members.value = data
-}
-*/
+const { add_member, delete_member, members, meta, change_limit, goto_page } = useRoleMembers(role)
 
 </script>
 

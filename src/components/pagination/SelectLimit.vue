@@ -42,11 +42,12 @@ const limit = computed({
       p-2 hover:ring-4">
       <span class="font-bold">{{ limit }}</span>
     </ListboxButton>
-    <ListboxOptions class="absolute bg-white items-center w-fit border z-50 flex flex-col rounded-4xl">
-      <span class="font-bold text-xs">Items per page</span>
+    <ListboxOptions class="absolute bg-white items-center border z-50 flex
+      flex-col right-0 rounded">
+      <div class="font-bold mb-2">Limit</div>
       <ListboxOption
         :class="{'font-bold': limit == l}"
-        class="hover:cursor-pointer"
+        class="hover:cursor-pointer w-full text-center px-4 hover:bg-rose-600 hover:text-white"
         v-for="l in props.limits"
         :key="l"
         :value="l"

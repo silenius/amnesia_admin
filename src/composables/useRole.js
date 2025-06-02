@@ -4,7 +4,7 @@ import { onBeforeMount, ref, computed, toRef, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
 
 export function useRoles() {
-    const browser = useBrowser('roles/browse')
+    const browser = useBrowser('roles/browse', {limit: 50})
     const { result, browse } = browser
 
     const roles = computed(
@@ -39,14 +39,15 @@ export function useRole(role_id) {
 export function useRoleMembers(role) {
     const reactive_role = toRef(role)
     const url = ref(`roles/${role.value.id}/members/all`)
-    const browser = useBrowser(url)
+    const browser = useBrowser(url, {limit: 50})
     const { result, browse } = browser
+    const error = ref()
 
     const members = computed(
         () => result.value
     )
 
-    const addMember = async (account_id) => {
+    const add_member = async (account_id) => {
         const form_data = new FormData()
         form_data.append('account_id', account_id)
         
@@ -56,9 +57,11 @@ export function useRoleMembers(role) {
                 body: form_data
             }
         )
+
+        if (!error) browse()
     }
 
-    const deleteMember = async (account_id) => {
+    const delete_member = async (account_id) => {
         const form_data = new FormData()
         form_data.append('account_id', account_id)
         
@@ -68,13 +71,84 @@ export function useRoleMembers(role) {
                 body: form_data
             }
         )
+
+        if (!error) browse()
     }
 
-    onBeforeMount(() => browse())
+    watch(reactive_role, () => browse(), {immediate: true})
 
     return {
         ...browser,
-        members: result
+        members: result,
+        add_member,
+        delete_member
+    }
+}
+
+export function useRolePermissions(role) {
+    const reactive_role = toRef(role)
+    const url = ref(`roles/${role.value.id}/global-permissions`)
+    const browser = useBrowser(url)
+    const { result, browse } = browser
+    const error = ref()
+
+    const permissions = computed(
+        () => result.value
+    )
+
+    watch(reactive_role, () => browse(), {immediate: true})
+
+    const change_weight = async (acl_id, weight) => {
+        const form_data = new FormData()
+        form_data.append('weight', weight)
+
+        const { data, error } = await useFetchBackend(`acls/${acl_id}`, {
+            method: 'PATCH',
+            body: form_data
+        })
+
+        if (!error) {
+            browse()
+        }
+
+        return { data, error }
+    }
+
+    const add_global_acl = async (id, permission_id, allow) => {
+        const form_data = new FormData()
+        form_data.append('permission_id', permission_id)
+        form_data.append('allow', allow)
+
+        const { data, error } = await useFetchBackend(`roles/${id}/acls`, {
+            method: 'POST',
+            body: form_data
+        })
+
+        if (!error) {
+            browse()
+        }
+
+        return { data, error }
+    }
+
+    const delete_global_acl = async (acl_id) => {
+        const { error, data } = await useFetchBackend(`acls/${acl_id}`, {
+            method: 'DELETE'
+        })
+
+        if (!error) {
+            browse()
+        }
+        return { data, error }
+        
+    }
+
+    return { 
+        ...browser,
+        permissions,
+        change_weight,
+        add_global_acl,
+        delete_global_acl
     }
 }
 
