@@ -210,10 +210,10 @@ const formatDate = (d) => {
     <div class="flex flex-col">
 
       <!--
-################
-# TABULAR VIEW #
-################
--->
+      ################
+      # TABULAR VIEW #
+      ################
+      -->
 
       <table class="table-auto w-full box-border border" v-if="view == 'tabular'">
         <thead>
@@ -334,10 +334,10 @@ const formatDate = (d) => {
       </table>
 
       <!--
-################
-# GALLERY VIEW #
-################
--->
+      ################
+      # GALLERY VIEW #
+      ################
+      -->
 
       <div v-if="view == 'gallery'" class="w-fit">
 

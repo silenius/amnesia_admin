@@ -4,18 +4,17 @@ import { toValue } from 'vue'
 export function useContentWeight() {
 
     const set_weight = async(id, weight) => {
-        const { data, error, fetchData } = useFetchBackend()
         const form_data = new FormData()
         form_data.append('weight', weight)
 
-        await fetchData(`${id}/weight`, {
+        const { error, data } = await useFetchBackend(`${id}/weight`, {
             method: 'POST',
             body: form_data
         })
 
         return { 
-            data: toValue(data),
-            error: toValue(error) 
+            data: data,
+            error: error 
         }
     }
 

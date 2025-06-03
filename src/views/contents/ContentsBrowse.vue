@@ -136,13 +136,6 @@ const doMove = async () => {
   }
 }
 
-const doAdd = async (folder, t) => {
-  await router.push({
-    name: 'add-content', 
-    query: { type: t }
-  })
-}
-
 </script>
 
 <template>

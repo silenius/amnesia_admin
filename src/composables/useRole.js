@@ -139,8 +139,8 @@ export function useRolePermissions(role) {
         if (!error) {
             browse()
         }
+
         return { data, error }
-        
     }
 
     return { 

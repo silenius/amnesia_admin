@@ -32,17 +32,15 @@ export function useContentACL(content) {
 
     const change_weight = async({acl_id, acl_idx, weight}) => {
         if (reactive_content.value.id) {
-            const { error, fetchData } = useFetchBackend()
-            
             const form_data = new FormData()
             form_data.append('weight', weight)
 
-            await fetchData(`acls/${acl_id}`, {
+            const { error } = await useFetchBackend(`acls/${acl_id}`, {
                 method: 'PATCH',
                 body: form_data
             })
 
-            if (!toValue(error)) {
+            if (!error) {
                 await load()
             }
         } else {
@@ -54,22 +52,18 @@ export function useContentACL(content) {
     const add_acl = async(allow, role, permission) => {
         // Do we add an ACL to an existing content?
         if (reactive_content.value.id) {
-            const { 
-                error, fetchData: add
-            } = useFetchBackend()
-            
             const form_data = new FormData()
             
             form_data.append('allow', toValue(allow))
             form_data.append('role_id', toValue(role).id)
             form_data.append('permission_id', toValue(permission).id)
 
-            await add(`${reactive_content.value.id}/acl`, {
+            const { error } = useFetchBackend(`${reactive_content.value.id}/acl`, {
                 method: 'POST',
                 body: form_data
             })
 
-            if (!toValue(error)) {
+            if (!error) {
                 await load()
             }
         } else {
@@ -83,15 +77,11 @@ export function useContentACL(content) {
 
     const remove_acl = async(acl, idx) => {
         if (reactive_content.value.id) {
-            const { 
-                data: acl_data, error: acl_error, fetchData: remove
-            } = useFetchBackend()
-
-            await remove(`acls/${acl.id}`, {
+            const { error } = useFetchBackend(`acls/${acl.id}`, {
                 method: 'DELETE'
             })
 
-            if (!toValue(acl_error)) {
+            if (!error) {
                 await load()
             }
         } else {

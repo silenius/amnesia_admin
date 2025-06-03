@@ -2,6 +2,7 @@
 
 import { watch, onMounted, toRefs, ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import { useRolePermissions } from '../../composables/useRole.js'
 
 const props = defineProps({
@@ -12,7 +13,7 @@ const props = defineProps({
 })
 
 const { role } = toRefs(props)
-const { permissions, change_weight, add_global_acl, delete_global_acl } = useRolePermissions(role)
+const { permissions, meta, change_limit, change_weight, add_global_acl, delete_global_acl } = useRolePermissions(role)
 
 const get_tr = (node) => {
   let target = node
@@ -125,15 +126,24 @@ const menuColors = {
 
 </script>
 
-
 <template>
-  <table class="table-auto box-border border">
+  <div>
+    <div class="flex">
+      <h1 class="flex grow gap-2 items-center mb-4 text-3xl border-b font-bold">
+        <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
+        {{ role.name }} permissions
+      </h1>
+      <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
+    </div>
+    <h2 class="text-2xl">This sections enables you to manage permissions of the
+      <span class="font-bold">{{ role.name }}</span> role.</h2>
+ 
+  <table class="mt-4 table-auto box-border border">
     <thead>
       <tr class="text-left text-white bg-slate-500">
         <th class="p-2">Name</th>
         <th>Description</th>
         <th>Status</th>
-        <th>Order</th>
       </tr>
     </thead>
 
@@ -157,7 +167,7 @@ const menuColors = {
         <td>
           {{ permission.description }}
         </td>
-        <td>
+        <td class="p-2">
           <div class="text-right">
             <Menu as="div" class="relative text-left">
               <div>
@@ -204,10 +214,8 @@ enter-to-class="transform scale-100 opacity-100"
             </Menu>
           </div>
         </td>
-        <td>
-          <font-awesome-icon v-if="permission.allow !== null" icon="fa-solid fa-up-down-left-right" class="w-full text-slate-700" />
-        </td>
       </tr>
     </tbody>
   </table>
-  </template>
+  </div>
+</template>

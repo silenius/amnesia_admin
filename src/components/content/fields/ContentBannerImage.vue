@@ -8,13 +8,14 @@ import {
   DialogTitle,
 } from '@headlessui/vue'
 
-import { useFolder } from '@/composables/folders.js'
-import { useContent } from '@/composables/contents.js'
-import { createBrowser } from '@/composables/browser.js'
-import { backend_url } from '@/composables/fetch.js'
-import FolderBrowser from '@/components/folder/FolderBrowser.vue'
-import InputCheckbox from '@/components/form/InputCheckbox.vue'
-import { yes_no_unknown } from '@/components/form/InputCheckboxDefaults.js'
+import { useFolder } from '../../../composables/useFolder.js'
+import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
+import { backend_url } from '../../../composables/fetch.js'
+import FolderBrowser from '../../folder/FolderBrowser.vue'
+import Pagination from '../../pagination/Pagination.vue'
+import Breadcrumb from '../../breadcrumbs/Breadcrumb.vue'
+import InputCheckbox from '../../form/InputCheckbox.vue'
+import { yes_no_unknown } from '../../form/InputCheckboxDefaults.js'
 
 const props = defineProps({
   banner_image: {
@@ -27,15 +28,12 @@ const emits = defineEmits([
   'select-banner'
 ])
 
-const { browse } = useFolder()
-const { getContent } = useContent()
+const folder_id = ref(1)
+const { folder } = useFolder(folder_id)
 
-const folder_id = computed(() => folder.value.id)
-const folder = ref(null)
-
-const { 
-  reload, meta, data, limit, offset, sort_folder_first,
-} = createBrowser(folder_id, browse)
+const { meta, goto_page, result } = useFolderBrowser(folder, {
+  filter_types: ['folder', 'file']
+})
 
 const actions = ref([
   {
@@ -51,16 +49,6 @@ const actions = ref([
     }
   }
 ])
-
-const doBrowse = async (id) => {
-  const { data: folder_data } = await getContent(id)
-  folder.value = folder_data
-
-  reload({
-    offset: 0,
-    filter_types: ['folder', 'file']
-  })
-}
 
 const doSelectBanner = (content) => {
   emits('update:banner_image', content.id) 
@@ -98,7 +86,7 @@ const int_value = computed(() => {
 
 const closeModal = () => isOpen.value = false
 const openModal = () => {
-  doBrowse(1)
+  //folder_id.value = 1
   isOpen.value = true
 }
 </script>
@@ -161,24 +149,31 @@ const openModal = () => {
                 </DialogTitle>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500">
-                    <FolderBrowser
-                      @browse="doBrowse"
-                      @select-banner="doSelectBanner"
-                      @breadcrumb-select="(content) => doBrowse(content.id)"
-                      @change-limit="async (n) => await reload({offset: 0, limit: n})"
-                      @change-pagination="async (n) => await reload(n)"
+                    <Breadcrumb 
+                      :content="folder" 
+                      @navigate="(content) => folder_id = content.id" 
+                      class="p-2 shadow-md"
+                    /> 
 
-                      :contents="data"
+                    <FolderBrowser
+                      class="mt-4"
+                      @browse="(id) => folder_id = id"
+                      @select-banner="doSelectBanner"
+                      :contents="result"
                       :folder="folder"
                       :actions="actions"
                       :selectActions="null"
-                      :view="'gallery'"
-                      :sortFolderFirst="sort_folder_first"
-                      :current_limit="limit"
-                      :offset="offset"
+                      :view="'gallery'" 
+                    />
+
+                    <Pagination
+                      v-if="meta.count > meta.limit"
+                      :limit="meta.limit"
+                      :offset="meta.offset"
                       :total="meta.count"
-                      v-if="folder && data">
-                    </FolderBrowser>
+                      @goto-page="(page) => goto_page(page)"
+                      class="flex justify-center my-4 gap-x-2"
+                    />
                   </p>
                 </div>
 

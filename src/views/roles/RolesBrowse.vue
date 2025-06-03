@@ -18,14 +18,6 @@ const { roles, meta, change_limit, goto_page } = useRoles()
       <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
     </div>
     <h2 class="text-2xl">This sections enables you to manage roles</h2>
-<!--
-    <button class="rounded w-fit hover:bg-green-200 bg-green-100
-        px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2
-        focus-visible:ring-white focus-visible:ring-opacity-75"
-        @click="add_role">
-        Add Role
-    </button>
--->
 
     <RoleTable 
       :roles="roles"
@@ -40,7 +32,6 @@ const { roles, meta, change_limit, goto_page } = useRoles()
       @goto-page="(page) => goto_page(page)"
       class="flex justify-center my-4 gap-x-2"
     />
-
 
   </div>
 </template>
