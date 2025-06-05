@@ -71,8 +71,6 @@ const value = computed({
 })
 
 const bool_value = computed(() => {
-
-  // XXX Fix this shit
   if (props.banner_image !== null && props.banner_image !== false && !isNaN(parseInt(props.banner_image))) {
     return true  
   }
@@ -80,9 +78,7 @@ const bool_value = computed(() => {
   return props.banner_image
 })
 
-const int_value = computed(() => {
-  return parseInt(props.banner_image)
-})
+const int_value = computed(() => parseInt(props.banner_image))
 
 const closeModal = () => isOpen.value = false
 const openModal = () => {
@@ -97,7 +93,7 @@ const openModal = () => {
       <InputCheckbox @change="(n) => value = n" :values="yes_no_unknown" :checked="bool_value"/>
       <div class="flex flex-col">
         <span class="font-bold">Banner</span>
-        <p class="text-xs" v-if="value===true">A custom banner will be
+        <p class="text-xs" v-if="value===true || parseInt(value)">A custom banner will be
           displayed.</p>
         <p class="text-xs" v-else-if="value===false">No banner will be
           displayed.</p>

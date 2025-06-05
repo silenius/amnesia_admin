@@ -1,8 +1,10 @@
 <script setup>
 
+import { useRoute } from 'vue-router'
 import { watch, onMounted, toRefs, ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import SelectLimit from '../../components/pagination/SelectLimit.vue'
+import BreadcrumbFromRouterMeta from '../../components/breadcrumbs/BreadcrumbFromRouterMeta.vue'
 import { useRolePermissions } from '../../composables/useRole.js'
 
 const props = defineProps({
@@ -11,6 +13,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const route_info = useRoute()
 
 const { role } = toRefs(props)
 const { permissions, meta, change_limit, change_weight, add_global_acl, delete_global_acl } = useRolePermissions(role)
@@ -137,6 +141,9 @@ const menuColors = {
     </div>
     <h2 class="text-2xl">This sections enables you to manage permissions of the
       <span class="font-bold">{{ role.name }}</span> role.</h2>
+    {{ route_info }}
+
+  <BreadcrumbFromRouterMeta />
  
   <table class="mt-4 table-auto box-border border">
     <thead>

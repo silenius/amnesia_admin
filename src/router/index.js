@@ -81,12 +81,67 @@ const routes = [
     {
         path: '/roles',
         name: 'roles',
+        meta: {
+            breadcrumb(route) {
+                return {
+                    text: "Roles",
+                    path: '/roles'
+                }
+            }
+        },
+
         components:{
             default: () => import('../views/roles/RolesIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
             LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
         },
         children: [
+            {
+                path: '/roles/:id(\\d+)',
+                name: 'role',
+                meta: {
+                    breadcrumb(route) {
+                        return {
+                            text: "Role",
+                            path: `/roles/${route.params.id}`
+                        }
+                    }
+                },
+                components: {
+                    default: () => import('../views/roles/RoleIndex.vue'),
+                    Header: () => import('../components/headers/DefaultHeader.vue'),
+                    LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
+                },
+                props: (route) => ({ 
+                    role_id: parseInt(route.params.id) 
+                }),
+                children: [
+                    {
+                        name: 'edit_role',
+                        path: 'edit',
+                        component: () => import('../views/roles/RoleEdit.vue'),
+                    },
+                    {
+                        name: 'edit_members',
+                        path: 'members',
+                        component: () => import('../views/roles/RoleMembers.vue'),
+                    },
+                    {
+                        name: 'edit_permissions',
+                        path: 'permissions',
+                        component: () => import('../views/roles/RolePermissions.vue'),
+                        meta: {
+                            breadcrumb(route) {
+                                return {
+                                    text: "Permissions",
+                                    path: `/roles/${route.params.id}/permissions`
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+
             {
                 name: 'browse-roles',
                 path: '',
@@ -99,35 +154,6 @@ const routes = [
             }
         ]
     },
-    {
-        path: '/roles/:id(\\d+)',
-        name: 'role',
-        components: {
-            default: () => import('../views/roles/RoleIndex.vue'),
-            Header: () => import('../components/headers/DefaultHeader.vue'),
-            LeftSideBar: () => import('../components/sidebars/MainSidebar.vue'),
-        },
-        props: (route) => ({ 
-            role_id: parseInt(route.params.id) 
-        }),
-        children: [
-            {
-                name: 'edit_role',
-                path: 'edit',
-                component: () => import('../views/roles/RoleEdit.vue'),
-            },
-            {
-                name: 'edit_members',
-                path: 'members',
-                component: () => import('../views/roles/RoleMembers.vue'),
-            },
-            {
-                name: 'edit_permissions',
-                path: 'permissions',
-                component: () => import('../views/roles/RolePermissions.vue'),
-            }
-        ]
-    }
 ]
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
