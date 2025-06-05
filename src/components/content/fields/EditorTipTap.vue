@@ -1,21 +1,15 @@
 <script setup>
 import { 
   ref, 
-  unref,
   watchEffect, 
-  watch,
   onMounted, 
   onBeforeUnmount,
   computed
 } from 'vue'
 
 import { 
-  useEditor, 
   EditorContent,
-  BubbleMenu
 } from '@tiptap/vue-3'
-
-import { storeToRefs } from 'pinia'
 
 //import StarterKit from "@tiptap/starter-kit"
 import { useEditorStore } from '../../../stores/editor'
@@ -36,7 +30,6 @@ import Pagination from '../../../components/pagination/Pagination.vue'
 import Breadcrumb from '../../../components/breadcrumbs/Breadcrumb.vue'
 
 import FolderBrowser from '../../folder/FolderBrowser.vue'
-import { useContent } from '../../../composables/useContent.js'
 import { useFolder, useMediaFolder } from '../../../composables/useFolder.js'
 import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
 import { useFile } from '../../../composables/files.js'

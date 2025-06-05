@@ -5,17 +5,18 @@ import { storeToRefs } from 'pinia'
 import AccountTable from '../../components/account/AccountTable.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import SelectLimit from '../../components/pagination/SelectLimit.vue'
+import BreadcrumbFromRouterMeta from '../../components/breadcrumbs/BreadcrumbFromRouterMeta.vue'
 import { useUsersStore } from '../../stores/users.js'
 
 const user_store = useUsersStore()
 const { meta, users } = storeToRefs(user_store)
 
-onMounted( async () => {
-  await user_store.browse()
+onMounted(() => {
+  user_store.browse()
 })
 
-const doDestroy = async (account) => {
-  await user_store.deleteUser(account.id)
+const doDestroy = (account) => {
+  user_store.deleteUser(account.id)
 }
 
 </script>
@@ -23,13 +24,20 @@ const doDestroy = async (account) => {
 <template>
   <div>
     <div class="flex">
-      <h1 class="flex grow gap-2 items-center mb-4 text-3xl border-b font-bold">
-        <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
-        Accounts
-      </h1>
+      <button class="h-12 font-bold hover:outline-hidden text-white bg-emerald-400
+        hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100 rounded-full
+        text-sm px-2 justify-center ">
+        Add account
+      </button>
+      <BreadcrumbFromRouterMeta />
       <SelectLimit :limit="meta.limit" @set-limit="(v) => user_store.change_limit(v)" />
     </div>
-    <h2 class="text-2xl">This sections enables you to manage accounts</h2>
+    <h1 class="flex mt-4 grow gap-2 items-center mb-2 text-xl font-bold">
+      <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
+      Accounts
+    </h1>
+
+    <h2>This sections enables you to manage accounts</h2>
     <AccountTable 
       class="mt-4"
       :accounts="users" 

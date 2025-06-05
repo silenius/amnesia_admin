@@ -36,6 +36,40 @@ export function useRole(role_id) {
     }
 }
 
+export function useCreateRole(fields) {
+    const role = ref({
+        name: '',
+        description: ''
+    })
+
+    const form_data = new FormData()
+
+    const { data, error, fetchData } = useFetchBackend()
+
+    const create_role = async(container) => {
+        for (const key of ['name', 'description']) {
+            const value = role.value[key]
+            if (value) {
+                form_data.append(key, value)
+            }
+        }
+
+        await fetchData('roles', {
+            method: 'POST',
+            body: form_data
+        })
+    }
+
+    watch(data, () => role.value = data.value)
+
+    return {
+        role,
+        create_role,
+        error,
+    }
+}
+
+
 export function useRoleMembers(role) {
     const reactive_role = toRef(role)
     const url = ref(`roles/${role.value.id}/members/all`)
@@ -143,12 +177,29 @@ export function useRolePermissions(role) {
         return { data, error }
     }
 
+    const update_global_acl = async (acl_id, allow) => {
+        const form_data = new FormData()
+        form_data.append('allow', allow)
+
+        const { data, error } = await useFetchBackend(`acls/${acl_id}`, {
+            method: 'PATCH',
+            body: form_data
+        })
+
+        if (!error) {
+            browse()
+        }
+
+        return { data, error }
+    }
+
     return { 
         ...browser,
         permissions,
         change_weight,
         add_global_acl,
-        delete_global_acl
+        delete_global_acl,
+        update_global_acl
     }
 }
 

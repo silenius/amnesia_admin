@@ -1,10 +1,11 @@
 <script setup>
 
-import { ref, watch, toRefs, computed, onMounted, onUpdated } from 'vue'
-import { useRole, useRoleMembers } from '../../composables/useRole.js'
+import { toRefs } from 'vue'
+import { useRoleMembers } from '../../composables/useRole.js'
 import AccountTable from '../../components/account/AccountTable.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import SelectLimit from '../../components/pagination/SelectLimit.vue'
+import BreadcrumbFromRouterMeta from '../../components/breadcrumbs/BreadcrumbFromRouterMeta.vue'
 
 const props = defineProps({
   role: {
@@ -21,15 +22,19 @@ const { add_member, delete_member, members, meta, change_limit, goto_page } = us
 <template>
   <div v-if="members">
     <div class="flex">
-      <h1 class="flex grow gap-2 items-center mb-4 text-3xl border-b font-bold">
-        <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
-        {{ role.name }} members
-      </h1>
+      <BreadcrumbFromRouterMeta>
+        <template #1-text>{{ role.name }}</template>
+      </BreadcrumbFromRouterMeta>
       <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
     </div>
-    <h2 class="text-2xl">This sections enables you to manage members of the
+    <h1 class="flex grow gap-2 items-center mb-2 text-xl font-bold">
+      <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
+      {{ role.name }}
+    </h1>
+
+    <h2>This sections enables you to manage members of the
       <span class="font-bold">{{ role.name }}</span> role.</h2>
- 
+
     <AccountTable :accounts="members" :enabled="false" class="mt-4">
       <template #headers>
         <th class="text-center">Member</th>

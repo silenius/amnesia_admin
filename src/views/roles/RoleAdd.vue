@@ -1,42 +1,52 @@
 <script setup>
-import { ref, provide, computed, onMounted } from 'vue'
+import { ref, provide, toValue } from 'vue'
 
 import RoleForm from '@/components/role/RoleForm.vue'
-import { useRoles } from '@/composables/roles.js'
+import { useCreateRole } from '../../composables/useRole.js'
 
-const { createRole } = useRoles()
-
-const role = ref({
-  name: '',
-  description: ''
-})
+const { create_role, role, error } = useCreateRole()
 
 const errors = ref({})
 
 const setError = (key, value) => {
-  errors.value[key] = value
+  if (value === false) {
+    delete errors.value[key]
+  } else {
+    errors.value[key] = value
+  }
+}
+
+const setErrorFromResponse = async(error) => {
+  const error_value = toValue(error)
+
+  for (const [k, v] of Object.entries(error_value.data)) {
+    setError(k, v)
+  }
 }
 
 provide('errors', {
   errors,
-  setError
+  setError,
+  setErrorFromResponse
 })
 
+const create  = async() => {
+  await create_role()
 
-const create = async () => {
-  await createRole(role).catch(e => {
-    console.log('ERROR')
-  })
+  if (!toValue(error)) {
+    router.push(`/${doc.value.id}`)
+  } else {
+    setErrorFromResponse(error)
+  }
+
 }
 
 </script>
 
 <template>
-  <h1>Add role</h1>
     <RoleForm 
       :role="role" 
       :action="'Create role'"
       @submit-role="create" 
     />
-
 </template>

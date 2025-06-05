@@ -64,6 +64,15 @@ const routes = [
 
     {
         path: '/accounts',
+        meta: {
+            breadcrumb(route) {
+                return {
+                    text: "Accounts",
+                    path: `/accounts`
+                }
+            }
+        },
+
         components: {
             default: () => import('../views/accounts/AccountsIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
@@ -77,7 +86,6 @@ const routes = [
             },
         ]
     },
-
     {
         path: '/roles',
         name: 'roles',
@@ -89,7 +97,6 @@ const routes = [
                 }
             }
         },
-
         components:{
             default: () => import('../views/roles/RolesIndex.vue'),
             Header: () => import('../components/headers/DefaultHeader.vue'),
@@ -117,6 +124,11 @@ const routes = [
                 }),
                 children: [
                     {
+                        name: 'show_role',
+                        path: '',
+                        component: () => import('../views/roles/RoleShow.vue'),
+                    },
+                    {
                         name: 'edit_role',
                         path: 'edit',
                         component: () => import('../views/roles/RoleEdit.vue'),
@@ -125,6 +137,15 @@ const routes = [
                         name: 'edit_members',
                         path: 'members',
                         component: () => import('../views/roles/RoleMembers.vue'),
+                        meta: {
+                            breadcrumb(route) {
+                                return {
+                                    text: "Members",
+                                    path: `/roles/${route.params.id}/members`
+                                }
+                            }
+                        }
+
                     },
                     {
                         name: 'edit_permissions',

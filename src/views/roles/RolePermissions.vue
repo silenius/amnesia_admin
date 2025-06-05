@@ -17,7 +17,8 @@ const props = defineProps({
 const route_info = useRoute()
 
 const { role } = toRefs(props)
-const { permissions, meta, change_limit, change_weight, add_global_acl, delete_global_acl } = useRolePermissions(role)
+const { permissions, meta, change_limit, change_weight, add_global_acl,
+  delete_global_acl, update_global_acl } = useRolePermissions(role)
 
 const get_tr = (node) => {
   let target = node
@@ -47,9 +48,9 @@ const change_permission = async (permission, allow) => {
   } else {
     console.info(`===> Update GlobalACL: ${permission.acl_id} / ${allow}`)
     // Update it's allow field
-    await patchGlobalACL(
+    await update_global_acl(
       permission.acl_id,
-      {'allow': allow}
+      allow
     )
   }
 }
@@ -133,96 +134,100 @@ const menuColors = {
 <template>
   <div>
     <div class="flex">
-      <h1 class="flex grow gap-2 items-center mb-4 text-3xl border-b font-bold">
-        <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
-        {{ role.name }} permissions
-      </h1>
+
+      <BreadcrumbFromRouterMeta>
+        <template #1-text>{{ role.name }}</template>
+      </BreadcrumbFromRouterMeta>
+
       <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
     </div>
-    <h2 class="text-2xl">This sections enables you to manage permissions of the
+    <h1 class="flex grow gap-2 items-center mb-2 text-xl font-bold">
+      <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-astronaut']" />
+      {{ role.name }}
+    </h1> 
+
+    <h2>This sections enables you to manage permissions of the
       <span class="font-bold">{{ role.name }}</span> role.</h2>
-    {{ route_info }}
 
-  <BreadcrumbFromRouterMeta />
- 
-  <table class="mt-4 table-auto box-border border">
-    <thead>
-      <tr class="text-left text-white bg-slate-500">
-        <th class="p-2">Name</th>
-        <th>Description</th>
-        <th>Status</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <tr v-for="permission in permissions" class="odd:bg-white even:bg-slate-50 text-slate-600"
-        :key="permission.id"
-        :class="{ 'cursor-move': permission.allow !== null }"
-        :data-weight="permission.weight"
-        :data-acl_id="permission.acl_id"
-        :draggable="permission.allow !== null"
-        @drag="drag"
-        @dragstart="start"
-        @dragend="end"
-        @dragleave="leave"
-        @dragenter="enter"
-        @dragover="over"
-        @drop="drop">
-        <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
-          {{ permission.name }}
-        </td>
-        <td>
-          {{ permission.description }}
-        </td>
-        <td class="p-2">
-          <div class="text-right">
-            <Menu as="div" class="relative text-left">
-              <div>
-                <MenuButton class="rounded inline-flex w-full justify-center
-                  px-4 py-1 text-xs font-medium focus:outline-hidden
-                  focus-visible:ring-2 focus-visible:ring-white
-                  focus-visible:ring-opacity-75"
-                  :class="menuColors[permission.allow]">
-                  <span v-if="permission.allow === true"> Allow </span>
-                  <span v-if="permission.allow === false"> Deny </span>
-                  <span v-if="permission.allow === null">Unset</span>
-                </MenuButton>
-              </div>
+    <table class="mt-4 table-auto box-border border">
+      <thead>
+        <tr class="text-left text-white bg-slate-500">
+          <th class="p-2">Name</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
 
-              <transition
-                enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0"
-enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-out"
-                leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0"
-              >
-                <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
-                  <div class="px-1 py-1">
-                    <MenuItem v-if="permission.allow !== false" v-slot="{ active }">
-                    <button @click="change_permission(permission, false)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
-                      Deny
-                    </button>
-                    </MenuItem>
+      <tbody>
+        <tr v-for="permission in permissions" class="odd:bg-white even:bg-slate-50 text-slate-600"
+          :key="permission.id"
+          :class="{ 'cursor-move': permission.allow !== null }"
+          :data-weight="permission.weight"
+          :data-acl_id="permission.acl_id"
+          :draggable="permission.allow !== null"
+          @drag="drag"
+          @dragstart="start"
+          @dragend="end"
+          @dragleave="leave"
+          @dragenter="enter"
+          @dragover="over"
+          @drop="drop">
+          <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
+            {{ permission.name }}
+          </td>
+          <td>
+            {{ permission.description }}
+          </td>
+          <td class="p-2">
+            <div class="text-right">
+              <Menu as="div" class="relative text-left">
+                <div>
+                  <MenuButton class="rounded inline-flex w-full justify-center
+                    px-4 py-1 text-xs font-medium focus:outline-hidden
+                    focus-visible:ring-2 focus-visible:ring-white
+                    focus-visible:ring-opacity-75"
+                    :class="menuColors[permission.allow]">
+                    <span v-if="permission.allow === true"> Allow </span>
+                    <span v-if="permission.allow === false"> Deny </span>
+                    <span v-if="permission.allow === null">Unset</span>
+                  </MenuButton>
+                </div>
 
-                    <MenuItem v-if="permission.allow !== true" v-slot="{ active }">
-                    <button @click="change_permission(permission, true)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
-                      Allow
-                    </button>
-                    </MenuItem>
-                    <MenuItem v-if="permission.allow !== null" v-slot="{ active }">
-                    <button @click="change_permission(permission, null)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
-                      Unset
-                    </button>
-                    </MenuItem>
-                  </div>
-                </MenuItems>
-              </transition>
-            </Menu>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+                <transition
+                  enter-active-class="transition duration-100 ease-out"
+                  enter-from-class="transform scale-95 opacity-0"
+                  enter-to-class="transform scale-100 opacity-100"
+                  leave-active-class="transition duration-75 ease-out"
+                  leave-from-class="transform scale-100 opacity-100"
+                  leave-to-class="transform scale-95 opacity-0"
+                >
+                  <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
+                    <div class="px-1 py-1">
+                      <MenuItem v-if="permission.allow !== false" v-slot="{ active }">
+                      <button @click="change_permission(permission, false)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
+                        Deny
+                      </button>
+                      </MenuItem>
+
+                      <MenuItem v-if="permission.allow !== true" v-slot="{ active }">
+                      <button @click="change_permission(permission, true)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
+                        Allow
+                      </button>
+                      </MenuItem>
+                      <MenuItem v-if="permission.allow !== null" v-slot="{ active }">
+                      <button @click="change_permission(permission, null)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full rounded-md px-2 py-2 text-xs']">
+                        Unset
+                      </button>
+                      </MenuItem>
+                    </div>
+                  </MenuItems>
+                </transition>
+              </Menu>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>

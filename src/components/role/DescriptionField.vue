@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref, inject, computed } from 'vue'
-import { useRole } from '@/composables/roles.js'
 
 const props = defineProps({
     description: String
@@ -24,8 +23,6 @@ const emit = defineEmits([
 
 const { errors, setError } = inject('errors')
 
-const { validateDescription } = useRole()
-
 const value = computed({
 
     get() {
@@ -33,7 +30,7 @@ const value = computed({
     },
 
     set(value) {
-        setError('description', validateDescription(value))
+//        setError('description', validateDescription(value))
         emit('update:description', value)
     }
 

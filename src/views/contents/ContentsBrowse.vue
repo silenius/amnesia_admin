@@ -121,8 +121,8 @@ const doDeleteSelection = async () => {
   browse()
 }
 
-const doMoveSelection = async () => {
-  await browse_move_folder({offset: 0})
+const doMoveSelection = () => {
+  browse_move_folder({offset: 0})
   move_modal_open.value = true
 }
 
@@ -190,7 +190,6 @@ const doMove = async () => {
       </div>
     </Dialog>
 
-    <h1 class="mb-4 font-bold text-xl underline uppercase tracking-tighter decoration-dotted">{{ folder.title }}</h1>
     <div class="flex gap-x-1">
 
       <DropDownAddToFolder 
@@ -218,6 +217,7 @@ const doMove = async () => {
 
     </div>
 
+    <h1 class="my-4 font-bold text-xl uppercase">{{ folder.title }}</h1>
     <div v-if="error" class="bg-red-500 text-white my-8 p-4">
       Error loading content
       <span v-if="error.status==403">: permission denied</span>

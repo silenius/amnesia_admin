@@ -57,14 +57,14 @@ const edit_members = (id) => {
     <tbody>
       <tr v-for="role in roles" :key="role.id" class="odd:bg-white
         even:bg-slate-50 text-slate-600">
-        <td class="p-2 tracking-wide font-semibold whitespace-nowrap">
+        <td class="p-2 font-semibold whitespace-nowrap">
           {{ role.name }}
         </td>
         <td class="p-2">
           <LockClosedIcon v-if="role.locked" class="inline h-4 w-4 fill-red-500" />
           <PaperAirplaneIcon v-if="role.virtual" class="inline h-4 w-4 fill-cyan-500" />
         </td>
-        <td class="tracking-tighter">{{ role.description }}</td>
+        <td class="text-xs">{{ role.description }}</td>
         <td class="p-2">
           <div class="w-min">
             <Menu as="div" class="relative text-left">
