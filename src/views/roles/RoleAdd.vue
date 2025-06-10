@@ -1,5 +1,6 @@
 <script setup>
 import { ref, provide, toValue } from 'vue'
+import { useRouter } from 'vue-router'
 
 import RoleForm from '@/components/role/RoleForm.vue'
 import { useCreateRole } from '../../composables/useRole.js'
@@ -7,6 +8,7 @@ import { useCreateRole } from '../../composables/useRole.js'
 const { create_role, role, error } = useCreateRole()
 
 const errors = ref({})
+const router = useRouter()
 
 const setError = (key, value) => {
   if (value === false) {
@@ -34,7 +36,7 @@ const create  = async() => {
   await create_role()
 
   if (!toValue(error)) {
-    router.push(`/${doc.value.id}`)
+    router.push(`/${role.value.id}`)
   } else {
     setErrorFromResponse(error)
   }

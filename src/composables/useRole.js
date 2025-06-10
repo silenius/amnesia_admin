@@ -2,6 +2,7 @@ import { useFetchBackend } from './fetch.js'
 import { useBrowser } from './useBrowser.js'
 import { onBeforeMount, ref, computed, toRef, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
+import { delete_role } from '../services/role.js'
 
 export function useRoles() {
     const browser = useBrowser('roles/browse', {limit: 50})
@@ -11,12 +12,18 @@ export function useRoles() {
         () => result.value.roles
     )
 
+    const destroy_role = (role_or_id) => {
+        if (delete_role(role_or_id)) {
+            browse()
+        }
+    }
+
     onBeforeMount(() => browse())
 
     return {
         ...browser,
         roles,
-
+        destroy_role,
     }
 }
 

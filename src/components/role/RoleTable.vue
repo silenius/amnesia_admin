@@ -5,8 +5,6 @@ import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { PencilSquareIcon, TrashIcon, UserIcon, AdjustmentsVerticalIcon, LockClosedIcon, PaperAirplaneIcon } from '@heroicons/vue/20/solid'
 
-import { useRoles } from '../../composables/useRole.js'
-
 const props = defineProps({
   roles: {
     type: Array,
@@ -14,11 +12,9 @@ const props = defineProps({
   }
 })
 
-const router = useRouter()
+const emits = defineEmits(['delete-role'])
 
-const delete_role = (id) => {
-  destroyRole(id)
-}
+const router = useRouter()
 
 const edit_role = (id) => {
   router.push({
@@ -103,7 +99,7 @@ const edit_members = (id) => {
                     </button>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
-                    <button @click="delete_role(role.id)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                    <button @click.prevent="$emit('delete-role', role)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                       <TrashIcon class="h-4 w-4" /> Delete
                     </button>
                     </MenuItem>
