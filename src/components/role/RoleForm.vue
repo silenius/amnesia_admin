@@ -18,15 +18,15 @@ const emit = defineEmits([
   'submit-role'
 ])
 
-const errors = inject('errors')
+const { errors } = inject('errors')
 
 </script>
 
 <template>
-  <form @submit.prevent="$emit('submit-role')">
+  <form class="text-slate-600" @submit.prevent="$emit('submit-role')">
     <NameField v-model="role.name" />
-    <DescriptionField v-model:description="role.description" />
-    <button type="submit" class="rounded-sm w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    <DescriptionField class="mt-2" v-model="role.description" />
+    <button type="submit" class="mt-4 rounded-sm w-fit hover:bg-green-200 bg-green-100 px-4 py-1 text-green-600 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
       {{ action }}
     </button>
   </form>

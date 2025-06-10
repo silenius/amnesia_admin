@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 
 import {
   TransitionRoot,
@@ -25,7 +25,7 @@ function openModal() {
   isOpen.value = true
 }
 
-const { destroy_role, roles, meta, change_limit, goto_page } = useRoles()
+const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles()
 
 </script>
 
@@ -67,12 +67,16 @@ const { destroy_role, roles, meta, change_limit, goto_page } = useRoles()
                 >
                   <DialogTitle
                     as="h3"
-                    class="text-lg font-medium leading-6 text-gray-900"
+                    class="text-lg flex gap-2 items-center font-medium leading-6 text-gray-900"
                   >
+                    <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-group']" />
                     Add a role
                   </DialogTitle>
                   <div class="mt-2">
-                    <RoleAdd />
+                    <RoleAdd 
+                      :emit_created="true"
+                      @role-created="browse() ; closeModal()"
+                    />
                   </div>
                 </DialogPanel>
               </TransitionChild>

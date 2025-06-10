@@ -1,5 +1,6 @@
 import { toValue } from 'vue'
 import { useFetchBackend } from '../composables/fetch.js'
+import { as_id } from './utils.js'
 
 export const content_as_formdata = ({content, form_data, extra_fields=[]} = {}) => {
     const content_value = toValue(content)
@@ -56,3 +57,17 @@ const change_state = async (id, state) => {
 export const publish = (id) => change_state(id, 'publish')
 export const unpublish = (id) => change_state(id, 'unpublish')
 export const private_ = (id) => change_state(id, 'private')
+
+export async function delete_content(content_or_id) {
+    const id = as_id(content_or_id)
+
+    if (id) {
+        const { error } = await useFetchBackend(id, {
+            method: 'DELETE'
+        })
+
+        return !error
+    }
+
+    return false
+}

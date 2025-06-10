@@ -2,7 +2,7 @@ import { useFetchBackend } from './fetch.js'
 import { useBrowser } from './useBrowser.js'
 import { onBeforeMount, ref, computed, toRef, readonly, watch } from 'vue';
 import { isEmpty, minLength } from '../services/validators.js'
-import { delete_role } from '../services/role.js'
+import { delete_role, role_as_formdata } from '../services/role.js'
 
 export function useRoles() {
     const browser = useBrowser('roles/browse', {limit: 50})
@@ -53,15 +53,10 @@ export function useCreateRole(fields) {
 
     const { data, error, fetchData } = useFetchBackend()
 
-    const create_role = async(container) => {
-        for (const key of ['name', 'description']) {
-            const value = role.value[key]
-            if (value) {
-                form_data.append(key, value)
-            }
-        }
+    const create_role = () => {
+        const form_data = role_as_formdata(role)
 
-        await fetchData('roles', {
+        return fetchData('roles', {
             method: 'POST',
             body: form_data
         })

@@ -1,9 +1,18 @@
 <script setup>
-import { ref, provide, toValue } from 'vue'
+import { ref, provide, toRefs, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 
 import RoleForm from '@/components/role/RoleForm.vue'
 import { useCreateRole } from '../../composables/useRole.js'
+
+const props = defineProps({
+  emit_created: {
+    type: Boolean,
+    default: false,
+  }
+})
+
+const emits = defineEmits(['role-created'])
 
 const { create_role, role, error } = useCreateRole()
 
@@ -36,11 +45,14 @@ const create  = async() => {
   await create_role()
 
   if (!toValue(error)) {
-    router.push(`/${role.value.id}`)
+    if (props.emit_created) {
+      emits('role-created', role)
+    } else {
+      router.push(`/${role.value.id}`)
+    }
   } else {
     setErrorFromResponse(error)
   }
-
 }
 
 </script>

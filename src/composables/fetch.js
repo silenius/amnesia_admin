@@ -42,10 +42,10 @@ export function useFetchBackend(url, options) {
                 body = await res.json()
             }
 
-            state.data = body
-
             if (!res.ok) {
                 throw new HTTPError(`HTTP error (${res.statusText})`, body)
+            } else {
+                state.data = body
             }
         }
         catch (e) {
