@@ -71,6 +71,26 @@ export function useCreateRole(fields) {
     }
 }
 
+export function useUpdateRole(role) {
+    const { data, error, fetchData } = useFetchBackend()
+
+    const update_role = () => {
+        const form_data = role_as_formdata(role)
+
+        return fetchData(`roles/${role.value.id}`, {
+            method: 'PUT',
+            body: form_data
+        })
+    }
+
+    watch(data, () => role.value = data.value)
+
+    return {
+        role,
+        update_role,
+        error,
+    }
+}
 
 export function useRoleMembers(role) {
     const reactive_role = toRef(role)

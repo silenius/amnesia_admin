@@ -12,16 +12,9 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['delete-role'])
+const emits = defineEmits(['delete-role', 'edit-role'])
 
 const router = useRouter()
-
-const edit_role = (id) => {
-  router.push({
-    name: 'edit_role',
-    params: { id: id }
-  })
-}
 
 const edit_permissions = (id) => {
   router.push({
@@ -94,7 +87,7 @@ const edit_members = (id) => {
 
                   <div class="px-1 py-1" v-if="!role.locked">
                     <MenuItem v-slot="{ active }">
-                    <button @click="edit_role(role.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                    <button @click="$emit('edit-role', role)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                       <PencilSquareIcon class="h-4 w-4"/> Edit
                     </button>
                     </MenuItem>

@@ -32,10 +32,10 @@ export function useCreateDocument(fields) {
 export function useUpdateDocument(doc) {
     const { data, error, fetchData } = useFetchBackend()
 
-    const update_document = async() => {
+    const update_document = () => {
         const form_data = document_as_formdata(doc)
 
-        await fetchData(doc.value.id, {
+        return fetchData(doc.value.id, {
             method: 'PUT',
             body: form_data
         })

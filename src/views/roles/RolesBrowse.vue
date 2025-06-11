@@ -1,5 +1,5 @@
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 
 import {
   TransitionRoot,
@@ -15,6 +15,7 @@ import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import BreadcrumbFromRouterMeta from '../../components/breadcrumbs/BreadcrumbFromRouterMeta.vue'
 import { useRoles } from '../../composables/useRole.js'
 import RoleAdd from "../../views/roles/RoleAdd.vue"
+import RoleEdit from "../../views/roles/RoleEdit.vue"
 
 const isOpen = ref(false)
 
@@ -24,6 +25,10 @@ function closeModal() {
 function openModal() {
   isOpen.value = true
 }
+
+const role_edit = ref(null)
+
+watch(role_edit, () => role_edit.value ? openModal() : closeModal())
 
 const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles()
 
@@ -67,13 +72,23 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
                 >
                   <DialogTitle
                     as="h3"
-                    class="text-lg flex gap-2 items-center font-medium leading-6 text-gray-900"
+                    class="text-lg border-b-2 mb-4 flex gap-2 items-center font-medium leading-6 text-gray-900"
                   >
+                    <div class="grow">
+                      <span v-if="role_edit">Edit role</span>
+                      <span v-else>Add a role</span>
+                    </div>
                     <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-group']" />
-                    Add a role
                   </DialogTitle>
                   <div class="mt-2">
+                    <RoleEdit
+                      v-if="role_edit"
+                      :emit_updated="true"
+                      :role="role_edit"
+                      @role-updated="browse() ; role_edit=null"
+                    />
                     <RoleAdd 
+                      v-else
                       :emit_created="true"
                       @role-created="browse() ; closeModal()"
                     />
@@ -107,6 +122,7 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
     <RoleTable 
       :roles="roles"
       @delete-role="destroy_role"
+      @edit-role="(role) => role_edit = role"
       class="mt-4"
     />
 
