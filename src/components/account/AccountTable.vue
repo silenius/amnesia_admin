@@ -97,7 +97,7 @@ const emit = defineEmits([
                 <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                   <div>
                     <MenuItem v-slot="{ active }">
-                    <button @click="$emit('edit-account', account.id)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                    <button @click="$emit('edit-account', account)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
                       <PencilSquareIcon class="h-4 w-4"/> Edit
                     </button>
                     </MenuItem>

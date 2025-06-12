@@ -10,12 +10,12 @@ import {
   DialogTitle,
 } from '@headlessui/vue'
 
-
 import AccountTable from '../../components/account/AccountTable.vue'
 import Pagination from '../../components/pagination/Pagination.vue'
 import SelectLimit from '../../components/pagination/SelectLimit.vue'
 import BreadcrumbFromRouterMeta from '../../components/breadcrumbs/BreadcrumbFromRouterMeta.vue'
 import { useUsersStore } from '../../stores/users.js'
+import AccountForm from '../../components/account/AccountForm.vue'
 
 const user_store = useUsersStore()
 const { meta, users } = storeToRefs(user_store)
@@ -28,15 +28,17 @@ const doDestroy = (account) => {
   user_store.deleteUser(account.id)
 }
 
-const isOpen = ref(false)
+const account_for_form = ref({})
 
-function closeModal() {
-  isOpen.value = false
-}
-function openModal() {
-  isOpen.value = true
+function create_or_modify() {
+  if (account_for_form.value.id) {
+
+  } else {
+    console.log(account_for_form.value)
+  }
 }
 
+const modal_open = ref(false)
 
 </script>
 
@@ -46,8 +48,8 @@ function openModal() {
     <!-- DIALOG ADD ACCOUNT -->
 
     <Teleport to="body">
-      <TransitionRoot appear :show="isOpen" as="template">
-        <Dialog as="div" @close="closeModal" class="relative z-10">
+      <TransitionRoot appear :show="modal_open" as="template">
+        <Dialog as="div" @close="modal_open=false" class="relative z-10">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out"
@@ -80,23 +82,14 @@ function openModal() {
                     as="h3"
                     class="text-lg border-b-2 mb-4 flex gap-2 items-center font-medium leading-6 text-gray-900"
                   >
-                    <div class="grow">
-                      <span v-if="role_edit">Edit account</span>
-                      <span v-else>Add an account</span>
-                    </div>
+                    Account
                     <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-group']" />
                   </DialogTitle>
                   <div class="mt-2">
-                    <RoleEdit
-                      v-if="role_edit"
-                      :emit_updated="true"
-                      :role="role_edit"
-                      @role-updated="browse() ; role_edit=null"
-                    />
-                    <RoleAdd 
-                      v-else
-                      :emit_created="true"
-                      @role-created="browse() ; closeModal()"
+                    <AccountForm 
+                      :account="account_for_form"
+                      @submit-account="create_or_modify"
+                      @toggle-show="(v) => modal_open=v"
                     />
                   </div>
                 </DialogPanel>
@@ -107,9 +100,8 @@ function openModal() {
       </TransitionRoot>
     </Teleport>
 
-
     <div class="flex">
-      <button @click.prevent="openModal" class="h-12 font-bold hover:outline-hidden text-white bg-emerald-400
+      <button @click.prevent="account_for_form = {} ; modal_open=true" class="h-12 font-bold hover:outline-hidden text-white bg-emerald-400
         hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100 rounded-full
         text-sm px-2 justify-center ">
         Add account
@@ -124,9 +116,11 @@ function openModal() {
 
     <h2>This sections enables you to manage accounts</h2>
     <AccountTable 
+      v-if="users"
       class="mt-4"
       :accounts="users" 
       :actions="true" 
+      @edit-account="(account) => { account_for_form=account ; modal_open = true }"
       @delete-account="doDestroy"
       @toggle-enabled="(a) => user_store.patch(a.id, { enabled: !a.enabled})" 
     />

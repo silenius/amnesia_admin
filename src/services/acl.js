@@ -1,9 +1,8 @@
 import { toValue } from 'vue'
 import { useFetchBackend } from '../composables/fetch.js'
+import { as_id } from './utils'
 
 export function get_recursive_acls(content_or_id) {
-    const v = toValue(content_or_id)
-    const id = isNaN(parseInt(v)) ? v.id : v
-    
-    return useFetch(`${id}/acls`)
+    const id = as_id(content_or_id)    
+    return useFetchBackend(`${id}/acls`)
 }

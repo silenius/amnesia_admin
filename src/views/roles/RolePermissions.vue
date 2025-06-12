@@ -149,7 +149,6 @@ const menuColors = {
     <h2>This sections enables you to manage permissions of the
       <span class="font-bold">{{ role.name }}</span> role.</h2>
 
-
     <table class="mt-4 table-auto box-border border">
       <thead>
         <tr class="text-left text-white bg-slate-500">
@@ -229,5 +228,8 @@ const menuColors = {
         </tr>
       </tbody>
     </table>
+
+    <!-- TODO: add pagination -->
+
   </div>
 </template>

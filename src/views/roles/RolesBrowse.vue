@@ -17,18 +17,10 @@ import { useRoles } from '../../composables/useRole.js'
 import RoleAdd from "../../views/roles/RoleAdd.vue"
 import RoleEdit from "../../views/roles/RoleEdit.vue"
 
-const isOpen = ref(false)
-
-function closeModal() {
-  isOpen.value = false
-}
-function openModal() {
-  isOpen.value = true
-}
-
+const modal_open = ref(false)
 const role_edit = ref(null)
 
-watch(role_edit, () => role_edit.value ? openModal() : closeModal())
+watch(role_edit, () => role_edit.value ? modal_open.value = true : modal_open.value = false)
 
 const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles()
 
@@ -40,8 +32,8 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
     <!-- DIALOG ADD ROLE -->
 
     <Teleport to="body">
-      <TransitionRoot appear :show="isOpen" as="template">
-        <Dialog as="div" @close="closeModal" class="relative z-10">
+      <TransitionRoot appear :show="modal_open" as="template">
+        <Dialog as="div" @close="modal_open = false" class="relative z-10">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out"
@@ -90,7 +82,7 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
                     <RoleAdd 
                       v-else
                       :emit_created="true"
-                      @role-created="browse() ; closeModal()"
+                      @role-created="browse() ; modal_open  = false"
                     />
                   </div>
                 </DialogPanel>
@@ -102,7 +94,7 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
     </Teleport>
 
     <div class="flex">
-      <button @click.prevent="openModal" class="h-12 font-bold hover:outline-hidden text-white bg-emerald-400
+      <button @click.prevent="modal_open = true" class="h-12 font-bold hover:outline-hidden text-white bg-emerald-400
         hover:bg-emerald-500 hover:ring-4 hover:ring-emerald-100 rounded-full
         text-sm px-2 justify-center ">
         Add role
@@ -110,7 +102,7 @@ const { destroy_role, roles, browse, meta, change_limit, goto_page } = useRoles(
 
       <BreadcrumbFromRouterMeta />
 
-      <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
+      <SelectLimit :limit="meta.limit" @set-limit="change_limit" />
     </div>
     <h1 class="flex grow gap-2 mt-4 items-center mb-2 text-xl font-bold">
       <font-awesome-icon class="block" :icon="['fa-solid', 'fa-user-group']" />

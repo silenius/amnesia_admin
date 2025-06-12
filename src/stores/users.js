@@ -4,6 +4,7 @@ import { useAuthStore } from './auth.js'
 import { useBrowser } from '../composables/useBrowser.js'
 import { useFetchBackend } from '../composables/fetch.js'
 import { asURLSearchParams } from '../services/url.js'
+import { create_account, delete_account } from '../services/account.js'
 
 export const useUsersStore = defineStore('users', () => {
     const authStore = useAuthStore()
@@ -32,20 +33,24 @@ export const useUsersStore = defineStore('users', () => {
         }
     }
 
-    const deleteUser = async (id) => {
-        const { error } = await useFetchBackend(`auth/${id}`, {
-            method: 'DELETE'
-        })
-
-        if (!error) {
+    const deleteUser = async (user_or_id) => {
+        if (delete_account(user_or_id)) {
             browse()
 
             if (authStore.user.id == id) {
                 authStore.logout()
             }
         }
+    }
 
-        return !error
+    const create = async (account_data) => {
+        const { error, data } = await create_account(account_data)
+
+        if (!error) {
+            browse()
+        }
+
+        return data
     }
 
     return {

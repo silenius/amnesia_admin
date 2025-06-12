@@ -1,6 +1,11 @@
 <script setup>
 
+import { ref, provide } from 'vue'
+
 import AccountFirstName from './fields/AccountFirstName.vue'
+import AccountLastName from './fields/AccountLastName.vue'
+import AccountLogin from './fields/AccountLogin.vue'
+import AccountEmail from './fields/AccountEmail.vue'
 
 const props = defineProps({
   account: {
@@ -11,6 +16,30 @@ const props = defineProps({
 
 const emits = defineEmits(['submit-account'])
 
+const errors = ref({})
+
+const setError = (key, value) => {
+  if (value === false) {
+    delete errors.value[key]
+  } else {
+    errors.value[key] = value
+  }
+}
+
+const setErrorFromResponse = async(error) => {
+  const error_value = toValue(error)
+
+  for (const [k, v] of Object.entries(error_value.data)) {
+    setError(k, v)
+  }
+}
+
+provide('errors', {
+  errors,
+  setError,
+  setErrorFromResponse
+})
+
 const cls = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-slate-600 focus:border-slate-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 
 </script>
@@ -18,21 +47,10 @@ const cls = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
 <template>
   <form @submit.prevent="$emit('submit-account')">
     <div class="space-y-4 md:space-y-6" action="#">
-      <AccountFirstName v-model="account.fist_name" />
-
-      <div>
-        <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
-        <input type="login" name="last_name" id="last_name" :class="cls" placeholder="Tiger" required="">
-      </div>
-
-      <div>
-        <label for="login" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Login</label>
-        <input type="login" name="login" id="login" :class="cls" placeholder="scott.tiger" required="">
-      </div>
-      <div>
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-        <input type="email" name="email" id="email" :class="cls" placeholder="name@company.com" required="">
-      </div>
+      <AccountFirstName v-model="account.first_name" />
+      <AccountLastName v-model="account.last_name" />
+      <AccountLogin v-model="account.login" />
+      <AccountEmail v-model="account.email" />
       <div>
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
         <input type="password" name="password" id="password" placeholder="••••••••" :class="cls" required="">
@@ -47,6 +65,4 @@ const cls = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
       <slot name="bottom" />
     </div>
   </form>
-
-
 </template>
