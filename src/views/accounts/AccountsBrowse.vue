@@ -32,9 +32,9 @@ const account_for_form = ref({})
 
 function create_or_modify() {
   if (account_for_form.value.id) {
-
+    user_store.update(account_for_form)
   } else {
-    console.log(account_for_form.value)
+    user_store.create(account_for_form)
   }
 }
 
@@ -120,6 +120,7 @@ const modal_open = ref(false)
       class="mt-4"
       :accounts="users" 
       :actions="true" 
+      @reset-password="user_store.reset_password(account)"
       @edit-account="(account) => { account_for_form=account ; modal_open = true }"
       @delete-account="doDestroy"
       @toggle-enabled="(a) => user_store.patch(a.id, { enabled: !a.enabled})" 

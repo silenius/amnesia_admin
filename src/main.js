@@ -12,6 +12,7 @@ import {
     faUpDownLeftRight,
     faUserAstronaut,
     faUserGroup,
+    faKey,
     faCircleCheck,
     faCheck,
     faXmark,
@@ -107,6 +108,7 @@ library.add(faSquareVirus)
 library.add(faUpDownLeftRight)
 library.add(faUserAstronaut)
 library.add(faUserGroup)
+library.add(faKey)
 library.add(faCircleCheck)
 library.add(faCircleXmark)
 library.add(faXmark)

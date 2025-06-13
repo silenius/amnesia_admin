@@ -57,7 +57,7 @@ const cls = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
       </div>
       <div>
         <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
-        <input type="confirm-password" name="confirm-password" id="confirm-password" placeholder="••••••••" :class="cls" required="">
+        <input type="password" name="confirm-password" id="confirm-password" placeholder="••••••••" :class="cls" required="">
       </div>
       <button type="submit" class="w-full text-white bg-slate-600 hover:bg-slate-700 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-slate-600 dark:hover:bg-slate-700 dark:focus:ring-slate-800">Create an account</button>
 

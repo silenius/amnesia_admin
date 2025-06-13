@@ -1,7 +1,6 @@
 <script setup>
 
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import DefaultPagination from '@/components/pagination/DefaultPagination.vue'
 
 const props = defineProps({
@@ -38,6 +37,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'toggle-enabled',
+  'reset-password',
   'delete-account',
   'edit-account'
 ])
@@ -97,13 +97,21 @@ const emit = defineEmits([
                 <MenuItems class="z-10 w-56 absolute divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
                   <div>
                     <MenuItem v-slot="{ active }">
+                    <button @click="$emit('reset-password', account)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
+                      <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-key" />
+                      Reset password
+                    </button>
+                    </MenuItem>
+                    <MenuItem v-slot="{ active }">
                     <button @click="$emit('edit-account', account)" :class="[ active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                      <PencilSquareIcon class="h-4 w-4"/> Edit
+                      <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-pen-to-square" />
+                      Edit
                     </button>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
                     <button @click="$emit('delete-account', account)" :class="[ active ? 'bg-red-700 text-white' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-xs']">
-                      <TrashIcon class="h-4 w-4" /> Delete
+                      <font-awesome-icon class="h-4 w-4" icon="fa-solid fa-trash-can" />
+                      Delete
                     </button>
                     </MenuItem>
                   </div>

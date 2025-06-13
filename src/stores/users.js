@@ -4,7 +4,7 @@ import { useAuthStore } from './auth.js'
 import { useBrowser } from '../composables/useBrowser.js'
 import { useFetchBackend } from '../composables/fetch.js'
 import { asURLSearchParams } from '../services/url.js'
-import { create_account, delete_account } from '../services/account.js'
+import { reset_account_password, update_account, create_account, delete_account } from '../services/account.js'
 
 export const useUsersStore = defineStore('users', () => {
     const authStore = useAuthStore()
@@ -44,7 +44,27 @@ export const useUsersStore = defineStore('users', () => {
     }
 
     const create = async (account_data) => {
-        const { error, data } = await create_account(account_data)
+        const { error, data } = await create_account(toValue(account_data))
+
+        if (!error) {
+            browse()
+        }
+
+        return data
+    }
+
+    const update = async (account_data) => {
+        const { error, data } = await update_account(toValue(account_data))
+
+        if (!error) {
+            browse()
+        }
+
+        return data
+    }
+
+    const reset_password = async(account) => {
+        const { error, data } = await reset_account_password(toValue(account))
 
         if (!error) {
             browse()
@@ -61,6 +81,9 @@ export const useUsersStore = defineStore('users', () => {
         patch,
         deleteUser,
         goto_page,
-        change_limit
+        change_limit,
+        create,
+        update,
+        reset_password
     }
 })

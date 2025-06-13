@@ -2,17 +2,20 @@ import { useFetchBackend } from '../composables/fetch.js'
 import { as_id } from './utils.js'
 import { toValue } from 'vue'
 
-export function account_as_formdata(account) {
+export function account_as_formdata(account, fields) {
     const data = new FormData()
     const account_value = toValue(account)
 
-    const fields = [
-        'first_name',
-        'last_name',
-        'login',
-        'email',
-        'password'
-    ]
+    if (!fields) {
+        fields = [
+            'first_name',
+            'last_name',
+            'login',
+            'email',
+            'password',
+            'password_repeat'
+        ]
+    }
 
     for (const field of fields) {
         data.append(field, account_value[field])
@@ -35,13 +38,32 @@ export async function delete_account(account_or_id) {
     return false
 }
 
-export function create_account(account_or_formdata) {
-    if (!account_or_formdata instanceof FormData) {
-        account_or_formdata = account_as_formdata(account_or_formdata)
-    }
+export function create_account(account) {
+    const form_data = account_as_formdata(account)
 
-    return useFetchBackend('/accounts', {
+    return useFetchBackend('auth/register', {
         method: 'POST',
-        body: account_or_formdata
+        body: form_data
     })
+}
+
+export function update_account(account) {
+    const form_data = account_as_formdata(account)
+
+    return useFetchBackend('accounts', {
+        method: 'PUT',
+        body: form_data
+    })
+}
+
+export function reset_account_password(account) {
+    const id = as_id(account)
+    const form_data = account_as_formdata(account, ['email'])
+
+    if (id) {
+        return useFetchBackend('auth/lost', {
+            method: 'POST',
+            body: form_data
+        })
+    }
 }

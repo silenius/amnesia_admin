@@ -5,7 +5,7 @@ import { isEmpty, minLength, validate } from "../../../services/validators.js"
 const { errors, setError } = inject('errors')
 
 const validators = [
-  isEmpty, [minLength, {min: 4}]
+  isEmpty
 ]
 
 const model = defineModel({
