@@ -1,6 +1,6 @@
 <script setup>
 import { inject } from 'vue'
-import { isEmpty, minLength, validate } from "../../../services/validators.js"
+import { isEmpty, validate } from "../../../services/validators.js"
 
 const { errors, setError } = inject('errors')
 

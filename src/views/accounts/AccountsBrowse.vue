@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, toValue, provide, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import {
   TransitionRoot,
@@ -24,21 +24,46 @@ onMounted(() => {
   user_store.browse()
 })
 
-const doDestroy = (account) => {
-  user_store.deleteUser(account.id)
-}
-
 const account_for_form = ref({})
 
-function create_or_modify() {
-  if (account_for_form.value.id) {
-    user_store.update(account_for_form)
+async function create_or_modify() {
+  const { error } = account_for_form.value.id 
+    ? await user_store.update(account_for_form) 
+    : await user_store.create(account_for_form)
+
+  if (!error) {
+    modal_open.value = false
   } else {
-    user_store.create(account_for_form)
+    setErrorFromResponse(error)
   }
 }
 
 const modal_open = ref(false)
+
+const errors = ref({})
+
+const setError = (key, value) => {
+  if (value === false) {
+    delete errors.value[key]
+  } else {
+    errors.value[key] = value
+  }
+}
+
+const setErrorFromResponse = async(error) => {
+  const error_value = toValue(error)
+
+  for (const [k, v] of Object.entries(error_value.data)) {
+    setError(k, v)
+  }
+}
+
+provide('errors', {
+  errors,
+  setError,
+  setErrorFromResponse
+})
+
 
 </script>
 
@@ -122,7 +147,7 @@ const modal_open = ref(false)
       :actions="true" 
       @reset-password="user_store.reset_password(account)"
       @edit-account="(account) => { account_for_form=account ; modal_open = true }"
-      @delete-account="doDestroy"
+      @delete-account="user_store.delete_"
       @toggle-enabled="(a) => user_store.patch(a.id, { enabled: !a.enabled})" 
     />
     <Pagination

@@ -4,6 +4,7 @@ import { useAuthStore } from './auth.js'
 import { useBrowser } from '../composables/useBrowser.js'
 import { useFetchBackend } from '../composables/fetch.js'
 import { asURLSearchParams } from '../services/url.js'
+import { as_id } from '../services/utils.js'
 import { reset_account_password, update_account, create_account, delete_account } from '../services/account.js'
 
 export const useUsersStore = defineStore('users', () => {
@@ -33,44 +34,45 @@ export const useUsersStore = defineStore('users', () => {
         }
     }
 
-    const deleteUser = async (user_or_id) => {
-        if (delete_account(user_or_id)) {
-            browse()
+    const delete_ = async (account_data) => {
+        const { error, data } = await delete_account(account_data)
 
-            if (authStore.user.id == id) {
+        if (!error) {
+            browse()
+            if (as_id(authStore.user) == as_id(account_data)) {
                 authStore.logout()
             }
         }
     }
 
     const create = async (account_data) => {
-        const { error, data } = await create_account(toValue(account_data))
+        const { error, data } = await create_account(account_data)
 
         if (!error) {
             browse()
         }
 
-        return data
+        return { error, data }
     }
 
     const update = async (account_data) => {
-        const { error, data } = await update_account(toValue(account_data))
+        const { error, data } = await update_account(account_data)
 
         if (!error) {
             browse()
         }
 
-        return data
+        return { error, data }
     }
 
     const reset_password = async(account) => {
-        const { error, data } = await reset_account_password(toValue(account))
+        const { error, data } = await reset_account_password(account)
 
         if (!error) {
             browse()
         }
 
-        return data
+        return { error, data }
     }
 
     return {
@@ -79,7 +81,7 @@ export const useUsersStore = defineStore('users', () => {
         browse,
         query,
         patch,
-        deleteUser,
+        delete_,
         goto_page,
         change_limit,
         create,

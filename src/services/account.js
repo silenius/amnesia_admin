@@ -18,7 +18,11 @@ export function account_as_formdata(account, fields) {
     }
 
     for (const field of fields) {
-        data.append(field, account_value[field])
+        const value = account_value[field]
+
+        if (value !== undefined) {
+            data.append(field, value === null ? '' : value)
+        }
     }
 
     return data
@@ -28,14 +32,10 @@ export async function delete_account(account_or_id) {
     const id = as_id(account_or_id)
 
     if (id) {
-        const { error } = await useFetchBackend(`auth/${id}`, {
+        return useFetchBackend(`auth/${id}`, {
             method: 'DELETE'
         })
-
-        return !error
     }
-
-    return false
 }
 
 export function create_account(account) {
