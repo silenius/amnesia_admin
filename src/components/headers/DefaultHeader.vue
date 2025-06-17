@@ -73,14 +73,11 @@ const doLogout = async() => {
 
       <!-- REGISTER -->
 
-      <Register :show="register_modal_open" @toggle-show="(show_or_hide) => register_modal_open=show_or_hide" >
-        <template #bottom>
-          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Already have an account? <a href="#"
-              @click.prevent="register_modal_open=false ; login_modal_open=true" class="font-medium text-slate-600 hover:underline dark:text-slate-500">Login here</a>
-          </p>
-        </template>
-      </Register>
+      <Register 
+        :show="register_modal_open" 
+        @toggle-show="(show_or_hide) => register_modal_open=show_or_hide"
+        @login-instead="register_modal_open=false; login_modal_open=true"
+      />
 
       <button @click="register_modal_open=true" class="border hover:cursor-pointer text-white p-2 rounded-sm hover:bg-white hover:text-teal-500 bg-teal-500 border-teal-400">
         register 
@@ -92,6 +89,7 @@ const doLogout = async() => {
         :show="login_modal_open" 
         :errors="login_errors"
         @login="doLogin"
+        @signup-instead="login_modal_open=false; register_modal_open=true"
         @toggle-show="(show_or_hide) => login_modal_open=show_or_hide"
       />
 

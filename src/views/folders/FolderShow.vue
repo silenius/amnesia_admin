@@ -26,7 +26,7 @@ const view_icon = computed(
 
 </script>
 <template>          
-  <Teleport defer to="#lol">
+  <Teleport defer to="#buttons">
     <SelectFolderFilters @change-filter="(p) => browse(p)" />
     <SelectLimit :limit="meta.limit" @set-limit="(v) => change_limit(v)" />
   </Teleport>

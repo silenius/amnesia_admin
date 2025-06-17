@@ -62,11 +62,18 @@ export const FontItalic = Extension.create({
                     })
                 }
 
-                return p.chain().setMark(
-                    'textClass', {
-                        fontItalic: mark
-                    }
-                ).run()
+                if (p.tr.selection.empty) {
+                    return p.commands.updateAttributes(
+                        "paragraph", { fontItalic: mark }
+                    )
+
+                } else {
+                    return p.chain().setMark(
+                        'textClass', {
+                            fontItalic: mark
+                        }
+                    ).run()
+                }
             },
         }
     },

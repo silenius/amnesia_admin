@@ -31,7 +31,7 @@ const mapping = {
 
 <template>
   <div v-if="content" class="m-4">
-    <div id="lol" class="flex gap-x-1 mb-4 items-center grow">
+    <div class="flex gap-x-1 mb-4 items-center grow">
       <EditContentButton class="p-1" :label="null"
         @click.prevent="$router.push({name: 'edit-content', params: {id:
           content_id}})" />
@@ -41,6 +41,8 @@ const mapping = {
         @navigate="(content) => $router.push({name: 'show-content', params: {id: content.id}})" 
         class="p-2 shadow-md"
       />
+
+      <div id="buttons" class="flex gap-2"></div>
     </div>
 
     <h1 class="flex gap-2 items-center text-3xl border-b font-bold">

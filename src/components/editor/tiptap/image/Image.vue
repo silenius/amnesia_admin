@@ -7,7 +7,7 @@
       :data-objectid="node.attrs['data-objectid']"
       :width="width_attr"
       :height="height_attr"
-      :class="[img_cls, extra_cls_img, bg_color_cls]" 
+      :class="[img_cls, extra_cls_img]" 
     />
     <resizeNode v-if="editable" :editor="editor" :selected="selected" :node="img" @resize="(size) => updateAttributes(size)" v-show="selected && img" /> 
   </node-view-wrapper>
@@ -16,7 +16,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
-import { render_bg_color_attrs } from '../background-color/utils'
 import { render_tw_attrs } from '../utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
@@ -57,7 +56,7 @@ const extra_cls_img = computed(() => {
   const classes = []
   const attrs = [
     'px', 'py', 'pt', 'pr', 'pb', 'pl', 'width', 'maxWidth', 'minWidth',
-    'height', 'maxHeight', 'minHeight',
+    'height', 'maxHeight', 'minHeight', 'backgroundColor',
   ]
 
   for (const attr of attrs) {
@@ -81,11 +80,6 @@ const extra_cls_img = computed(() => {
   }
 
   return classes
-})
-
-const bg_color_cls = computed(() => {
-  const cls = render_bg_color_attrs(props.node.attrs)
-  return cls ? Object.values(cls) : []
 })
 
 const width_attr = computed(() => {
