@@ -654,7 +654,8 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="exts.fontItalic"
               :editor="editor"
-              @select-font-italic="({italic}) => editor.chain().focus().setFontItalic(italic, breakpoint).run()"
+              :selected="nodeSelected"
+              @select-font-italic="(p) => editor.chain().focus().setFontItalic({...p, selected: nodeSelected}).run()"
             />
 
             <SelectFontWeight 
@@ -663,7 +664,8 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="exts.fontWeight"
               :editor="editor"
-              @select-font-weight="({weight}) => editor.chain().focus().setFontWeight(weight, breakpoint).run()"
+              :selected="nodeSelected"
+              @select-font-weight="(p) => editor.chain().focus().setFontWeight({...p, selected: nodeSelected}).run()"
             />
 
             <SelectTextDecoration 
@@ -672,7 +674,8 @@ Fix width to the current breakpoint.
               :breakpoint="breakpoint"
               :extension="exts.textDecoration"
               :editor="editor"
-              @select-text-decoration="({decoration}) => editor.chain().focus().setTextDecoration(decoration, breakpoint).run()"
+              :selected="nodeSelected"
+              @select-text-decoration="(p) => editor.chain().focus().setTextDecoration({...p, selected: nodeSelected}).run()"
             />
 
           </div>

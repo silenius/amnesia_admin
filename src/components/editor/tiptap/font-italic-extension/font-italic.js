@@ -43,36 +43,44 @@ export const FontItalic = Extension.create({
 
     addCommands() {
         return {
-            setFontItalic: (italic = null, breakpoint = null) => (p) => {
+            setFontItalic: ({italic = null, breakpoint = null, type=undefined, selected=undefined}) => (p) => {
+                if (!selected && !type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 if (p.tr.selection.node?.type.isText === false) {
                     return null
                 }
 
-                const oldAttrs = p.editor.getAttributes('textClass').fontItalic
+                let attrs = selected ? selected.node.attrs['fontItalic'] : p.editor.getAttributes(type)['fontItalic']
 
-                const mark = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
+
 
                 if (this.options.italics.indexOf(italic) !== -1) {
                     // New value
-                    mark.push({
+                    attr.push({
                         breakpoint: breakpoint,
                         tw: italic,
                     })
                 }
 
-                if (p.tr.selection.empty) {
-                    return p.commands.updateAttributes(
-                        "paragraph", { fontItalic: mark }
-                    )
+                attr = {
+                    fontItalic: attr
+                }
 
+                if (!p.tr.selection.empty && p.tr.selection.toJSON().type == 'text') {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
                 } else {
-                    return p.chain().setMark(
-                        'textClass', {
-                            fontItalic: mark
-                        }
-                    ).run()
+                    return p.commands.updateAttributes(
+                        type, attr
+                    )
                 }
             },
         }

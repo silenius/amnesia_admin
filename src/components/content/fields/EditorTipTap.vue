@@ -745,6 +745,10 @@ onMounted( async () => {
         @click="add_tmpl1"
       />
 
+      <font-awesome-icon icon="fa-solid fa-broom"
+        @click="editor.commands.unsetAllMarks()"
+        v-if="!editor.state.selection.empty" />
+
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
         v-if="!editor.state.selection.empty" />

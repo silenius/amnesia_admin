@@ -29,6 +29,7 @@ import {
     faPenToSquare,
     faPencil,
     faCalendar,
+    faBroom,
     faFile,
     faAtom,
     faMicrophoneLines,
@@ -118,6 +119,7 @@ library.add(faCircle)
 library.add(faShieldHalved)
 library.add(faFolderTree)
 library.add(faFolder)
+library.add(faBroom)
 library.add(faFileLines)
 library.add(faArrowRight)
 library.add(faArrowUpFromBracket)

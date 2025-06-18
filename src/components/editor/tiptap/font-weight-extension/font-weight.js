@@ -40,30 +40,46 @@ export const FontWeight = Extension.create({
 
     addCommands() {
         return {
-            setFontWeight: (weight, breakpoint = null) => (p) => {
+            setFontWeight: ({weight = null, breakpoint = null, type = undefined, selected = undefined}) => (p) => {
+                if (!selected && !type) {
+                    type = this.options.types.find((e) => p.editor.isActive(e))
+                }
+
                 if (p.tr.selection.node?.type.isText === false) {
                     return null
                 }
 
-                const oldAttrs = p.editor.getAttributes('textClass')['fontWeight']
-                const attr = Array.isArray(oldAttrs)
-                    ? oldAttrs.filter((x) => x.breakpoint !== breakpoint)
+                let attrs = selected ? selected.node.attrs['fontWeight'] : p.editor.getAttributes(type)['fontWeight']
+
+                let attr = Array.isArray(attrs)
+                    ? attrs.filter((x) => x.breakpoint !== breakpoint)
                     : []
+
 
                 if (this.options.weights.indexOf(weight) !== -1) {
                     // New value
                     attr.push({
                         breakpoint: breakpoint,
-                        tw: weight
+                        tw: weight,
                     })
                 }
 
-                return p.chain().setMark(
-                    'textClass', {
-                        fontWeight: attr
-                    }
-                ).run()
-            },
+                attr = {
+                    fontWeight: attr
+                }
+
+                if (!p.tr.selection.empty && p.tr.selection.toJSON().type == 'text') {
+                    return p.commands.setMark('textClass', attr)
+                } else if (selected) {
+                    return p.commands._updateNodeAttributes(
+                        selected.pos, selected.node, attr
+                    )
+                } else {
+                    return p.commands.updateAttributes(
+                        type, attr
+                    )
+                }
+            }
         }
     },
 
