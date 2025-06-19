@@ -19,18 +19,10 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs, props_extension } from '../utils'
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-  selected: Object
-})
-
-const emits = defineEmits([
-  'select-maxWidth'
-])
+const props = defineProps(props_extension)
+const emits = defineEmits(['select-maxWidth'])
 
 const class_opts = [
   'absolute', 'text-center', 'max-h-48', 'rounded-sm', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'

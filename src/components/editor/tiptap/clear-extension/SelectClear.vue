@@ -19,8 +19,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
-import { props_extension } from '../utils';
+import { getSelectedAttrs, props_extension } from '../utils'
 import clearLeft from "@/assets/float-left.svg";
 import clearRight from "@/assets/float-right.svg";
 import clearNone from "@/assets/denied.svg";

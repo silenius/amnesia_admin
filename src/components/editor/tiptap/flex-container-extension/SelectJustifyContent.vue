@@ -11,7 +11,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs, props_extension } from '../utils'
 
 import {
   Listbox,
@@ -20,17 +20,8 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  transaction: Object,
-  editor: Object,
-  selected: Object
-})
-
-const emits = defineEmits([
-  'select-justify-content'
-])
+const props = defineProps(props_extension)
+const emits = defineEmits(['select-justify-content'])
 
 const class_opts = [
   'absolute', 'text-center', 'max-h-48', 'rounded-sm', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'

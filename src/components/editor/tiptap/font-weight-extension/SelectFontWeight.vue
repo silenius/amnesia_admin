@@ -22,10 +22,9 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
-import { props_extension } from '../utils';
+import { getTypeAttrs, props_extension } from '../utils'
 
-const props = defineProps(props_extensions)
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-font-weight'])
 
 const class_opts = [

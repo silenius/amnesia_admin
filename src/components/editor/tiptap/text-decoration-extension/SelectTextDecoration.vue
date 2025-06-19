@@ -19,8 +19,7 @@ import { computed } from 'vue'
 import underlineImg from "@/assets/underline.svg";
 import overlineImg from "@/assets/overline.svg";
 import linethroughImg from "@/assets/strikethrough.svg";
-import { getTypeAttrs } from '@/components/editor/tiptap/utils'
-import { props_extension } from '../utils';
+import { getTypeAttrs, props_extension } from '../utils'
 
 const props = defineProps(props_extension)
 const emits = defineEmits(['select-text-decoration'])

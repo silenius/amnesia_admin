@@ -56,7 +56,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs, props_extension } from '../utils'
 
 import {
   Popover, 
@@ -64,16 +64,8 @@ import {
   PopoverPanel
 } from '@headlessui/vue'
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-  selected: Object,
-})
-
-const emits = defineEmits([
-  'select-flex-grow-shrink'
-])
+const props = defineProps(props_extension)
+const emits = defineEmits(['select-flex-grow-shrink'])
 
 const opts = [
   {

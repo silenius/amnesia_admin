@@ -83,7 +83,6 @@
 
 import { watch, ref, computed } from 'vue'
 import marginSvg from "@/assets/margin.svg";
-import { props_extension } from '../utils';
 
 import {
   Listbox,
@@ -92,7 +91,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+import { getSelectedAttrs, props_extension } from '../utils'
 
 const props = defineProps(props_extension)
 const emits = defineEmits(['select-margin'])

@@ -23,7 +23,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
 import {
   Listbox,
@@ -32,13 +31,9 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-  selected: Object
-})
+import { getSelectedAttrs, props_extension } from '../utils'
 
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-gap'])
 
 const class_opts = [

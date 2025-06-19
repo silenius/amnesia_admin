@@ -34,8 +34,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
-import { props_extension } from '../utils';
+import { getSelectedAttrs, props_extension } from '../utils'
 
 const props = defineProps(props_extension)
 const emits = defineEmits(['select-align'])
