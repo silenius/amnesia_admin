@@ -27,14 +27,9 @@ import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 import floatLeft from "@/assets/float-left.svg";
 import floatRight from "@/assets/float-right.svg";
 import floatNone from "@/assets/denied.svg";
+import { props_extension } from '../utils';
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-  selected: Object
-})
-
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-float'])
 
 const float = computed({

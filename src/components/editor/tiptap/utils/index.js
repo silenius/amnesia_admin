@@ -18,6 +18,21 @@ export const get_modifiers = (cls) => {
     return modifiers
 }
 
+export const props_extension = {
+    breakpoint: {
+        type: String
+    },
+    extension: {
+        type: Object
+    },
+    editor: {
+        type: Object
+    },
+    selected: {
+        type: Object
+    }
+}
+
 export * from './getSelectedAttrs.js'
 export * from './getTypeAttrs.js'
 export * from './attrs.js'

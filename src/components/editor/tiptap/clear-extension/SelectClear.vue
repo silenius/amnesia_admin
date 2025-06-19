@@ -20,17 +20,12 @@
 <script setup>
 import { computed } from 'vue'
 import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
+import { props_extension } from '../utils';
 import clearLeft from "@/assets/float-left.svg";
 import clearRight from "@/assets/float-right.svg";
 import clearNone from "@/assets/denied.svg";
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-  selected: Object
-})
-
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-clear'])
 
 const clear = computed({

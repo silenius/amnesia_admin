@@ -83,6 +83,7 @@
 
 import { computed } from 'vue'
 import paddingSvg from "@/assets/padding.svg";
+import { props_extension } from '../utils';
 
 import {
   Listbox,
@@ -93,14 +94,7 @@ import {
 
 import { getSelectedAttrs } from '@/components/editor/tiptap/utils'
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  transaction: Object,
-  editor: Object,
-  selected: Object
-})
-
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-padding'])
 
 const class_opts = [

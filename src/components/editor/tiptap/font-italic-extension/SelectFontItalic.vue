@@ -23,16 +23,10 @@ import {
 } from '@headlessui/vue'
 
 import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { props_extension } from '../utils';
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object,
-})
-
-const emits = defineEmits([
-  'select-font-italic'
-])
+const props = defineProps(props_extension)
+const emits = defineEmits(['select-font-italic'])
 
 const italics = computed(
   () => props.extension.options.italics.toSpliced(0, 0, undefined)

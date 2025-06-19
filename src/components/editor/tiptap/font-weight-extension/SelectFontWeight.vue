@@ -23,16 +23,10 @@ import {
 } from '@headlessui/vue'
 
 import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { props_extension } from '../utils';
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object
-})
-
-const emits = defineEmits([
-  'select-font-weight'
-])
+const props = defineProps(props_extensions)
+const emits = defineEmits(['select-font-weight'])
 
 const class_opts = [
   'absolute', 'text-center', 'max-h-48', 'rounded-sm', 'text-black', 'bg-white', 'overflow-scroll', 'z-10'

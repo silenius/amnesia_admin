@@ -17,13 +17,9 @@
 import { ref, computed } from 'vue'
 import SelectColor from '@/components/editor/tiptap/colors/SelectColor.vue'
 import { getTypeAttrs } from '@/components/editor/tiptap/utils'
+import { props_extension } from '../utils';
 
-const props = defineProps({
-  breakpoint: String,
-  extension: Object,
-  editor: Object
-})
-
+const props = defineProps(props_extension)
 const emits = defineEmits(['select-text-color'])
 const open = ref(false)
 
