@@ -1,45 +1,44 @@
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useCreateContent } from './useContent.js'
-import { file_as_formdata } from '../services/file.js'
+import { create_file, update_file } from '../services/file.js'
 
 export function useCreateFile(fields) {
     const { content: file } = useCreateContent(fields)
+    const error = ref()
 
-    const { data, error, fetchData } = useFetchBackend()
-
-    const create_file = async(container) => {
-        const form_data = file_as_formdata(file)
-
-        await fetchData(`${container.id}/@@add_file`, {
-            method: 'POST',
-            body: form_data
-        })
+    const create = async (container) => {
+        const { data, f_error: error } = await create_file(container, file)
+        
+        if (!error) {
+            file.value = data
+        } else {
+            error.value = f_error
+        }
     }
-
-    watch(data, () => file.value = data.value)
 
     return {
         file,
-        create_file,
+        create,
         error,
     }
 }
 
 export function useUpdateFile(file) {
-    const { data, error, fetchData } = useFetchBackend()
+    const error = ref()
 
-    const update_file = async() => {
-        const form_data = file_as_formdata(file)
-
-        await fetchData(file.value.id, {
-            method: 'PUT',
-            body: form_data
-        })
+    const update = async() => {
+        const { data, f_error: error } = await update_file(file)
+        
+        if (!error) {
+            file.value = data
+        } else {
+            error.value = f_error
+        }
     }
 
     return {
-        update_file,
+        update,
         error
     }
 }

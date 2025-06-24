@@ -1,7 +1,6 @@
 import { ref, watch, toRef } from 'vue'
 import { useFetchBackend } from './fetch.js'
 import { useBuildContent } from './useContentBuilder.js'
-import { content_as_formdata } from '../services/content.js'
 
 export function useContent(content_id) {
     const { data, error, loading, fetchData } = useFetchBackend()

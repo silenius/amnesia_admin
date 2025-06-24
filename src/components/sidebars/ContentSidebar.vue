@@ -69,8 +69,6 @@ watch(lineage, () => {
   }
 })
 
-const selected = nodeSelected
-
 const breakpoint = ref(null)
 const change_breakpoint = (value) => breakpoint.value = value
 

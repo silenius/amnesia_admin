@@ -228,13 +228,7 @@ export const FlexContainer = Node.create({
                          * post-step version.
                          */
 
-                        console.log(map)
                         map.forEach((oldStart, oldEnd, newStart, newEnd) => {
-                            console.log('OLD START: ', oldStart)
-                            console.log('OLD END: ', oldEnd)
-                            console.log('NEW START: ', newStart)
-                            console.log('NEW END: ', newEnd)
-                            
                             state.doc.nodesBetween(oldStart, oldEnd, (node, pos, parent) => {
                                 if (pos >= oldStart && pos <= oldEnd) {
                                     if (node.type.name == 'flexItem') {

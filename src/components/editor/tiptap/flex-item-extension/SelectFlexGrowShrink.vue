@@ -95,8 +95,6 @@ const opts = [
   },
 ]
 
-const attrs = computed(() => props.editor.getAttributes('flexItem'))
-
 const flex = computed({
 
   get() {

@@ -13,12 +13,10 @@ const { setErrorFromResponse } = inject('errors')
 
 const router = useRouter()
 
-const { create_file, file, error } = useCreateFile({
-  container: props.container
-})
+const { create, file, error } = useCreateFile()
 
-const create = async () => {
-  await create_file(props.container)
+const do_create = async () => {
+  await create(props.container)
 
   if (!toValue(error)) {
     router.push(`/${file.value.id}`)
@@ -32,6 +30,6 @@ const create = async () => {
   <FileForm 
     :file="file" 
     :action="'Add file'"
-    @submit-file="create" 
+    @submit-file="do_create" 
   />
 </template>

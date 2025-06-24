@@ -17,19 +17,19 @@ export const useEditorEventStore = defineStore('editorEvent', () => {
     const nodeHover = ref()
     const lineage = ref(new Map())
 
-    watch (editor, () => {
+    watch(editor, () => {
         nodeHover.value = null
         nodeSelected.value = null
     })
 
-    watch (nodeHover, () => {
+    watch(nodeHover, () => {
         console.debug('===>>> [WATCH] nodeHover: ', 
             nodeHover?.value?.pos, 
             nodeHover?.value?.node?.type.name
         )
     })
 
-    watch (nodeSelected, () => {
+    watch(nodeSelected, () => {
         console.debug('===>>> [WATCH] nodeSelected: ', 
             nodeSelected?.value?.pos, 
             nodeSelected?.value?.node?.type.name
@@ -39,16 +39,17 @@ export const useEditorEventStore = defineStore('editorEvent', () => {
             return false
         }
 
-        const { pos, node } = nodeSelected.value
+        const { pos } = nodeSelected.value
         let level = 0
 
         lineage.value.clear()
 
-        editor.value.view.state.doc.nodesBetween(pos, pos+1, (_node, _pos) => {
-            if (!_node.isText) {
-                lineage.value.set(_pos, {
-                    node: _node,
-                    pos: _pos,
+        // Compute hierarchy from selected node to the top
+        editor.value.view.state.doc.nodesBetween(pos, pos+1, (node, pos_) => {
+            if (!node.isText) {
+                lineage.value.set(pos_, {
+                    node: node,
+                    pos: pos_,
                     level: level+=1
                 })
             }

@@ -17,10 +17,10 @@ const router = useRouter()
 
 const { setErrorFromResponse } = inject('errors')
 
-const { update_file, error } = useUpdateFile(file)
+const { update, error } = useUpdateFile(file)
 
-const update = async() => {
-  await update_file()
+const do_update = async() => {
+  await update()
 
   if (!toValue(error)) {
     router.push(`/${file.value.id}`)
@@ -35,6 +35,6 @@ const update = async() => {
     <FileForm 
       :file="file" 
       :action="'Update file'"
-      @submit-file="update" 
+      @submit-file="do_update" 
     />
 </template>

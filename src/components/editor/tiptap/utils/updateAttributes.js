@@ -111,7 +111,11 @@ const outlineNodePlugin = new Plugin({
                 const target = event.target
                 const children = Array.from(target.parentNode?.childNodes || [])
                 const offset = children.indexOf(target)
-                let pos = view.posAtDOM(target.parentElement, offset)
+                let pos = Math.max(
+                    view.posAtDOM(target.parentElement, offset),
+                    0
+                )
+
                 let node = view.state.doc.nodeAt(pos)
 
                 if (!node || node.isText) {
@@ -132,7 +136,11 @@ const outlineNodePlugin = new Plugin({
                 const target = event.target
                 const children = Array.from(target.parentNode?.childNodes || [])
                 const offset = children.indexOf(target)
-                let pos = view.posAtDOM(target.parentNode, offset)
+                let pos = Math.max(
+                    view.posAtDOM(target.parentNode, offset),
+                    0
+                )
+
                 let node = view.state.doc.nodeAt(pos)
 
                 if (!node || node.isText) {

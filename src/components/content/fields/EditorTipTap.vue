@@ -14,7 +14,7 @@ import {
 //import StarterKit from "@tiptap/starter-kit"
 import { useEditorStore } from '../../../stores/editor'
 
-import placeholder_img from "../../../assets/image-combiner.svg";
+import placeholder_img from "../../../assets/images/tmpl01.jpg";
 
 import {
   TransitionRoot,
@@ -32,7 +32,7 @@ import Breadcrumb from '../../../components/breadcrumbs/Breadcrumb.vue'
 import FolderBrowser from '../../folder/FolderBrowser.vue'
 import { useFolder, useMediaFolder } from '../../../composables/useFolder.js'
 import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
-import { useFile } from '../../../composables/files.js'
+import { create_file } from '../../../services/file.js'
 import { backend_url } from '../../../composables/fetch.js';
 import { build_editor, default_extensions } from '../../editor/tiptap';
 
@@ -133,6 +133,8 @@ const insert_flex = (cpt) => {
       return {
         type: 'flexItem',
         attrs: {
+          px: [{'breakpoint': null, 'tw': 'px-2'}],
+          py: [{'breakpoint': null, 'tw': 'py-2'}],
           basis: [{'breakpoint': null, 'tw': `basis-1/${cpt}`}],
           borderWidth: [{'breakpoint': null, 'tw': 'border'}],
         },
@@ -153,6 +155,8 @@ const insert_flex = (cpt) => {
   const flex_container = {
     type: 'flexContainer',
     attrs: {
+      mx: [{'breakpoint': null, 'tw': 'mx-2'}],
+      my: [{'breakpoint': null, 'tw': 'my-2'}],
       gapX: [{'breakpoint': null, 'tw': 'gap-x-2'}],
       gapY: [{'breakpoint': null, 'tw': 'gap-y-2'}],
       align_items: [{'breakpoint': null, 'tw': 'items-stretch'}],
@@ -284,7 +288,6 @@ const add_link = () => {
 }
 
 const upload_image = () => input_upload_file.value.click()
-const { createFile } = useFile()
 
 const onFileChange = async (event) => {
   const uploaded_file = event.target.files[0]
@@ -294,11 +297,11 @@ const onFileChange = async (event) => {
       throw new NotAnImage('The provided file is not an image')
     }
 
-    const { data } = await createFile(media_folder, { 
+    const { data, error } = await create_file(media_folder, { 
       title: uploaded_file.name,
       content: uploaded_file
     })
-
+    
     if (data.mime.major.name !== 'image') {
       throw new NotAnImage('The uploaded file is not an image')
     }
@@ -338,8 +341,6 @@ const editor = build_editor({
   },
 
 })
-
-
 
 /*
 watch(() => props.content, () => editor.value.commands.setContent(props.content))
@@ -470,7 +471,6 @@ onMounted( async () => {
                   </button>
 
                   <!-- UPLOAD IMAGE -->
-                  {{ media_folder }}
                   <button v-if="media_folder" @click="upload_image" class="p-1 text-rose-500 hover:text-rose-700 font-medium text-sm">
                     <font-awesome-icon icon="fa-solid fa-upload" class="h-4 w-4" />
                   </button>
