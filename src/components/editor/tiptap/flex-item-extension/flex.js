@@ -39,7 +39,14 @@ const basis = [
     'basis-6/12', 'basis-7/12', 'basis-8/12', 'basis-9/12', 'basis-10/12', 
     'basis-11/12',
 
-    'basis-full'
+    'basis-full',
+
+    // Using the container scale
+    // Use utilities like basis-xs and basis-sm to set the initial size of flex items based on the container scale:
+
+    'basis-3xs', 'basis-2xs', 'basis-xs', 'basis-sm', 'basis-md', 'basis-lg', 
+    'basis-xl', 'basis-2xl', 'basis-3xl', 'basis-4xl', 'basis-5xl', 
+    'basis-6xl', 'basis-7xl', 
 ]
 
 const flexs = [

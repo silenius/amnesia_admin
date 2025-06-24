@@ -3,6 +3,8 @@ import {
     Node
 } from '@tiptap/core'
 
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+
 import {
     extract_tw_attrs,
     render_tw_attrs
@@ -211,10 +213,67 @@ export const FlexContainer = Node.create({
         }
     },
 
+    addProseMirrorPlugins() {
+        return [
+            new Plugin({
+                filterTransaction(transaction, state) {
+                    let return_value = true
+                    transaction.mapping.maps.forEach((map) => {
+                        
+                        /*
+                         * A map describing the deletions and insertions made 
+                         * by a step, which can be used to find the 
+                         * correspondence between positions in the pre-step 
+                         * version of a document and the same position in the 
+                         * post-step version.
+                         */
+
+                        console.log(map)
+                        map.forEach((oldStart, oldEnd, newStart, newEnd) => {
+                            console.log('OLD START: ', oldStart)
+                            console.log('OLD END: ', oldEnd)
+                            console.log('NEW START: ', newStart)
+                            console.log('NEW END: ', newEnd)
+                            
+                            state.doc.nodesBetween(oldStart, oldEnd, (node, pos, parent) => {
+                                if (pos >= oldStart && pos <= oldEnd) {
+                                    if (node.type.name == 'flexItem') {
+                                        console.log("===>>> MATCH : ", node, pos, parent)
+                                        return_value = false
+                                    }
+                                }
+                            })
+
+                        })
+                    })
+
+
+                    /*
+                    transaction.steps.forEach((step, index) => {
+                        state.doc.nodesBetween(
+                            step.from, step.to, (node, pos) => { 
+                                if (step.from <= pos && step.to >= pos) {
+                                    if (node.type.name == 'flexItem') {
+                                        return_value = false
+                                        return false
+                                    }
+                                }
+                            }
+                        )
+                    })
+                    */
+
+                    return return_value
+                }
+            })
+        ];
+    },
+
     addKeyboardShortcuts() {
         return {
             Backspace: ({ editor }) => {
                 console.log('===>>> BACKSPACE', editor)
+                return false
                 /*
                 if (editor.isActive('flexContainer')) {
                     const selection = editor.state.selection
@@ -227,6 +286,7 @@ export const FlexContainer = Node.create({
             },
             Delete: ({ editor }) => {
                 console.log('===>>> DELETE')
+                return false
                 /*
                 if (editor.isActive('flexContainer')) {
                     return true
@@ -255,7 +315,6 @@ export const FlexContainer = Node.create({
                     }
 
                     /*
-
                     console.log('EDITOR : ', editor)
                     const foo2 = editor.$pos(editor.state.selection.from).closest('flexContainer').to
                     editor.commands.insertContentAt(foo2, '<p>TEST</p>', {
