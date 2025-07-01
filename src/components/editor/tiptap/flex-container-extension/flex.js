@@ -134,7 +134,7 @@ export const FlexContainer = Node.create({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-        return ['section', mergeAttributes(HTMLAttributes, { class: 'flex' }), 0]
+        return ['section', mergeAttributes(HTMLAttributes, { class: 'flex', 'data-node': 'flexContainer' }), 0]
     },
 
     addCommands() {
@@ -263,6 +263,7 @@ export const FlexContainer = Node.create({
         ];
     },
 
+    // Return true = disable command
     addKeyboardShortcuts() {
         return {
             Backspace: ({ editor }) => {
@@ -287,34 +288,33 @@ export const FlexContainer = Node.create({
                 }
                 */
             },
+            
             Enter: ({ editor }) => {
                 console.log('===>>> ENTER')
                 const selection = editor.state.selection
                 //console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
 
                 if (editor.isActive('flexContainer')) {
-                    if (selection.$cursor !== null && 
-                        selection.$cursor.parentOffset == 0
-                    ) {
-                        // Get the parent <article>
-                        const article = editor.$pos(selection.from).closest('article')
-                        if (article.parent.lastChild.pos == article.pos) {
-                            return true
-                            //editor.commands.createParagraphNear()
-                        } else {
-                            return true
-                        }
-                    } else {
+                    console.log("===>>> SELECTION :", selection)
+                    
+                    if (!selection.$cursor) {
                         editor.commands.createParagraphNear()
+                    } else {
+                        if (selection.$cursor !== null && 
+                            selection.$cursor.parentOffset == 0
+                        ) {
+                            // Get the parent <article>
+                            const article = editor.$pos(selection.from).closest('article')
+                            if (article.parent.lastChild.pos == article.pos) {
+                                return true
+                                //editor.commands.createParagraphNear()
+                            } else {
+                                return true
+                            }
+                        } else {
+                            editor.commands.createParagraphNear()
+                        }
                     }
-
-                    /*
-                    console.log('EDITOR : ', editor)
-                    const foo2 = editor.$pos(editor.state.selection.from).closest('flexContainer').to
-                    editor.commands.insertContentAt(foo2, '<p>TEST</p>', {
-                        updateSelection: true
-                    })
-                    */
                 }
             },
         };
