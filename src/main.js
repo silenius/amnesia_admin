@@ -12,6 +12,7 @@ import {
     faUpDownLeftRight,
     faUserAstronaut,
     faUserGroup,
+    faParagraph,
     faKey,
     faCircleCheck,
     faCheck,
@@ -82,6 +83,8 @@ import {
     faBackward,
     faBackwardStep,
     faListOl,
+    faListUl,
+    faListCheck,
     faPhone,
     faEnvelope,
     faGlobe,
@@ -180,10 +183,13 @@ library.add(faForwardStep)
 library.add(faBackward)
 library.add(faBackwardStep)
 library.add(faListOl)
+library.add(faListUl)
+library.add(faListCheck)
 library.add(faPhone)
 library.add(faEnvelope)
 library.add(faGlobe)
 library.add(faFileCsv)
+library.add(faParagraph)
 
 
 const app = createApp(App)

@@ -732,10 +732,12 @@ onMounted( async () => {
     <div v-if="editable" class="items-center flex gap-4 p-4 bg-white border">
       <font-awesome-icon icon="fa-regular fa-image"
         @click="add_image"
-        v-if="!editor.isActive('image')" />
+        v-if="!editor.isActive('image')" 
+      />
 
       <font-awesome-icon icon="fa-solid fa-film"
-        @click="add_video" />
+        @click="add_video" 
+      />
 
       <font-awesome-icon icon="fa-solid fa-bars" class="fa-rotate-90"
         @click="add_flex_container"
@@ -745,17 +747,35 @@ onMounted( async () => {
         @click="add_tmpl1"
       />
 
+      <font-awesome-icon icon="fa-solid fa-list-ul" 
+        @click="editor.chain().focus().toggleBulletList().run()"
+      />
+
+      <font-awesome-icon icon="fa-solid fa-list-ol" 
+        @click="editor.chain().focus().toggleOrderedList().run()"
+      />
+
+      <!--
+      <font-awesome-icon icon="fa-solid fa-list-check" 
+        @click="editor.chain().focus().toggleTaskList().run()"
+      />
+      -->
+
       <font-awesome-icon icon="fa-solid fa-broom"
         @click="editor.commands.unsetAllMarks()"
-        v-if="!editor.state.selection.empty" />
+        v-if="!editor.state.selection.empty" 
+      />
 
       <font-awesome-icon icon="fa-solid fa-link" 
         @click="add_link"
-        v-if="!editor.state.selection.empty" />
+        v-if="!editor.state.selection.empty" 
+      />
 
       <font-awesome-icon icon="fa-solid fa-link-slash" 
         @click="remove_link"
-        v-if="!editor.state.selection.empty" />
+        v-if="!editor.state.selection.empty" 
+      />
+
     </div>
     <EditorContent :editor="editor" />
   </div>

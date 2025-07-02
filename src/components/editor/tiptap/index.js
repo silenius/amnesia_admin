@@ -53,6 +53,11 @@ import Section from './section-extension'
 import BorderWidth from './border-width-extension'
 import BorderColor from './border-color-extension'
 import BorderRadius from './border-radius-extension'
+import BulletList from '@tiptap/extension-bullet-list'
+import OrderedList from '@tiptap/extension-ordered-list'
+import ListItem from '@tiptap/extension-list-item'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 
 const fonts = Object.keys(fontFamily).concat(['sans', 'serif', 'mono'])
 export const default_extensions = [
@@ -146,6 +151,7 @@ export const default_extensions = [
     BorderRadius.configure({
         types: ['flexContainer', 'flexItem', 'video', 'image', 'paragraph', 'heading']
     }),
+
     Table,
     TableHeader,
     TableRow,
@@ -159,6 +165,21 @@ export const default_extensions = [
     Article,
     Div,
     Section,
+    BulletList.configure({
+        HTMLAttributes: {
+            class: 'list-disc ml-5',
+        },
+    }),
+    OrderedList.configure({
+        HTMLAttributes: {
+            class: 'list-decimal ml-5',
+        },
+    }),
+    ListItem,
+    TaskList,
+    TaskItem.configure({
+        nested: true,
+    }),
 ]
 
 export const build_editor = (options) => {

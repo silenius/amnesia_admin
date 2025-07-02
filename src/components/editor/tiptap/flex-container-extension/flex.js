@@ -217,7 +217,12 @@ export const FlexContainer = Node.create({
         return [
             new Plugin({
                 filterTransaction(transaction, state) {
+                    if (transaction.getMeta('force')) {
+                        return true
+                    }
+
                     let return_value = true
+                    
                     transaction.mapping.maps.forEach((map) => {
                         
                         /*
@@ -288,37 +293,8 @@ export const FlexContainer = Node.create({
                 }
                 */
             },
-            
-            Enter: ({ editor }) => {
-                console.log('===>>> ENTER')
-                const selection = editor.state.selection
-                //console.log(editor.extensionManager.extensions.filter((x) => x.type == 'node' && editor.isActive(x.name)))
-
-                if (editor.isActive('flexContainer')) {
-                    console.log("===>>> SELECTION :", selection)
-                    
-                    if (!selection.$cursor) {
-                        editor.commands.createParagraphNear()
-                    } else {
-                        if (selection.$cursor !== null && 
-                            selection.$cursor.parentOffset == 0
-                        ) {
-                            // Get the parent <article>
-                            const article = editor.$pos(selection.from).closest('article')
-                            if (article.parent.lastChild.pos == article.pos) {
-                                return true
-                                //editor.commands.createParagraphNear()
-                            } else {
-                                return true
-                            }
-                        } else {
-                            editor.commands.createParagraphNear()
-                        }
-                    }
-                }
-            },
-        };
-    },
+        }
+    }
     /*
 
     addNodeView() {

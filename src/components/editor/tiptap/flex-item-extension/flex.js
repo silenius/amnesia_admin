@@ -120,7 +120,7 @@ export const FlexItem = Node.create({
                 parseHTML: elem => extract_tw_attrs(elem, this.options.grows),
                 renderHTML: attrs => render_tw_attrs(attrs, 'grow')
             },
-            
+
             shrink: {
                 default: null,
                 parseHTML: elem => extract_tw_attrs(elem, this.options.shrinks),
@@ -203,4 +203,37 @@ export const FlexItem = Node.create({
         }
     },
 
+    addKeyboardShortcuts() {
+        return {
+            Enter: ({ editor }) => {
+                const selection = editor.state.selection
+
+                if (editor.isActive('flexItem')) {
+                    switch (selection.toJSON().type) {
+                        case 'node':
+                            return true
+                            break;
+
+                        case 'text':
+                            // TODO use a filterTransaction, check is the
+                            // flexItem node has childCount == 0 and if this is
+                            // the case abort transaction ...?
+                            const cursor = selection.$cursor
+
+                            return ! (cursor 
+                                && cursor.node(-1).type.name == 'flexItem' 
+                                && cursor.node(-2).type.name == 'flexContainer' 
+                                && (cursor.parentOffset > 0 
+                                    || (cursor.parentOffset == 0 
+                                        && cursor.nodeAfter
+                                    )
+                                )
+                            )
+                            
+                            break;
+                    }
+                }
+            }
+        }
+    }
 })

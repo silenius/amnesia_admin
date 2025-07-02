@@ -10,7 +10,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { useEditorEventStore } from '../../../../stores/editor'
 
-const storeEditorEvent = useEditorEventStore()
+const { nodeSelected, nodeHover } = storeToRefs(useEditorEventStore())
 
 const find_dec = (value, spec) => value.find(
     undefined, undefined, (x) => x.node === spec
@@ -107,7 +107,6 @@ const outlineNodePlugin = new Plugin({
         handleDOMEvents: {
             click(view, event) {
                 event.preventDefault()
-                const { nodeSelected } = storeToRefs(storeEditorEvent)
                 const target = event.target
                 const children = Array.from(target.parentNode?.childNodes || [])
                 const offset = children.indexOf(target)
@@ -132,7 +131,6 @@ const outlineNodePlugin = new Plugin({
 
             mouseover(view, event) {
                 event.preventDefault()
-                const { nodeHover } = storeToRefs(storeEditorEvent)
                 const target = event.target
                 const children = Array.from(target.parentNode?.childNodes || [])
                 const offset = children.indexOf(target)
@@ -157,7 +155,6 @@ const outlineNodePlugin = new Plugin({
 
             keyup(view, event) {
                 event.preventDefault()
-                const { nodeSelected } = storeToRefs(storeEditorEvent)
                 const selection = view.state.selection
                 const $pos = selection.$anchor
                 let pos = $pos.pos
@@ -203,6 +200,7 @@ export const TipTapCommands = Extension.create({
     */
 
     addCommands() {
+        // TODO
         return {
             _setTw : ({target, types, key, value, valid_values, breakpoint}) => (p) => {
                 let type
@@ -240,9 +238,8 @@ export const TipTapCommands = Extension.create({
                         type, attr
                     )
                 }
-
-
             },
+
             _updateNodeAttributes: (pos, node, attributes = {}) => ({ tr }) => {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,

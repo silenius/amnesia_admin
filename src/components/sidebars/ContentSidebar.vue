@@ -125,12 +125,6 @@ watch(editor, () => {
     return false
   }
 
-  /*
-  editor.value.on('transaction', ({ editor, transaction }) => {
-    console.debug('===> [EVENT] TRANSACTION')
-  })
-  */
-
   editor.value.on('update', ({ transaction }) => {
     /*  
       Nodes are immutable so we need to update the reference otherwise
@@ -143,6 +137,14 @@ watch(editor, () => {
 
 })
 
+const delete_node = (data) => {
+  // Set force to true to bypass the transaction filter in
+  // flex-container-extension
+  editor.value.chain().setMeta('force', true).deleteRange({
+    from: data.pos,
+    to: data.pos + data.node.nodeSize
+  }).focus().run()
+}
 </script>
 
 <template>
@@ -158,17 +160,23 @@ watch(editor, () => {
 
     <section name="node" class="my-4" :class="cls_section" v-if="lineage && lineage.size > 0">
       <div class="flex flex-col gap-y-2 items-start">
-        <button 
-          v-for="t in lineage.values()"
-          @click="nodeSelected = t"
-          @mouseover="decorate('highlightNode', t)" 
-          @mouseout="decorate('highlightNode')"
-          :data-pos="t.pos"
-          type="button" 
-          :class="[`ml-${t.level}`, {'outline-hidden ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
-          class="text-white bg-red-700 hover:bg-red-800 font-medium
-          rounded-full text-xs px-3 py-2 dark:bg-red-600
-          dark:hover:bg-red-700">{{ t.node.type.name }} {{ t.pos }} </button>
+        <div class="flex gap-4" v-for="t in lineage.values()">
+          <button 
+            @click="nodeSelected = t"
+            @mouseover="decorate('highlightNode', t)" 
+            @mouseout="decorate('highlightNode')"
+            :data-pos="t.pos"
+            type="button" 
+            :class="[`ml-${t.level}`, {'outline-hidden ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
+            class="text-white bg-red-700 hover:bg-red-800 font-medium
+            rounded-full text-xs px-3 py-2 dark:bg-red-600
+            dark:hover:bg-red-700 grow">
+            {{ t.node.type.name }} {{ t.pos }} {{ t.node.content.size }}
+          </button>
+          <button @click="delete_node(t)">
+            <font-awesome-icon icon="fa-solid fa-trash-can" /> 
+          </button>
+        </div>
       </div>
     </section>
 

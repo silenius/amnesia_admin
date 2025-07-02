@@ -89,9 +89,15 @@ export default Node.create({
 
     renderHTML({node, HTMLAttributes}) {
         return [
+            'img', 
+            mergeAttributes(HTMLAttributes)
+        ]
+        /*
+        return [
             'amnesia-img', 
             mergeAttributes(HTMLAttributes)
         ]
+        */
     },
 
     addCommands() {
