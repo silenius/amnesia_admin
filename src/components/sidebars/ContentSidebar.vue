@@ -171,9 +171,9 @@ const delete_node = (data) => {
             class="text-white bg-red-700 hover:bg-red-800 font-medium
             rounded-full text-xs px-3 py-2 dark:bg-red-600
             dark:hover:bg-red-700 grow">
-            {{ t.node.type.name }} {{ t.pos }} {{ t.node.content.size }}
+            {{ t.node.type.name }} ({{ t.pos }}/{{ t.node.content.size }})
           </button>
-          <button @click="delete_node(t)">
+          <button @mouseout="decorate('deleteNode')" @mouseover="decorate('deleteNode', t)" @click="delete_node(t)">
             <font-awesome-icon icon="fa-solid fa-trash-can" /> 
           </button>
         </div>

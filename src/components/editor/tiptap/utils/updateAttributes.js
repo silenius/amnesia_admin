@@ -16,9 +16,6 @@ const find_dec = (value, spec) => value.find(
     undefined, undefined, (x) => x.node === spec
 )
 
-const hl_class = 'outline outline-1 outline-indigo-500'
-const sl_class = 'outline outline-1 outline-red-500'
-
 /* 
  * A ProseMirror plugin which highlight "hover" nodes and selected node.
  * It uses ProseMirror "Node decorations" (which add styling or other DOM 
@@ -39,50 +36,46 @@ const outlineNodePlugin = new Plugin({
 
             decorations = decorations.map(tr.mapping, tr.doc)
 
-            // Highlight node
-
-            if (tr.getMeta('highlightNode')) {
-                let { pos } = tr.getMeta('highlightNode')
-                pos = parseInt(pos)
-
-                if (pos >= 0) {
-                    const node = tr.doc.nodeAt(pos)
-                    const hl = find_dec(decorations, 'highlight') 
-
-                    decorations = decorations.remove(hl)
-
-                    if (node) {
-                        decorations = decorations.add(tr.doc, [
-                            Decoration.node(pos, pos + node.nodeSize, {
-                                class: hl_class,
-                            }, { 
-                                node: 'highlight' 
-                            })
-                        ])
+            const metas = [
+                {
+                    meta: 'highlightNode',
+                    class: 'outline outline-2 outline-indigo-500',
+                    spec: {
+                        node: 'hightlight'
+                    }
+                }, {
+                    meta: 'deleteNode',
+                    class: 'bg-red-500',
+                    spec: {
+                        node: 'delete'
+                    }
+                }, {
+                    meta: 'selectNode',
+                    class: 'outline outline-2 outline-green-500',
+                    spec: {
+                        node: 'select'
                     }
                 }
-            }
+            ]
 
-            // Selected node
+            for (const meta of metas) {
+                if (tr.getMeta(meta.meta)) {
+                    let { pos } = tr.getMeta(meta.meta)
+                    pos = parseInt(pos)
 
-            if (tr.getMeta('selectNode')) {
-                let { pos } = tr.getMeta('selectNode')
-                pos = parseInt(pos)
+                    const dec = find_dec(decorations, meta.spec.node) 
+                    decorations = decorations.remove(dec)
 
-                if (pos >= 0) {
-                    const node = tr.doc.nodeAt(pos)
-                    const sl = find_dec(decorations, 'select')
+                    if (pos >= 0) {
+                        const node = tr.doc.nodeAt(pos)
 
-                    decorations = decorations.remove(sl)
-
-                    if (node) {
-                        decorations = decorations.add(tr.doc, [
-                            Decoration.node(pos, pos + node.nodeSize, {
-                                class: sl_class,
-                            }, { 
-                                node: 'select' 
-                            })
-                        ])
+                        if (node) {
+                            decorations = decorations.add(tr.doc, [
+                                Decoration.node(pos, pos + node.nodeSize, {
+                                    class: meta.class,
+                                }, meta.spec)
+                            ])
+                        }
                     }
                 }
             }
