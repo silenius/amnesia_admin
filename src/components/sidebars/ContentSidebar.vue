@@ -160,7 +160,7 @@ const delete_node = (data) => {
 
     <section name="node" class="my-4" :class="cls_section" v-if="lineage && lineage.size > 0">
       <div class="flex flex-col gap-y-2 items-start">
-        <div class="flex gap-4" v-for="t in lineage.values()">
+        <div class="flex gap-2" v-for="t in lineage.values()">
           <button 
             @click="nodeSelected = t"
             @mouseover="decorate('highlightNode', t)" 
@@ -170,10 +170,14 @@ const delete_node = (data) => {
             :class="[`ml-${t.level}`, {'outline-hidden ring-4 ring-red-300 dark:ring-red-900': t.pos == nodeSelected?.pos}]"
             class="text-white bg-red-700 hover:bg-red-800 font-medium
             rounded-full text-xs px-3 py-2 dark:bg-red-600
-            dark:hover:bg-red-700 grow">
+            dark:hover:bg-red-700">
             {{ t.node.type.name }} ({{ t.pos }}/{{ t.node.content.size }})
           </button>
-          <button @mouseout="decorate('deleteNode')" @mouseover="decorate('deleteNode', t)" @click="delete_node(t)">
+          <button 
+            @mouseout="decorate('deleteNode')" 
+            @mouseover="decorate('deleteNode', t)" 
+            @click="delete_node(t)"
+          >
             <font-awesome-icon icon="fa-solid fa-trash-can" /> 
           </button>
         </div>

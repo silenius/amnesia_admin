@@ -39,7 +39,7 @@ const outlineNodePlugin = new Plugin({
             const metas = [
                 {
                     meta: 'highlightNode',
-                    class: 'outline outline-2 outline-indigo-500',
+                    class: 'outline outline-2 outline-yellow-500',
                     spec: {
                         node: 'hightlight'
                     }
@@ -73,7 +73,18 @@ const outlineNodePlugin = new Plugin({
                             decorations = decorations.add(tr.doc, [
                                 Decoration.node(pos, pos + node.nodeSize, {
                                     class: meta.class,
-                                }, meta.spec)
+                                }, meta.spec),
+                                /*
+                                Decoration.widget(pos, (view, getPos) => {
+                                    const foo = document.createElement('div')
+                                    foo.style.width = '10px'
+                                    foo.style.height = '10px'
+                                    foo.style.position = 'absolute'
+                                    foo.style.borderRadius = '10px'
+                                    foo.style.backgroundColor = 'red'
+                                    return foo
+                                })
+                                */
                             ])
                         }
                     }

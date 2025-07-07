@@ -211,6 +211,7 @@ export const FlexItem = Node.create({
                 if (editor.isActive('flexItem')) {
                     switch (selection.toJSON().type) {
                         case 'node':
+                            editor.chain().insertContentAt(selection.from, '<p></p>').run()
                             return true
                             break;
 
@@ -221,15 +222,17 @@ export const FlexItem = Node.create({
                             const cursor = selection.$cursor
 
                             return ! (cursor 
-                                && cursor.node(-1).type.name == 'flexItem' 
-                                && cursor.node(-2).type.name == 'flexContainer' 
+                                && editor.isActive('flexItem') 
                                 && (cursor.parentOffset > 0 
                                     || (cursor.parentOffset == 0 
-                                        && cursor.nodeAfter
+                                        && (cursor.node(-1).type.name != 'flexItem'
+                                            || (cursor.node(-1).type.name == 'flexItem' 
+                                                && cursor.nodeAfter)
+                                        )
                                     )
                                 )
                             )
-                            
+
                             break;
                     }
                 }
