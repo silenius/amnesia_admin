@@ -222,45 +222,37 @@ export const FlexContainer = Node.create({
                     }
 
                     let return_value = true
-                    
+
+                    // Loop on insertions and deletions (StepMap)
                     transaction.mapping.maps.forEach((map) => {
-                        
-                        /*
-                         * A map describing the deletions and insertions made 
-                         * by a step, which can be used to find the 
-                         * correspondence between positions in the pre-step 
-                         * version of a document and the same position in the 
-                         * post-step version.
-                         */
 
+                        // Loop on changed ranges included in the map
                         map.forEach((oldStart, oldEnd, newStart, newEnd) => {
-                            state.doc.nodesBetween(oldStart, oldEnd, (node, pos, parent) => {
-                                if (pos >= oldStart && pos <= oldEnd) {
-                                    if (node.type.name == 'flexItem') {
-                                        console.log("===>>> MATCH : ", node, pos, parent)
-                                        return_value = false
-                                    }
-                                }
-                            })
+                            /*
+                            console.log('OLD START : ', oldStart)
+                            console.log('OLD END : ', oldEnd)
+                            console.log('NEW START : ', newStart)
+                            console.log('NEW END : ', newEnd)
+                            */
 
-                        })
-                    })
-
-
-                    /*
-                    transaction.steps.forEach((step, index) => {
-                        state.doc.nodesBetween(
-                            step.from, step.to, (node, pos) => { 
-                                if (step.from <= pos && step.to >= pos) {
-                                    if (node.type.name == 'flexItem') {
+                            // Deletion
+                            if (oldStart == newStart && oldEnd > newEnd) {
+                                state.doc.nodesBetween(newEnd, oldEnd, (node, pos, parent) => {
+                                    // If the node is a flex item and that we
+                                    // are explicitely deleting *that* node
+                                    // (newEnd == pos) then abort then transaction.
+                                    // This is to prevent deletion of a
+                                    // flexItem if we're in a flexContainer
+                                    // (to prevent UI glitches).
+                                    if (node.type.name == 'flexItem' && newEnd == pos) {
                                         return_value = false
                                         return false
                                     }
-                                }
+                                })
+
                             }
-                        )
+                        })
                     })
-                    */
 
                     return return_value
                 }
