@@ -222,6 +222,19 @@ export const FlexContainer = Node.create({
                     }
 
                     let return_value = true
+                    let replace_with_content = false
+
+                    transaction.steps.forEach((step, index) => {
+                        if (step.jsonID == 'replace') {
+                            if (step.slice.size > 0) {
+                                replace_with_content = true
+                            }
+                        }
+                    })
+
+                    if (replace_with_content) {
+                        return true
+                    }
 
                     // Loop on insertions and deletions (StepMap)
                     transaction.mapping.maps.forEach((map) => {
@@ -235,7 +248,6 @@ export const FlexContainer = Node.create({
                             console.log('NEW END : ', newEnd)
                             */
 
-                            // Deletion
                             if (oldStart == newStart && oldEnd > newEnd) {
                                 state.doc.nodesBetween(newEnd, oldEnd, (node, pos, parent) => {
                                     // If the node is a flex item and that we
@@ -264,6 +276,10 @@ export const FlexContainer = Node.create({
                                             && node.content.size < 1
                                         )
                                     ) {
+                                        console.log('===>>> TRANSACTION ABORTED <<<===')
+                                        console.log('===>>> NODE: ', node)
+                                        console.log('===>>> POS: ', pos)
+                                        console.log('===>>> PARENT: ', parent)
                                         return_value = false
                                     }
                                 })
