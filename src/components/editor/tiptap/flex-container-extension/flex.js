@@ -240,16 +240,33 @@ export const FlexContainer = Node.create({
                                 state.doc.nodesBetween(newEnd, oldEnd, (node, pos, parent) => {
                                     // If the node is a flex item and that we
                                     // are explicitely deleting *that* node
-                                    // (newEnd == pos) then abort then transaction.
+                                    // (newEnd == pos) then abort the transaction.
                                     // This is to prevent deletion of a
                                     // flexItem if we're in a flexContainer
                                     // (to prevent UI glitches).
-                                    if (node.type.name == 'flexItem' && newEnd == pos) {
+                                    if (
+                                        (
+                                            node.type.name == 'flexItem' 
+                                            && pos >= newEnd 
+                                            && pos <= oldEnd
+                                        ) 
+                                        || (
+                                            /* Prevent deletion if the node:
+                                             * - is first child of his parent
+                                             * - his parent is a flexItem
+                                             * - his parent has only one child
+                                             * - doesn't have any content 
+                                             *   (empty paragraph, ...)
+                                             */
+                                            parent.type.name == 'flexItem' 
+                                            && node.eq(parent.firstChild) 
+                                            && parent.childCount == 1 
+                                            && node.content.size < 1
+                                        )
+                                    ) {
                                         return_value = false
-                                        return false
                                     }
                                 })
-
                             }
                         })
                     })
