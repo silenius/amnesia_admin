@@ -2,7 +2,7 @@
   <node-view-wrapper 
     :class="wrapper_cls"
   >
-    <div v-if="src" :class="[align_cls, bg_color_cls, padding_cls]" class="block w-min" draggable>
+    <div v-if="src" :class="[align_cls, bg_color_cls]" class="block w-min" draggable>
       <span v-if="editable" data-drag-handle class="rounded
         m-1 p-1 absolute hover:cursor-pointer text-white hover:text-red-500 p-1 z-50
         bg-zinc-800">
@@ -34,14 +34,14 @@ import { ref, computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { render_width_attrs } from '../width-extension/utils'
 import { render_height_attrs } from '../height-extension/utils'
-import { render_float_attrs } from '../float-extension/utils'
 import { render_bg_color_attrs } from '../background-color/utils'
-import { render_padding_attrs } from '../padding/utils'
-import { render_margin_attrs } from '../margin/utils'
 import { render_tw_attrs } from '../utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
 const props = defineProps(nodeViewProps)
+const attrs_keys = computed(() => Object.keys(
+  props.node.attrs
+))
 const video = ref()
 
 const editable = computed(() => props.editor.view.editable)
@@ -71,13 +71,10 @@ const src = computed(() => {
 })
 
 const wrapper_cls = computed(() => {
-  const classes = []
-  const attrs = [
-    'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'width', 'maxWidth', 'minWidth',
-    'height', 'maxHeight', 'minHeight', 'float', 'clear'
-  ]
 
-  for (const attr of attrs) {
+  const classes = []
+  
+  for (const attr of attrs_keys.value) {
     const cls = render_tw_attrs(props.node.attrs, attr)?.class
 
     if (cls) {
@@ -99,21 +96,6 @@ const bg_color_cls = computed(() => {
   const cls = render_bg_color_attrs(props.node.attrs)
   return cls ? Object.values(cls) : []
 })
-
-const padding_cls = computed(() => {
-  const paddings = []
-
-  for (const padding of ['px', 'py', 'pt', 'pr', 'pb', 'pl']) {
-    const cls = render_padding_attrs(props.node.attrs, padding)?.class
-
-    if (cls) {
-      paddings.push(cls)
-    }
-  }
-
-  return paddings
-})
-
 
 const iframe_cls = computed(() => ({
   'outline outline-1 outline-indigo-500 outline-offset-2': props.selected &&

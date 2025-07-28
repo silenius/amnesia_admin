@@ -20,6 +20,9 @@ import { render_tw_attrs } from '../utils'
 import resizeNode from '../resizeNode/resizeNode.vue'
 
 const props = defineProps(nodeViewProps)
+const attrs_keys = computed(() => Object.keys(
+  props.node.attrs
+))
 
 const img = ref()
 

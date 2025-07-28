@@ -35,6 +35,7 @@ import { useFolderBrowser } from '../../../composables/useFolderBrowser.js'
 import { create_file } from '../../../services/file.js'
 import { backend_url } from '../../../composables/fetch.js';
 import { build_editor, default_extensions } from '../../editor/tiptap';
+import { guess_video } from '../../editor/tiptap/video-extension/utils.js'
 
 const props = defineProps({
   content: String,
