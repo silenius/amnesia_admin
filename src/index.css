@@ -1,19 +1,27 @@
-/*
-@import '@fontsource-variable/open-sans' layer(base);
-@import '@fontsource-variable/caveat' layer(base);
-@import '@fontsource/kalam' layer(base);
-@import '@fontsource/roboto' layer(base);
-@import '@fontsource/pacifico' layer(base);
-@import '@fontsource/lobster-two' layer(base);
-*/
-
 /* @import 'tailwindcss'; */
-@layer theme, base, components, utilities;
 
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css";
-@source '../tailwind-safelist.txt';
+@import '@fontsource-variable/open-sans' layer(vendor);
+@import '@fontsource-variable/caveat' layer(vendor);
+@import '@fontsource/kalam' layer(vendor);
+@import '@fontsource/roboto' layer(vendor);
+@import '@fontsource/pacifico' layer(vendor);
+@import '@fontsource/lobster-two' layer(vendor);
+
+@import '@fortawesome/fontawesome-svg-core/styles.css' layer(vendor);
+@import "tailwindcss";
+
+@theme {
+    --font-kalam: "Kalam", "cursive";
+    --font-pacifico: "Pacifico", "cursive";
+    --font-lobster-two: "Lobster Two", "cursive";
+    --font-opensans: "Open Sans Variable", "sans-serif";
+    --font-caveat: "Caveat Variable", "cursive";
+    --font-roboto: "Roboto", "sans-serif";
+}
+
+@plugin "@tailwindcss/forms";
+@source "../tailwind-safelist.txt";
+@source inline('font-{sans,serif,mono,kalam,lobster-two,pacifico,opensans,caveat,roboto}');
 
 /*
 @config '../tailwind.config.js';
