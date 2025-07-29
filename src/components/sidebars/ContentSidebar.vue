@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, computed, watch } from 'vue'
-import { useEditorStore, useEditorEventStore } from '@/stores/editor'
+import { useEditorStore, useEditorEventStore } from '../../stores/editor'
 import {
   Disclosure,
   DisclosureButton,

@@ -91,14 +91,16 @@ with io.open('tailwind-safelist.txt', 'w') as f:
     for attr in it.chain(margins, paddings, gaps):
         for level in margins_paddings_levels:
             write_attr(f, f'{attr}-{level}')
-    for color in it.chain(colors, colors_unique):
-        for attr in {'border', 'fill', 'outline', 'ring', 'caret', 'bg', 'text'}:
-            if color in colors_unique:
-                write_attr(f, f'{attr}-{color}')
-            else:
-                for level in color_levels:
-                    write_attr(f, f'{attr}-{color}-{level}')
+
+    for attr in {'border', 'fill', 'outline', 'ring', 'caret', 'bg', 'text'}:
+        for color in colors_unique:
+            write_attr(f, f'{attr}-{color}')
+        for color in colors:
+            for level in color_levels:
+                write_attr(f, f'{attr}-{color}-{level}')
+   
     for item in others:
         write_attr(f, item)
+    
     for i in range(1, 10):
         f.write(f'group/{i} group-hover/{i}:block ')

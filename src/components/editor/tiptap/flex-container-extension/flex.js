@@ -3,6 +3,8 @@ import {
     Node
 } from '@tiptap/core'
 
+import { storeToRefs } from 'pinia'
+
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 
 import {
@@ -10,9 +12,14 @@ import {
     render_tw_attrs
 } from '../utils'
 
+import { useEditorEventStore } from '../../../../stores/editor'
+
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
+import { toValue } from 'vue'
 
 import Flex from './Flex.vue'
+
+const { lineage } = storeToRefs(useEditorEventStore())
 
 const tag = 'amnesia-flex-container'
 
